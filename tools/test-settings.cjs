@@ -30,7 +30,7 @@ async function verify() {
         contentType: "text/html",
         body: `<!doctype html><meta charset="utf-8">
         <style>${css}</style><button id="reader-settings">Settings</button><main>
-        <p id="text">Find an integration</p><code>integration</code>
+        <article class="reading"><div class="reader-body"><p id="text">Find an integration</p></div></article><code>integration</code>
         <input placeholder="Find an integration" aria-label="Search integrations"></main><script>${script}</script>`,
       });
     });
@@ -42,6 +42,10 @@ async function verify() {
     assert.equal(await page.locator("dialog").evaluate((d) => d.open), true);
     await control("size").selectOption("150");
     await control("motion").selectOption("reduced");
+    await control("type").selectOption("system");
+    await control("spacing").selectOption("spacious");
+    await control("measure").selectOption("narrow");
+    await control("color").selectOption("dark");
     assert.equal(
       await page.locator("html").evaluate((el) => el.style.fontSize),
       "150%",
@@ -51,6 +55,22 @@ async function verify() {
         .locator("html")
         .evaluate((el) => el.hasAttribute("data-reader-reduced-motion")),
     );
+    assert.equal(await page.locator("html").getAttribute("data-reader-type"), "system");
+    assert.equal(await page.locator("html").getAttribute("data-reader-spacing"), "spacious");
+    assert.equal(await page.locator("html").getAttribute("data-reader-measure"), "narrow");
+    assert.equal(await page.locator("html").getAttribute("data-reader-color"), "dark");
+    const widthMatches = await page.locator(".reading").evaluate((el) => {
+      const actual = getComputedStyle(el).maxWidth;
+      el.style.maxWidth = "58ch";
+      const expected = getComputedStyle(el).maxWidth;
+      el.style.removeProperty("max-width");
+      return actual === expected;
+    });
+    assert(widthMatches, "Narrow reading width should resolve to 58ch");
+    assert.equal(await page.locator("#text").evaluate((el) => {
+      const style = getComputedStyle(el);
+      return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+    }), 2);
     await control("language").selectOption("yue");
     assert.equal(await trigger.textContent(), "設定");
     assert.equal(await page.locator("#text").textContent(), "搵整合");
@@ -96,6 +116,10 @@ async function verify() {
     );
     await trigger.click();
     assert.equal(await control("size").inputValue(), "150");
+    assert.equal(await control("type").inputValue(), "system");
+    assert.equal(await control("spacing").inputValue(), "spacious");
+    assert.equal(await control("measure").inputValue(), "narrow");
+    assert.equal(await control("color").inputValue(), "dark");
     await control("reset").click();
     assert.equal(
       await page.locator("#text").textContent(),
@@ -105,6 +129,10 @@ async function verify() {
       await page.locator("html").evaluate((el) => el.style.fontSize),
       "100%",
     );
+    assert.equal(await page.locator("html").getAttribute("data-reader-type"), "editorial");
+    assert.equal(await page.locator("html").getAttribute("data-reader-spacing"), "relaxed");
+    assert.equal(await page.locator("html").getAttribute("data-reader-measure"), "standard");
+    assert.equal(await page.locator("html").getAttribute("data-reader-color"), "system");
     await page.keyboard.press("Escape");
     assert.equal(
       await trigger.evaluate((el) => document.activeElement === el),

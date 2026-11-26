@@ -206,13 +206,39 @@
   const WORDING = "integration-atlas:wording:v1";
   const modes = ["en", "yue", "both"];
   const sizes = ["100", "112", "125", "150"];
-  const defaults = { language: "en", size: "100", motion: "system" };
+  const types = ["editorial", "system"];
+  const spacings = ["comfortable", "relaxed", "spacious"];
+  const measures = ["narrow", "standard", "wide"];
+  const colorModes = ["system", "light", "dark"];
+  const defaults = {
+    language: "en",
+    size: "100",
+    motion: "system",
+    type: "editorial",
+    spacing: "relaxed",
+    measure: "standard",
+    color: "system",
+  };
   const messages = {
     settings: ["Settings", "設定"],
     title: ["Reader settings", "閱讀設定"],
     language: ["Control language", "控制項語言"],
     font: ["Text size", "字體大小"],
     motion: ["Motion", "動態效果"],
+    type: ["Typeface", "字體風格"],
+    spacing: ["Line spacing", "行距"],
+    measure: ["Article width", "文章寬度"],
+    color: ["Color mode", "顏色模式"],
+    editorial: ["Editorial", "編輯字體"],
+    systemType: ["System", "系統字體"],
+    comfortable: ["Comfortable", "舒適"],
+    relaxed: ["Relaxed", "寬鬆"],
+    spacious: ["Spacious", "特寬鬆"],
+    narrow: ["Narrow", "窄"],
+    standard: ["Standard", "標準"],
+    wide: ["Wide", "寬"],
+    light: ["Light", "淺色"],
+    dark: ["Dark", "深色"],
     system: ["Use device setting", "跟裝置設定"],
     reduced: ["Reduce motion", "減少動態效果"],
     close: ["Close", "關閉"],
@@ -250,6 +276,57 @@
     ["All collections", "所有分類"],
     ["Collection", "分類"],
     ["Home", "首頁"],
+    // Reusable interface copy shared by the homepage, directory, guides,
+    // references, tour, and reading workspace. Keep this list to UI labels;
+    // article prose and integration names remain in their source language.
+    ["Workspace", "閱讀工作區"],
+    ["Skip to content", "跳至內容"],
+    ["Guided tour", "網站導覽"],
+    ["Accessibility", "無障礙設定"],
+    ["Accessibility tools", "無障礙工具"],
+    ["Independent Home Assistant integration reference", "獨立 Home Assistant 整合參考資料"],
+    ["Sources & attribution", "來源及鳴謝"],
+    ["Offline guide", "離線指南"],
+    ["Browse integrations", "瀏覽整合"],
+    ["Name or domain", "名稱或網域"],
+    ["Overview", "概覽"],
+    ["Guide", "指南"],
+    ["Reference", "參考資料"],
+    ["Integration reference", "整合參考資料"],
+    ["Reading workspace", "閱讀工作區"],
+    ["Find a guide or pick up where you left off.", "搵指南，或者繼續上次睇到嘅地方。"],
+    ["Go to an integration", "前往整合頁面"],
+    ["Integration name or domain", "整合名稱或網域"],
+    ["Open as", "開啟為"],
+    ["Saved pages", "已儲存頁面"],
+    ["Name for this page", "呢頁嘅名稱"],
+    ["Save page", "儲存頁面"],
+    ["Reading history", "閱讀記錄"],
+    ["Save a page to find it here.", "儲存頁面後，就可以喺呢度搵到。"],
+    ["Opened integration pages will appear here.", "開過嘅整合頁面會喺呢度顯示。"],
+    ["Clear all", "全部清除"],
+    ["Cancel", "取消"],
+    ["Confirm clear", "確認清除"],
+    ["Export all", "匯出全部"],
+    ["Export", "匯出"],
+    ["Remove", "移除"],
+    ["Close", "關閉"],
+    ["Current page", "目前頁面"],
+    ["Search directory", "搜尋目錄"],
+    ["Choose a matching integration", "選擇符合條件嘅整合"],
+    ["Find an integration", "搵整合"],
+    ["Change the search or collection in the directory. Open any matching result to continue.", "喺目錄更改搜尋內容或分類，再打開符合條件嘅結果繼續。"],
+    ["Focus directory filters", "移到目錄篩選器"],
+    ["Open first match", "打開第一個結果"],
+    ["Return to results", "返回搜尋結果"],
+    ["No matches. Change the name or collection and try again.", "搵唔到結果。請更改名稱或分類，再試一次。"],
+    ["Explore the integration story", "了解整合用途"],
+    ["Open setup guide", "打開設定指南"],
+    ["Return to the overview", "返回概覽"],
+    ["Track your setup progress", "記錄設定進度"],
+    ["Go to checklist", "前往核對清單"],
+    ["Finish tour", "完成導覽"],
+    ["Return to the guide", "返回指南"],
   ]);
   function setup() {
     const trigger = document.getElementById("reader-settings");
@@ -280,6 +357,10 @@
         : defaults.language,
       size: sizes.includes(saved?.size) ? saved.size : defaults.size,
       motion: saved?.motion === "reduced" ? "reduced" : "system",
+      type: types.includes(saved?.type) ? saved.type : defaults.type,
+      spacing: spacings.includes(saved?.spacing) ? saved.spacing : defaults.spacing,
+      measure: measures.includes(saved?.measure) ? saved.measure : defaults.measure,
+      color: colorModes.includes(saved?.color) ? saved.color : defaults.color,
     };
     const cached = parsePersonalVocabulary(read(WORDING) || "");
     let entries = cached.ok ? cached.entries : {};
@@ -295,6 +376,10 @@
       <option value="en" lang="en">English</option><option value="yue" lang="yue-Hant">廣東話</option><option value="both">English · 廣東話</option></select>
     <label for="reader-size" data-reader-label="font"></label><select id="reader-size"></select>
     <label for="reader-motion" data-reader-label="motion"></label><select id="reader-motion"><option value="system" data-reader-label="system"></option><option value="reduced" data-reader-label="reduced"></option></select>
+    <label for="reader-type" data-reader-label="type"></label><select id="reader-type"><option value="editorial" data-reader-label="editorial"></option><option value="system" data-reader-label="systemType"></option></select>
+    <label for="reader-spacing" data-reader-label="spacing"></label><select id="reader-spacing"><option value="comfortable" data-reader-label="comfortable"></option><option value="relaxed" data-reader-label="relaxed"></option><option value="spacious" data-reader-label="spacious"></option></select>
+    <label for="reader-measure" data-reader-label="measure"></label><select id="reader-measure"><option value="narrow" data-reader-label="narrow"></option><option value="standard" data-reader-label="standard"></option><option value="wide" data-reader-label="wide"></option></select>
+    <label for="reader-color" data-reader-label="color"></label><select id="reader-color"><option value="system" data-reader-label="system"></option><option value="light" data-reader-label="light"></option><option value="dark" data-reader-label="dark"></option></select>
     <fieldset><legend data-reader-label="wording"></legend><p id="reader-format" data-reader-label="format"></p>
     <label for="reader-file" data-reader-label="choose"></label><input id="reader-file" type="file" accept=".json,application/json" aria-describedby="reader-format">
     <p id="reader-count"></p><button type="button" id="reader-clear" data-reader-label="clear"></button></fieldset>
@@ -384,10 +469,16 @@
         "data-reader-reduced-motion",
         preferences.motion === "reduced",
       );
+      document.documentElement.dataset.readerType = preferences.type;
+      document.documentElement.dataset.readerSpacing = preferences.spacing;
+      document.documentElement.dataset.readerMeasure = preferences.measure;
+      document.documentElement.dataset.readerColor = preferences.color;
       dialog.lang = preferences.language === "yue" ? "yue-Hant" : "en";
       field("size").value = preferences.size;
       field("language").value = preferences.language;
       field("motion").value = preferences.motion;
+      for (const name of ["type", "spacing", "measure", "color"])
+        field(name).value = preferences[name];
       for (const el of dialog.querySelectorAll("[data-reader-label]"))
         el.textContent = label(el.dataset.readerLabel);
       trigger.textContent = label("settings");
@@ -410,7 +501,7 @@
       childList: true,
       characterData: true,
     });
-    for (const name of ["language", "size", "motion"])
+    for (const name of ["language", "size", "motion", "type", "spacing", "measure", "color"])
       field(name).addEventListener("change", () => {
         preferences[name] = field(name).value;
         messageKey = undefined;
