@@ -5,6 +5,7 @@
  */
 (() => {
   "use strict";
+  const settingsWorkerUrl = new URL("search-worker.js", document.currentScript?.src || location.href);
   const VOCABULARY_LIMITS = {
     bytes: 262144,
     depth: 8,
@@ -221,6 +222,11 @@
   };
   const messages = {
     settings: ["Settings", "設定"],
+    filterSettings: ["Find a setting", "搜尋設定"],
+    patternMode: ["Use a regular expression", "用正則表達式搜尋"],
+    noSettings: ["No matching settings.", "冇符合嘅設定。"],
+    invalidPattern: ["Check the search pattern and flags.", "請檢查搜尋模式同旗標。"],
+    searchStopped: ["Search stopped. Shorten the expression or use plain text.", "搜尋已停止。請縮短表達式或改用文字搜尋。"],
     title: ["Reader settings", "閱讀設定"],
     language: ["Control language", "控制項語言"],
     font: ["Text size", "字體大小"],
@@ -379,6 +385,11 @@
     dialog.id = "atlas-reader-dialog";
     dialog.setAttribute("aria-labelledby", "reader-title");
     dialog.innerHTML = `<div class="reader-head"><h2 id="reader-title" data-reader-label="title"></h2><button type="button" id="reader-close" data-reader-label="close" autofocus></button></div>
+    <div class="reader-filter">
+      <label for="reader-filter" data-reader-label="filterSettings"></label><input id="reader-filter" type="search" maxlength="512">
+      <label id="reader-pattern-label" hidden><input type="checkbox" id="reader-pattern"> <span data-reader-label="patternMode"></span></label>
+      <p id="reader-filter-status" role="status"></p>
+    </div>
     <label for="reader-language" data-reader-label="language"></label><select id="reader-language">
       <option value="en" lang="en">English</option><option value="yue" lang="yue-Hant">廣東話</option><option value="both">English · 廣東話</option></select>
     <label for="reader-size" data-reader-label="font"></label><select id="reader-size"></select>
@@ -513,6 +524,66 @@
         }
       }
     }
+    const filterInput = field("filter");
+    const filterMode = field("pattern");
+    const filterGroups = Array.from(dialog.children).flatMap(el => {
+      if (el.tagName === "LABEL") return [[el, el.control]];
+      if (el.tagName === "FIELDSET") return [[el]];
+      return [];
+    });
+    let filterWorker, filterTimer, filterBuilder;
+    function stopFilter() {
+      filterWorker?.terminate();
+      filterWorker = null;
+      clearTimeout(filterTimer);
+    }
+    function applyFilter() {
+      stopFilter();
+      const query = filterInput.value.trim();
+      if (filterBuilder) filterBuilder.box.hidden = !filterMode.checked;
+      const records = filterGroups.map(group => ({
+        name: group.map(el => el.textContent).join(" "),
+      }));
+      function show(matches, error = "") {
+        let visible = 0;
+        filterGroups.forEach((group, i) => {
+          const hide = !matches.has(i) || (group[0] === field("page-style") && !sectionNodes.size);
+          for (const el of group) el.hidden = hide;
+          if (!hide) visible++;
+        });
+        field("filter-status").textContent = error || (visible ? "" : label("noSettings"));
+      }
+      if (!query || !filterMode.checked || !filterBuilder) {
+        const term = query.toLocaleLowerCase();
+        show(new Set(records.flatMap((r,i) => r.name.toLocaleLowerCase().includes(term) ? [i] : [])));
+        return;
+      }
+      function failed(key) {
+        stopFilter();
+        show(new Set(records.keys()), label(key));
+      }
+      try {
+        const worker = new Worker(settingsWorkerUrl);
+        filterWorker = worker;
+        filterTimer = setTimeout(() => failed("searchStopped"), 1500);
+        worker.onerror = () => { if (filterWorker === worker) failed("searchStopped"); };
+        worker.onmessage = ({data}) => {
+          if (filterWorker !== worker) return;
+          if (data.ready) {
+            worker.postMessage({pattern:query, flags:filterBuilder.flags.value, records});
+          } else if (data.error) {
+            failed("invalidPattern");
+          } else {
+            stopFilter();
+            show(new Set(data.results));
+          }
+        };
+      } catch {
+        failed("searchStopped");
+      }
+    }
+    filterInput.addEventListener("input", applyFilter);
+    filterMode.addEventListener("change", applyFilter);
     function renderStatus() {
       field("status").textContent = [
         messageKey && label(messageKey),
@@ -546,6 +617,7 @@
       field("clear").disabled = !count;
       renderStatus();
       refreshNode(document.body);
+      applyFilter();
     }
     const observer = new MutationObserver((records) => {
       if (!Object.keys(entries).length && preferences.language === "en") return;
@@ -627,9 +699,20 @@
     });
     trigger.setAttribute("aria-haspopup", "dialog");
     trigger.setAttribute("aria-controls", dialog.id);
-    trigger.addEventListener("click", () => dialog.showModal());
+    trigger.addEventListener("click", () => {
+      if (!filterBuilder && window.IntegrationAtlasSearch?.workbench) {
+        filterBuilder = window.IntegrationAtlasSearch.workbench(filterInput, "i", applyFilter, "Search setting labels and available choices.");
+        field("pattern-label").hidden = false;
+        field("pattern-label").after(filterBuilder.box);
+      }
+      applyFilter();
+      dialog.showModal();
+    });
     field("close").addEventListener("click", () => dialog.close());
-    dialog.addEventListener("close", () => trigger.focus());
+    dialog.addEventListener("close", () => {
+      stopFilter();
+      trigger.focus();
+    });
     render();
   }
   if (document.readyState === "loading")

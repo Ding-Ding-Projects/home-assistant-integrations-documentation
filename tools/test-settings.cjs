@@ -40,6 +40,12 @@ async function verify() {
     await trigger.focus();
     await page.keyboard.press("Enter");
     assert.equal(await page.locator("dialog").evaluate((d) => d.open), true);
+    await control("filter").fill("line spacing");
+    assert(await control("spacing").isVisible());
+    assert(!(await control("color").isVisible()));
+    await control("filter").fill("does not match any setting");
+    assert.equal(await control("filter-status").innerText(), "No matching settings.");
+    await control("filter").fill("");
     await control("size").selectOption("150");
     await control("motion").selectOption("reduced");
     await control("type").selectOption("system");
