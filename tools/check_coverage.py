@@ -1,4 +1,5 @@
 """Check that each catalog record has its promised public surfaces."""
+import argparse
 import json
 from html import escape
 from html.parser import HTMLParser
@@ -21,13 +22,18 @@ class Structure(HTMLParser):
         if data.get('id'):
             self.controls.add(data['id'])
 
-def check():
+def check(selected=None):
     root = Path('docs')
     catalog = json.loads(Path('catalog.json').read_text())['integrations']
     domains = {r['domain'] for r in catalog}
     assert len(domains) == len(catalog)
+    inspected = set(selected) if selected else domains
+    if inspected - domains:
+        raise ValueError('Unknown domains: ' + ', '.join(sorted(inspected - domains)))
     reviewed = set()
     for path in Path('editorial').glob('*.json'):
+        if selected and path.stem not in inspected:
+            continue
         row = json.loads(path.read_text())
         assert path.stem in domains, path
         assert row['theme'] in {'studio','almanac','console','gallery','workshop','observatory','signal','folio'}, path
@@ -46,7 +52,7 @@ def check():
     for area in ('discover','integrations','references'):
         actual = {p.parent.name for p in (root/area).glob('*/index.html')}
         assert actual == domains, (area, actual ^ domains)
-    for domain in domains:
+    for domain in inspected:
         for area in ('discover','integrations','references'):
             path = root/area/domain/'index.html'
             doc = Structure()
@@ -58,7 +64,9 @@ def check():
                 assert len(layout) == 6 and layout not in layouts, path
                 layouts.add(layout)
     assert {d for d,_ in json.loads((root/'lookup.json').read_text())} == domains
-    print(f'{len(domains)} domains matched, {len(layouts)} distinct guide layouts, reader controls present on every integration route; {len(reviewed)} individually edited campaigns')
+    print(f'{len(inspected)} domains matched, {len(layouts)} distinct guide layouts, reader controls present on every integration route; {len(reviewed)} individually edited campaigns')
 
 if __name__ == '__main__':
-    check()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--domain', action='append')
+    check(parser.parse_args().domain)

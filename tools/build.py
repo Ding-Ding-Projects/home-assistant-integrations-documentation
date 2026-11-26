@@ -2,6 +2,7 @@
 from references import render_reference
 from navigation import recommendations
 from stories import design, marketing, instrument
+import argparse
 import hashlib
 import json
 import random
@@ -38,9 +39,28 @@ def chips(values):
     return '<ul class="chips">' + ''.join(f'<li>{esc(label(v))}</li>' for v in values) + '</ul>'
 
 
-def guide(r):
-    domain, name = r['domain'], esc(r['name'])
+def choose_layout(domain):
     rng = random.Random(domain)
+    # Keep setup near the top. Pair the six sections on a twelve-column grid.
+    # Reject collisions so two integrations never share the same structural layout.
+    while True:
+        order = list(range(1,6))
+        rng.shuffle(order)
+        order.insert(rng.randrange(2),0)
+        widths = []
+        for _ in range(3):
+            w = rng.randrange(4,9)
+            widths.extend([w,12-w])
+        signature = (tuple(order),tuple(widths))
+        if signature not in layouts:
+            layouts.add(signature)
+            break
+    return order, widths, rng.randrange(4)
+
+
+def guide(r, layout):
+    domain, name = r['domain'], esc(r['name'])
+    order, widths, composition = layout
     kind = label(r.get('integration_type', 'integration'))
     article = r.get('article') or r.get('documentation')
     summary = r.get('summary') or (f"Use {r['supported_by']} to connect this brand." if r.get('supported_by') else f"Explore {r['name']} setup, capabilities and implementation details.")
@@ -67,20 +87,6 @@ def guide(r):
         ('Setup checklist', ''.join(f'<label><input type="checkbox" data-save="{domain}-{i}"> {text}</label>' for i,text in enumerate(['Read the setup requirements','Review available capabilities','Verify setup in my home']))),
         ('References', '<ul>'+''.join('<li>'+v+'</li>' for v in references if v)+'</ul>'),
     ]
-    # Keep setup near the top. Pair the six sections on a twelve-column grid.
-    # Reject collisions so two integrations never share the same structural layout.
-    while True:
-        order = list(range(1,6))
-        rng.shuffle(order)
-        order.insert(rng.randrange(2),0)
-        widths = []
-        for _ in range(3):
-            w = rng.randrange(4,9)
-            widths.extend([w,12-w])
-        signature = (tuple(order),tuple(widths))
-        if signature not in layouts:
-            layouts.add(signature)
-            break
     copy = design(r)
     theme = copy['theme']
     panels = ''.join(f'<section id="section-{j}" class="panel tone{j}" style="--span:{w}"><h2>{blocks[j][0]}</h2><div>{blocks[j][1]}</div></section>' for j,w in zip(order,widths))
@@ -89,7 +95,7 @@ def guide(r):
     art = instrument(r,theme,copy.get('flow'))
     context = ''.join(f'<section><h3>{esc(heading)}</h3><p>{esc(paragraph)}</p></section>' for heading,paragraph in r.get('article_text',[]))
     reading = f'<article class="reading"><h2>Using {name}</h2>{context}</article>' if context else ''
-    body = f'<nav><a href="../../directory.html">Directory</a> / <a href="{overview}">{name}</a> / Guide</nav><div class="hero campaign composition-{rng.randrange(4)}"><div><small>{esc(kind)} guide</small><h1>{name}</h1><p>{esc(summary)}</p><code>{esc(domain)}</code></div>{art}</div><div id="setup" class="grid">{panels}</div>{reading}{related[domain]}'
+    body = f'<nav><a href="../../directory.html">Directory</a> / <a href="{overview}">{name}</a> / Guide</nav><div class="hero campaign composition-{composition}"><div><small>{esc(kind)} guide</small><h1>{name}</h1><p>{esc(summary)}</p><code>{esc(domain)}</code></div>{art}</div><div id="setup" class="grid">{panels}</div>{reading}{related[domain]}'
     dest = OUT/'integrations'/domain
     dest.mkdir(parents=True, exist_ok=True)
     color = f'--h:{hue}'
@@ -99,8 +105,20 @@ def guide(r):
     render_reference(r,shell,theme,color,catalog_names)
 
 
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--domain', action='append', default=[], help='Render only this integration. May be repeated.')
+selected = set(parser.parse_args().domain)
+if selected - known:
+    parser.error('Unknown integration: ' + ', '.join(sorted(selected - known)))
 for row in rows:
-    guide(row)
+    domain = row['domain']
+    layout = choose_layout(domain)
+    if not selected or domain in selected:
+        guide(row, layout)
+if selected:
+    print(f'Rendered {len(selected)} integrations')
+    raise SystemExit(0)
+
 entries = []
 for r in sorted(rows,key=lambda r:r['name'].casefold()):
     domain=r['domain']
