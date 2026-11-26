@@ -29,8 +29,12 @@ def design(row):
     return copy
 
 
-def instrument(row, theme):
+def instrument(row, theme, flow=None):
     """A reading aid. Every displayed value comes from the article or manifest."""
+    if flow:
+        stages = ''.join(f'<li>{e(stage)}</li>' for stage in flow['stages'])
+        return (f'<aside class="flow-diagram {theme}"><h2>{e(flow["title"])}</h2>'
+                f'<ol>{stages}</ol></aside>')
     group = {'studio':'Room controls','almanac':'Field notes','gallery':'Programme','observatory':'Readouts','console':'Channels','workshop':'Workbench','signal':'Signals','folio':'Contents'}[theme]
     labels = row.get('platforms') or row.get('topics') or list(row.get('steps', {})) or list(row['sources']) or [row['name']]
     digest = hashlib.sha256(row['domain'].encode()).digest()
@@ -42,7 +46,7 @@ def marketing(row, copy, guide):
     path = Path('docs/discover') / row['domain']
     path.mkdir(parents=True,exist_ok=True)
     title = e(copy['headline'])
-    art = instrument(row,copy['theme'])
+    art = instrument(row,copy['theme'],copy.get('flow'))
     kicker = e(row['name']) if copy['headline'] != row['name'] else e((row.get('categories') or [row.get('integration_type','Home Assistant integration')])[0].replace('_',' ').replace('.',' / '))
     image = f'<img class="editorial-plate" src="../../assets/{copy["theme"]}.webp" alt="" width="443" height="443">'
     content = f'<small>{kicker}</small><h1>{title}</h1><p>{e(copy["intro"])}</p><a class="cta" href="{guide}">Open the {e(row["name"])} guide →</a>'

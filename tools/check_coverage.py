@@ -25,6 +25,19 @@ def check():
     catalog = json.loads(Path('catalog.json').read_text())['integrations']
     domains = {r['domain'] for r in catalog}
     assert len(domains) == len(catalog)
+    reviewed = set()
+    for path in Path('editorial').glob('*.json'):
+        row = json.loads(path.read_text())
+        assert path.stem in domains, path
+        assert row['theme'] in {'studio','almanac','console','gallery','workshop','observatory','signal','folio'}, path
+        assert isinstance(row['highlights'], list) and len(row['highlights']) == 3, path
+        fields = [row['headline'],row['intro'],*row['highlights']]
+        if 'flow' in row:
+            flow = row['flow']
+            assert isinstance(flow['stages'], list) and 2 <= len(flow['stages']) <= 4, path
+            fields.extend([flow['title'],*flow['stages']])
+        assert all(isinstance(value,str) and value.strip() for value in fields), path
+        reviewed.add(path.stem)
     layouts = set()
     for area in ('discover','integrations','references'):
         actual = {p.parent.name for p in (root/area).glob('*/index.html')}
@@ -41,7 +54,7 @@ def check():
                 assert len(layout) == 6 and layout not in layouts, path
                 layouts.add(layout)
     assert {d for d,_ in json.loads((root/'lookup.json').read_text())} == domains
-    print(f'{len(domains)} domains matched, {len(layouts)} distinct guide layouts, reader controls present on every integration route')
+    print(f'{len(domains)} domains matched, {len(layouts)} distinct guide layouts, reader controls present on every integration route; {len(reviewed)} individually edited campaigns')
 
 if __name__ == '__main__':
     check()

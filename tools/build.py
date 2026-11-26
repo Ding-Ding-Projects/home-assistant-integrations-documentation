@@ -24,8 +24,13 @@ def label(value):
     return value.replace('_', ' ').capitalize()
 
 
-def shell(title, content, base='', style='', theme='folio'):
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} · Integration Atlas</title><link rel="stylesheet" href="{base}atlas.css"><script defer src="{base}atlas.js"></script><link rel="stylesheet" href="{base}settings.css"><link rel="stylesheet" href="{base}search.css"><script src="{base}settings.js" defer></script><script src="{base}search.js" defer></script><link rel="stylesheet" href="{base}workspace.css"><link rel="stylesheet" href="{base}tour.css"><script defer src="{base}workspace.js"></script><script defer src="{base}tour.js"></script></head><body style="{style}" data-theme="{theme}"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="{base}index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="{base}directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="{base}directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main">{content}</main><footer>Independent Home Assistant integration reference · <a href="{base}credits.html">Sources &amp; attribution</a> · <a href="{base}downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>'''
+def shell(title, content, base='', style='', theme='folio', article_search=False):
+    search_assets = (
+        f'<link rel="stylesheet" href="{base}article-find.css">'
+        f'<script defer src="{base}article-find.js"></script>'
+        if article_search else ''
+    )
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} · Integration Atlas</title><link rel="stylesheet" href="{base}atlas.css"><script defer src="{base}atlas.js"></script><link rel="stylesheet" href="{base}settings.css"><link rel="stylesheet" href="{base}search.css"><script src="{base}settings.js" defer></script><script src="{base}search.js" defer></script><link rel="stylesheet" href="{base}workspace.css"><link rel="stylesheet" href="{base}tour.css"><script defer src="{base}workspace.js"></script><script defer src="{base}tour.js"></script>{search_assets}</head><body style="{style}" data-theme="{theme}"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="{base}index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="{base}directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="{base}directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main">{content}</main><footer>Independent Home Assistant integration reference · <a href="{base}credits.html">Sources &amp; attribution</a> · <a href="{base}downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>'''
 
 
 def chips(values):
@@ -80,14 +85,14 @@ def guide(r):
     panels = ''.join(f'<section id="section-{j}" class="panel tone{j}" style="--span:{w}"><h2>{blocks[j][0]}</h2><div>{blocks[j][1]}</div></section>' for j,w in zip(order,widths))
     hue = int(hashlib.sha256(domain.encode()).hexdigest()[:6],16)%360
     overview = f'../../discover/{domain}/'
-    art = instrument(r,theme)
+    art = instrument(r,theme,copy.get('flow'))
     context = ''.join(f'<section><h3>{esc(heading)}</h3><p>{esc(paragraph)}</p></section>' for heading,paragraph in r.get('article_text',[]))
     reading = f'<article class="reading"><h2>Using {name}</h2>{context}</article>' if context else ''
     body = f'<nav><a href="../../directory.html">Directory</a> / <a href="{overview}">{name}</a> / Guide</nav><div class="hero campaign composition-{rng.randrange(4)}"><div><small>{esc(kind)} guide</small><h1>{name}</h1><p>{esc(summary)}</p><code>{esc(domain)}</code></div>{art}</div><div id="setup" class="grid">{panels}</div>{reading}{related[domain]}'
     dest = OUT/'integrations'/domain
     dest.mkdir(parents=True, exist_ok=True)
     color = f'--h:{hue}'
-    (dest/'index.html').write_text(shell(r['name'] + ' guide',body,'../../',color,theme))
+    (dest/'index.html').write_text(shell(r['name'] + ' guide',body,'../../',color,theme,article_search=True))
     dest, landing = marketing(r,copy,f'../../integrations/{domain}/')
     (dest/'index.html').write_text(shell(r['name'],landing,'../../',color,theme))
     render_reference(r,shell,theme,color)

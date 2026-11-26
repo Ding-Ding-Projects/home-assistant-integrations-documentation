@@ -7,7 +7,9 @@ self.onmessage = ({ data: { pattern, flags, records, collection } }) => {
     for (let i = 0; i < records.length; i++) {
       const row = records[i];
       if (collection && !row.collections.includes(collection)) continue;
-      if ([row.name, row.domain].some(value => {
+      const values = [row.name];
+      if (typeof row.domain === 'string') values.push(row.domain);
+      if (values.some(value => {
         expression.lastIndex = 0;
         return expression.test(value);
       })) results.push(i);

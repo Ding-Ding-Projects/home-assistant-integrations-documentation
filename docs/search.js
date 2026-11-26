@@ -16,7 +16,9 @@
     ['Optional', '?'], ['Group selection', '(?:…)'], ['Escape selection', 'literal']
   ];
 
-  function workbench(input, initialFlags, onChange) {
+  function escapeLiteral(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function workbench(input, initialFlags, onChange, helpText = 'Search each name and domain separately. Flags include i for case-insensitive matching and u for Unicode.') {
     const box = element('div', undefined, 'regex-workbench');
     const tokenLabel = element('label', 'Build a pattern');
     const tokens = element('select');
@@ -30,7 +32,7 @@
       const selected = input.value.slice(start, end);
       let replacement = tokens.value;
       if (replacement === 'literal') {
-        replacement = selected.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        replacement = escapeLiteral(selected);
       } else if (replacement.includes('…')) {
         replacement = '(?:' + selected + ')';
       }
@@ -48,10 +50,12 @@
     flags.setAttribute('aria-label', 'Regular expression flags');
     flags.addEventListener('input', onChange);
     flagsLabel.append(flags);
-    const help = element('small', 'Search each name and domain separately. Flags include i for case-insensitive matching and u for Unicode.');
+    const help = element('small', helpText);
     box.append(tokenLabel, insert, flagsLabel, help);
     return { box, flags };
   }
+
+  window.IntegrationAtlasSearch = Object.freeze({ workbench, escapeLiteral });
 
   const header = document.querySelector('.global-search');
   if (header) {

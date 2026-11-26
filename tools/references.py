@@ -60,7 +60,7 @@ def render_reference(row, shell, theme, style):
     content.append(f'<p><a href="{guide}">Return to the {name} guide →</a></p></article>')
     path = Path('docs/references') / domain
     path.mkdir(parents=True, exist_ok=True)
-    page = shell(f'{row["name"]} reference', ''.join(content), base, style, theme)
+    page = shell(f'{row["name"]} reference', ''.join(content), base, style, theme, article_search=True)
     # Keep rendered code and original source exact without trailing blanks in Git.
     page = re.sub(r'[ \t]+(?=\r?$)', lambda m: ''.join(f'&#{ord(c)};' for c in m[0]), page, flags=re.M)
     page = re.sub(r'^[ \t]+', lambda m: m[0].replace('\t', '&#9;'), page, flags=re.M)
