@@ -37,7 +37,7 @@ Article excerpts and adaptations credit the Home Assistant documentation contrib
 
 ## Reader features
 
-The home page introduces integration stories. The directory supports name, domain and collection filters, plus an optional pattern builder. Individual guides include local checklists, related integrations and a reference reader. The reader workspace stores bookmarks and recent pages on the visitor's device. The guided tour, accessibility controls, font sizing, motion preference and optional personal wording are available from the site navigation. Settings labels support English, Cantonese and bilingual display. The imported reference articles retain their source language.
+The home page introduces integration stories. The directory supports name, domain and collection filters, plus an optional pattern builder. Individual guides include local checklists, related integrations and a reference reader. The in-page finder searches guide panels or reference passages and supports pattern construction, regex flags, next/previous navigation and local search state. The reader workspace stores bookmarks and recent pages on the visitor's device. The guided tour, accessibility controls, typeface, font size, line spacing, reading width, color mode, motion preference and optional personal wording are available from the site navigation. Settings labels support English, Cantonese and bilingual display. The imported reference articles retain their source language.
 
 Run `python tools/check_coverage.py` to reconcile the three route sets, guide layout arrangements and reader controls with the domain inventory. The link verifier checks generated page links, fragments, local resources and form destinations.
 

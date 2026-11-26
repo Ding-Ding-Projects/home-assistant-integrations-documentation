@@ -1,5 +1,6 @@
 """Check that each catalog record has its promised public surfaces."""
 import json
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -37,6 +38,9 @@ def check():
             assert isinstance(flow['stages'], list) and 2 <= len(flow['stages']) <= 4, path
             fields.extend([flow['title'],*flow['stages']])
         assert all(isinstance(value,str) and value.strip() for value in fields), path
+        campaign = (root/'discover'/path.stem/'index.html').read_text()
+        assert '<h1>' + escape(row['headline']) + '</h1>' in campaign, f'Stale campaign for {path.stem}'
+        assert '<p>' + escape(row['intro']) + '</p>' in campaign, f'Stale intro for {path.stem}'
         reviewed.add(path.stem)
     layouts = set()
     for area in ('discover','integrations','references'):
