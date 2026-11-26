@@ -30,7 +30,7 @@ async function verify() {
         contentType: "text/html",
         body: `<!doctype html><meta charset="utf-8">
         <style>${css}</style><button id="reader-settings">Settings</button><main>
-        <article class="reading"><div class="reader-body"><p id="text">Find an integration</p></div></article><code>integration</code>
+        <article class="reading"><h2>Test article</h2><div class="reader-body"><p id="text">Find an integration</p></div></article><code>integration</code>
         <input placeholder="Find an integration" aria-label="Search integrations"></main><script>${script}</script>`,
       });
     });
@@ -46,6 +46,9 @@ async function verify() {
     await control("spacing").selectOption("spacious");
     await control("measure").selectOption("narrow");
     await control("color").selectOption("dark");
+    await control("section-style").selectOption("technical");
+    assert.equal(await page.locator(".reading").getAttribute("data-atlas-section-style"), "technical");
+    assert.match(await page.locator(".reading h2").evaluate((el) => getComputedStyle(el).fontFamily), /monospace/);
     assert.equal(
       await page.locator("html").evaluate((el) => el.style.fontSize),
       "150%",
@@ -110,6 +113,7 @@ async function verify() {
     await upload(" ".repeat(262145));
     await control("status").filter({ hasText: "256 KiB" }).waitFor();
     await page.reload();
+    assert.equal(await page.locator(".reading").getAttribute("data-atlas-section-style"), "technical");
     assert.equal(
       await page.locator("#text").textContent(),
       "Find an component",
@@ -121,6 +125,7 @@ async function verify() {
     assert.equal(await control("measure").inputValue(), "narrow");
     assert.equal(await control("color").inputValue(), "dark");
     await control("reset").click();
+    assert.equal(await page.locator(".reading").getAttribute("data-atlas-section-style"), null);
     assert.equal(
       await page.locator("#text").textContent(),
       "Find an integration",

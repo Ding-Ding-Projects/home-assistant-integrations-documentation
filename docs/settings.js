@@ -242,6 +242,13 @@
     system: ["Use device setting", "跟裝置設定"],
     reduced: ["Reduce motion", "減少動態效果"],
     close: ["Close", "關閉"],
+    pageStyle: ["Customize this page", "自訂呢一頁"],
+    section: ["Page section", "頁面部分"],
+    sectionStyle: ["Section appearance", "部分外觀"],
+    original: ["Original design", "原有設計"],
+    book: ["Book typography", "書本字體"],
+    technical: ["Technical typography", "技術文件字體"],
+    highlighted: ["Accent border", "重點邊框"],
     wording: ["Personal wording", "個人用詞"],
     choose: ["Import wording file", "匯入用詞檔案"],
     format: [
@@ -380,6 +387,12 @@
     <label for="reader-spacing" data-reader-label="spacing"></label><select id="reader-spacing"><option value="comfortable" data-reader-label="comfortable"></option><option value="relaxed" data-reader-label="relaxed"></option><option value="spacious" data-reader-label="spacious"></option></select>
     <label for="reader-measure" data-reader-label="measure"></label><select id="reader-measure"><option value="narrow" data-reader-label="narrow"></option><option value="standard" data-reader-label="standard"></option><option value="wide" data-reader-label="wide"></option></select>
     <label for="reader-color" data-reader-label="color"></label><select id="reader-color"><option value="system" data-reader-label="system"></option><option value="light" data-reader-label="light"></option><option value="dark" data-reader-label="dark"></option></select>
+    <fieldset id="reader-page-style"><legend data-reader-label="pageStyle"></legend>
+    <label for="reader-section" data-reader-label="section"></label><select id="reader-section"></select>
+    <label for="reader-section-style" data-reader-label="sectionStyle"></label><select id="reader-section-style">
+      <option value="" data-reader-label="original"></option><option value="book" data-reader-label="book"></option>
+      <option value="technical" data-reader-label="technical"></option><option value="highlighted" data-reader-label="highlighted"></option>
+    </select></fieldset>
     <fieldset><legend data-reader-label="wording"></legend><p id="reader-format" data-reader-label="format"></p>
     <label for="reader-file" data-reader-label="choose"></label><input id="reader-file" type="file" accept=".json,application/json" aria-describedby="reader-format">
     <p id="reader-count"></p><button type="button" id="reader-clear" data-reader-label="clear"></button></fieldset>
@@ -388,6 +401,51 @@
     document.body.append(dialog);
     const field = (id) => dialog.querySelector("#reader-" + id);
     for (const size of sizes) field("size").add(new Option(size + "%", size));
+    const pageStyleKey = "integration-atlas:page-style:v1:" + location.pathname.replace(/index\.html$/, "");
+    const sectionNodes = new Map();
+    const sectionStyles = Object.create(null);
+    const styleOptions = new Set(["book", "technical", "highlighted"]);
+    let storedStyles;
+    try {
+      storedStyles = JSON.parse(read(pageStyleKey));
+    } catch {}
+    for (const node of document.querySelectorAll("main .hero,main .panel,main .story-notes > section,main .reading,main .featured,#directory")) {
+      const heading = node.querySelector("h1,h2,h3");
+      if (!heading) continue;
+      const name = heading.textContent.trim();
+      // Use the original heading and its occurrence so translations and reordering
+      // of different sections leave the visitor's choices attached to the same item.
+      const prefix = node.id || "heading:" + name;
+      let key = prefix;
+      for (let n = 2; sectionNodes.has(key); n++) key = prefix + ":" + n;
+      sectionNodes.set(key, node);
+      field("section").add(new Option(name, key));
+      if (styleOptions.has(storedStyles?.[key])) {
+        sectionStyles[key] = storedStyles[key];
+        node.dataset.atlasSectionStyle = storedStyles[key];
+      }
+    }
+    field("page-style").hidden = sectionNodes.size === 0;
+    function showSectionStyle() {
+      field("section-style").value = sectionStyles[field("section").value] || "";
+    }
+    field("section").addEventListener("change", showSectionStyle);
+    field("section-style").addEventListener("change", () => {
+      const key = field("section").value;
+      const node = sectionNodes.get(key);
+      if (!node) return;
+      const value = field("section-style").value;
+      if (styleOptions.has(value)) {
+        sectionStyles[key] = value;
+        node.dataset.atlasSectionStyle = value;
+      } else {
+        delete sectionStyles[key];
+        delete node.dataset.atlasSectionStyle;
+      }
+      persistFailed = !store(pageStyleKey, Object.keys(sectionStyles).length ? JSON.stringify(sectionStyles) : null);
+      renderStatus();
+    });
+    showSectionStyle();
     const localized = ([en, yue]) =>
       preferences.language === "yue"
         ? yue
@@ -557,7 +615,13 @@
     field("reset").addEventListener("click", () => {
       const cleared = clearWording();
       preferences = { ...defaults };
-      persistFailed = !store(SETTINGS, null) || !cleared;
+      for (const [key,node] of sectionNodes) {
+        delete node.dataset.atlasSectionStyle;
+        delete sectionStyles[key];
+      }
+      showSectionStyle();
+      const pageCleared = store(pageStyleKey, null);
+      persistFailed = !store(SETTINGS, null) || !cleared || !pageCleared;
       messageKey = "resetDone";
       render();
     });
