@@ -78,17 +78,38 @@
     mode.type = 'hidden';
     mode.name = 'mode';
     mode.value = 'regex';
-    const builder = workbench(pattern, 'i', () => {});
+    const error = element('p', '', 'regex-error');
+    error.id = 'global-regex-error';
+    error.setAttribute('role', 'alert');
+    pattern.setAttribute('aria-describedby', error.id);
+    function clearError() {
+      error.textContent = '';
+      pattern.removeAttribute('aria-invalid');
+    }
+    const builder = workbench(pattern, 'i', clearError);
+    pattern.addEventListener('input', clearError);
+    form.addEventListener('submit', event => {
+      try {
+        if (pattern.value.length > 512) throw new Error('Use a pattern of 512 characters or fewer.');
+        new RegExp(pattern.value, builder.flags.value);
+      } catch (invalid) {
+        event.preventDefault();
+        error.textContent = invalid.message;
+        pattern.setAttribute('aria-invalid', 'true');
+        pattern.focus();
+      }
+    });
     builder.flags.name = 'flags';
     const submit = element('button', 'Search directory');
     submit.type = 'submit';
     const close = element('button', 'Cancel');
     close.type = 'button';
     close.addEventListener('click', () => dialog.close());
-    form.append(label, builder.box, mode, submit, close);
+    form.append(label, builder.box, error, mode, submit, close);
     dialog.append(title, form);
     document.body.append(dialog);
     open.addEventListener('click', () => {
+      clearError();
       pattern.value = header.elements.q.value;
       builder.flags.value = new URLSearchParams(location.search).get('flags') ?? 'i';
       dialog.showModal();
@@ -164,6 +185,7 @@
 
     function fail(message) {
       if (ticket !== version) return;
+      version++;
       cancel();
       input.setAttribute('aria-invalid', 'true');
       render([], message);
