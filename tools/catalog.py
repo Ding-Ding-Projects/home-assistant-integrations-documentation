@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 import yaml
+from extract import paragraphs
 
 
 def load(path):
@@ -46,6 +47,7 @@ def collect(stock, material, packages, articles):
         domain = meta.get('ha_domain') or path.stem
         row = catalog.setdefault(domain, {'domain': domain, 'sources': {}})
         row.setdefault('name', meta.get('title') or domain.replace('_', ' ').title())
+        row['article_text'] = paragraphs(body)
         row['article'] = 'https://www.home-assistant.io/integrations/' + path.stem + '/'
         row['summary'] = str(meta.get('description') or row.get('summary') or '')
         row['topics'] = [s.strip() for s in re.findall(r'^## ([^\n]+)', body, re.M) if re.fullmatch(r"[\w /(),&'’?:.–-]{2,90}", s.strip())][:12]

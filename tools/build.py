@@ -1,4 +1,5 @@
 """Render the complete offline-readable integration atlas using Python 3."""
+from stories import design, marketing, instrument
 import hashlib
 import json
 import random
@@ -26,8 +27,8 @@ def external(text, url):
     return f'<a href="{esc(url)}">{esc(text)} ↗</a>'
 
 
-def shell(title, content, base='', style=''):
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} · Integration Atlas</title><link rel="stylesheet" href="{base}atlas.css"><script defer src="{base}atlas.js"></script></head><body style="{style}"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="{base}index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><a href="{base}index.html#directory">Directory ↗</a></header><main id="main">{content}</main><footer>Independent Home Assistant integration reference · <a href="{base}credits.html">Sources &amp; attribution</a></footer></body></html>'''
+def shell(title, content, base='', style='', theme='folio'):
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} · Integration Atlas</title><link rel="stylesheet" href="{base}atlas.css"><script defer src="{base}atlas.js"></script></head><body style="{style}" data-theme="{theme}"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="{base}index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="{base}directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="{base}directory.html">Directory ↗</a></header><main id="main">{content}</main><footer>Independent Home Assistant integration reference · <a href="{base}credits.html">Sources &amp; attribution</a></footer></body></html>'''
 
 
 def chips(values):
@@ -79,12 +80,21 @@ def guide(r):
         if signature not in layouts:
             layouts.add(signature)
             break
-    panels = ''.join(f'<section class="panel tone{j}" style="--span:{w}"><h2>{blocks[j][0]}</h2><div>{blocks[j][1]}</div></section>' for j,w in zip(order,widths))
+    copy = design(r)
+    theme = copy['theme']
+    panels = ''.join(f'<section id="section-{j}" class="panel tone{j}" style="--span:{w}"><h2>{blocks[j][0]}</h2><div>{blocks[j][1]}</div></section>' for j,w in zip(order,widths))
     hue = int(hashlib.sha256(domain.encode()).hexdigest()[:6],16)%360
-    body = f'<nav><a href="../../index.html#directory">Directory</a> / {name}</nav><div class="hero"><small>{esc(kind)}</small><h1>{name}</h1><p>{esc(summary)}</p><code>{esc(domain)}</code></div><div class="grid">{panels}</div>'
+    overview = f'../../discover/{domain}/'
+    art = instrument(r,theme)
+    context = ''.join(f'<section><h3>{esc(heading)}</h3><p>{esc(paragraph)}</p></section>' for heading,paragraph in r.get('article_text',[]))
+    reading = f'<article class="reading"><h2>Using {name}</h2>{context}</article>' if context else ''
+    body = f'<nav><a href="../../directory.html">Directory</a> / <a href="{overview}">{name}</a> / Guide</nav><div class="hero campaign composition-{rng.randrange(4)}"><div><small>{esc(kind)} guide</small><h1>{name}</h1><p>{esc(summary)}</p><code>{esc(domain)}</code></div>{art}</div><div id="setup" class="grid">{panels}</div>{reading}'
     dest = OUT/'integrations'/domain
     dest.mkdir(parents=True, exist_ok=True)
-    (dest/'index.html').write_text(shell(r['name'],body,'../../',f'--h:{hue}'))
+    color = f'--h:{hue}'
+    (dest/'index.html').write_text(shell(r['name'] + ' guide',body,'../../',color,theme))
+    dest, landing = marketing(r,copy,f'../../integrations/{domain}/')
+    (dest/'index.html').write_text(shell(r['name'],landing,'../../',color,theme))
 
 
 for row in rows:
@@ -93,10 +103,15 @@ entries = []
 for r in sorted(rows,key=lambda r:r['name'].casefold()):
     domain=r['domain']
     tags=' '.join(r['sources']) or 'Article'
-    entries.append(f'<li data-origin="{tags}"><a href="integrations/{domain}/"><b>{esc(r["name"])}</b><code>{esc(domain)}</code><span>{tags} ↗</span></a></li>')
+    entries.append(f'<li data-origin="{tags}"><a href="discover/{domain}/"><b>{esc(r["name"])}</b><code>{esc(domain)}</code><span>{tags} ↗</span></a></li>')
 directory = '<ol id="entries">'+''.join(entries)+'</ol>'
 intro = f'<div class="hero"><small>Home Assistant field guide</small><h1>Integration Atlas</h1><p>Find setup instructions, supported capabilities and maintainer references for {len(rows):,} integrations.</p></div>'
 controls = '<div class="filters" hidden><label>Find an integration<input type="search" id="search" placeholder="Name or domain" autocomplete="off"></label><label>Collection<select id="collection"><option value="">All collections</option><option>Stock</option><option>Material</option><option>Package</option><option>Article</option></select></label></div><p id="matches" aria-live="polite"></p>'
-(OUT/'index.html').write_text(shell('Directory',intro+'<section id="directory"><h2>Browse integrations</h2>'+controls+directory+'</section>'))
+(OUT/'directory.html').write_text(shell('Directory',intro+'<section id="directory"><h2>Browse integrations</h2>'+controls+directory+'</section>'))
 (OUT/'credits.html').write_text(shell('Sources','<h1>Sources &amp; attribution</h1><p>Descriptions and topic lists adapted from <a href="https://github.com/home-assistant/home-assistant.io">Home Assistant Documentation</a> by its contributors are distributed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Each article links to the original guide. Component and package metadata comes from the linked project manifests. Checklists are stored on this device.</p>'))
 print(f'{len(rows)} guides, {len(layouts)} distinct section layouts')
+
+stories = [('hue','Light a room','studio'),('sun','Follow the sun','almanac'),('printer_door','Watch a print','console'),('bin_day','Plan collection day','almanac'),('mqtt','Connect a message bus','signal')]
+features = ''.join(f'<a class="feature-card {family}" href="discover/{domain}/"><small>{esc(domain.replace("_"," ").title())}</small><h2>{title}</h2><span>Explore →</span></a>' for domain,title,family in stories)
+home = f'<section class="hero directory-hero"><div><small>Home Assistant integrations</small><h1>A home in sync.</h1><p>Explore what your lights, sensors and everyday devices can do together.</p><a class="cta" href="directory.html">Explore {len(rows):,} integrations →</a></div></section><section class="featured"><h2>Explore by story</h2><div class="feature-grid">{features}</div></section>'
+(OUT/'index.html').write_text(shell('Home',home))

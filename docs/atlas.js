@@ -24,3 +24,7 @@ for (const field of document.querySelectorAll('[data-save]')) {
     try { localStorage.setItem(key, field.checked ? '1' : '0'); } catch {}
   });
 }
+if (search) {
+  search.value = new URLSearchParams(location.search).get('q') || '';
+  search.dispatchEvent(new Event('input'));
+}
