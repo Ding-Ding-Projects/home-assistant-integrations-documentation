@@ -41,6 +41,13 @@
   regex.type = 'checkbox';
   regex.id = 'article-find-regex';
   regexLabel.append(regex, ' Regular expression');
+  const regexWorkbench = window.IntegrationAtlasSearch?.workbench?.(
+    input,
+    'i',
+    () => { saveState(); if (regex.checked) runSearch(); },
+    'Build a regular expression for passages on this page. Flags include i for case-insensitive matching and u for Unicode.'
+  );
+  if (regexWorkbench) regexWorkbench.box.hidden = true;
   const help = document.createElement('p');
   help.id = 'article-find-help';
   help.className = 'article-find-help';
@@ -58,7 +65,9 @@
   status.setAttribute('aria-live', 'polite');
   status.setAttribute('aria-atomic', 'true');
   actions.append(previous, next);
-  form.append(label, input, regexLabel, help, actions, status);
+  form.append(label, input, regexLabel);
+  if (regexWorkbench) form.append(regexWorkbench.box);
+  form.append(help, actions, status);
   panel.append(title, form);
   if (article) article.before(panel);
   else if (searchRoot.querySelector('nav')) searchRoot.querySelector('nav').after(panel);
@@ -78,11 +87,12 @@
       if (state && typeof state.query === 'string') {
         input.value = state.query.slice(0, maxPatternLength);
         regex.checked = state.regex === true;
+        if (regexWorkbench && typeof state.flags === 'string') regexWorkbench.flags.value = state.flags.slice(0, 16);
       }
     } catch { /* Storage can be disabled; the search still works for this visit. */ }
   }
   function saveState() {
-    try { sessionStorage.setItem(storageKey, JSON.stringify({ query: input.value, regex: regex.checked })); }
+    try { sessionStorage.setItem(storageKey, JSON.stringify({ query: input.value, regex: regex.checked, flags: regexWorkbench?.flags.value ?? 'i' })); }
     catch { /* Per-page state remains in the controls for this visit. */ }
   }
   function clearHighlights() {
@@ -90,7 +100,7 @@
   }
   function setStatus(message) { status.textContent = message; }
   function updateButtons() {
-    const disabled = matches.length < 2;
+    const disabled = matches.length === 0;
     previous.disabled = disabled;
     next.disabled = disabled;
   }
@@ -136,7 +146,7 @@
     }
     current = -1;
     updateButtons();
-    const capNote = contentCapped ? ' Search is limited to the first 2 MB of article text.' : '';
+    const capNote = contentCapped ? ` Search is limited to ${maxNodes.toLocaleString()} passages or ${Math.round(maxTextLength / 1_000_000)} MB of text; later content was skipped.` : '';
     if (matches.length) setStatus(`${matches.length} matching passages. Press Enter to move through them.${capNote}`);
     else setStatus(`No matches found.${capNote}`);
   }
@@ -146,12 +156,16 @@
     matches = []; current = -1; updateButtons();
     const query = input.value.trim();
     saveState();
+    if (regexWorkbench) regexWorkbench.box.hidden = !regex.checked;
     if (!query) { setStatus('Enter a word or phrase to search this article.'); return; }
     if (regex.checked && query.length > maxPatternLength) { setStatus(`Regular expressions can contain at most ${maxPatternLength} characters.`); return; }
 
     const records = collectTextNodes();
-    if (!records.length) { setStatus('No searchable article text was found.'); return; }
-    const pattern = regex.checked ? query : query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (!records.length) {
+      setStatus(contentCapped ? 'The search limit skipped the available article text.' : 'No searchable article text was found.');
+      return;
+    }
+    const pattern = regex.checked ? query : (window.IntegrationAtlasSearch?.escapeLiteral || (value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))(query);
     const serial = ++requestSerial;
     let worker;
     try { worker = new Worker(workerUrl); }
@@ -174,7 +188,7 @@
       discardWorker();
       setStatus('Search took too long and was stopped. Simplify the expression or switch off regular expressions, then try again.');
     }, workerTimeout);
-    worker.postMessage({ pattern, flags: 'i', records: records.map(record => ({ name: record.text, domain: '' })) });
+    worker.postMessage({ pattern, flags: regex.checked ? (regexWorkbench?.flags.value || '') : 'i', records: records.map(record => ({ name: record.text })) });
   }
   function navigate(direction) {
     if (!matches.length) return;

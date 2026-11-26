@@ -44,6 +44,7 @@
     const flagsLabel = element('label', 'Flags');
     const flags = element('input');
     flags.type = 'text';
+    flags.maxLength = 16;
     flags.value = initialFlags;
     flags.spellcheck = false;
     flags.autocomplete = 'off';

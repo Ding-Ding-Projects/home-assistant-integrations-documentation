@@ -11,7 +11,8 @@ from pathlib import Path
 
 OUT = Path('docs')
 rows = json.loads(Path('catalog.json').read_text())['integrations']
-known = {r['domain'] for r in rows}
+catalog_names = {r['domain']: r['name'] for r in rows}
+known = catalog_names.keys()
 layouts = set()
 related = recommendations(rows)
 
@@ -95,7 +96,7 @@ def guide(r):
     (dest/'index.html').write_text(shell(r['name'] + ' guide',body,'../../',color,theme,article_search=True))
     dest, landing = marketing(r,copy,f'../../integrations/{domain}/')
     (dest/'index.html').write_text(shell(r['name'],landing,'../../',color,theme))
-    render_reference(r,shell,theme,color)
+    render_reference(r,shell,theme,color,catalog_names)
 
 
 for row in rows:

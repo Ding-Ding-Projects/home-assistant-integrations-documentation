@@ -10,7 +10,7 @@ def readable(value):
     return escape(value.replace('_', ' '))
 
 
-def render_reference(row, shell, theme, style):
+def render_reference(row, shell, theme, style, catalog_names):
     domain = row['domain']
     name = escape(row['name'])
     base = '../../'
@@ -29,7 +29,13 @@ def render_reference(row, shell, theme, style):
 
     content.append('<section><h2>Configuration details</h2>')
     if row.get('supported_by'):
-        content.append(f'<p>Set up {name} through its supporting integration, <code>{escape(row["supported_by"])}</code>.</p>')
+        parent = row['supported_by']
+        if parent in catalog_names:
+            parent_label = escape(catalog_names[parent])
+            destination = f'<a href="../{escape(parent)}/">{parent_label}</a>'
+        else:
+            destination = f'<code>{escape(parent)}</code>'
+        content.append(f'<p>Set up {name} through its supporting integration, {destination}.</p>')
     elif row.get('config_flow'):
         menu = 'Create helper' if row.get('integration_type') == 'helper' else 'Add integration'
         content.append(f'<p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>{menu}</strong>, and search for {name}.</p>')
