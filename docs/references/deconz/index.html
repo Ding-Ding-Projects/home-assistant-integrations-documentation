@@ -1,1 +1,906 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>deCONZ reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:357" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/deconz/">deCONZ guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>deCONZ</h1><p>Instructions on how to set up ConBee/RaspBee devices with deCONZ from dresden elektronik within Home Assistant.</p><section><h2>Overview</h2><p>There is currently support for the following device types within Home Assistant:</p></section><section><h2>Recommended way of running deCONZ</h2><p>An official deCONZ app for Home Assistant (formerly known as deCONZ add-on) is available in the Home Assistant app store. Otherwise, use community container for your deCONZ needs.</p></section><section><h2>Supported devices</h2><p>See deCONZ wiki for a list of supported devices.</p></section><section><h2>Debugging integration</h2><p>If you have problems with deCONZ or the integration you can add debug prints to the log.</p></section><section><h2>Troubleshooting</h2><p>If you are having issues and want to report a problem, always start with making sure that you&#x27;re on the latest deCONZ software version and latest firmware for hardware.</p></section><section><h2>No state updates</h2><p>If the state of entities are only reflected in Home Assistant when the integration is loaded (during restart, reload, setup) you probably have an issue with the WebSocket configuration where your deCONZ instance is running. The deCONZ integration uses the WebSocket port provided by the deCONZ REST API. If you&#x27;re running the deCONZ Docker container make sure that it properly configures the WebSocket port so deCONZ can report what port is exposed outside of the containerized environment. Also, make sure to review firewall rules that might block communication over certain ports.</p></section><section><h2>Remote control devices</h2><p>Remote controls (ZHASwitch category) will not be exposed as regular entities, but as events named deconz_event with a payload of id and event. Id will be the device name from deCONZ and Event will be the momentary state of the switch.</p></section><section><h2>Device triggers</h2><p>To simplify using remote control devices in automations deCONZ integration exposes them as device triggers. This will expose all possible variations of button presses and rotations. Most popular brands of Zigbee remotes are supported.</p></section><section><h2>Requesting support for new device trigger</h2><p>If you have a Zigbee remote that is not yet supported, you can request support for it by creating an issue on the Home Assistant Core GitHub repository. This requires the device model (can be acquired from debug logs) together with a mapping of action and button event, for example, Hue dimmer remote model RWL021, Short press turn on 1000.</p></section><section><h2>Colored Flashing - RGB Philips Hue bulb using deconz.configure</h2><p>Note: Requires on: true to change color while the Philips Hue bulb is off. If on: true is specified, the bulb remains on after flashing is complete. The previous color is not saved or restored. To color flash light groups, replace /state with /action and specify the light group as the entity.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for deCONZ.</p><p>The <strong>manual input</strong> configuration step lists <code>host</code>, <code>port</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>fan</li><li>light</li><li>lock</li><li>number</li><li>scene</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>configure</li><li>device refresh</li><li>remove orphaned entries</li></ul><h3>Connection methods</h3><ul class="chips"><li>zigbee</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Recommended way of running deCONZ</li><li>Prerequisites</li><li>Debugging integration</li><li>Troubleshooting</li><li>Remote control devices</li><li>Examples</li><li>Platforms</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/deconz/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/deconz</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/deconz</code></dd></dl></section><p><a href="../../integrations/deconz/">Return to the deCONZ guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>deCONZ reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:357" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/deconz/">deCONZ guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>deCONZ</h1><p>Instructions on how to set up ConBee/RaspBee devices with deCONZ from dresden elektronik within Home Assistant.</p><div class="reader-body"><p><a>deCONZ</a> by <a>dresden elektronik</a> is a software that communicates with ConBee/RaspBee Zigbee gateways and exposes Zigbee devices that are connected to the gateway.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li><a>Alarm control panel</a></li>
+<li><a>Binary sensor</a></li>
+<li><a>Climate</a></li>
+<li><a>Cover</a></li>
+<li><a>Light</a></li>
+<li><a>Lock</a></li>
+<li><a>Scene</a></li>
+<li><a>Sensor</a></li>
+<li><a>Siren</a></li>
+<li><a>Switch</a></li>
+</ul>
+<h2>Recommended way of running deCONZ</h2>
+<p>An official deCONZ app for Home Assistant (formerly known as deCONZ add-on) is available in the Home Assistant app store.
+Otherwise, use <a>community container</a> for your deCONZ needs.</p>
+<h3>Supported devices</h3>
+<p>See <a>deCONZ wiki</a> for a list of supported devices.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li><p>If the adapter isn't discovered automatically by Home Assistant, and you add the integration manually, you need the hostname of deCONZ and the port.</p>
+</li>
+<li><p>If you are running the deCONZ app for Home Assistant, you can see the hostname on the app page under <a><strong>Settings</strong> &gt; <strong>App</strong> &gt; <strong>deCONZ</strong></a>, under <strong>Hostname</strong>.</p>
+<ul>
+<li>For example: <code>core-deconz</code></li>
+</ul>
+</li>
+<li><p>If the suggested port does not work, try port <code>40850</code>.</p>
+</li>
+<li><p>Running a stand-alone instance of deCONZ (non-app installation) requires a pairing between the deCONZ gateway and Home Assistant:</p>
+<ul>
+<li>To allow Home Assistant to connect with deCONZ, go to the Phoscon UI, select <strong>Settings</strong> &gt; <strong>Gateway</strong> &gt; <strong>Advanced</strong> and select the <strong>Authenticate app</strong> button.<ul>
+<li>This same information is also shown during the config flow of the deCONZ integration.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>deCONZ</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>deCONZ</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Debugging integration</h2>
+<p>If you have problems with deCONZ or the integration you can add debug prints to the log.</p>
+<pre><code>logger:
+  default: info
+  logs:
+    pydeconz: debug
+ &nbsp; &nbsp;homeassistant.components.deconz: debug
+</code></pre>
+<h2>Troubleshooting</h2>
+<p>If you are having issues and want to report a problem, always start with making sure that you're on the latest <a>deCONZ software version</a> and <a>latest firmware for hardware</a>.</p>
+<h3>No state updates</h3>
+<p>If the state of entities are only reflected in Home Assistant when the integration is loaded (during restart, reload, setup) you probably have an issue with the WebSocket configuration where your deCONZ instance is running. The deCONZ integration uses the WebSocket port provided by the deCONZ REST API. If you're running the deCONZ Docker container make sure that it properly configures the WebSocket port so deCONZ can report what port is exposed outside of the containerized environment. Also, make sure to review firewall rules that might block communication over certain ports.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Remote control devices</h2>
+<p>Remote controls (ZHASwitch category) will not be exposed as regular entities, but as events named <code>deconz_event</code> with a payload of <code>id</code> and <code>event</code>. Id will be the device name from deCONZ and Event will be the momentary state of the switch.</p>
+<p>Depending on the device some device-specific attributes may also be included in the payload. In case of the Aqara Magic Cube, an additional <code>gesture</code> attribute will be exposed. For the tint remote, the <code>angle</code> and <code>xy</code> attributes will be included in the payload. Gesture is used for some Aqara Magic Cube specific events like: flip 90 degrees, flip 180 degrees, clockwise and counterclockwise rotation. However, a sensor entity will be created that shows the battery level of the switch, as reported by deCONZ, named sensor.device_name_battery_level.</p>
+<p>Typical values for switches, the event codes are 4 numbers where the first and last number are of interest here.</p>
+<table>
+<thead>
+<tr>
+  <th>Switch code</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1XXX</td>
+  <td>Button #1 up to #8</td>
+</tr>
+<tr>
+  <td>XXX1</td>
+  <td>Button hold</td>
+</tr>
+<tr>
+  <td>XXX2</td>
+  <td>Button short release</td>
+</tr>
+<tr>
+  <td>XXX3</td>
+  <td>Button long release</td>
+</tr>
+</tbody>
+</table>
+<p>Where for example on a Philips Hue Dimmer, 2001 would be holding the dim up button.</p>
+<p>For the IKEA Tradfri remote, the first digit indicates the button: 1 for middle, 2 for up, 3 for down, 4 for left, and 5 for right (for example, <code>"event": 1002</code> is a middle button short release).</p>
+<p>Specific gestures for the Aqara Magic Cube are:</p>
+<table>
+<thead>
+<tr>
+  <th>Gesture</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>0</td>
+  <td>Awake</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Shake</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Free fall</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Flip 90</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Flip 180</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Move on any side</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Double tap on any side</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Turn clockwise</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Turn counter clockwise</td>
+</tr>
+</tbody>
+</table>
+<h3>Finding your events</h3>
+<p>Go to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Events</strong>. In the section <strong>Listen to events</strong> add <code>deconz_event</code> and press <strong>START LISTENING</strong>. All events from deCONZ will now be shown and by pushing your remote button while monitoring the log it should be fairly easy to find the events you are looking for.</p>
+<h3>Device triggers</h3>
+<p>To simplify using remote control devices in automations deCONZ integration exposes them as device triggers. This will expose all possible variations of button presses and rotations. Most popular brands of Zigbee remotes are supported.</p>
+<h4>Requesting support for new device trigger</h4>
+<p>If you have a Zigbee remote that is not yet supported, you can request support for it by creating an issue on the Home Assistant Core GitHub repository. This requires the device model (can be acquired from debug logs) together with a mapping of action and button event, for example, Hue dimmer remote model <code>RWL021</code>, Short press turn on 1000.</p>
+<h2>Examples</h2>
+<h3>YAML</h3>
+<h4>Step up and step down input number with wireless dimmer</h4>
+<pre><code>automation:
+  - alias: "'Toggle lamp from dimmer'"
+    initial_state: "on"
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 1002
+    actions:
+      - action: light.toggle
+        target:
+          entity_id: light.lamp
+
+  - alias: "Increase brightness of lamp from dimmer"
+    initial_state: "on"
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 2002
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+        data:
+          brightness: &gt;
+            {% set bri = state_attr('light.lamp', 'brightness') | int %}
+            {{ [bri+30, 249] | min }}
+
+  - alias: "Decrease brightness of lamp from dimmer"
+    initial_state: "on"
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 3002
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+        data:
+          brightness: &gt;
+            {% set bri = state_attr('light.lamp', 'brightness') | int %}
+            {{ [bri-30, 0] | max }}
+
+  - alias: 'Turn lamp on when turning cube clockwise'
+    initial_state: "on"
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          gesture: 7
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+</code></pre>
+<h4>Changing color through the Müller Licht tint remote control</h4>
+<pre><code>automation:
+  - alias: "React to color wheel changes"
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: tint_remote_1
+          event: 6002
+    actions:
+      - action: light.turn_on
+        data:
+          xy_color:
+            - '{{ trigger.event.data.xy.0 }}'
+            - '{{ trigger.event.data.xy.1 }}'
+          entity_id: light.example_color_light_1
+    mode: restart
+</code></pre>
+<h4>Colored Flashing - RGB Philips Hue bulb using deconz.configure</h4>
+<p>Note: Requires <code>on: true</code> to change color while the Philips Hue bulb is off. If <code>on: true</code> is specified, the bulb remains on after flashing is complete. The previous color is not saved or restored. To color flash light groups, replace <code>/state</code> with <code>/action</code> and specify the light group as the entity.</p>
+<pre><code>automation:
+  - alias: "Flash Hue Bulb with Doorbell Motion"
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.doorbell_motion
+        to: "on"
+    actions:
+      - action: deconz.configure
+        data:
+          entity: light.hue_lamp
+          field: /state
+          data:
+            'on': true
+            hue: 65535
+            sat: 255
+            bri: 255
+            alert: "breathe"
+      - delay: 00:00:15
+      - action: deconz.configure
+        data:
+          entity: light.hue_lamp
+          field: "/state"
+          data:
+            'on': false
+</code></pre>
+<h2>Platforms</h2>
+<p>The <code>entity_id</code> name will be <code>platform.device_name</code>, where <code>device_name</code> is defined in deCONZ.</p>
+<h3>Alarm control panel</h3>
+<p>The entity of a physical keypad. Can be in 4 different modes (<code>arm_away</code>, <code>arm_home</code>, <code>arm_night</code> or <code>disarmed</code>). Changing the state will do an audible notification from the keypad.</p>
+<p>The Device also exposes a new event type <code>deconz_alarm_event</code> which reflects signals not supported within the alarm control panel platform.
+The Payload consists of an event (<code>emergency</code>, <code>fire</code>, <code>invalid_code</code> or <code>panic</code>).</p>
+<h3>Binary sensor</h3>
+<p>The following sensor types are supported:</p>
+<ul>
+<li>Alarm signaling</li>
+<li>Fire/Smoke detection</li>
+<li>Open/Close detection</li>
+<li>Presence detection</li>
+<li>Vibration detection</li>
+<li>Water leakage detection</li>
+</ul>
+<h3>Climate</h3>
+<p>See the <a href="../deconz/">deCONZ main integration</a> for configuration instructions.</p>
+<p>Climate currently represent thermostats.</p>
+<p>Note that devices in the climate platform identify as sensors, so there is a manually curated list that defines which "sensors" are climate devices.</p>
+<h3>Cover</h3>
+<p>Covers are devices like ventilation dampers or smart window covers.</p>
+<h3>Fan</h3>
+<p>Fans from deCONZ are currently a combination of a light and fan fixture.</p>
+<h3>Light</h3>
+<p>The Light platform keeps light devices and deCONZ light groups. Light groups created in deCONZ will be created in Home Assistant as lights named <code>light.group_name_in_deconz</code>, allowing the user to control groups of lights with only a single API call to deCONZ.</p>
+<h3>Lock</h3>
+<p>Locks are devices such as the Danalock Zigbee lock.</p>
+<h3>Scene</h3>
+<p>The <code>entity_id</code> name will be <code>scene.group_scene_name</code>, where <code>group</code> is which group the scene belongs to and the name of the scene, both group and name are defined in deCONZ.</p>
+<h3>Sensor</h3>
+<p>The following sensor types are supported:</p>
+<ul>
+<li>Air quality sensor</li>
+<li>Battery sensor</li>
+<li>Consumption sensor</li>
+<li>Daylight</li>
+<li>Humidity sensor</li>
+<li>Moisture sensor</li>
+<li>Light level sensor</li>
+<li>Power sensor</li>
+<li>Pressure sensor</li>
+<li>Switches</li>
+<li>Temperature sensor</li>
+</ul>
+<p>Switches aren't exposed as ordinary entities, see the <a href="../deconz/">deCONZ main integration</a> for more details.</p>
+<h4>deCONZ Daylight Sensor</h4>
+<p>The deCONZ Daylight sensor is a special sensor built into the deCONZ software since version 2.05.12. It is represented in Home Assistant as a sensor called sensor.daylight. The sensor's state value is a string corresponding to the phase of daylight (descriptions below taken from <a>SunCalc</a>, on which the deCONZ implementation is based):</p>
+<table>
+<thead>
+<tr>
+  <th>Sensor State</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>sunrise_start</td>
+  <td>sunrise (top edge of the sun appears on the horizon)</td>
+</tr>
+<tr>
+  <td>sunrise_end</td>
+  <td>sunrise ends (bottom edge of the sun touches the horizon)</td>
+</tr>
+<tr>
+  <td>golden_hour_1</td>
+  <td>morning golden hour (soft light, the best time for photography)</td>
+</tr>
+<tr>
+  <td>solar_noon</td>
+  <td>solar noon (sun is in the highest position)</td>
+</tr>
+<tr>
+  <td>golden_hour_2</td>
+  <td>evening golden hour</td>
+</tr>
+<tr>
+  <td>sunset_start</td>
+  <td>sunset starts (bottom edge of the sun touches the horizon)</td>
+</tr>
+<tr>
+  <td>sunset_end</td>
+  <td>sunset (sun disappears below the horizon, evening civil twilight starts)</td>
+</tr>
+<tr>
+  <td>dusk</td>
+  <td>dusk (evening nautical twilight starts)</td>
+</tr>
+<tr>
+  <td>nautical_dusk</td>
+  <td>nautical dusk (evening astronomical twilight starts)</td>
+</tr>
+<tr>
+  <td>night_start</td>
+  <td>night starts (dark enough for astronomical observations)</td>
+</tr>
+<tr>
+  <td>nadir</td>
+  <td>nadir (darkest moment of the night, the sun is in the lowest position)</td>
+</tr>
+<tr>
+  <td>night_end</td>
+  <td>night ends (morning astronomical twilight starts)</td>
+</tr>
+<tr>
+  <td>nautical_dawn</td>
+  <td>nautical dawn (morning nautical twilight starts)</td>
+</tr>
+<tr>
+  <td>dawn</td>
+  <td>dawn (morning nautical twilight ends, morning civil twilight starts)</td>
+</tr>
+</tbody>
+</table>
+<p>The sensor also has an attribute called "daylight" that has the value <code>true</code> when the sensor's state is <code>golden_hour_1</code>, <code>solar_noon</code>, or <code>golden_hour_2</code>, and <code>false</code> otherwise.</p>
+<p>These states can be used in automations as a trigger (for example, trigger when a certain phase of daylight starts or ends) or condition (for example, trigger only if in a certain phase of daylight).</p>
+<p>The deCONZ daylight sensor is <a>disabled by default</a> in Home Assistant. It can be enabled manually by going to your deCONZ controller device in the Home Assistant UI.</p>
+<h3>Siren</h3>
+<p>Control audible devices with a limit on how long the signal should sound.</p>
+<h3>Switch</h3>
+<p>Switches are devices such as power plugs.</p>
+<p>The <code>entity_id</code> name will be <code>switch.device_name</code>, where <code>device_name</code> is defined in deCONZ.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/deconz.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up ConBee/RaspBee devices with deCONZ from dresden elektronik within Home Assistant.
+ha_release: 0.61
+ha_domain: deconz
+---
+
+[deCONZ](https://www.dresden-elektronik.de/funk/software/deconz.html) by [dresden elektronik](https://www.dresden-elektronik.de) is a software that communicates with ConBee/RaspBee Zigbee gateways and exposes Zigbee devices that are connected to the gateway.
+
+
+There is currently support for the following device types within Home Assistant:
+
+- [Alarm control panel](#alarm-control-panel)
+- [Binary sensor](#binary-sensor)
+- [Climate](#climate)
+- [Cover](#cover)
+- [Light](#light)
+- [Lock](#lock)
+- [Scene](#scene)
+- [Sensor](#sensor)
+- [Siren](#siren)
+- [Switch](#switch)
+
+## Recommended way of running deCONZ
+
+An official deCONZ app for Home Assistant (formerly known as deCONZ add-on) is available in the Home Assistant app store.
+Otherwise, use [community container](https://github.com/deconz-community/deconz-docker) for your deCONZ needs.
+
+### Supported devices
+
+See [deCONZ wiki](https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Supported-Devices) for a list of supported devices.
+
+## Prerequisites
+
+- If the adapter isn&#x27;t discovered automatically by Home Assistant, and you add the integration manually, you need the hostname of deCONZ and the port.
+- If you are running the deCONZ app for Home Assistant, you can see the hostname on the app page under [**Settings** &gt; **App** &gt; **deCONZ**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_deconz), under **Hostname**.
+  - For example: `core-deconz`
+- If the suggested port does not work, try port `40850`.
+- Running a stand-alone instance of deCONZ (non-app installation) requires a pairing between the deCONZ gateway and Home Assistant:
+
+  - To allow Home Assistant to connect with deCONZ, go to the Phoscon UI, select **Settings** &gt; **Gateway** &gt; **Advanced** and select the **Authenticate app** button.
+    - This same information is also shown during the config flow of the deCONZ integration.
+
+{% include integrations/config_flow.md %}
+
+## Debugging integration
+
+If you have problems with deCONZ or the integration you can add debug prints to the log.
+
+```yaml
+logger:
+  default: info
+  logs:
+    pydeconz: debug
+    homeassistant.components.deconz: debug
+```
+
+## Troubleshooting
+
+If you are having issues and want to report a problem, always start with making sure that you&#x27;re on the latest [deCONZ software version](https://github.com/dresden-elektronik/deconz-rest-plugin/releases) and [latest firmware for hardware](http://deconz.dresden-elektronik.de/deconz-firmware/?C=M;O=D).
+
+### No state updates
+
+If the state of {% term entities %} are only reflected in Home Assistant when the {% term integration %} is loaded (during restart, reload, setup) you probably have an issue with the WebSocket configuration where your deCONZ instance is running. The deCONZ integration uses the WebSocket port provided by the deCONZ REST API. If you&#x27;re running the deCONZ Docker container make sure that it properly configures the WebSocket port so deCONZ can report what port is exposed outside of the containerized environment. Also, make sure to review firewall rules that might block communication over certain ports.
+
+{% include integrations/actions.md %}
+
+## Remote control devices
+
+Remote controls (ZHASwitch category) will not be exposed as regular entities, but as events named `deconz_event` with a payload of `id` and `event`. Id will be the device name from deCONZ and Event will be the momentary state of the switch.
+
+Depending on the device some device-specific attributes may also be included in the payload. In case of the Aqara Magic Cube, an additional `gesture` attribute will be exposed. For the tint remote, the `angle` and `xy` attributes will be included in the payload. Gesture is used for some Aqara Magic Cube specific events like: flip 90 degrees, flip 180 degrees, clockwise and counterclockwise rotation. However, a sensor entity will be created that shows the battery level of the switch, as reported by deCONZ, named sensor.device_name_battery_level.
+
+Typical values for switches, the event codes are 4 numbers where the first and last number are of interest here.
+
+| Switch code | Description          |
+| ----------- | -------------------- |
+| 1XXX        | Button #1 up to #8   |
+| XXX1        | Button hold          |
+| XXX2        | Button short release |
+| XXX3        | Button long release  |
+
+Where for example on a Philips Hue Dimmer, 2001 would be holding the dim up button.
+
+For the IKEA Tradfri remote, the first digit indicates the button: 1 for middle, 2 for up, 3 for down, 4 for left, and 5 for right (for example, `&quot;event&quot;: 1002` is a middle button short release).
+
+Specific gestures for the Aqara Magic Cube are:
+
+| Gesture | Description            |
+| ------- | ---------------------- |
+| 0       | Awake                  |
+| 1       | Shake                  |
+| 2       | Free fall              |
+| 3       | Flip 90                |
+| 4       | Flip 180               |
+| 5       | Move on any side       |
+| 6       | Double tap on any side |
+| 7       | Turn clockwise         |
+| 8       | Turn counter clockwise |
+
+### Finding your events
+
+Go to {% my tools_events title=&quot;**Settings** &gt; **Tools** &gt; **Events**&quot; %}. In the section **Listen to events** add `deconz_event` and press **START LISTENING**. All events from deCONZ will now be shown and by pushing your remote button while monitoring the log it should be fairly easy to find the events you are looking for.
+
+### Device triggers
+
+To simplify using remote control devices in automations deCONZ integration exposes them as device triggers. This will expose all possible variations of button presses and rotations. Most popular brands of Zigbee remotes are supported.
+
+#### Requesting support for new device trigger
+
+If you have a Zigbee remote that is not yet supported, you can request support for it by creating an issue on the Home Assistant Core GitHub repository. This requires the device model (can be acquired from debug logs) together with a mapping of action and button event, for example, Hue dimmer remote model `RWL021`, Short press turn on 1000.
+
+## Examples
+
+### YAML
+
+#### Step up and step down input number with wireless dimmer
+
+
+```yaml
+automation:
+  - alias: &quot;&#x27;Toggle lamp from dimmer&#x27;&quot;
+    initial_state: &quot;on&quot;
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 1002
+    actions:
+      - action: light.toggle
+        target:
+          entity_id: light.lamp
+
+  - alias: &quot;Increase brightness of lamp from dimmer&quot;
+    initial_state: &quot;on&quot;
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 2002
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+        data:
+          brightness: &gt;
+            {% set bri = state_attr(&#x27;light.lamp&#x27;, &#x27;brightness&#x27;) | int %}
+            {{ [bri+30, 249] | min }}
+
+  - alias: &quot;Decrease brightness of lamp from dimmer&quot;
+    initial_state: &quot;on&quot;
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          event: 3002
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+        data:
+          brightness: &gt;
+            {% set bri = state_attr(&#x27;light.lamp&#x27;, &#x27;brightness&#x27;) | int %}
+            {{ [bri-30, 0] | max }}
+
+  - alias: &#x27;Turn lamp on when turning cube clockwise&#x27;
+    initial_state: &quot;on&quot;
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: remote_control_1
+          gesture: 7
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id: light.lamp
+```
+
+
+#### Changing color through the Müller Licht tint remote control
+
+
+```yaml
+automation:
+  - alias: &quot;React to color wheel changes&quot;
+    triggers:
+      - trigger: event
+        event_type: deconz_event
+        event_data:
+          id: tint_remote_1
+          event: 6002
+    actions:
+      - action: light.turn_on
+        data:
+          xy_color:
+            - &#x27;{{ trigger.event.data.xy.0 }}&#x27;
+            - &#x27;{{ trigger.event.data.xy.1 }}&#x27;
+          entity_id: light.example_color_light_1
+    mode: restart
+```
+
+
+#### Colored Flashing - RGB Philips Hue bulb using deconz.configure
+
+Note: Requires `on: true` to change color while the Philips Hue bulb is off. If `on: true` is specified, the bulb remains on after flashing is complete. The previous color is not saved or restored. To color flash light groups, replace `/state` with `/action` and specify the light group as the entity.
+
+```yaml
+automation:
+  - alias: &quot;Flash Hue Bulb with Doorbell Motion&quot;
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.doorbell_motion
+        to: &quot;on&quot;
+    actions:
+      - action: deconz.configure
+        data:
+          entity: light.hue_lamp
+          field: /state
+          data:
+            &#x27;on&#x27;: true
+            hue: 65535
+            sat: 255
+            bri: 255
+            alert: &quot;breathe&quot;
+      - delay: 00:00:15
+      - action: deconz.configure
+        data:
+          entity: light.hue_lamp
+          field: &quot;/state&quot;
+          data:
+            &#x27;on&#x27;: false
+```
+
+## Platforms
+
+The `entity_id` name will be `platform.device_name`, where `device_name` is defined in deCONZ.
+
+### Alarm control panel
+
+The entity of a physical keypad. Can be in 4 different modes (`arm_away`, `arm_home`, `arm_night` or `disarmed`). Changing the state will do an audible notification from the keypad.
+
+The Device also exposes a new event type `deconz_alarm_event` which reflects signals not supported within the alarm control panel platform.
+The Payload consists of an event (`emergency`, `fire`, `invalid_code` or `panic`).
+
+### Binary sensor
+
+The following sensor types are supported:
+
+- Alarm signaling
+- Fire/Smoke detection
+- Open/Close detection
+- Presence detection
+- Vibration detection
+- Water leakage detection
+
+### Climate
+
+See the [deCONZ main integration](/integrations/deconz/) for configuration instructions.
+
+Climate currently represent thermostats.
+
+Note that devices in the climate platform identify as sensors, so there is a manually curated list that defines which &quot;sensors&quot; are climate devices.
+
+### Cover
+
+Covers are devices like ventilation dampers or smart window covers.
+
+### Fan
+
+Fans from deCONZ are currently a combination of a light and fan fixture.
+
+### Light
+
+The Light platform keeps light devices and deCONZ light groups. Light groups created in deCONZ will be created in Home Assistant as lights named `light.group_name_in_deconz`, allowing the user to control groups of lights with only a single API call to deCONZ.
+
+### Lock
+
+Locks are devices such as the Danalock Zigbee lock.
+
+### Scene
+
+The `entity_id` name will be `scene.group_scene_name`, where `group` is which group the scene belongs to and the name of the scene, both group and name are defined in deCONZ.
+
+### Sensor
+
+The following sensor types are supported:
+
+- Air quality sensor
+- Battery sensor
+- Consumption sensor
+- Daylight
+- Humidity sensor
+- Moisture sensor
+- Light level sensor
+- Power sensor
+- Pressure sensor
+- Switches
+- Temperature sensor
+
+Switches aren&#x27;t exposed as ordinary entities, see the [deCONZ main integration](/integrations/deconz/) for more details.
+
+#### deCONZ Daylight Sensor
+
+The deCONZ Daylight sensor is a special sensor built into the deCONZ software since version 2.05.12. It is represented in Home Assistant as a sensor called sensor.daylight. The sensor&#x27;s state value is a string corresponding to the phase of daylight (descriptions below taken from [SunCalc](https://github.com/mourner/suncalc), on which the deCONZ implementation is based):
+
+| Sensor State  | Description                                                              |
+| ------------- | ------------------------------------------------------------------------ |
+| sunrise_start | sunrise (top edge of the sun appears on the horizon)                     |
+| sunrise_end   | sunrise ends (bottom edge of the sun touches the horizon)                |
+| golden_hour_1 | morning golden hour (soft light, the best time for photography)          |
+| solar_noon    | solar noon (sun is in the highest position)                              |
+| golden_hour_2 | evening golden hour                                                      |
+| sunset_start  | sunset starts (bottom edge of the sun touches the horizon)               |
+| sunset_end    | sunset (sun disappears below the horizon, evening civil twilight starts) |
+| dusk          | dusk (evening nautical twilight starts)                                  |
+| nautical_dusk | nautical dusk (evening astronomical twilight starts)                     |
+| night_start   | night starts (dark enough for astronomical observations)                 |
+| nadir         | nadir (darkest moment of the night, the sun is in the lowest position)   |
+| night_end     | night ends (morning astronomical twilight starts)                        |
+| nautical_dawn | nautical dawn (morning nautical twilight starts)                         |
+| dawn          | dawn (morning nautical twilight ends, morning civil twilight starts)     |
+
+The sensor also has an attribute called &quot;daylight&quot; that has the value `true` when the sensor&#x27;s state is `golden_hour_1`, `solar_noon`, or `golden_hour_2`, and `false` otherwise.
+
+These states can be used in automations as a trigger (for example, trigger when a certain phase of daylight starts or ends) or condition (for example, trigger only if in a certain phase of daylight).
+
+The deCONZ daylight sensor is [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) in Home Assistant. It can be enabled manually by going to your deCONZ controller device in the Home Assistant UI.
+
+### Siren
+
+Control audible devices with a limit on how long the signal should sound.
+
+### Switch
+
+Switches are devices such as power plugs.
+
+The `entity_id` name will be `switch.device_name`, where `device_name` is defined in deCONZ.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for deCONZ.</p><p>The <strong>manual input</strong> configuration step lists <code>host</code>, <code>port</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>fan</li><li>light</li><li>lock</li><li>number</li><li>scene</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>configure</li><li>device refresh</li><li>remove orphaned entries</li></ul><h3>Connection methods</h3><ul class="chips"><li>zigbee</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Recommended way of running deCONZ</li><li>Prerequisites</li><li>Debugging integration</li><li>Troubleshooting</li><li>Remote control devices</li><li>Examples</li><li>Platforms</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/deconz/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/deconz</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/deconz</code></dd></dl></section><p><a href="../../integrations/deconz/">Return to the deCONZ guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

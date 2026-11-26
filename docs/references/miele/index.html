@@ -1,1 +1,688 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Miele reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:93" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/miele/">Miele guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Miele</h1><p>Instructions on how to set up the Miele integration within Home Assistant.</p><section><h2>Overview</h2><p>The Miele integration allows users to integrate their home appliances using the official 3rd party API.</p></section><section><h2>Use cases</h2><p>Note that the feature availability depends on the appliance model.</p></section><section><h2>Supported devices</h2><p>You can find general information about supported devices on the Miele website. The integration supports any Miele appliance connected to a Miele user account. Miele WiFiConn@ct appliances can be connected directly via a Wi-Fi router. Miele Zigbee appliances must use the Miele@home Gateway XGW3000.</p></section><section><h2>Prerequisites</h2><p>Make sure that you have your username, password, and country available for your Miele account.</p></section><section><h2>Button</h2><p>Button entities are used to control program progress in washing machines, dryers, dishwashers, robot vacuum cleaners, and others. The exact response to pressing a button can vary slightly between product models, but the result is usually intuitive. The API enables and disables the buttons according to the actual state of the appliance. Most appliances require you to manually activate mobile start or remote control mode.</p></section><section><h2>Climate</h2><p>Climate entities are used to control target temperatures in refrigerators, freezers, and wine cabinets. One, two, or three zones can be controlled depending on the capabilities of the appliance.</p></section><section><h2>Automation examples</h2><p>Get started with these automation examples</p></section><section><h2>Set program and start washing machine</h2><p>Load your washing machine and manually activate mobile start or remote control mode on the machine.</p></section><section><h2>Data updates</h2><p>This integration uses server-sent events from the Miele API to receive live updates from the appliances. When the configuration entry is loaded or after a streaming error (for example after disconnection), the integration will request all data (such as appliance info, available commands, programs, settings, and status) for all appliances.</p></section><section><h2>Troubleshooting</h2><p>Follow these instructions if you are instructed to do so by a developer or by Miele support. It is not needed for normal use of the integration.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Miele.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>fan</li><li>light</li><li>select</li><li>sensor</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>get programs</li><li>set program</li><li>set program oven</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/miele/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/miele</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/miele</code></dd></dl></section><p><a href="../../integrations/miele/">Return to the Miele guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Miele reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:93" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/miele/">Miele guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Miele</h1><p>Instructions on how to set up the Miele integration within Home Assistant.</p><div class="reader-body"><p>The <strong>Miele</strong> integration allows users to integrate their home appliances using the <a>official 3rd party API</a>.</p>
+<p>Miele is known as a manufacturer of premium appliances for cooking, laundry care, and floor care.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Monitor the multiple sensors of the appliance and trigger automations based on these sensors.</li>
+<li>Monitor the program status of the appliances.</li>
+<li>Control settings on the appliances.</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Note that the feature availability depends on the appliance model.</p>
+<h2>Supported devices</h2>
+<p>You can find general information about supported devices on the <a>Miele website</a>. The integration supports any Miele appliance connected to a Miele user account. Miele WiFiConn@ct appliances can be connected directly via a Wi-Fi router. Miele Zigbee appliances must use the Miele@home Gateway XGW3000.</p>
+<p>The appliance must be connected to the Miele CloudService by using the Miele app.</p>
+<p><strong>Note</strong></p>
+<p>New generation washer/dryers and new generation vacuum cleaners:
+Endpoints for the new generations are not yet available and will be released in the fall of 2025.</p>
+<h2>Prerequisites</h2>
+<p>Make sure that you have your username, password, and country available for your Miele account.</p>
+<h4>I have manually disabled My Home Assistant</h4>
+<p>If you don't have <a href="../my/">My Home Assistant</a> on your installation,
+you can use <code>&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback</code> as the redirect URI
+instead.</p>
+<p>The <code>&lt;HOME_ASSISTANT_URL&gt;</code> must be the same as used during the configuration/
+authentication process.</p>
+<p>Internal examples: <code>http://192.168.0.2:8123/auth/external/callback</code>, <code>http://homeassistant.local:8123/auth/external/callback</code>.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Miele</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Miele</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>The integration configuration may ask for <em>Client ID</em> and <em>Client Secret</em>. See <a href="../miele/">Troubleshooting</a> below and <a href="../application_credentials/">Application Credentials</a> for more details.</p>
+<h2>Supported functionality</h2>
+<p><strong>Note</strong></p>
+<ul>
+<li>The entities' availability depends on the appliance type and the generation of the product, and the appliance might not support all the entities for its type. Please refer to the product manual for details on implementation of specific functions.</li>
+<li>Products from professional and semi-professional series are generally not supported due to the limitations in the Miele 3rd party API.</li>
+<li>Some appliances don't report data while they are turned off, so corresponding entities will not appear in the Miele integration after loading until the appliances are turned on.</li>
+</ul>
+<h3>Binary sensor</h3>
+<h4>List of binary sensors</h4>
+<ul>
+<li><strong>Operation state</strong>:<ul>
+<li><strong>Door</strong>: Shows if the door on the appliance is open or closed.</li>
+<li><strong>Full remote control</strong>: Shows the state of Full remote control feature on appliances that supports it.</li>
+<li><strong>Mobile start</strong>: Shows the state of Mobile start feature on appliances that supports it.</li>
+<li><strong>Notification active</strong>: Shows if there is a notification message active on the appliance. The API does not supply any information on the details of the notifications.</li>
+<li><strong>Problem</strong>: Shows if there is an error message active on the appliance. The API does not supply any information on the details of the error.</li>
+<li><strong>Smart grid</strong>: Shows the state of Smart grid feature on appliances that supports it.</li>
+</ul>
+</li>
+</ul>
+<h3>Button</h3>
+<h4>List of button entities</h4>
+<p>Button entities are used to control program progress in washing machines, dryers, dishwashers, robot vacuum cleaners, and others. The exact response to pressing a button can vary slightly between product models, but the result is usually intuitive. The API enables and disables the buttons according to the actual state of the appliance. Most appliances require you to manually activate mobile start or remote control mode.</p>
+<ul>
+<li><strong>Start</strong>: Starts or resumes a program.</li>
+<li><strong>Pause</strong>: Pauses a program.</li>
+<li><strong>Stop</strong>: Stops a program.</li>
+</ul>
+<h3>Climate</h3>
+<h4>List of climate entities</h4>
+<p>Climate entities are used to control target temperatures in refrigerators, freezers, and wine cabinets. One, two, or three zones can be controlled depending on the capabilities of the appliance.</p>
+<h3>Fan</h3>
+<h4>List of fan entities</h4>
+<ul>
+<li><strong>Fan</strong>: The speed of extraction fans can be monitored and controlled in many models of cooker hoods and combined induction hobs with integrated extraction fans.</li>
+</ul>
+<h3>Light</h3>
+<h4>List of light entities</h4>
+<ul>
+<li><strong>Light</strong>: The light can be turned on and off in many models of ovens, cooker hoods, and wine cabinets.</li>
+<li><strong>Ambient light</strong>: Some models of cooker hoods have ambient light that can be turned on and off.</li>
+</ul>
+<h3>Select</h3>
+<h4>List of select entities</h4>
+<ul>
+<li><strong>Mode</strong>: Select operating mode for freezers and refrigerators. Available modes vary depending on appliance model.</li>
+</ul>
+<h3>Sensor</h3>
+<h4>List of sensors</h4>
+<ul>
+<li><strong>Operation state</strong>:<ul>
+<li><strong>Status</strong>: Represents the current operation state of the device. The default entity name is just the appliance type. For example, "Dishwasher".</li>
+<li><strong>Program</strong>: Shows the currently active program. On coffee machines, the program sensor also provides an extra state attribute <code>profile</code> to distinguish which profile is in use on the machine.</li>
+<li><strong>Program phase</strong>: Shows the current phase in the running program.</li>
+<li><strong>Program type</strong>: Shows the current program type.</li>
+<li><strong>Spin speed</strong>: Shows the spin speed selected for the current washing machine program.</li>
+<li><strong>Energy consumption</strong>: Shows the energy consumption during the current program cycle. The value will be reset after finishing the program.</li>
+<li><strong>Energy forecast</strong>: Shows the forecast percentage of the maximum energy the program will consume for a given cycle.</li>
+<li><strong>Water consumption</strong>: Shows the water consumption during the current program cycle. The value will be reset after finishing the program.</li>
+<li><strong>Water forecast</strong>: Shows the forecast percentage of the maximum water the program will consume for a given cycle.</li>
+<li><strong>Temperature</strong>: Represents the current temperature in refrigerators, freezers, and ovens. Entities are created for up to 3 zones depending on the device capabilities. For zones 2 and 3, the temperature sensor is dynamically created when the appliance is turned on and a valid value is reported.</li>
+<li><strong>Target temperature</strong>: Shows the set target temperature for ovens and washing machines.</li>
+<li><strong>Core temperature</strong>: Shows the core temperature of the food in ovens with an appropriate temperature probe. This sensor is dynamically created when the appliance is turned on, a program is started and the temperature probe is connected to the appliance.</li>
+<li><strong>Target core temperature</strong>: Shows the set core target temperature for the food in ovens with an appropriate temperature probe. This sensor is dynamically created when the appliance is turned on, a program is started and the core target temperature is set on the device.</li>
+<li><strong>Drying step</strong>: Shows the selected drying step on tumble dryers.</li>
+<li><strong>Elapsed time</strong>: Shows the number of minutes that the current program has been running.</li>
+<li><strong>Remaining time</strong>: Shows the estimated number of minutes remaining in the current program cycle. This value can fluctuate during a program cycle based on load dirtiness or water‑heating time.</li>
+<li><strong>Start in</strong>: Shows the number of minutes until a delayed program start, if configured.</li>
+<li><strong>Start</strong>: Shows the date and time when the program starts. If you've set a delayed start, it shows when the appliance will actually begin the cycle.</li>
+<li><strong>Finish</strong>: Shows the estimated date and time when the program will finish. If you've set a delayed start, it shows when the appliance is expected to complete the cycle, including the delay time.</li>
+<li><strong>Plate</strong>: Four to six sensors that show the current state of hob heating plates. The status mimics the display on the actual hob. For example, 0 is off, 5 is approximately 50% power, and "B" is power boost. Plates can only be monitored from Home Assistant, not controlled.</li>
+<li><strong>TwinDos level</strong>: Two sensors displaying the remaining level in the detergent containers in applicable washing machines. If the device does not support this sensor, the value is shown as <code>Unknown</code>.</li>
+<li><strong>Descaling, degreasing, milk pipework cleaning cycles counter</strong>: A set of sensors displaying the total number of cycles that the appliance has run. These sensors are available only for devices that support these maintenance programs (such as coffee machines or ovens with steam addition).</li>
+<li><strong>PowerDisk level</strong>: A sensor displaying the remaining level in the detergent container in applicable dishwashers. If the device does not support this sensor, the value is shown as <code>Unknown</code>.</li>
+<li><strong>Rinse aid level</strong>: A sensor displaying the remaining level in the rinse aid container in dishwashers.</li>
+<li><strong>Salt level</strong>: A sensor displaying the remaining level in the salt container in dishwashers.</li>
+</ul>
+</li>
+</ul>
+<h3>Switch</h3>
+<h4>List of switch entities</h4>
+<ul>
+<li><strong>Power</strong>: The Power switch has slightly different characteristics depending on the appliance model. For some devices, it works more or less as a traditional power switch, while it behaves like a wake-up/sleep toggle on others. The availability of the switch is controlled by the API, depending on the operational state of the appliance.</li>
+<li><strong>Supercooling</strong>: The switch controls Supercooling mode for refrigerators.</li>
+<li><strong>Superfreezing</strong>: The switch controls Superfreezing mode for freezers.</li>
+</ul>
+<h3>Vacuum</h3>
+<h4>List of vacuum entities</h4>
+<ul>
+<li><strong>Robot vacuum cleaner</strong>: Miele robot vacuum cleaners can be monitored and controlled to a limited extent. The device can be started, stopped, and paused. The fan speed can also be set.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Automation examples</h2>
+<p>Get started with these automation examples</p>
+<h3>Send a notification when the appliance ends the program</h3>
+<h4>Example YAML configuration</h4>
+<pre><code>alias: "Notify when program ends"
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.washing_machine
+    to: program_ended
+actions:
+  - action: notify.notify
+    data:
+      message: "The appliance has finished the program."
+</code></pre>
+<h3>Set program and start washing machine</h3>
+<p>Load your washing machine and manually activate mobile start or remote control mode on the machine.</p>
+<h4>Example YAML configuration</h4>
+<pre><code>alias: "Wash cottons early in the morning"
+description: "Set cottons program and start washing machine early in the morning"
+triggers:
+  - trigger: time
+    at: "04:00:00"
+actions:
+  - action: miele.set_program
+    data:
+      device_id: &lt;Your washing machine's device_id&gt;
+      program_id: 1
+</code></pre>
+<h2>Data updates</h2>
+<p>This integration uses server-sent events from the Miele API to receive live updates from the appliances.
+When the configuration entry is loaded or after a streaming error (for example after disconnection), the integration will request all data (such as appliance info, available commands, programs, settings, and status) for all appliances.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The Miele 3rd party API does not fully match the Miele app. Some programs, options, or settings available in the app may not be accessible or usable via the API.</li>
+<li>This integration supports only one integration entry, as the Miele 3rd party API does not allow for the unique identification of an account.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Manual entry of authentication credentials</h4>
+<p>Follow these instructions if you are instructed to do so by a developer or by Miele support. It is not needed for normal use of the integration.</p>
+<ul>
+<li>Visit <a>https://www.miele.com/developer</a> and sign up for a developer account.</li>
+<li>Enter an arbitrary name for your connection and the email of your login for the original Miele app.</li>
+<li>On success, you will get an email with an activation link. Press the <strong>Activate</strong> button. Make note of the client ID and secret - you will need them for the next step.
+You may be prompted to create an [Application - The provided Miele User Account email address must be all lowercase; otherwise, it will result in authentication failures.</li>
+<li>The password should not contain any special characters. Even though it works in the Miele app, it may not work with the API.</li>
+<li>Allow a couple of minutes to get the activation email. All changes in the developer portal take a couple of minutes before the change is implemented. Save your credentials as you will need them later.</li>
+</ul>
+<h4>Problem: Unavailable entities for a device</h4>
+<p>After reloading the Miele integration, the entities related to an appliance that used to be available are no longer available.</p>
+<p>Unavailable entities can have multiple causes:</p>
+<ul>
+<li>The appliance is turned off. When it is turned off, the appliance is disconnected and the API does not retrieve information about the appliance.</li>
+<li>The appliance is experiencing a network issue.</li>
+<li>The Miele API is experiencing issues.</li>
+</ul>
+<p>To try to solve the above issues, follow these steps:</p>
+<ol>
+<li>Turn on the appliance and reload the Miele integration.</li>
+<li>If the appliance is turned on and the issue persists, check the network connection of the appliance and perform a soft reset on the appliance.</li>
+<li>If the issue persists, check the connection of the appliance with the Miele API by checking it in the Miele app.<ol>
+<li>Open the Miele app.</li>
+<li>Go to the appliance that is experiencing the issue.</li>
+<li>Press the cog-wheel to view more information.</li>
+</ol>
+</li>
+<li>If everything is correct and the issue persists, contact Miele support.<ul>
+<li><a>Miele service and contact</a></li>
+<li><a>Miele developer Help &amp; Support</a></li>
+</ul>
+</li>
+</ol>
+<h4>Problem: Program or program phase is unknown</h4>
+<p>The most common cause is that the code presented by the API is unknown to the integration. Details of the missing code can be found in the Home Assistant log or in the diagnostic file. Please open an issue on GitHub with the details from the logs. Please also include information on the program or program phase that was active when the message occurred.</p>
+<p>Unknown can also be displayed if the state is reported as unknown by the API, usually caused by a temporary malfunction in the cloud service.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/miele.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up the Miele integration within Home Assistant.
+ha_release: &#x27;2025.5&#x27;
+ha_domain: miele
+---
+
+The **Miele** {% term integration %} allows users to integrate their home appliances using the [official 3rd party API](https://www.miele.com/developer).
+
+Miele is known as a manufacturer of premium appliances for cooking, laundry care, and floor care.
+
+## Use cases
+
+- Monitor the multiple sensors of the appliance and trigger automations based on these sensors.
+- Monitor the program status of the appliances.
+- Control settings on the appliances.
+
+{% note %}
+Note that the feature availability depends on the appliance model.
+{% endnote %}
+
+## Supported devices
+
+You can find general information about supported devices on the [Miele website](https://www.miele.com/developer/capabilities.html). The integration supports any Miele appliance connected to a Miele user account. Miele WiFiConn@ct appliances can be connected directly via a Wi-Fi router. Miele Zigbee appliances must use the Miele@home Gateway XGW3000.
+
+The appliance must be connected to the Miele CloudService by using the Miele app.
+
+{% note %}
+New generation washer/dryers and new generation vacuum cleaners:
+Endpoints for the new generations are not yet available and will be released in the fall of 2025.
+{% endnote %}
+
+## Prerequisites
+
+Make sure that you have your username, password, and country available for your Miele account.
+
+{% details &quot;I have manually disabled My Home Assistant&quot; %}
+
+If you don&#x27;t have [My Home Assistant](/integrations/my) on your installation,
+you can use `&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback` as the redirect URI
+instead.
+
+The `&lt;HOME_ASSISTANT_URL&gt;` must be the same as used during the configuration/
+authentication process.
+
+Internal examples: `http://192.168.0.2:8123/auth/external/callback`, `http://homeassistant.local:8123/auth/external/callback`.
+
+{% enddetails %}
+
+{% include integrations/config_flow.md %}
+
+The integration configuration may ask for *Client ID* and *Client Secret*. See [Troubleshooting](/integrations/miele/#troubleshooting) below and [Application Credentials](/integrations/application_credentials) for more details.
+
+## Supported functionality
+
+{% note %}
+
+- The entities&#x27; availability depends on the appliance type and the generation of the product, and the appliance might not support all the entities for its type. Please refer to the product manual for details on implementation of specific functions.
+- Products from professional and semi-professional series are generally not supported due to the limitations in the Miele 3rd party API.
+- Some appliances don&#x27;t report data while they are turned off, so corresponding entities will not appear in the Miele integration after loading until the appliances are turned on.
+{% endnote %}
+
+### Binary sensor
+
+{% details &quot;List of binary sensors&quot; %}
+
+- **Operation state**:
+  - **Door**: Shows if the door on the appliance is open or closed.
+  - **Full remote control**: Shows the state of Full remote control feature on appliances that supports it.
+  - **Mobile start**: Shows the state of Mobile start feature on appliances that supports it.
+  - **Notification active**: Shows if there is a notification message active on the appliance. The API does not supply any information on the details of the notifications.
+  - **Problem**: Shows if there is an error message active on the appliance. The API does not supply any information on the details of the error.
+  - **Smart grid**: Shows the state of Smart grid feature on appliances that supports it.
+{% enddetails %}
+
+### Button
+
+{% details &quot;List of button entities&quot; %}
+
+Button entities are used to control program progress in washing machines, dryers, dishwashers, robot vacuum cleaners, and others. The exact response to pressing a button can vary slightly between product models, but the result is usually intuitive. The API enables and disables the buttons according to the actual state of the appliance. Most appliances require you to manually activate mobile start or remote control mode.
+
+- **Start**: Starts or resumes a program.
+- **Pause**: Pauses a program.
+- **Stop**: Stops a program.
+
+{% enddetails %}
+
+### Climate
+
+{% details &quot;List of climate entities&quot; %}
+
+Climate entities are used to control target temperatures in refrigerators, freezers, and wine cabinets. One, two, or three zones can be controlled depending on the capabilities of the appliance.
+
+{% enddetails %}
+
+### Fan
+
+{% details &quot;List of fan entities&quot; %}
+
+- **Fan**: The speed of extraction fans can be monitored and controlled in many models of cooker hoods and combined induction hobs with integrated extraction fans.
+
+{% enddetails %}
+
+### Light
+
+{% details &quot;List of light entities&quot; %}
+
+- **Light**: The light can be turned on and off in many models of ovens, cooker hoods, and wine cabinets.
+- **Ambient light**: Some models of cooker hoods have ambient light that can be turned on and off.
+{% enddetails %}
+
+### Select
+
+{% details &quot;List of select entities&quot; %}
+
+- **Mode**: Select operating mode for freezers and refrigerators. Available modes vary depending on appliance model.
+{% enddetails %}
+
+### Sensor
+
+{% details &quot;List of sensors&quot; %}
+
+- **Operation state**:
+  - **Status**: Represents the current operation state of the device. The default entity name is just the appliance type. For example, &quot;Dishwasher&quot;.
+  - **Program**: Shows the currently active program. On coffee machines, the program sensor also provides an extra state attribute `profile` to distinguish which profile is in use on the machine.
+  - **Program phase**: Shows the current phase in the running program.
+  - **Program type**: Shows the current program type.
+  - **Spin speed**: Shows the spin speed selected for the current washing machine program.
+  - **Energy consumption**: Shows the energy consumption during the current program cycle. The value will be reset after finishing the program.
+  - **Energy forecast**: Shows the forecast percentage of the maximum energy the program will consume for a given cycle.
+  - **Water consumption**: Shows the water consumption during the current program cycle. The value will be reset after finishing the program.
+  - **Water forecast**: Shows the forecast percentage of the maximum water the program will consume for a given cycle.
+  - **Temperature**: Represents the current temperature in refrigerators, freezers, and ovens. Entities are created for up to 3 zones depending on the device capabilities. For zones 2 and 3, the temperature sensor is dynamically created when the appliance is turned on and a valid value is reported.
+  - **Target temperature**: Shows the set target temperature for ovens and washing machines.
+  - **Core temperature**: Shows the core temperature of the food in ovens with an appropriate temperature probe. This sensor is dynamically created when the appliance is turned on, a program is started and the temperature probe is connected to the appliance.
+  - **Target core temperature**: Shows the set core target temperature for the food in ovens with an appropriate temperature probe. This sensor is dynamically created when the appliance is turned on, a program is started and the core target temperature is set on the device.
+  - **Drying step**: Shows the selected drying step on tumble dryers.
+  - **Elapsed time**: Shows the number of minutes that the current program has been running.
+  - **Remaining time**: Shows the estimated number of minutes remaining in the current program cycle. This value can fluctuate during a program cycle based on load dirtiness or water‑heating time.
+  - **Start in**: Shows the number of minutes until a delayed program start, if configured.
+  - **Start**: Shows the date and time when the program starts. If you&#x27;ve set a delayed start, it shows when the appliance will actually begin the cycle.
+  - **Finish**: Shows the estimated date and time when the program will finish. If you&#x27;ve set a delayed start, it shows when the appliance is expected to complete the cycle, including the delay time.
+  - **Plate**: Four to six sensors that show the current state of hob heating plates. The status mimics the display on the actual hob. For example, 0 is off, 5 is approximately 50% power, and &quot;B&quot; is power boost. Plates can only be monitored from Home Assistant, not controlled.
+  - **TwinDos level**: Two sensors displaying the remaining level in the detergent containers in applicable washing machines. If the device does not support this sensor, the value is shown as `Unknown`.
+  - **Descaling, degreasing, milk pipework cleaning cycles counter**: A set of sensors displaying the total number of cycles that the appliance has run. These sensors are available only for devices that support these maintenance programs (such as coffee machines or ovens with steam addition).
+  - **PowerDisk level**: A sensor displaying the remaining level in the detergent container in applicable dishwashers. If the device does not support this sensor, the value is shown as `Unknown`.
+  - **Rinse aid level**: A sensor displaying the remaining level in the rinse aid container in dishwashers.
+  - **Salt level**: A sensor displaying the remaining level in the salt container in dishwashers.
+{% enddetails %}
+
+### Switch
+
+{% details &quot;List of switch entities&quot; %}
+
+- **Power**: The Power switch has slightly different characteristics depending on the appliance model. For some devices, it works more or less as a traditional power switch, while it behaves like a wake-up/sleep toggle on others. The availability of the switch is controlled by the API, depending on the operational state of the appliance.
+- **Supercooling**: The switch controls Supercooling mode for refrigerators.
+- **Superfreezing**: The switch controls Superfreezing mode for freezers.
+{% enddetails %}
+
+### Vacuum
+
+{% details &quot;List of vacuum entities&quot; %}
+
+- **Robot vacuum cleaner**: Miele robot vacuum cleaners can be monitored and controlled to a limited extent. The device can be started, stopped, and paused. The fan speed can also be set.
+{% enddetails %}
+
+{% include integrations/actions.md %}
+
+## Automation examples
+
+Get started with these automation examples
+
+### Send a notification when the appliance ends the program
+
+{% details &quot;Example YAML configuration&quot; %}
+
+```yaml
+alias: &quot;Notify when program ends&quot;
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.washing_machine
+    to: program_ended
+actions:
+  - action: notify.notify
+    data:
+      message: &quot;The appliance has finished the program.&quot;
+```
+{% enddetails %}
+
+### Set program and start washing machine
+
+Load your washing machine and manually activate mobile start or remote control mode on the machine.
+
+{% details &quot;Example YAML configuration&quot; %}
+
+```yaml
+alias: &quot;Wash cottons early in the morning&quot;
+description: &quot;Set cottons program and start washing machine early in the morning&quot;
+triggers:
+  - trigger: time
+    at: &quot;04:00:00&quot;
+actions:
+  - action: miele.set_program
+    data:
+      device_id: &lt;Your washing machine&#x27;s device_id&gt;
+      program_id: 1
+```
+{% enddetails %}
+
+## Data updates
+
+This integration uses server-sent events from the Miele API to receive live updates from the appliances.
+When the configuration entry is loaded or after a streaming error (for example after disconnection), the integration will request all data (such as appliance info, available commands, programs, settings, and status) for all appliances.
+
+## Known limitations
+
+- The Miele 3rd party API does not fully match the Miele app. Some programs, options, or settings available in the app may not be accessible or usable via the API.
+- This integration supports only one integration entry, as the Miele 3rd party API does not allow for the unique identification of an account.
+
+## Troubleshooting
+
+{% details &quot;Manual entry of authentication credentials&quot; %}
+
+Follow these instructions if you are instructed to do so by a developer or by Miele support. It is not needed for normal use of the integration.
+
+- Visit [https://www.miele.com/developer](https://www.miele.com/f/com/en/register_api.aspx) and sign up for a developer account.
+- Enter an arbitrary name for your connection and the email of your login for the original Miele app.
+- On success, you will get an email with an activation link. Press the **Activate** button. Make note of the client ID and secret - you will need them for the next step.
+You may be prompted to create an [Application - The provided Miele User Account email address must be all lowercase; otherwise, it will result in authentication failures.
+- The password should not contain any special characters. Even though it works in the Miele app, it may not work with the API.
+- Allow a couple of minutes to get the activation email. All changes in the developer portal take a couple of minutes before the change is implemented. Save your credentials as you will need them later.
+
+{% enddetails %}
+
+{% details &quot;Problem: Unavailable entities for a device&quot; %}
+
+After reloading the Miele integration, the entities related to an appliance that used to be available are no longer available.
+
+Unavailable entities can have multiple causes:
+
+- The appliance is turned off. When it is turned off, the appliance is disconnected and the API does not retrieve information about the appliance.
+- The appliance is experiencing a network issue.
+- The Miele API is experiencing issues.
+
+To try to solve the above issues, follow these steps:
+
+1. Turn on the appliance and reload the Miele integration.
+2. If the appliance is turned on and the issue persists, check the network connection of the appliance and perform a soft reset on the appliance.
+3. If the issue persists, check the connection of the appliance with the Miele API by checking it in the Miele app.
+   1. Open the Miele app.
+   2. Go to the appliance that is experiencing the issue.
+   3. Press the cog-wheel to view more information.
+4. If everything is correct and the issue persists, contact Miele support.
+   - [Miele service and contact](https://www.miele.com/)
+   - [Miele developer Help &amp; Support](https://www.miele.com/developer)
+
+{% enddetails %}
+
+{% details &quot;Problem: Program or program phase is unknown&quot; %}
+
+The most common cause is that the code presented by the API is unknown to the integration. Details of the missing code can be found in the Home Assistant log or in the diagnostic file. Please open an issue on GitHub with the details from the logs. Please also include information on the program or program phase that was active when the message occurred.
+
+Unknown can also be displayed if the state is reported as unknown by the API, usually caused by a temporary malfunction in the cloud service.
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Miele.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>fan</li><li>light</li><li>select</li><li>sensor</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>get programs</li><li>set program</li><li>set program oven</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/miele/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/miele</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/miele</code></dd></dl></section><p><a href="../../integrations/miele/">Return to the Miele guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

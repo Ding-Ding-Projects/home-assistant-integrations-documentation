@@ -1,1 +1,580 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Binary sensor reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:66" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/binary_sensor/">Binary sensor guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Binary sensor</h1><p>Instructions on how-to set up binary sensors with Home Assistant.</p><section><h2>Overview</h2><p>Binary sensors are similar to other sensors in that they monitor the states and conditions of different entities. Where binary sensors differ is they can only return one of two mutually exclusive values. For example, a binary sensor for a window may report a value of open or closed, a switch on or off, a condition true or false.</p></section><section><h2>Binary sensor states</h2><p>A binary sensor has two states: on or off. In the Home Assistant interface, its device class determines the icon and the label shown for each state. For example, a lock binary sensor shows Unlocked when its state is on and Locked when its state is off.</p></section><section><h2>Device class</h2><p>The device class tells Home Assistant what a binary sensor detects, such as an open door or motion. Home Assistant uses the device class to choose the icon and the labels for on and off, such as Open and Closed. The device class also decides where you can use the binary sensor, such as in triggers and conditions, on the Security dashboard, or in voice assistants. If a binary sensor doesn&#x27;t show up where you expect it, check its device class.</p></section><section><h2>List of available device classes</h2><p>A binary sensor without a device class shows On and Off as its state labels.</p></section><section><h2>Changing the device class of a binary sensor</h2><p>If a binary sensor shows up as the wrong type, for example as an opening instead of a door, you can change its device class.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Binary sensor in Home Assistant is <code>binary_sensor</code>.</p></section><section><h2>Topics in the original article</h2><ul><li>Binary sensor states</li><li>Device class</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/binary_sensor/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/binary_sensor</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/binary_sensor</code></dd></dl></section><p><a href="../../integrations/binary_sensor/">Return to the Binary sensor guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Binary sensor reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:66" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/binary_sensor/">Binary sensor guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Binary sensor</h1><p>Instructions on how-to set up binary sensors with Home Assistant.</p><div class="reader-body"><p>Binary sensors are similar to other <a href="../sensor/">sensors</a> in that they
+monitor the states and conditions of different entities. Where binary sensors
+differ is they can only return one of two mutually exclusive values.
+For example, a binary sensor for a window may report a value
+of <code>open</code> or <code>closed</code>, a switch <code>on</code> or <code>off</code>, a condition <code>true</code> or <code>false</code>.</p>
+<p>This <em>either/or</em> constraint is what makes these sensors binary. They are digital
+in nature, whereas analog sensors, like temperature and weight sensors,
+return a range of values.</p>
+<p>Some binary sensors are created automatically when you add a device integration.
+For example, adding the <a href="../ecobee/">ecobee integration</a> will create
+a binary sensor to detect room occupancy. Other binary sensors can be created
+manually using the <a href="../template/">template integration</a>
+or using an <a href="../input_boolean/">input boolean helper</a>.</p>
+<p><strong>Note</strong></p>
+<p><strong>Building block integration</strong></p>
+<p>This binary sensor is a building block integration that cannot be added to your Home Assistant directly but is used and provided by other integrations.</p>
+<p>A building block integration differs from the typical integration that connects to a device or service. Instead, other integrations that do integrate a device or service into Home Assistant use this binary sensor building block to provide entities, services, and other functionality that you can use in your automations or dashboards.</p>
+<p>If one of your integrations features this building block, this page documents the functionality the binary sensor building block offers.</p>
+<h2>Binary sensor states</h2>
+<p>A binary sensor has two states: <code>on</code> or <code>off</code>. In the Home Assistant interface, its device class determines the icon and the label shown for each state. For example, a lock binary sensor shows <strong>Unlocked</strong> when its state is <code>on</code> and <strong>Locked</strong> when its state is <code>off</code>.</p>
+<p>In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:</p>
+<ul>
+<li><strong>Unavailable</strong> (<code>unavailable</code>): The entity is currently unavailable.</li>
+<li><strong>Unknown</strong> (<code>unknown</code>): The state is not yet known.</li>
+</ul>
+<h2>Device class</h2>
+<p>The device class tells Home Assistant what a binary sensor detects, such as an open door or motion. Home Assistant uses the device class to choose the icon and the labels for <code>on</code> and <code>off</code>, such as <strong>Open</strong> and <strong>Closed</strong>. The device class also decides where you can use the binary sensor, such as in triggers and conditions, on the <a>Security dashboard</a>, or in voice assistants. If a binary sensor doesn't show up where you expect it, check its device class.</p>
+<p>The integration that provides the binary sensor sets the device class. When you create a binary sensor yourself with a <a href="../template/">template helper</a>, you choose the device class.</p>
+<h3>Device classes in automations and templates</h3>
+<ul>
+<li>Automations: Some device classes have their own triggers and conditions, such as <a>Door opened</a>. Of your binary sensors, these triggers and conditions only list the ones with that device class. The list below shows the triggers and conditions of each device class.</li>
+<li>Templates: The device class is the <code>device_class</code> attribute of the entity. Use the stored value, such as <code>door</code>. For example, you can <a>find entities by device class</a>.</li>
+</ul>
+<h3>List of available device classes</h3>
+<p>A binary sensor without a device class shows <strong>On</strong> and <strong>Off</strong> as its state labels.</p>
+<p>Each item shows the name you see in the Home Assistant interface, followed by the device class as Home Assistant stores it. Below each item are the labels the interface shows for the <code>on</code> and <code>off</code> states, and the triggers and conditions of the device class, if it has any.</p>
+<ul>
+<li><strong>Battery</strong> (<code>battery</code>): Shows whether the battery is low.<ul>
+<li><strong>Low</strong> (<code>on</code>)</li>
+<li><strong>Normal</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Battery low</a>, <a>Battery not low</a></li>
+<li>Conditions: <a>Battery is low</a>, <a>Battery is not low</a></li>
+</ul>
+</li>
+<li><strong>Charging</strong> (<code>battery_charging</code>): Shows whether the battery is charging. Under <strong>Show as</strong>, this type is called <strong>Battery charging</strong>.<ul>
+<li><strong>Charging</strong> (<code>on</code>)</li>
+<li><strong>Not charging</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Battery started charging</a>, <a>Battery stopped charging</a></li>
+<li>Conditions: <a>Battery is charging</a>, <a>Battery is not charging</a></li>
+</ul>
+</li>
+<li><strong>Carbon monoxide</strong> (<code>carbon_monoxide</code>): Shows whether carbon monoxide is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Carbon monoxide cleared</a>, <a>Carbon monoxide detected</a></li>
+<li>Conditions: <a>Carbon monoxide cleared</a>, <a>Carbon monoxide detected</a></li>
+</ul>
+</li>
+<li><strong>Cold</strong> (<code>cold</code>): Shows whether something is cold.<ul>
+<li><strong>Cold</strong> (<code>on</code>)</li>
+<li><strong>Normal</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Connectivity</strong> (<code>connectivity</code>): Shows whether a device is connected.<ul>
+<li><strong>Connected</strong> (<code>on</code>)</li>
+<li><strong>Disconnected</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Door</strong> (<code>door</code>): Shows whether a door is open.<ul>
+<li><strong>Open</strong> (<code>on</code>)</li>
+<li><strong>Closed</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Door closed</a>, <a>Door opened</a></li>
+<li>Conditions: <a>Door is closed</a>, <a>Door is open</a></li>
+</ul>
+</li>
+<li><strong>Garage door</strong> (<code>garage_door</code>): Shows whether a garage door is open.<ul>
+<li><strong>Open</strong> (<code>on</code>)</li>
+<li><strong>Closed</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Garage door closed</a>, <a>Garage door opened</a></li>
+<li>Conditions: <a>Garage door is closed</a>, <a>Garage door is open</a></li>
+</ul>
+</li>
+<li><strong>Gas</strong> (<code>gas</code>): Shows whether gas is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Gas cleared</a>, <a>Gas detected</a></li>
+<li>Conditions: <a>Gas cleared</a>, <a>Gas detected</a></li>
+</ul>
+</li>
+<li><strong>Glass break</strong> (<code>glass_break</code>): Shows whether glass breaking is detected.<ul>
+<li><strong>Glass break detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Heat</strong> (<code>heat</code>): Shows whether something is hot.<ul>
+<li><strong>Hot</strong> (<code>on</code>)</li>
+<li><strong>Normal</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Light</strong> (<code>light</code>): Shows whether light is detected.<ul>
+<li><strong>Light detected</strong> (<code>on</code>)</li>
+<li><strong>No light</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Light level cleared</a>, <a>Light level detected</a></li>
+<li>Conditions: <a>Light level is detected</a>, <a>Light level is not detected</a></li>
+</ul>
+</li>
+<li><strong>Lock</strong> (<code>lock</code>): Shows whether a lock is unlocked.<ul>
+<li><strong>Unlocked</strong> (<code>on</code>)</li>
+<li><strong>Locked</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Moisture</strong> (<code>moisture</code>): Shows whether moisture is detected, such as a water leak.<ul>
+<li><strong>Wet</strong> (<code>on</code>)</li>
+<li><strong>Dry</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Moisture cleared</a>, <a>Moisture detected</a></li>
+<li>Conditions: <a>Moisture is detected</a>, <a>Moisture is not detected</a></li>
+</ul>
+</li>
+<li><strong>Motion</strong> (<code>motion</code>): Shows whether motion is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Motion cleared</a>, <a>Motion detected</a></li>
+<li>Conditions: <a>Motion is detected</a>, <a>Motion is not detected</a></li>
+</ul>
+</li>
+<li><strong>Moving</strong> (<code>moving</code>): Shows whether something is moving.<ul>
+<li><strong>Moving</strong> (<code>on</code>)</li>
+<li><strong>Not moving</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Occupancy</strong> (<code>occupancy</code>): Shows whether a room or area is occupied.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Occupancy cleared</a>, <a>Occupancy detected</a></li>
+<li>Conditions: <a>Occupancy is detected</a>, <a>Occupancy is not detected</a></li>
+</ul>
+</li>
+<li><strong>Opening</strong> (<code>opening</code>): Shows whether something is open, such as a cabinet or a drawer.<ul>
+<li><strong>Open</strong> (<code>on</code>)</li>
+<li><strong>Closed</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Plug</strong> (<code>plug</code>): Shows whether something is plugged in.<ul>
+<li><strong>Plugged in</strong> (<code>on</code>)</li>
+<li><strong>Unplugged</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Power</strong> (<code>power</code>): Shows whether power is detected.<ul>
+<li><strong>On</strong> (<code>on</code>)</li>
+<li><strong>Off</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Presence</strong> (<code>presence</code>): Shows whether someone is home.<ul>
+<li><strong>Home</strong> (<code>on</code>)</li>
+<li><strong>Away</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Problem</strong> (<code>problem</code>): Shows whether there is a problem.<ul>
+<li><strong>Problem</strong> (<code>on</code>)</li>
+<li><strong>OK</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Running</strong> (<code>running</code>): Shows whether something is running.<ul>
+<li><strong>Running</strong> (<code>on</code>)</li>
+<li><strong>Not running</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Safety</strong> (<code>safety</code>): Shows whether something is unsafe.<ul>
+<li><strong>Unsafe</strong> (<code>on</code>)</li>
+<li><strong>Safe</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Smoke</strong> (<code>smoke</code>): Shows whether smoke is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Smoke cleared</a>, <a>Smoke detected</a></li>
+<li>Conditions: <a>Smoke cleared</a>, <a>Smoke detected</a></li>
+</ul>
+</li>
+<li><strong>Sound</strong> (<code>sound</code>): Shows whether sound is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Tamper</strong> (<code>tamper</code>): Shows whether tampering is detected.<ul>
+<li><strong>Tampering detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Update</strong> (<code>update</code>): Shows whether an update is available.<ul>
+<li><strong>Update available</strong> (<code>on</code>)</li>
+<li><strong>Up-to-date</strong> (<code>off</code>)</li>
+</ul>
+</li>
+<li><strong>Vibration</strong> (<code>vibration</code>): Shows whether vibration is detected.<ul>
+<li><strong>Detected</strong> (<code>on</code>)</li>
+<li><strong>Clear</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Vibration cleared</a>, <a>Vibration detected</a></li>
+<li>Conditions: <a>Vibration is detected</a>, <a>Vibration is not detected</a></li>
+</ul>
+</li>
+<li><strong>Window</strong> (<code>window</code>): Shows whether a window is open.<ul>
+<li><strong>Open</strong> (<code>on</code>)</li>
+<li><strong>Closed</strong> (<code>off</code>)</li>
+<li>Triggers: <a>Window closed</a>, <a>Window opened</a></li>
+<li>Conditions: <a>Window is closed</a>, <a>Window is open</a></li>
+</ul>
+</li>
+</ul>
+<p>For sensors that measure values, see the <a href="../sensor/">sensor device classes</a>.</p>
+<h3>Changing the device class of a binary sensor</h3>
+<p>If a binary sensor shows up as the wrong type, for example as an opening instead of a door, you can change its device class.</p>
+<p>You can only change the device class in the UI if the binary sensor has a unique ID. A binary sensor without a unique ID shows a message in its entity settings instead. For such a binary sensor, you can change the device class in YAML with <a>customization</a>.</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Entities</strong> and select the binary sensor.</li>
+<li>In the top-right corner, select <strong>Settings</strong> .</li>
+<li>Under <strong>Show as</strong>, select the type that matches your device.</li>
+<li>Select <strong>Update</strong>.<ul>
+<li>Result: The binary sensor shows up as the new type in triggers and dashboards.</li>
+</ul>
+</li>
+</ol>
+<p>If you created the binary sensor with a template helper, change the device class in the options of the template helper instead.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/binary_sensor.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how-to set up binary sensors with Home Assistant.
+ha_release: 0.9
+ha_domain: binary_sensor
+---
+
+Binary sensors are similar to other [sensors](/integrations/sensor) in that they
+monitor the states and conditions of different entities. Where binary sensors
+differ is they can only return one of two mutually exclusive values.
+For example, a binary sensor for a window may report a value
+of `open` or `closed`, a switch `on` or `off`, a condition `true` or `false`.
+
+This *either/or* constraint is what makes these sensors binary. They are digital
+in nature, whereas analog sensors, like temperature and weight sensors,
+return a range of values.
+
+Some binary sensors are created automatically when you add a device integration.
+For example, adding the [ecobee integration](/integrations/ecobee/) will create
+a binary sensor to detect room occupancy. Other binary sensors can be created
+manually using the [template integration](/integrations/template/)
+or using an [input boolean helper](/integrations/input_boolean).
+
+{% include integrations/building_block_integration.md %}
+
+## Binary sensor states
+
+A binary sensor has two states: `on` or `off`. In the Home Assistant interface, its device class determines the icon and the label shown for each state. For example, a lock binary sensor shows **Unlocked** when its state is `on` and **Locked** when its state is `off`.
+
+In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:
+
+- **Unavailable** (`unavailable`): The entity is currently unavailable.
+- **Unknown** (`unknown`): The state is not yet known.
+
+## Device class
+
+The device class tells Home Assistant what a binary sensor detects, such as an open door or motion. Home Assistant uses the device class to choose the icon and the labels for `on` and `off`, such as **Open** and **Closed**. The device class also decides where you can use the binary sensor, such as in triggers and conditions, on the [Security dashboard](/dashboards/dashboards/#security-dashboard), or in voice assistants. If a binary sensor doesn&#x27;t show up where you expect it, check its device class.
+
+The integration that provides the binary sensor sets the device class. When you create a binary sensor yourself with a [template helper](/integrations/template/), you choose the device class.
+
+### Device classes in automations and templates
+
+- Automations: Some device classes have their own triggers and conditions, such as [Door opened](/triggers/door.opened/). Of your binary sensors, these triggers and conditions only list the ones with that device class. The list below shows the triggers and conditions of each device class.
+- Templates: The device class is the `device_class` attribute of the entity. Use the stored value, such as `door`. For example, you can [find entities by device class](/docs/templating/patterns/#finding-entities-by-device-class).
+
+### List of available device classes
+
+A binary sensor without a device class shows **On** and **Off** as its state labels.
+
+Each item shows the name you see in the Home Assistant interface, followed by the device class as Home Assistant stores it. Below each item are the labels the interface shows for the `on` and `off` states, and the triggers and conditions of the device class, if it has any.
+
+- **Battery** (`battery`): Shows whether the battery is low.
+  - **Low** (`on`)
+  - **Normal** (`off`)
+  - Triggers: [Battery low](/triggers/battery.became_low/), [Battery not low](/triggers/battery.no_longer_low/)
+  - Conditions: [Battery is low](/conditions/battery.is_low/), [Battery is not low](/conditions/battery.is_not_low/)
+- **Charging** (`battery_charging`): Shows whether the battery is charging. Under **Show as**, this type is called **Battery charging**.
+  - **Charging** (`on`)
+  - **Not charging** (`off`)
+  - Triggers: [Battery started charging](/triggers/battery.started_charging/), [Battery stopped charging](/triggers/battery.stopped_charging/)
+  - Conditions: [Battery is charging](/conditions/battery.is_charging/), [Battery is not charging](/conditions/battery.is_not_charging/)
+- **Carbon monoxide** (`carbon_monoxide`): Shows whether carbon monoxide is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Carbon monoxide cleared](/triggers/air_quality.co_cleared/), [Carbon monoxide detected](/triggers/air_quality.co_detected/)
+  - Conditions: [Carbon monoxide cleared](/conditions/air_quality.is_co_cleared/), [Carbon monoxide detected](/conditions/air_quality.is_co_detected/)
+- **Cold** (`cold`): Shows whether something is cold.
+  - **Cold** (`on`)
+  - **Normal** (`off`)
+- **Connectivity** (`connectivity`): Shows whether a device is connected.
+  - **Connected** (`on`)
+  - **Disconnected** (`off`)
+- **Door** (`door`): Shows whether a door is open.
+  - **Open** (`on`)
+  - **Closed** (`off`)
+  - Triggers: [Door closed](/triggers/door.closed/), [Door opened](/triggers/door.opened/)
+  - Conditions: [Door is closed](/conditions/door.is_closed/), [Door is open](/conditions/door.is_open/)
+- **Garage door** (`garage_door`): Shows whether a garage door is open.
+  - **Open** (`on`)
+  - **Closed** (`off`)
+  - Triggers: [Garage door closed](/triggers/garage_door.closed/), [Garage door opened](/triggers/garage_door.opened/)
+  - Conditions: [Garage door is closed](/conditions/garage_door.is_closed/), [Garage door is open](/conditions/garage_door.is_open/)
+- **Gas** (`gas`): Shows whether gas is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Gas cleared](/triggers/air_quality.gas_cleared/), [Gas detected](/triggers/air_quality.gas_detected/)
+  - Conditions: [Gas cleared](/conditions/air_quality.is_gas_cleared/), [Gas detected](/conditions/air_quality.is_gas_detected/)
+- **Glass break** (`glass_break`): Shows whether glass breaking is detected.
+  - **Glass break detected** (`on`)
+  - **Clear** (`off`)
+- **Heat** (`heat`): Shows whether something is hot.
+  - **Hot** (`on`)
+  - **Normal** (`off`)
+- **Light** (`light`): Shows whether light is detected.
+  - **Light detected** (`on`)
+  - **No light** (`off`)
+  - Triggers: [Light level cleared](/triggers/illuminance.cleared/), [Light level detected](/triggers/illuminance.detected/)
+  - Conditions: [Light level is detected](/conditions/illuminance.is_detected/), [Light level is not detected](/conditions/illuminance.is_not_detected/)
+- **Lock** (`lock`): Shows whether a lock is unlocked.
+  - **Unlocked** (`on`)
+  - **Locked** (`off`)
+- **Moisture** (`moisture`): Shows whether moisture is detected, such as a water leak.
+  - **Wet** (`on`)
+  - **Dry** (`off`)
+  - Triggers: [Moisture cleared](/triggers/moisture.cleared/), [Moisture detected](/triggers/moisture.detected/)
+  - Conditions: [Moisture is detected](/conditions/moisture.is_detected/), [Moisture is not detected](/conditions/moisture.is_not_detected/)
+- **Motion** (`motion`): Shows whether motion is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Motion cleared](/triggers/motion.cleared/), [Motion detected](/triggers/motion.detected/)
+  - Conditions: [Motion is detected](/conditions/motion.is_detected/), [Motion is not detected](/conditions/motion.is_not_detected/)
+- **Moving** (`moving`): Shows whether something is moving.
+  - **Moving** (`on`)
+  - **Not moving** (`off`)
+- **Occupancy** (`occupancy`): Shows whether a room or area is occupied.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Occupancy cleared](/triggers/occupancy.cleared/), [Occupancy detected](/triggers/occupancy.detected/)
+  - Conditions: [Occupancy is detected](/conditions/occupancy.is_detected/), [Occupancy is not detected](/conditions/occupancy.is_not_detected/)
+- **Opening** (`opening`): Shows whether something is open, such as a cabinet or a drawer.
+  - **Open** (`on`)
+  - **Closed** (`off`)
+- **Plug** (`plug`): Shows whether something is plugged in.
+  - **Plugged in** (`on`)
+  - **Unplugged** (`off`)
+- **Power** (`power`): Shows whether power is detected.
+  - **On** (`on`)
+  - **Off** (`off`)
+- **Presence** (`presence`): Shows whether someone is home.
+  - **Home** (`on`)
+  - **Away** (`off`)
+- **Problem** (`problem`): Shows whether there is a problem.
+  - **Problem** (`on`)
+  - **OK** (`off`)
+- **Running** (`running`): Shows whether something is running.
+  - **Running** (`on`)
+  - **Not running** (`off`)
+- **Safety** (`safety`): Shows whether something is unsafe.
+  - **Unsafe** (`on`)
+  - **Safe** (`off`)
+- **Smoke** (`smoke`): Shows whether smoke is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Smoke cleared](/triggers/air_quality.smoke_cleared/), [Smoke detected](/triggers/air_quality.smoke_detected/)
+  - Conditions: [Smoke cleared](/conditions/air_quality.is_smoke_cleared/), [Smoke detected](/conditions/air_quality.is_smoke_detected/)
+- **Sound** (`sound`): Shows whether sound is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+- **Tamper** (`tamper`): Shows whether tampering is detected.
+  - **Tampering detected** (`on`)
+  - **Clear** (`off`)
+- **Update** (`update`): Shows whether an update is available.
+  - **Update available** (`on`)
+  - **Up-to-date** (`off`)
+- **Vibration** (`vibration`): Shows whether vibration is detected.
+  - **Detected** (`on`)
+  - **Clear** (`off`)
+  - Triggers: [Vibration cleared](/triggers/vibration.cleared/), [Vibration detected](/triggers/vibration.detected/)
+  - Conditions: [Vibration is detected](/conditions/vibration.is_detected/), [Vibration is not detected](/conditions/vibration.is_not_detected/)
+- **Window** (`window`): Shows whether a window is open.
+  - **Open** (`on`)
+  - **Closed** (`off`)
+  - Triggers: [Window closed](/triggers/window.closed/), [Window opened](/triggers/window.opened/)
+  - Conditions: [Window is closed](/conditions/window.is_closed/), [Window is open](/conditions/window.is_open/)
+
+For sensors that measure values, see the [sensor device classes](/integrations/sensor/#device-class).
+
+### Changing the device class of a binary sensor
+
+If a binary sensor shows up as the wrong type, for example as an opening instead of a door, you can change its device class.
+
+You can only change the device class in the UI if the binary sensor has a unique ID. A binary sensor without a unique ID shows a message in its entity settings instead. For such a binary sensor, you can change the device class in YAML with [customization](/docs/configuration/customizing-entities/#customizing-an-entity-in-yaml).
+
+1. Go to {% my entities title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Entities**&quot; %} and select the binary sensor.
+2. In the top-right corner, select **Settings** {% icon &quot;mdi:cog-outline&quot; %}.
+3. Under **Show as**, select the type that matches your device.
+4. Select **Update**.
+   - Result: The binary sensor shows up as the new type in triggers and dashboards.
+
+If you created the binary sensor with a template helper, change the device class in the options of the template helper instead.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Binary sensor in Home Assistant is <code>binary_sensor</code>.</p></section><section><h2>Topics in the original article</h2><ul><li>Binary sensor states</li><li>Device class</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/binary_sensor/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/binary_sensor</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/binary_sensor</code></dd></dl></section><p><a href="../../integrations/binary_sensor/">Return to the Binary sensor guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,904 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scenes reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:143" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/scene/">Scenes guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Scenes</h1><p>Scenes set a group of entities to saved states in one step. Learn what the Scenes integration provides, how to define scenes in YAML, and how to use scenes in automations.</p><section><h2>Overview</h2><p>The Scenes integration lets you use scenes in Home Assistant. A scene stores the states that you want for a group of entities, and sets them again in one step when you activate it. For example, a &quot;Movie night&quot; scene can dim the TV backlight, turn off the ceiling light, and switch the TV to the right input.</p></section><section><h2>Scenes from other integrations</h2><p>Some integrations, such as Philips Hue, MQTT, and KNX, provide their own scenes. These scenes are also scene entities, and you activate them in the same way. When you activate one, Home Assistant tells the integration to activate it, and the integration or the device decides what changes. That&#x27;s why you can&#x27;t change these scenes in the scene editor. You manage them where the integration manages its scenes. For example, you create Hue scenes in the Hue app, KNX scenes in the KNX panel or in YAML, and MQTT scenes in YAML or with MQTT discovery.</p></section><section><h2>The state of a scene</h2><p>A scene doesn&#x27;t have an on or off state. Activating a scene sets the states of its entities, but there is nothing to turn off afterwards. To go back to the earlier states, activate another scene, or save the current states first with Create scene.</p></section><section><h2>Defining scenes in YAML</h2><p>Scenes that you create in the scene editor are stored in the scenes.yaml file. You can also write scenes in YAML yourself, for example, directly in your configuration.yaml file. Only the scenes in scenes.yaml can be edited in the scene editor.</p></section><section><h2>Editing a YAML scene in the scene editor</h2><p>If you wrote a scene in another YAML file, for example, directly in your configuration.yaml file, you can move it to scenes.yaml, so you can edit it in the scene editor. Your configuration.yaml file loads scenes.yaml with scene: !include scenes.yaml. This line is there by default. Check that your configuration.yaml file has it, and if it&#x27;s missing, add it. If your configuration.yaml file already has a scene: section for other scenes, give that section a label, for example, scene manual:, because each key can only be used once.</p></section><section><h2>Reloading scenes</h2><p>After you change scenes in YAML, you can apply the changes without restarting Home Assistant:</p></section><section><h2>Scene automation examples</h2><p>The following examples show how you can use scenes in automations.</p></section><section><h2>Automation: activate a scene slowly when someone comes home</h2><p>When Sweetheart comes home, this automation activates the Romantic scene. The lights change to their new states over 2.5 seconds, instead of all at once. Transitions only work for lights that support them. Other entities in the scene change right away.</p></section><section><h2>Automation: turn things off while a window is open, and restore them afterwards</h2><p>These two automations work together. When the window opens, the first one saves the current states of the thermostat and the ceiling lights in a new scene, and then turns them off. When the window closes, the second one activates that scene, so everything goes back to how it was.</p></section><section><h2>Description</h2><p>The scene has no id, so the scene editor can&#x27;t open it. This is the case for scenes in YAML without an id, scenes from another integration, and temporary scenes from the Create scene action.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Scenes in Home Assistant is <code>scene</code>.</p><h3>Documented actions</h3><ul class="chips"><li>apply</li><li>create</li><li>delete</li><li>reload</li><li>turn on</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Scenes from other integrations</li><li>The state of a scene</li><li>Defining scenes in YAML</li><li>Reloading scenes</li><li>Scene automation examples</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/scene/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/scene</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/scene</code></dd></dl></section><p><a href="../../integrations/scene/">Return to the Scenes guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scenes reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:143" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/scene/">Scenes guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Scenes</h1><p>Scenes set a group of entities to saved states in one step. Learn what the Scenes integration provides, how to define scenes in YAML, and how to use scenes in automations.</p><div class="reader-body"><p>The <strong>Scenes</strong> integration lets you use scenes in Home Assistant. A scene stores the states that you want for a group of entities, and sets them again in one step when you activate it. For example, a "Movie night" scene can dim the TV backlight, turn off the ceiling light, and switch the TV to the right input.</p>
+<p>Each scene is an entity, for example, <code>scene.movie_night</code>. You can activate it from a dashboard, an automation, or a script, and start an automation when it's activated.</p>
+<p>To create a scene, use the <a>scene editor</a>. To learn what scenes are and when to use them, refer to <a>Scenes</a>.</p>
+<p>Scenes</p>
+<h2>Scenes from other integrations</h2>
+<p>Some integrations, such as <a href="../hue/">Philips Hue</a>, <a href="../mqtt/">MQTT</a>, and <a href="../knx/">KNX</a>, provide their own scenes. These scenes are also scene entities, and you activate them in the same way. When you activate one, Home Assistant tells the integration to activate it, and the integration or the device decides what changes. That's why you can't change these scenes in the scene editor. You manage them where the integration manages its scenes. For example, you create <a href="../hue/">Hue scenes</a> in the Hue app, <a href="../knx/">KNX scenes</a> in the KNX panel or in YAML, and <a href="../mqtt/">MQTT scenes</a> in YAML or with MQTT discovery.</p>
+<h2>The state of a scene</h2>
+<p>A scene doesn't have an on or off state. Activating a scene sets the states of its entities, but there is nothing to turn off afterwards. To go back to the earlier states, activate another scene, or save the current states first with <a><strong>Create scene</strong></a>.</p>
+<p>The state of a scene entity is the date and time when the scene was last activated. Home Assistant keeps it after a restart.</p>
+<p>
+
+Screenshot showing the state of a scene entity in **Settings** &gt; **Tools** &gt; **States**
+</p>
+
+<p>In addition, the entity can have the following states:</p>
+<ul>
+<li><strong>Unavailable</strong>: The entity is currently unavailable.</li>
+<li><strong>Unknown</strong>: The state is not yet known.</li>
+</ul>
+<p>Scenes from the scene editor, from YAML, or from the <strong>Create scene</strong> action have these attributes:</p>
+<ul>
+<li><code>entity_id</code>: The entities in the scene.</li>
+<li><code>id</code>: The unique ID of the scene, if it has one.</li>
+</ul>
+<h2>Defining scenes in YAML</h2>
+<p>Scenes that you create in the scene editor are stored in the <code>scenes.yaml</code> file. You can also write scenes in YAML yourself, for example, directly in your <code>configuration.yaml</code> file. Only the scenes in <code>scenes.yaml</code> can be edited in the scene editor.</p>
+<p>Under <code>entities</code>, you list the states that the entities should have, not the actions to get there:</p>
+<pre><code># Example configuration.yaml entry
+scene:
+  - name: "Romantic"
+    icon: "mdi:flower-tulip"
+    entities:
+      light.tv_back_light: "on"
+      light.ceiling:
+        state: "on"
+        brightness: 200
+        color_mode: "xy"
+        xy_color:
+          - 0.33
+          - 0.66
+  - name: "Movies"
+    entities:
+      light.tv_back_light:
+        state: "on"
+        brightness: 125
+      light.ceiling: "off"
+      media_player.sony_bravia_tv:
+        state: "on"
+        source: "HDMI 1"
+  - name: "Standard"
+    entities:
+      light.tv_back_light:
+        state: "off"
+      light.ceiling:
+        state: "on"
+        brightness: 125
+        color_mode: "white"
+</code></pre>
+<pre><code>
+id:
+  description: A unique ID for the scene. Scenes that you create in the scene editor get one automatically. Without an ID, you can't edit the scene in the scene editor, or change the settings of the scene entity in the UI, for example, its area or category.
+  required: false
+  type: string
+name:
+  description: Friendly name of the scene.
+  required: true
+  type: string
+icon:
+  description: Icon for the scene.
+  required: false
+  type: string
+entities:
+  description: Entities to control and their desired states.
+  required: true
+  type: map
+
+</code></pre>
+<p>There are two ways to define the state of an entity:</p>
+<ul>
+<li>Only the state<ul>
+<li>For example, <code>light.tv_back_light: "on"</code>.</li>
+</ul>
+</li>
+<li>The state with attributes<ul>
+<li>For example, the brightness and color of a light. Add <code>state</code> and the attributes below the entity. To find the attributes of an entity, go to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>States</strong>.</li>
+</ul>
+</li>
+</ul>
+<h3>Editing a YAML scene in the scene editor</h3>
+<p>If you wrote a scene in another YAML file, for example, directly in your <code>configuration.yaml</code> file, you can move it to <code>scenes.yaml</code>, so you can edit it in the scene editor. Your <code>configuration.yaml</code> file loads <code>scenes.yaml</code> with <code>scene: !include scenes.yaml</code>. This line is there by default. Check that your <code>configuration.yaml</code> file has it, and if it's missing, add it. If your <code>configuration.yaml</code> file already has a <code>scene:</code> section for other scenes, give that section a label, for example, <code>scene manual:</code>, because each key can only be used once.</p>
+<ol>
+<li><p>Copy the scene from its old file to <code>scenes.yaml</code>.</p>
+<ul>
+<li><code>scenes.yaml</code> is a list, so each scene starts with <code>-</code>.</li>
+</ul>
+</li>
+<li><p>Give the scene an <code>id</code>. The <code>id</code> can be any text, as long as no other scene uses it:</p>
+<pre><code># Example scenes.yaml entry
+- id: "romantic"
+  name: "Romantic"
+  entities:
+    light.tv_back_light: "on"
+    light.ceiling:
+      state: "on"
+      brightness: 200
+      color_mode: "xy"
+      xy_color:
+        - 0.33
+        - 0.66
+</code></pre>
+</li>
+<li><p>Remove the scene from its old file.</p>
+<ul>
+<li>If you leave it there, Home Assistant loads both copies, and you have the scene twice.</li>
+</ul>
+</li>
+<li><p><a>Reload the scenes</a>.</p>
+<ul>
+<li>Result: The scene shows up in the scene editor, and you can edit it there.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Note</strong></p>
+<p>When you save a scene in the editor, the comments in <code>scenes.yaml</code> are lost.</p>
+<h2>Reloading scenes</h2>
+<p>After you change scenes in YAML, you can apply the changes without restarting Home Assistant:</p>
+<ul>
+<li>Go to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>YAML</strong>, and under <strong>YAML configuration reloading</strong>, select <strong>Scenes</strong>.</li>
+<li>In an automation or a script, use the <a><strong>Reload scenes</strong></a> action.</li>
+</ul>
+<p>Reloading also removes the scenes that you created with the <strong>Create scene</strong> action.</p>
+<h2>List of triggers</h2>
+<p>This integration does not provide any documented triggers yet. See the <a>triggers reference</a> for triggers from other integrations.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Scene automation examples</h2>
+<p>The following examples show how you can use scenes in automations.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: activate a scene slowly when someone comes home</h3>
+<p>When Sweetheart comes home, this automation activates the Romantic scene. The lights change to their new states over 2.5 seconds, instead of all at once. Transitions only work for lights that support them. Other entities in the scene change right away.</p>
+<ul>
+<li><strong>Trigger</strong>: Zone entered<ul>
+<li><strong>Target</strong>: Sweetheart</li>
+<li><strong>Zone</strong>: Home</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Activate scene<ul>
+<li><strong>Target</strong>: Romantic</li>
+<li><strong>Transition</strong>: 2.5</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for activating a scene with a transition</h4>
+<h4>Example</h4>
+<p>automation: |</p>
+<ul>
+<li>alias: "Activate the romantic scene when Sweetheart comes home"
+triggers:<ul>
+<li>trigger: zone.entered
+target:
+entity_id: device_tracker.sweetheart
+options:
+zone: zone.home
+actions:</li>
+<li>action: scene.turn_on
+target:
+entity_id: scene.romantic
+data:
+transition: 2.5</li>
+</ul>
+</li>
+</ul>
+<h3>Automation: turn things off while a window is open, and restore them afterwards</h3>
+<p>These two automations work together. When the window opens, the first one saves the current states of the thermostat and the ceiling lights in a new scene, and then turns them off. When the window closes, the second one activates that scene, so everything goes back to how it was.</p>
+<ul>
+<li>Automation 1<ul>
+<li><strong>Trigger</strong>: Window opened<ul>
+<li><strong>Target</strong>: Window</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Create scene<ul>
+<li><strong>Scene entity ID</strong>: <code>before</code></li>
+<li><strong>Entities snapshot</strong>: Thermostat and ceiling lights</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Turn off light<ul>
+<li><strong>Target</strong>: Ceiling lights</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Set thermostat HVAC mode<ul>
+<li><strong>Target</strong>: Thermostat</li>
+<li><strong>HVAC mode</strong>: Off</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Automation 2<ul>
+<li><strong>Trigger</strong>: Window closed<ul>
+<li><strong>Target</strong>: Window</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Activate scene<ul>
+<li><strong>Target</strong>: <code>scene.before</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for saving and restoring states with a window</h4>
+<h4>Example</h4>
+<p>automation: |</p>
+<ul>
+<li>alias: "Window opened"
+triggers:<ul>
+<li>trigger: window.opened
+target:
+entity_id: binary_sensor.window
+actions:</li>
+<li>action: scene.create
+data:
+scene_id: "before"
+snapshot_entities:
+- climate.ecobee
+- light.ceiling_lights</li>
+<li>action: light.turn_off
+target:
+entity_id: light.ceiling_lights</li>
+<li>action: climate.set_hvac_mode
+target:
+entity_id: climate.ecobee
+data:
+hvac_mode: "off"</li>
+</ul>
+</li>
+<li>alias: "Window closed"
+triggers:<ul>
+<li>trigger: window.closed
+target:
+entity_id: binary_sensor.window
+actions:</li>
+<li>action: scene.turn_on
+target:
+entity_id: scene.before</li>
+</ul>
+</li>
+</ul>
+<h2>Troubleshooting</h2>
+<p><a></a></p>
+<h4>Scene doesn't open in the scene editor</h4>
+<h3>Symptom: Selecting the scene does nothing</h3>
+<p>In <strong>Settings</strong> &gt; <strong>Automations &amp; scenes</strong> &gt; <strong>Scenes</strong>, selecting the scene does nothing. The row shows , with <strong>Only scenes defined in scenes.yaml are editable.</strong>, and <strong>Rename</strong>, <strong>Duplicate</strong>, and <strong>Delete</strong> in its menu are grayed out.</p>
+<h4>Description</h4>
+<p>The scene has no <code>id</code>, so the scene editor can't open it. This is the case for scenes in YAML without an <code>id</code>, scenes from another integration, and temporary scenes from the <strong>Create scene</strong> action.</p>
+<h4>Resolution</h4>
+<ul>
+<li>For a scene in YAML, move it to <code>scenes.yaml</code>, and give it an <code>id</code>. For the steps, refer to <a>Editing a YAML scene in the scene editor</a>.</li>
+<li>For a scene from another integration, change it where that integration manages its scenes, for example, in the Hue app or the KNX panel. For details, refer to <a>Scenes from other integrations</a>.</li>
+<li>A temporary scene from <strong>Create scene</strong> can't be edited. To change it, run <strong>Create scene</strong> again with the same <strong>Scene entity ID</strong>.</li>
+</ul>
+<p><a></a></p>
+<h4>Scene can't be edited in the scene editor</h4>
+<h3>Symptom: "Only scenes in scenes.yaml are editable"</h3>
+<p>When you open the scene, the scene editor shows <strong>Only scenes in scenes.yaml are editable.</strong></p>
+<h4>Description</h4>
+<p>The scene has an <code>id</code>, but it's not in the <code>scenes.yaml</code> file, for example, because it's written directly in your <code>configuration.yaml</code> file. The scene editor can only edit scenes in <code>scenes.yaml</code>.</p>
+<h4>Resolution</h4>
+<ul>
+<li>To edit the scene in the scene editor, move it to <code>scenes.yaml</code>. For the steps, refer to <a>Editing a YAML scene in the scene editor</a>.</li>
+<li>To keep the scene in its file, change it there, and then <a>reload the scenes</a>.</li>
+</ul>
+<p><a></a></p>
+<h4>Changes to a scene in YAML don't take effect</h4>
+<h3>Symptom: Activating the scene still sets the old states</h3>
+<p>You changed a scene in YAML, but activating the scene still sets the old states.</p>
+<h4>Description</h4>
+<p>Home Assistant reads the scenes from YAML when it starts or when you reload the scenes.</p>
+<h4>Resolution</h4>
+<p><a>Reload the scenes</a>, or restart Home Assistant.</p>
+<p><a></a></p>
+<h4>Create scene does nothing: the scene would be empty</h4>
+<h3>Symptom: No scene is created, and there is no error</h3>
+<p>You run the <strong>Create scene</strong> action, but no scene is created. There is no error. The logs show <code>Empty scenes are not allowed</code>, often after one or more warnings like <code>Entity light.ceiling_lights does not exist and therefore cannot be snapshotted</code>.</p>
+<h4>Description</h4>
+<p><strong>Create scene</strong> skips each entity in <strong>Entities snapshot</strong> that doesn't exist, for example, because of a typo in the entity ID, or because the entity was renamed or removed. If no entities are left, and <strong>Entity states</strong> is empty, the scene would be empty, so the action doesn't create it.</p>
+<p>If only some of the entities don't exist, the scene is created without them.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check the entity IDs in <strong>Entities snapshot</strong>. To find the current entity IDs, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Entities</strong>.</li>
+<li>Fix the entity IDs in the action, and run it again.</li>
+</ol>
+<p><a></a></p>
+<h4>Create scene does nothing: the scene already exists</h4>
+<h3>Symptom: The scene isn't created or changed</h3>
+<p>You run the <strong>Create scene</strong> action, but the scene isn't created or changed. The logs show <code>The scene scene.my_scene already exists</code>.</p>
+<h4>Description</h4>
+<p>A scene with that ID already exists in the scene editor or in YAML. <strong>Create scene</strong> only replaces scenes that it created itself.</p>
+<h4>Resolution</h4>
+<p>Use a different <strong>Scene entity ID</strong>.</p>
+<p><a></a></p>
+<h4>Create scene fails: entities and snapshot_entities must not overlap</h4>
+<h3>Symptom: "entities and snapshot_entities must not overlap"</h3>
+<p>The <strong>Create scene</strong> action fails, and the error message says <strong>entities and snapshot_entities must not overlap</strong>.</p>
+<h4>Description</h4>
+<p>The same entity is in both <strong>Entity states</strong> and <strong>Entities snapshot</strong>. A scene can only store one state for each entity.</p>
+<h4>Resolution</h4>
+<p>Remove the entity from one of the two fields.</p>
+<p><a></a></p>
+<h4>Delete scene fails: the scene wasn't created with Create scene</h4>
+<h3>Symptom: "The scene scene.my_scene is not created with action scene.create"</h3>
+<p>The <strong>Delete scene</strong> action fails with <strong>The scene scene.my_scene is not created with action <code>scene.create</code>.</strong></p>
+<h4>Description</h4>
+<p><strong>Delete scene</strong> only removes scenes that were created with the <strong>Create scene</strong> action. This scene comes from the scene editor or from YAML.</p>
+<h4>Resolution</h4>
+<ul>
+<li>For a scene from the scene editor, delete it in the scene editor.</li>
+<li>For a scene in YAML, remove it from the YAML file, and then <a>reload the scenes</a>.</li>
+</ul>
+<p><a></a></p>
+<h4>Delete scene fails: the scene is from another integration</h4>
+<h3>Symptom: "scene.my_scene is not a valid entity ID of a scene"</h3>
+<p>The <strong>Delete scene</strong> action fails with <strong>scene.my_scene is not a valid entity ID of a scene.</strong></p>
+<h4>Description</h4>
+<p>The scene comes from another integration, such as Hue, KNX, or MQTT. <strong>Delete scene</strong> only removes scenes that were created with the <strong>Create scene</strong> action.</p>
+<h4>Resolution</h4>
+<p>Delete the scene where that integration manages its scenes, for example, in the Hue app. For details, refer to <a>Scenes from other integrations</a>.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/scene.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Scenes set a group of entities to saved states in one step. Learn what the Scenes integration provides, how to define scenes in YAML, and how to use scenes in automations.
+ha_release: 0.15
+ha_domain: scene
+related:
+  - docs: /docs/scene/
+    title: Scenes
+---
+
+The **Scenes** {% term integration %} lets you use {% term scenes %} in Home Assistant. A scene stores the states that you want for a group of {% term entities %}, and sets them again in one step when you activate it. For example, a &quot;Movie night&quot; scene can dim the TV backlight, turn off the ceiling light, and switch the TV to the right input.
+
+Each scene is an {% term entity %}, for example, `scene.movie_night`. You can activate it from a dashboard, an automation, or a script, and start an automation when it&#x27;s activated.
+
+To create a scene, use the [scene editor](/docs/scene/#creating-a-scene-in-the-scene-editor). To learn what scenes are and when to use them, refer to [Scenes](/docs/scene/).
+
+{% my scenes badge %}
+
+## Scenes from other integrations
+
+Some integrations, such as [Philips Hue](/integrations/hue/), [MQTT](/integrations/mqtt/), and [KNX](/integrations/knx/), provide their own scenes. These scenes are also scene entities, and you activate them in the same way. When you activate one, Home Assistant tells the integration to activate it, and the integration or the device decides what changes. That&#x27;s why you can&#x27;t change these scenes in the scene editor. You manage them where the integration manages its scenes. For example, you create [Hue scenes](/integrations/hue/#scenes) in the Hue app, [KNX scenes](/integrations/knx/#scene) in the KNX panel or in YAML, and [MQTT scenes](/integrations/scene.mqtt/) in YAML or with MQTT discovery.
+
+## The state of a scene
+
+A scene doesn&#x27;t have an on or off state. Activating a scene sets the states of its entities, but there is nothing to turn off afterwards. To go back to the earlier states, activate another scene, or save the current states first with [**Create scene**](/actions/scene.create/).
+
+The state of a scene entity is the date and time when the scene was last activated. Home Assistant keeps it after a restart.
+
+&lt;p class=&#x27;img&#x27;&gt;
+&lt;img src=&#x27;/images/integrations/scene/state_scene.png&#x27; alt=&#x27;Screenshot showing the state of a scene entity in the States tab of Tools.&#x27; /&gt;
+Screenshot showing the state of a scene entity in {% my tools_states title=&quot;**Settings** &gt; **Tools** &gt; **States**&quot; %}
+&lt;/p&gt;
+
+In addition, the entity can have the following states:
+
+- **Unavailable**: The entity is currently unavailable.
+- **Unknown**: The state is not yet known.
+
+Scenes from the scene editor, from YAML, or from the **Create scene** action have these attributes:
+
+- `entity_id`: The entities in the scene.
+- `id`: The unique ID of the scene, if it has one.
+
+## Defining scenes in YAML
+
+Scenes that you create in the scene editor are stored in the `scenes.yaml` file. You can also write scenes in YAML yourself, for example, directly in your {% term &quot;`configuration.yaml`&quot; %} file. Only the scenes in `scenes.yaml` can be edited in the scene editor.
+
+Under `entities`, you list the states that the entities should have, not the actions to get there:
+
+```yaml
+# Example configuration.yaml entry
+scene:
+  - name: &quot;Romantic&quot;
+    icon: &quot;mdi:flower-tulip&quot;
+    entities:
+      light.tv_back_light: &quot;on&quot;
+      light.ceiling:
+        state: &quot;on&quot;
+        brightness: 200
+        color_mode: &quot;xy&quot;
+        xy_color:
+          - 0.33
+          - 0.66
+  - name: &quot;Movies&quot;
+    entities:
+      light.tv_back_light:
+        state: &quot;on&quot;
+        brightness: 125
+      light.ceiling: &quot;off&quot;
+      media_player.sony_bravia_tv:
+        state: &quot;on&quot;
+        source: &quot;HDMI 1&quot;
+  - name: &quot;Standard&quot;
+    entities:
+      light.tv_back_light:
+        state: &quot;off&quot;
+      light.ceiling:
+        state: &quot;on&quot;
+        brightness: 125
+        color_mode: &quot;white&quot;
+```
+
+{% configuration %}
+id:
+  description: A unique ID for the scene. Scenes that you create in the scene editor get one automatically. Without an ID, you can&#x27;t edit the scene in the scene editor, or change the settings of the scene entity in the UI, for example, its area or category.
+  required: false
+  type: string
+name:
+  description: Friendly name of the scene.
+  required: true
+  type: string
+icon:
+  description: Icon for the scene.
+  required: false
+  type: string
+entities:
+  description: Entities to control and their desired states.
+  required: true
+  type: map
+{% endconfiguration %}
+
+There are two ways to define the state of an entity:
+
+- Only the state
+  - For example, `light.tv_back_light: &quot;on&quot;`.
+- The state with attributes
+  - For example, the brightness and color of a light. Add `state` and the attributes below the entity. To find the attributes of an entity, go to {% my tools_states title=&quot;**Settings** &gt; **Tools** &gt; **States**&quot; %}.
+
+### Editing a YAML scene in the scene editor
+
+If you wrote a scene in another YAML file, for example, directly in your {% term &quot;`configuration.yaml`&quot; %} file, you can move it to `scenes.yaml`, so you can edit it in the scene editor. Your `configuration.yaml` file loads `scenes.yaml` with `scene: !include scenes.yaml`. This line is there by default. Check that your `configuration.yaml` file has it, and if it&#x27;s missing, add it. If your `configuration.yaml` file already has a `scene:` section for other scenes, give that section a label, for example, `scene manual:`, because each key can only be used once.
+
+1. Copy the scene from its old file to `scenes.yaml`.
+   - `scenes.yaml` is a list, so each scene starts with `-`.
+2. Give the scene an `id`. The `id` can be any text, as long as no other scene uses it:
+
+   ```yaml
+   # Example scenes.yaml entry
+   - id: &quot;romantic&quot;
+     name: &quot;Romantic&quot;
+     entities:
+       light.tv_back_light: &quot;on&quot;
+       light.ceiling:
+         state: &quot;on&quot;
+         brightness: 200
+         color_mode: &quot;xy&quot;
+         xy_color:
+           - 0.33
+           - 0.66
+   ```
+
+3. Remove the scene from its old file.
+   - If you leave it there, Home Assistant loads both copies, and you have the scene twice.
+4. [Reload the scenes](#reloading-scenes).
+   - Result: The scene shows up in the scene editor, and you can edit it there.
+
+{% note %}
+When you save a scene in the editor, the comments in `scenes.yaml` are lost.
+{% endnote %}
+
+## Reloading scenes
+
+After you change scenes in YAML, you can apply the changes without restarting Home Assistant:
+
+- Go to {% my tools_yaml title=&quot;**Settings** &gt; **Tools** &gt; **YAML**&quot; %}, and under **YAML configuration reloading**, select **Scenes**.
+- In an automation or a script, use the [**Reload scenes**](/actions/scene.reload/) action.
+
+Reloading also removes the scenes that you created with the **Create scene** action.
+
+{% include integrations/triggers.md %}
+
+{% include integrations/actions.md %}
+
+## Scene automation examples
+
+The following examples show how you can use scenes in automations.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: activate a scene slowly when someone comes home
+
+When Sweetheart comes home, this automation activates the Romantic scene. The lights change to their new states over 2.5 seconds, instead of all at once. Transitions only work for lights that support them. Other entities in the scene change right away.
+
+- **Trigger**: Zone entered
+  - **Target**: Sweetheart
+  - **Zone**: Home
+- **Action**: Activate scene
+  - **Target**: Romantic
+  - **Transition**: 2.5
+
+{% details &quot;YAML example for activating a scene with a transition&quot; %}
+
+{% example %}
+automation: |
+  - alias: &quot;Activate the romantic scene when Sweetheart comes home&quot;
+    triggers:
+      - trigger: zone.entered
+        target:
+          entity_id: device_tracker.sweetheart
+        options:
+          zone: zone.home
+    actions:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.romantic
+        data:
+          transition: 2.5
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: turn things off while a window is open, and restore them afterwards
+
+These two automations work together. When the window opens, the first one saves the current states of the thermostat and the ceiling lights in a new scene, and then turns them off. When the window closes, the second one activates that scene, so everything goes back to how it was.
+
+- Automation 1
+  - **Trigger**: Window opened
+    - **Target**: Window
+  - **Action**: Create scene
+    - **Scene entity ID**: `before`
+    - **Entities snapshot**: Thermostat and ceiling lights
+  - **Action**: Turn off light
+    - **Target**: Ceiling lights
+  - **Action**: Set thermostat HVAC mode
+    - **Target**: Thermostat
+    - **HVAC mode**: Off
+- Automation 2
+  - **Trigger**: Window closed
+    - **Target**: Window
+  - **Action**: Activate scene
+    - **Target**: `scene.before`
+
+{% details &quot;YAML example for saving and restoring states with a window&quot; %}
+
+{% example %}
+automation: |
+  - alias: &quot;Window opened&quot;
+    triggers:
+      - trigger: window.opened
+        target:
+          entity_id: binary_sensor.window
+    actions:
+      - action: scene.create
+        data:
+          scene_id: &quot;before&quot;
+          snapshot_entities:
+            - climate.ecobee
+            - light.ceiling_lights
+      - action: light.turn_off
+        target:
+          entity_id: light.ceiling_lights
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: climate.ecobee
+        data:
+          hvac_mode: &quot;off&quot;
+  - alias: &quot;Window closed&quot;
+    triggers:
+      - trigger: window.closed
+        target:
+          entity_id: binary_sensor.window
+    actions:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.before
+{% endexample %}
+
+{% enddetails %}
+
+## Troubleshooting
+
+&lt;a id=&quot;scene-doesnt-open-in-the-scene-editor&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Scene doesn&#x27;t open in the scene editor&quot; %}
+
+### Symptom: Selecting the scene does nothing
+
+In {% my scenes title=&quot;**Settings** &gt; **Automations &amp; scenes** &gt; **Scenes**&quot; %}, selecting the scene does nothing. The row shows {% icon &quot;mdi:pencil-off&quot; %}, with **Only scenes defined in scenes.yaml are editable.**, and **Rename**, **Duplicate**, and **Delete** in its menu are grayed out.
+
+#### Description
+
+The scene has no `id`, so the scene editor can&#x27;t open it. This is the case for scenes in YAML without an `id`, scenes from another integration, and temporary scenes from the **Create scene** action.
+
+#### Resolution
+
+- For a scene in YAML, move it to `scenes.yaml`, and give it an `id`. For the steps, refer to [Editing a YAML scene in the scene editor](#editing-a-yaml-scene-in-the-scene-editor).
+- For a scene from another integration, change it where that integration manages its scenes, for example, in the Hue app or the KNX panel. For details, refer to [Scenes from other integrations](#scenes-from-other-integrations).
+- A temporary scene from **Create scene** can&#x27;t be edited. To change it, run **Create scene** again with the same **Scene entity ID**.
+
+{% enddetails %}
+
+&lt;a id=&quot;scene-cant-be-edited-in-the-scene-editor&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Scene can&#x27;t be edited in the scene editor&quot; %}
+
+### Symptom: &quot;Only scenes in scenes.yaml are editable&quot;
+
+When you open the scene, the scene editor shows **Only scenes in scenes.yaml are editable.**
+
+#### Description
+
+The scene has an `id`, but it&#x27;s not in the `scenes.yaml` file, for example, because it&#x27;s written directly in your `configuration.yaml` file. The scene editor can only edit scenes in `scenes.yaml`.
+
+#### Resolution
+
+- To edit the scene in the scene editor, move it to `scenes.yaml`. For the steps, refer to [Editing a YAML scene in the scene editor](#editing-a-yaml-scene-in-the-scene-editor).
+- To keep the scene in its file, change it there, and then [reload the scenes](#reloading-scenes).
+
+{% enddetails %}
+
+&lt;a id=&quot;scene-changes-in-yaml-dont-take-effect&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Changes to a scene in YAML don&#x27;t take effect&quot; %}
+
+### Symptom: Activating the scene still sets the old states
+
+You changed a scene in YAML, but activating the scene still sets the old states.
+
+#### Description
+
+Home Assistant reads the scenes from YAML when it starts or when you reload the scenes.
+
+#### Resolution
+
+[Reload the scenes](#reloading-scenes), or restart Home Assistant.
+
+{% enddetails %}
+
+&lt;a id=&quot;create-scene-does-nothing-scene-would-be-empty&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Create scene does nothing: the scene would be empty&quot; %}
+
+### Symptom: No scene is created, and there is no error
+
+You run the **Create scene** action, but no scene is created. There is no error. The logs show `Empty scenes are not allowed`, often after one or more warnings like `Entity light.ceiling_lights does not exist and therefore cannot be snapshotted`.
+
+#### Description
+
+**Create scene** skips each entity in **Entities snapshot** that doesn&#x27;t exist, for example, because of a typo in the entity ID, or because the entity was renamed or removed. If no entities are left, and **Entity states** is empty, the scene would be empty, so the action doesn&#x27;t create it.
+
+If only some of the entities don&#x27;t exist, the scene is created without them.
+
+#### Resolution
+
+1. Check the entity IDs in **Entities snapshot**. To find the current entity IDs, go to {% my entities title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Entities**&quot; %}.
+2. Fix the entity IDs in the action, and run it again.
+
+{% enddetails %}
+
+&lt;a id=&quot;create-scene-does-nothing-scene-already-exists&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Create scene does nothing: the scene already exists&quot; %}
+
+### Symptom: The scene isn&#x27;t created or changed
+
+You run the **Create scene** action, but the scene isn&#x27;t created or changed. The logs show `The scene scene.my_scene already exists`.
+
+#### Description
+
+A scene with that ID already exists in the scene editor or in YAML. **Create scene** only replaces scenes that it created itself.
+
+#### Resolution
+
+Use a different **Scene entity ID**.
+
+{% enddetails %}
+
+&lt;a id=&quot;create-scene-fails-entities-overlap&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Create scene fails: entities and snapshot_entities must not overlap&quot; %}
+
+### Symptom: &quot;entities and snapshot_entities must not overlap&quot;
+
+The **Create scene** action fails, and the error message says **entities and snapshot_entities must not overlap**.
+
+#### Description
+
+The same entity is in both **Entity states** and **Entities snapshot**. A scene can only store one state for each entity.
+
+#### Resolution
+
+Remove the entity from one of the two fields.
+
+{% enddetails %}
+
+&lt;a id=&quot;delete-scene-fails-not-created-with-create-scene&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Delete scene fails: the scene wasn&#x27;t created with Create scene&quot; %}
+
+### Symptom: &quot;The scene scene.my_scene is not created with action scene.create&quot;
+
+The **Delete scene** action fails with **The scene scene.my_scene is not created with action `scene.create`.**
+
+#### Description
+
+**Delete scene** only removes scenes that were created with the **Create scene** action. This scene comes from the scene editor or from YAML.
+
+#### Resolution
+
+- For a scene from the scene editor, delete it in the scene editor.
+- For a scene in YAML, remove it from the YAML file, and then [reload the scenes](#reloading-scenes).
+
+{% enddetails %}
+
+&lt;a id=&quot;delete-scene-fails-scene-from-another-integration&quot;&gt;&lt;/a&gt;
+
+{% details &quot;Delete scene fails: the scene is from another integration&quot; %}
+
+### Symptom: &quot;scene.my_scene is not a valid entity ID of a scene&quot;
+
+The **Delete scene** action fails with **scene.my_scene is not a valid entity ID of a scene.**
+
+#### Description
+
+The scene comes from another integration, such as Hue, KNX, or MQTT. **Delete scene** only removes scenes that were created with the **Create scene** action.
+
+#### Resolution
+
+Delete the scene where that integration manages its scenes, for example, in the Hue app. For details, refer to [Scenes from other integrations](#scenes-from-other-integrations).
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Scenes in Home Assistant is <code>scene</code>.</p><h3>Documented actions</h3><ul class="chips"><li>apply</li><li>create</li><li>delete</li><li>reload</li><li>turn on</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Scenes from other integrations</li><li>The state of a scene</li><li>Defining scenes in YAML</li><li>Reloading scenes</li><li>Scene automation examples</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/scene/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/scene</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/scene</code></dd></dl></section><p><a href="../../integrations/scene/">Return to the Scenes guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

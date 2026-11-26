@@ -1,1 +1,663 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scrape reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:177" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/scrape/">Scrape guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Scrape</h1><p>Instructions on how to integrate Web scrape sensors into Home Assistant.</p><section><h2>Overview</h2><p>The Scrape sensor integration scrapes information from websites. The sensor loads an HTML page, and allows you to search and extract specific values. As this is not a fully featured web scraper like scrapy, it will work with simple web pages and it can be time-consuming to get the right section.</p></section><section><h2>YAML Configuration</h2><p>To enable this integration using YAML, add the following lines to your configuration.yaml file.</p></section><section><h2>Examples</h2><p>In this section you find some real-life examples of how to use this sensor. There is also a Jupyter notebook available for this example to give you a bit more insight.</p></section><section><h2>Home Assistant</h2><p>The current release Home Assistant is published on homepage</p></section><section><h2>Get a value out of a tag</h2><p>The German Federal Office for Radiation protection (Bundesamt für Strahlenschutz) is publishing various details about optical radiation including an UV index. This example is getting the index for a region in Germany.</p></section><section><h2>IFTTT status</h2><p>If you make heavy use of the IFTTT web service for your automations and are curious about the status of IFTTT then you can display the current state of IFTTT in your frontend.</p></section><section><h2>Get the latest podcast episode file URL</h2><p>If you want to get the file URL for the latest episode of your favorite podcast, so you can pass it on to a compatible media player.</p></section><section><h2>Energy price</h2><p>This example tries to retrieve the price for electricity.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Scrape.</p><p>The <strong>user</strong> configuration step lists <code>method</code>, <code>payload</code>, <code>resource</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>YAML Configuration</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/scrape/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/scrape</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/scrape</code></dd></dl></section><p><a href="../../integrations/scrape/">Return to the Scrape guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scrape reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:177" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/scrape/">Scrape guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Scrape</h1><p>Instructions on how to integrate Web scrape sensors into Home Assistant.</p><div class="reader-body"><p>The <strong>Scrape</strong> sensor integration scrapes information from websites. The sensor loads an HTML page, and allows you to search and extract specific values. As this is not a fully featured web scraper like <a>scrapy</a>, it will work with simple web pages and it can be time-consuming to get the right section.</p>
+<p>Both UI and <a>YAML setup</a> is supported while YAML provides additional configuration possibilities.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Scrape</strong> integration to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Scrape</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Scrape uses configuration subentries for configuring the sensors.</p>
+<ol>
+<li>Set up the resource configuration once per resource you want to scrape information from.</li>
+<li>Create one or multiple configuration subentries per sensor you want to create by scraping the website.</li>
+</ol>
+<h2>YAML Configuration</h2>
+<p>To enable this integration using YAML, add the following lines to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://www.home-assistant.io
+    sensor:
+      - name: "Current version"
+        select: ".release-date"
+</code></pre>
+<pre><code>
+resource:
+  description: The resource or endpoint that contains the value. One of `resource` and `resource_template` must be used.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support. One of `resource` and `resource_template` must be used.
+  required: true
+  type: template
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+payload_template:
+  description: The payload to send with a POST request with template support.
+  required: false
+  type: template
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+timeout:
+  description: Defines max time to wait data from the endpoint.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+username:
+  description: The username for accessing the resource.
+  required: false
+  type: string
+password:
+  description: The password for accessing the resource.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+scan_interval:
+  description: Define the frequency to call the resource in seconds.
+  required: false
+  type: integer
+  default: 600
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+sensor:
+  description: A list of sensors to create from the shared data.
+  required: true
+  type: map
+  keys:
+    name:
+      description: Defines a template to get the name of the entity.
+      required: false
+      type: template
+    select:
+      description: "Defines the HTML tag to search for. Check Beautifulsoup's [CSS selectors](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors) for details."
+      required: true
+      type: string
+    attribute:
+      description: Get value of an attribute on the selected tag.
+      required: false
+      type: string
+    index:
+      description: Defines which of the elements returned by the CSS selector to use.
+      required: false
+      default: 0
+      type: integer
+    value_template:
+      description: Defines a template to get the state of the sensor.
+      required: false
+      type: template
+    unique_id:
+      description: An ID that uniquely identifies this entity. Will be combined with the unique ID of the configuration block if available. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+      required: false
+      type: string
+    icon:
+      description: Defines a template for the icon of the entity.
+      required: false
+      type: template
+    availability:
+      description: Defines a template to get the `available` state of the entity. If the template either fails to render or returns `True`, `"1"`, `"true"`, `"yes"`, `"on"`, `"enable"`, or a non-zero number, the entity will be `available`. If the template returns any other value, the entity will be `unavailable`. If not configured, the entity will always be `available`. Note that the string comparison not case sensitive; `"TrUe"` and `"yEs"` are allowed.
+      required: false
+      type: template
+      default: true
+    unit_of_measurement:
+      description: "Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes). This will also display the value based on the user profile Number Format setting and influence the graphical presentation in the history visualization as a continuous value."
+      required: false
+      type: string
+      default: None
+    state_class:
+      description: "The [state_class](/integrations/sensor/#state-class) of the sensor. This will also display the value based on the user profile Number Format setting and influence the graphical presentation in the history visualization as a continuous value."
+      required: false
+      type: string
+      default: None
+    picture:
+      description: Defines a template for the entity picture of the sensor.
+      required: false
+      type: template
+    device_class:
+      description: Sets the [device class](/integrations/sensor/#device-class), changing the device state and icon that is displayed on the UI. It does not set the `unit_of_measurement`.
+      required: false
+      type: device_class
+      default: None
+
+</code></pre>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>Examples</h2>
+<p>In this section you find some real-life examples of how to use this sensor. There is also a <a>Jupyter notebook</a> available for this example to give you a bit more insight.</p>
+<h3>Home Assistant</h3>
+<p>The current release Home Assistant is published on <a>homepage</a></p>
+<pre><code>scrape:
+# Example configuration.yaml entry
+  - resource: https://www.home-assistant.io
+    sensor:
+      - name: Release
+        select: ".release-date"
+</code></pre>
+<h3>Available implementations</h3>
+<p>Get the counter for all our implementations from the integrations page under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://www.home-assistant.io/integrations/
+    sensor:
+      - name: Home Assistant impl.
+        select: 'a[href="#all"]'
+        value_template: '{{ value.split("(")[1].split(")")[0] }}'
+</code></pre>
+<h3>Get a value out of a tag</h3>
+<p>The German <a>Federal Office for Radiation protection (Bundesamt für Strahlenschutz)</a> is publishing various details about optical radiation including an UV index. This example is getting the index for a region in Germany.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://www.bfs.de/DE/themen/opt/uv/uv-index/prognose/prognose_node.html
+    sensor:
+      - name: Coast Ostsee
+        select: "p"
+        index: 19
+        unit_of_measurement: "UV Index"
+</code></pre>
+<h3>IFTTT status</h3>
+<p>If you make heavy use of the <a href="../ifttt/">IFTTT</a> web service for your automations and are curious about the <a>status of IFTTT</a> then you can display the current state of IFTTT in your frontend.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://status.ifttt.com/
+    sensor:
+      - name: IFTTT status
+        select: ".component-status"
+</code></pre>
+<h3>Get the latest podcast episode file URL</h3>
+<p>If you want to get the file URL for the latest episode of your <a>favorite podcast</a>, so you can pass it on to a compatible media player.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://hasspodcast.io/feed/podcast
+    sensor:
+      - name: Home Assistant Podcast
+        select: "enclosure"
+        index: 1
+        attribute: url
+</code></pre>
+<h3>Energy price</h3>
+<p>This example tries to retrieve the price for electricity.</p>
+<pre><code># Example configuration.yaml entry
+scrape:
+  - resource: https://elen.nu/dagens-spotpris/se3-stockholm/
+    sensor:
+      - name: Electricity price
+        select: ".text-lg.font-bold"
+        index: 1
+        value_template: '{{ value | replace (",", ".") | float }}'
+        unit_of_measurement: "öre/kWh"
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/scrape.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Web scrape sensors into Home Assistant.
+ha_release: 0.31
+ha_domain: scrape
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The **Scrape** sensor {% term integration %} scrapes information from websites. The sensor loads an HTML page, and allows you to search and extract specific values. As this is not a fully featured web scraper like [scrapy](https://scrapy.org/), it will work with simple web pages and it can be time-consuming to get the right section.
+
+Both UI and [YAML setup](#yaml-configuration) is supported while YAML provides additional configuration possibilities.
+
+{% include integrations/config_flow.md %}
+
+{% note %}
+
+Scrape uses configuration subentries for configuring the sensors.
+
+1. Set up the resource configuration once per resource you want to scrape information from.
+2. Create one or multiple configuration subentries per sensor you want to create by scraping the website.
+
+{% endnote %}
+
+## YAML Configuration
+
+To enable this {% term integration %} using YAML, add the following lines to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://www.home-assistant.io
+    sensor:
+      - name: &quot;Current version&quot;
+        select: &quot;.release-date&quot;
+```
+
+{% configuration %}
+resource:
+  description: The resource or endpoint that contains the value. One of `resource` and `resource_template` must be used.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support. One of `resource` and `resource_template` must be used.
+  required: true
+  type: template
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+payload_template:
+  description: The payload to send with a POST request with template support.
+  required: false
+  type: template
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+timeout:
+  description: Defines max time to wait data from the endpoint.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+username:
+  description: The username for accessing the resource.
+  required: false
+  type: string
+password:
+  description: The password for accessing the resource.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+scan_interval:
+  description: Define the frequency to call the resource in seconds.
+  required: false
+  type: integer
+  default: 600
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+sensor:
+  description: A list of sensors to create from the shared data.
+  required: true
+  type: map
+  keys:
+    name:
+      description: Defines a template to get the name of the entity.
+      required: false
+      type: template
+    select:
+      description: &quot;Defines the HTML tag to search for. Check Beautifulsoup&#x27;s [CSS selectors](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors) for details.&quot;
+      required: true
+      type: string
+    attribute:
+      description: Get value of an attribute on the selected tag.
+      required: false
+      type: string
+    index:
+      description: Defines which of the elements returned by the CSS selector to use.
+      required: false
+      default: 0
+      type: integer
+    value_template:
+      description: Defines a template to get the state of the sensor.
+      required: false
+      type: template
+    unique_id:
+      description: An ID that uniquely identifies this entity. Will be combined with the unique ID of the configuration block if available. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+      required: false
+      type: string
+    icon:
+      description: Defines a template for the icon of the entity.
+      required: false
+      type: template
+    availability:
+      description: Defines a template to get the `available` state of the entity. If the template either fails to render or returns `True`, `&quot;1&quot;`, `&quot;true&quot;`, `&quot;yes&quot;`, `&quot;on&quot;`, `&quot;enable&quot;`, or a non-zero number, the entity will be `available`. If the template returns any other value, the entity will be `unavailable`. If not configured, the entity will always be `available`. Note that the string comparison not case sensitive; `&quot;TrUe&quot;` and `&quot;yEs&quot;` are allowed.
+      required: false
+      type: template
+      default: true
+    unit_of_measurement:
+      description: &quot;Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes). This will also display the value based on the user profile Number Format setting and influence the graphical presentation in the history visualization as a continuous value.&quot;
+      required: false
+      type: string
+      default: None
+    state_class:
+      description: &quot;The [state_class](/integrations/sensor/#state-class) of the sensor. This will also display the value based on the user profile Number Format setting and influence the graphical presentation in the history visualization as a continuous value.&quot;
+      required: false
+      type: string
+      default: None
+    picture:
+      description: Defines a template for the entity picture of the sensor.
+      required: false
+      type: template
+    device_class:
+      description: Sets the [device class](/integrations/sensor/#device-class), changing the device state and icon that is displayed on the UI. It does not set the `unit_of_measurement`.
+      required: false
+      type: device_class
+      default: None
+{% endconfiguration %}
+
+{% include integrations/using_templates.md %}
+
+## Examples
+
+In this section you find some real-life examples of how to use this sensor. There is also a [Jupyter notebook](https://nbviewer.jupyter.org/github/home-assistant/home-assistant-notebooks/blob/master/other/web-scraping.ipynb) available for this example to give you a bit more insight.
+
+### Home Assistant
+
+The current release Home Assistant is published on [homepage](/)
+
+```yaml
+scrape:
+# Example configuration.yaml entry
+  - resource: https://www.home-assistant.io
+    sensor:
+      - name: Release
+        select: &quot;.release-date&quot;
+```
+
+### Available implementations
+
+Get the counter for all our implementations from the integrations page under {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://www.home-assistant.io/integrations/
+    sensor:
+      - name: Home Assistant impl.
+        select: &#x27;a[href=&quot;#all&quot;]&#x27;
+        value_template: &#x27;{{ value.split(&quot;(&quot;)[1].split(&quot;)&quot;)[0] }}&#x27;
+```
+
+### Get a value out of a tag
+
+The German [Federal Office for Radiation protection (Bundesamt für Strahlenschutz)](https://www.bfs.de/) is publishing various details about optical radiation including an UV index. This example is getting the index for a region in Germany.
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://www.bfs.de/DE/themen/opt/uv/uv-index/prognose/prognose_node.html
+    sensor:
+      - name: Coast Ostsee
+        select: &quot;p&quot;
+        index: 19
+        unit_of_measurement: &quot;UV Index&quot;
+```
+
+### IFTTT status
+
+If you make heavy use of the [IFTTT](/integrations/ifttt/) web service for your automations and are curious about the [status of IFTTT](https://status.ifttt.com/) then you can display the current state of IFTTT in your frontend.
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://status.ifttt.com/
+    sensor:
+      - name: IFTTT status
+        select: &quot;.component-status&quot;
+```
+
+### Get the latest podcast episode file URL
+
+If you want to get the file URL for the latest episode of your [favorite podcast](https://hasspodcast.io/), so you can pass it on to a compatible media player.
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://hasspodcast.io/feed/podcast
+    sensor:
+      - name: Home Assistant Podcast
+        select: &quot;enclosure&quot;
+        index: 1
+        attribute: url
+```
+
+### Energy price
+
+This example tries to retrieve the price for electricity.
+
+```yaml
+# Example configuration.yaml entry
+scrape:
+  - resource: https://elen.nu/dagens-spotpris/se3-stockholm/
+    sensor:
+      - name: Electricity price
+        select: &quot;.text-lg.font-bold&quot;
+        index: 1
+        value_template: &#x27;{{ value | replace (&quot;,&quot;, &quot;.&quot;) | float }}&#x27;
+        unit_of_measurement: &quot;öre/kWh&quot;
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Scrape.</p><p>The <strong>user</strong> configuration step lists <code>method</code>, <code>payload</code>, <code>resource</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>YAML Configuration</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/scrape/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/scrape</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/scrape</code></dd></dl></section><p><a href="../../integrations/scrape/">Return to the Scrape guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

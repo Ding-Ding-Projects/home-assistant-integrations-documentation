@@ -1,1 +1,3725 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:105" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/modbus/">Modbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Modbus</h1><p>Instructions on how to manually register Modbus entities and platforms.</p><section><h2>Overview</h2><p>The Modbus integration connects Home Assistant to devices that have a Modbus interface. Many integrations for these devices use the Modbus integration to connect, so you usually don&#x27;t set it up yourself.</p></section><section><h2>Setting up a Modbus hub in YAML</h2><p>Use a Modbus hub in YAML only if no integration supports your device. You then configure the Modbus registers of your device yourself.</p></section><section><h2>Modbus YAML reference</h2><p>Use these options when you set up a Modbus hub in YAML. For the steps, refer to Setting up a Modbus hub in YAML.</p></section><section><h2>Modbus terms used in YAML</h2><p>When you set up a Modbus hub in YAML, you also need the following terms. For general terms, such as a Modbus gateway or the unit ID, refer to Modbus terminology.</p></section><section><h2>Modbus hub</h2><p>A connection that you configure in YAML, under modbus:. A Modbus hub keeps a connection of its own, even if an integration uses the same device.</p></section><section><h2>Connection type</h2><p>The type of a Modbus hub sets how Home Assistant reaches the device:</p></section><section><h2>Modbus &lt;abbr title=&quot;American Standard Code for Information Interchange&quot;&gt;ASCII&lt;/abbr&gt;</h2><p>Modbus over a serial connection, with the data sent as text characters. Only a few devices use it. With type: serial, set method: ascii. For Modbus RTU, use method: rtu.</p></section><section><h2>Modbus &lt;abbr title=&quot;User Datagram Protocol&quot;&gt;UDP&lt;/abbr&gt;</h2><p>Modbus over your network, with UDP instead of TCP. It&#x27;s rarely used. Set type: udp.</p></section><section><h2>Device address</h2><p>The unit ID of the device, set with device_address on each entity. Most devices use 1. Older configurations use slave, which works the same.</p></section><section><h2>Register</h2><p>A place in the device that stores one value of 16 bits. Values that need more space, such as a 32-bit number, use several registers in a row.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Modbus in Home Assistant is <code>modbus</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>fan</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>stop</li><li>write coil</li><li>write register</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setting up a Modbus hub in YAML</li><li>Modbus YAML reference</li><li>Opening an issue</li><li>Building on top of Modbus</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/modbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/modbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/modbus</code></dd></dl></section><p><a href="../../integrations/modbus/">Return to the Modbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:105" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/modbus/">Modbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Modbus</h1><p>Instructions on how to manually register Modbus entities and platforms.</p><div class="reader-body"><p>The <strong>Modbus</strong> integration connects Home Assistant to devices that have a Modbus interface. Many integrations for these devices use the Modbus integration to connect, so you usually don't set it up yourself.</p>
+<p>This page documents the <strong>Modbus</strong> integration. To learn more about Modbus, refer to <a>Modbus</a>.</p>
+<p>If no integration supports your device, you can still get to its data by manually configuring the Modbus registers in YAML. For the steps, refer to <a>Setting up a Modbus hub in YAML</a>.</p>
+<h2>Setting up a Modbus hub in YAML</h2>
+<p>Use a Modbus hub in YAML only if no integration supports your device. You then configure the Modbus registers of your device yourself.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>You have administrator rights.</li>
+<li>You can edit your <code>configuration.yaml</code> file.</li>
+<li>You have a device with a Modbus interface, and its Modbus documentation with the addresses of the values you want to use.<ul>
+<li>For the terms, such as register types and addresses, refer to <a>Modbus terms used in YAML</a>.</li>
+</ul>
+</li>
+<li>Home Assistant can reach the Modbus interface of the device in one of these ways:<ul>
+<li>Over the network (Modbus TCP or Modbus UDP): the device, or a Modbus gateway that translates to Modbus TCP or UDP, is on your network.</li>
+<li>Over a serial connection (Modbus RTU): the RS-485 wires of the device are connected to one of these, but not to an ESPHome serial proxy:<ul>
+<li>A <a>USB-to-RS-485 adapter</a> that is connected to your Home Assistant system.</li>
+<li>A <a>serial device server</a> on your network.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>If needed, turn on the Modbus interface of your device.</li>
+<li>In your <code>configuration.yaml</code> file, add a Modbus hub for the connection to your device.<ul>
+<li>For the options, refer to <a>Configuring Modbus communication</a>.</li>
+<li>For a serial device server, use <code>type: rtuovertcp</code>. Set the baud rate on the serial device server itself. For details, refer to <a>Configuring a Modbus RTU over TCP connection</a>.</li>
+</ul>
+</li>
+<li>Under the hub, add an entity for each value you want to read or control. Set <code>address</code> to where the device stores the value.<ul>
+<li>For the options, refer to <a>Configuring Modbus entities</a>.</li>
+</ul>
+</li>
+<li>Restart Home Assistant.<ul>
+<li>Result: The entities of your device appear in Home Assistant.</li>
+</ul>
+</li>
+<li>Optional: To check the connection, go to <strong>Settings</strong> &gt; <strong>Connectivity</strong> &gt; <strong>Modbus</strong>.<ul>
+<li>For details, refer to <a>Viewing your Modbus connections</a>.</li>
+</ul>
+</li>
+</ol>
+<h2>Modbus YAML reference</h2>
+<p>Use these options when you set up a Modbus hub in YAML. For the steps, refer to <a>Setting up a Modbus hub in YAML</a>.</p>
+<h3>Modbus terms used in YAML</h3>
+<p>When you set up a Modbus hub in YAML, you also need the following terms. For general terms, such as a Modbus gateway or the unit ID, refer to <a>Modbus terminology</a>.</p>
+<h4>Modbus hub</h4>
+<p>A connection that you configure in YAML, under <code>modbus:</code>. A Modbus hub keeps a connection of its own, even if an integration uses the same device.</p>
+<h4>Connection type</h4>
+<p>The <code>type</code> of a Modbus hub sets how Home Assistant reaches the device:</p>
+<ul>
+<li><code>tcp</code>: <a>Modbus TCP</a>, to a device with a network interface, or to a <a>Modbus gateway</a> that translates.</li>
+<li><code>rtuovertcp</code>: <a>Modbus RTU over TCP</a>, to a <a>serial device server</a>, or to a Modbus gateway in transparent mode.</li>
+<li><code>udp</code>: <a>Modbus UDP</a>.</li>
+<li><code>serial</code>: <a>Modbus RTU</a> or <a>Modbus ASCII</a>, over a serial port, such as a <a>USB-to-RS-485 adapter</a>.</li>
+</ul>
+<h4>Modbus ASCII</h4>
+<p>Modbus over a serial connection, with the data sent as text characters. Only a few devices use it. With <code>type: serial</code>, set <code>method: ascii</code>. For Modbus RTU, use <code>method: rtu</code>.</p>
+<h4>Modbus UDP</h4>
+<p>Modbus over your network, with UDP instead of TCP. It's rarely used. Set <code>type: udp</code>.</p>
+<h4>Device address</h4>
+<p>The <a>unit ID</a> of the device, set with <code>device_address</code> on each entity. Most devices use <code>1</code>. Older configurations use <code>slave</code>, which works the same.</p>
+<h4>Register</h4>
+<p>A place in the device that stores one value of 16 bits. Values that need more space, such as a 32-bit number, use several registers in a row.</p>
+<p>Modbus defines four types of data: coils, discrete inputs, input registers, and holding registers. A device only uses the types it needs.</p>
+<h4>Coil</h4>
+<p>A single bit that you can read and write, for example, to turn a relay on or off. In YAML, it's <code>coil</code>.</p>
+<h4>Discrete input</h4>
+<p>A single bit that you can only read, for example, the state of a contact. In YAML, it's <code>discrete_input</code>.</p>
+<h4>Input register</h4>
+<p>A register that you can only read, for example, a measured value. In YAML, it's <code>input</code>.</p>
+<h4>Holding register</h4>
+<p>A register that you can read and write, for example, a setting. In YAML, it's <code>holding</code>.</p>
+<h4>Register address</h4>
+<p>The position of a coil, discrete input, or register in the device. Home Assistant counts addresses from <code>0</code>.</p>
+<p>Some manuals count from <code>1</code>, or add the type of data in front, such as <code>40001</code> for the first holding register. In that case, the address in Home Assistant is <code>0</code>.</p>
+<h3>Configuring Modbus communication</h3>
+<p>Configure the Modbus communication with your Modbus devices. This general setup is needed to access the device.</p>
+<p>The Modbus integration allows you to use multiple connections, each with multiple entities.</p>
+<p>The Modbus integration provides several parameters to help communicate with "difficult" devices. These parameters are independent of the type of communication.</p>
+<p>To enable this integration, add it to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code>
+delay:
+  description: "Time to delay sending messages in seconds after connecting.
+  Some Modbus devices need a delay of typically 1-2 seconds after connection is established to prepare the communication.
+  If a device does not respond to messages after connecting, then try this parameter.
+  The delay only affects the first message."
+  required: false
+  default: 0
+  type: integer
+message_wait_milliseconds:
+  description: "Time to wait in milliseconds between requests."
+  required: false
+  default: 30 for serial connection, 0 for all other connections.
+  type: integer
+name:
+  description: "Name of this hub. Must be unique."
+  required: true
+  type: string
+timeout:
+  description: "Timeout while waiting for a response in seconds."
+  required: false
+  default: 3
+  type: integer
+type:
+  description: "Type of connection."
+  required: true
+  type: list
+  keys:
+    tcp:
+      description: "Modbus TCP, for devices with a Modbus TCP interface, or for a Modbus gateway on your network."
+    udp:
+      description: "Modbus UDP, over the network. Rarely used."
+    rtuovertcp:
+      description: "Modbus RTU over TCP, for a serial device server, or a Modbus gateway in transparent mode."
+    serial:
+      description: "Serial connection (Modbus RTU or Modbus ASCII), for a serial port or a USB-to-RS-485 adapter."
+
+
+</code></pre>
+<h3>Configuring a Modbus TCP connection</h3>
+<p><code>type: tcp</code> is required. Use it for devices with a Modbus TCP interface, and for Modbus gateways that translate to Modbus TCP.</p>
+<pre><code>
+host:
+  description: "IP address or name of your Modbus device, for example, `192.168.1.1`."
+  required: true
+  type: string
+port:
+  description: "Network port for the communication."
+  required: true
+  type: integer
+
+
+</code></pre>
+<h4>Example: Typical Modbus TCP configuration</h4>
+<pre><code># Example YAML: typical Modbus TCP connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+</code></pre>
+<h4>Example: Full Modbus TCP configuration</h4>
+<pre><code># Example YAML: full Modbus TCP connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+</code></pre>
+<h3>Configuring a Modbus RTU over TCP connection</h3>
+<p><code>type: rtuovertcp</code> is required. Use it for a serial device server, or for a Modbus gateway in transparent mode. Both pass Modbus RTU unchanged between your network and one or more serial connections.</p>
+<pre><code>
+host:
+  description: "IP address or name of your Modbus device, for example, `192.168.1.1`."
+  required: true
+  type: string
+port:
+  description: "Network port for the communication."
+  required: true
+  type: integer
+
+
+</code></pre>
+<h4>Example: Typical Modbus RTU over TCP configuration</h4>
+<pre><code># Example YAML: typical Modbus RTU over TCP connection
+modbus:
+  - name: modbus_hub
+    type: rtuovertcp
+    host: IP_ADDRESS
+    port: 502
+</code></pre>
+<h4>Example: Full Modbus RTU over TCP configuration</h4>
+<pre><code># Example YAML: full Modbus RTU over TCP connection
+modbus:
+  - name: modbus_hub
+    type: rtuovertcp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+</code></pre>
+<h3>Configuring a Modbus UDP connection</h3>
+<p><code>type: udp</code> is required. This is rarely used, and only for very special configurations.</p>
+<pre><code>
+host:
+  description: "IP address or name of your Modbus device, for example, `192.168.1.1`."
+  required: true
+  type: string
+port:
+  description: "Network port for the communication."
+  required: true
+  type: integer
+
+
+</code></pre>
+<h4>Example: Typical Modbus UDP configuration</h4>
+<pre><code># Example YAML: typical Modbus UDP connection
+modbus:
+  - name: modbus_hub
+    type: udp
+    host: IP_ADDRESS
+    port: 502
+</code></pre>
+<h4>Example: Full Modbus UDP configuration</h4>
+<pre><code># Example YAML: full Modbus UDP connection
+modbus:
+  - name: modbus_hub
+    type: udp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+</code></pre>
+<h3>Configuring a serial connection</h3>
+<p><code>type: serial</code> is required. Use it for devices with an RS-485 interface.</p>
+<p>The device is typically connected through a USB-to-RS-485 adapter, or through an RS-232-to-RS-485 adapter on a serial port.</p>
+<pre><code>
+baudrate:
+  description: "Speed of the serial connection, higher speed gives better performance."
+  required: true
+  type: integer
+bytesize:
+  description: "Data size in bits of each byte."
+  required: true
+  type: list
+  keys:
+    "5":
+      description: "5 bit for data, rarely used."
+    "6":
+      description: "6 bit for data, rarely used."
+    "7":
+      description: "7 bit for data, used for very old devices."
+    "8":
+      description: "8 bit for data, standard."
+method:
+  description: "The Modbus variant that the device uses on the serial connection."
+  required: true
+  type: list
+  keys:
+    rtu:
+      description: "Modbus RTU: binary data, preceded by the unit ID and followed by a checksum. Standard."
+    ascii:
+      description: "Modbus ASCII: data as text characters, preceded by the unit ID and followed by a checksum. Only a few devices use it."
+parity:
+  description: "Parity of the data bytes."
+  required: true
+  type: list
+  keys:
+    E:
+      description: "Even parity bit."
+    O:
+      description: "Odd parity bit."
+    N:
+      description: "No parity bit, standard."
+port:
+  description: "Serial port or USB device where your Modbus device is connected to your Home Assistant host."
+  required: true
+  type: string
+stopbits:
+  description: "Stopbits of the data bytes."
+  required: true
+  type: list
+  keys:
+    '1':
+      description: "1 stop bit."
+    '2':
+      description: "2 stop bits, standard."
+
+
+</code></pre>
+<h4>Example: Typical serial configuration</h4>
+<pre><code># Example YAML: typical serial connection
+modbus:
+  - name: modbus_hub
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+</code></pre>
+<h4>Example: Full serial configuration</h4>
+<pre><code># Example YAML: full serial connection
+modbus:
+  - name: modbus_hub
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+</code></pre>
+<h3>Configuring multiple connections</h3>
+<p>Multiple connections can freely mix different communications:</p>
+<pre><code># Example YAML: multiple Modbus TCP connections
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+
+  - name: modbus_hub2
+    type: tcp
+    host: IP_ADDRESS_2
+    port: 502
+</code></pre>
+<pre><code># Example YAML: Modbus TCP connection and serial connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+
+  - name: modbus_hub2
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+</code></pre>
+<h3>Configuring Modbus entities</h3>
+<p>Modbus entities are grouped below each Modbus hub.</p>
+<p>Each Modbus hub must have at least 1 entity. Otherwise, Home Assistant doesn't load that hub, and shows a repair in <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong>.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<p>All Modbus entities have the following parameters:</p>
+<pre><code>
+address:
+  description: "Address (0-based) of the coil or register. You can also enter it in hexadecimal, for example, `0x789A`."
+  required: true
+  type: integer
+name:
+  description: "Name of the entity which must be unique within the entity type."
+  required: true
+  type: string
+scan_interval:
+  description: "Update interval in seconds.
+  scan_interval = 0 for no polling.
+  Entities are read shortly after startup and then according to scan_interval.
+  When Home Assistant restarts, the last known value is restored."
+  required: false
+  type: integer
+  default: 15
+slave:
+  description: "Identical to `device_address`"
+  required: false
+  type: integer
+  default: 1
+device_address:
+  description: "Unit ID of the device. Use it to address several devices on an RS-485 bus, or devices behind a Modbus gateway. On these connections, `0` is the broadcast address."
+  required: false
+  type: integer
+  default: 1
+unique_id:
+  description: "ID that uniquely identifies this entity.
+  With `virtual_count`, the additional entities get this unique ID with a number added, for example, `my_unique_id_1`.
+  If two entities have the same unique ID, Home Assistant will raise an exception."
+  required: false
+  type: string
+
+
+</code></pre>
+<h4>Example: Entities grouping</h4>
+<pre><code># Example YAML: entities grouping
+modbus:
+  - type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+    name: "modbus_hub"
+    binary_sensors:
+      - name: binary_sensor1
+        address: 100
+    climates:
+      - name: "Watlow F4T"
+        address: 200
+    covers:
+      - name: Door1
+        address: 300
+    fans:
+      - name: Fan1
+        address: 400
+    lights:
+      - name: light1
+        address: 500
+    sensors:
+      - name: sensor1
+        address: 600
+    switches:
+      - name: Switch1
+        address: 700
+</code></pre>
+<p>The different types of entities are detailed in the following.</p>
+<h3>Configuring binary sensor entities</h3>
+<p>The Modbus binary sensor allows you to gather data from coils which as per standard have state ON/OFF.</p>
+<p>Normally, a register contains 16 coils, giving different addresses depending on the request used.</p>
+<pre><code>Register 512: Coil 1 - 16
+Register 513: Coil 17 - 32
+</code></pre>
+<p><code>input_type: coils</code> would use addresses from 1 through 32, while <code>input_type: input</code> would use addresses 512 and 513.
+For that reason, many devices (especially older ones) do not share the coil address space with the register address space,
+and this <code>input</code> would read from a different address space than <code>coil</code>. The problem is present in devices with
+shared address space and are a frequent cause of problems when configuring entities.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+binary_sensors:
+  description: "A list of all binary sensors configured for this connection."
+  required: false
+  type: map
+  keys:
+    device_class:
+      description: "The [type/class](/integrations/binary_sensor/#device-class) to be used for the UI."
+      required: false
+      type: string
+    input_type:
+      description: "Type of request `discrete_input`, `coil`, `holding` or `input`"
+      required: false
+      default: coil
+      type: string
+    slave_count:
+      description: "Identical to `virtual_count`."
+      required: false
+      type: integer
+    virtual_count:
+      description: "Creates this binary sensor plus this number of additional binary sensors.
+      Addresses are automatically incremented.
+      The parameter simplifies configuration and provides a much better performance by not using count+1 requests but a single request."
+      required: false
+      type: integer
+    unique_id:
+      description: "ID that uniquely identifies the entity. The additional binary sensors get this unique ID with a number added, for example, `my_unique_id_1`. If two sensors have the same unique ID, Home Assistant will raise an exception."
+      required: false
+      type: string
+
+
+</code></pre>
+<h4>Example: Typical binary sensor configuration</h4>
+<pre><code># Example YAML: typical binary_sensor
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        slave: 1
+</code></pre>
+<h4>Example: Full binary sensor configuration</h4>
+<pre><code># Example YAML: binary_sensor with all options
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        device_class: door
+        input_type: coil
+        scan_interval: 15
+        slave: 1
+        slave_count: 0
+        unique_id: my_relay
+</code></pre>
+<h4>Example: Multiple identical binary sensor configuration</h4>
+<pre><code># Example of 10 identical binary_sensor
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        slave: 1
+        slave_count: 10
+        unique_id: my_relay
+</code></pre>
+<p>This configuration will poll coil addresses 100 to 110 every 15 seconds and update the binary_sensors: <code>my_relay</code>
+and <code>my_relay_1</code> to <code>my_relay_10</code>.</p>
+<p>The additional binary sensors get the same configuration as the first one, such as <code>device_class</code>.</p>
+<h3>Configuring climate entities</h3>
+<p>The Modbus climate platform allows you to monitor a thermostat or heaters as well as set a target temperature, HVAC action, HVAC mode, swing mode, and fan state.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+climates:
+  description: "A list of all climate entities in this Modbus hub."
+  required: false
+  type: map
+  keys:
+    temperature_unit:
+      description: "Temperature unit: C or F."
+      required: false
+      default: C
+      type: list
+      keys:
+        C:
+          description: "Celsius"
+        F:
+          description: "Fahrenheit"
+    precision:
+      description: "Number of valid decimals for temperature."
+      required: false
+      type: integer
+      default: 0
+    temp_step:
+      description: "Step size target temperature."
+      required: false
+      type: float
+      default: 0.5
+    max_temp:
+      description: "Maximum setpoint for target temperature."
+      required: false
+      type: integer
+      default: 35
+    min_temp:
+      description: "Minimum setpoint for target temperature."
+      required: false
+      type: integer
+      default: 5
+    count:
+      description: "Number of registers to read to fetch the current temperature.
+      **only valid for `data_type: custom` and `data_type: string`**, for other data types count is automatically calculated."
+      required: false
+      type: integer
+    data_type:
+      description: "Response representation when reading the current temperature register(s)."
+      required: false
+      default: int16
+      type: list
+      keys:
+        custom:
+          description: "user defined format, `structure:` and `count:` must be configured."
+        float16:
+          description: "16 bit signed float (1 register holds 1 value)."
+        float32:
+          description: "32 bit signed float (2 registers holds 1 value)."
+        float64:
+          description: "64 bit signed float (4 register holds 1 value)."
+        int:
+          description: "**DEPRECATED** is silently converted to `int16`"
+        int16:
+          description: "16 bit signed integer (1 register holds 1 value)."
+        int32:
+          description: "32 bit signed integer (2 registers holds 1 value)."
+        int64:
+          description: "64 bit signed integer (4 registers holds 1 value)."
+        string:
+          description: "set of 8 bit characters, `count:` must be configured."
+        uint:
+          description: "**DEPRECATED** is silently converted to `uint16`"
+        uint16:
+          description: "16 bit unsigned integer (1 register holds 1 value)."
+        uint32:
+          description: "32 bit unsigned integer (2 registers holds 1 value)."
+        uint64:
+          description: "64 bit unsigned integer (4 registers holds 1 value)."
+    input_type:
+      description: Modbus register type for current temperature.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: "Holding register."
+        input:
+          description: "Input register."
+    scale:
+      description: "Scale factor (`output` = `scale` * `value` + offset) for setting target and current temperature. Cannot be used together with `current_temp_scale` or `target_temp_scale."
+      required: false
+      type: float
+      default: 1
+    offset:
+      description: "Final offset for target and current temperature (`output` = `scale` * `value` + `offset). Cannot be used together with current_temp_offset or target_temp_offset`."
+      required: false
+      type: float
+      default: 0
+    current_temp_scale:
+      description: "Scale factor for current temperature (output = `current_temp_scale` * `value` + `current_temp_offset`). Cannot be used together with `scale`"
+      required: false
+      type: float
+      default: 1.0
+    current_temp_offset:
+      description: "Offset for current temperature (output` = current_temp_scale` * `value` + `current_temp_offset`). Cannot be used together with *offset*."
+      required: false
+      type: float
+      default: 0.0
+    target_temp_scale:
+      description: "Scale factor for target temperature (`output` = `target_temp_scale` * `value` + `target_temp_offset`). Cannot be used together with scale`."
+      required: false
+      type: float
+      default: 1.0
+    target_temp_offset:
+      description: "Offset for target temperature (`output` = `target_temp_scale` * `value` + `target_temp_offset`). Cannot be used together with offset`."
+      required: false
+      type: float
+      default: 0.0
+    target_temp_register:
+      description: "Register address for target temperature (Setpoint). Using a list, it is possible to define one register for each of the available HVAC Modes. The list has to have a fixed size of 7 registers corresponding to the 7 available HVAC Modes, as follows: Register **1: HVAC AUTO mode**; Register **2: HVAC Cool mode**; Register **3: HVAC Dry mode**; Register **4: HVAC Fan only mode**; Register **5: HVAC Heat mode**; Register **6: HVAC Heat Cool mode**; Register **7: HVAC OFF mode**. It is possible to set duplicated values for the modes where the devices don't have a related register."
+      required: true
+      type: [integer, list]
+    target_temp_write_registers:
+      description: "If `true` use `write_registers` for target temperature (`target_temp_register`), else use `write_register`."
+      required: false
+      type: boolean
+      default: false
+    structure:
+      description: "If `data_type: custom` is specified a double-quoted Python struct is expected,
+      to format the string to unpack the value. See Python documentation for details.
+      Example: `&gt;i`."
+      required: false
+      type: string
+      default: "&gt;f"
+    swap:
+      description: "Swap the order of bytes/words, **not valid with `custom` and `datatype: string`** when setting target temperature"
+      required: false
+      default: none
+      type: list
+      keys:
+        byte:
+          description: "Swap bytes AB -&gt; BA."
+        word:
+          description: "Swap word ABCD -&gt; CDAB, **not valid with data types: `int16`, `uint16`**"
+        word_byte:
+          description: "Swap word ABCD -&gt; DCBA, **not valid with data types: `int16`, `uint16`**"
+    hvac_action_register:
+      description: "Configuration of register for HVAC action"
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address of HVAC action register."
+          required: true
+          type: integer
+        input_type:
+          description: "Type of register, either `holding` or `input`"
+          required: false
+          default: holding
+          type: string
+        values:
+          description: "Mapping between the register values and HVAC actions"
+          required: true
+          type: map
+          keys:
+            action_off:
+              description: "Value corresponding to HVAC Off action."
+              required: false
+              type: [integer, list]
+            action_cooling:
+              description: "Value corresponding to HVAC Cooling action."
+              required: false
+              type: [integer, list]
+            action_defrosting:
+              description: "Value corresponding to HVAC Defrosting action."
+              required: false
+              type: [integer, list]
+            action_drying:
+              description: "Value corresponding to HVAC Drying action."
+              required: false
+              type: [integer, list]
+            action_fan:
+              description: "Value corresponding to HVAC Fan action."
+              required: false
+              type: [integer, list]
+            action_heating:
+              description: "Value corresponding to HVAC Heating action."
+              required: false
+              type: [integer, list]
+            action_idle:
+              description: "Value corresponding to HVAC Idle action."
+              required: false
+              type: [integer, list]
+            action_preheating:
+              description: "Value corresponding to HVAC Preheating action."
+              required: false
+              type: [integer, list]
+    hvac_mode_register:
+      description: "Configuration of register for HVAC mode"
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address of HVAC mode register."
+          required: true
+          type: integer
+        write_registers:
+          description: "Request type for setting HVAC mode, use `write_registers` if true else `write_register`.
+            If more than one value is specified for a specific mode, only the first one is used for writing to the register."
+          required: false
+          type: boolean
+          default: false
+        values:
+          description: "Mapping between the register values and HVAC modes"
+          required: true
+          type: map
+          keys:
+            state_off:
+              description: "Value corresponding to HVAC Off mode.
+                If the On/Off state handled on a different address and/or register the `state_off` state should be omitted from your configuration"
+              required: false
+              type: [integer, list]
+            state_heat:
+              description: "Value corresponding to HVAC Heat mode."
+              required: false
+              type: [integer, list]
+            state_cool:
+              description: "Value corresponding to HVAC Cool mode."
+              required: false
+              type: [integer, list]
+            state_auto:
+              description: "Value corresponding to HVAC Auto mode."
+              required: false
+              type: [integer, list]
+            state_dry:
+              description: "Value corresponding to HVAC Dry mode."
+              required: false
+              type: [integer, list]
+            state_fan_only:
+              description: "Value corresponding to HVAC Fan only mode."
+              required: false
+              type: [integer, list]
+            state_heat_cool:
+              description: "Value corresponding to HVAC Heat/Cool mode."
+              required: false
+              type: [integer, list]
+    fan_mode_register:
+      description: "Configuration of register for Fan mode"
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address of Fan mode register. (int to call write_register, list of 1 int to call write_registers)"
+          required: true
+          type: [integer, list]
+        values:
+          description: "Mapping between the register values and Fan modes
+            This is typically used to control one of: Speed, Direction or On/Off state."
+          required: true
+          type: map
+          keys:
+            state_fan_on:
+              description: "Value corresponding to Fan On mode."
+              required: false
+              type: integer
+            state_fan_off:
+              description: "Value corresponding to Fan Off mode."
+              required: false
+              type: integer
+            state_fan_low:
+              description: "Value corresponding to Fan Low mode."
+              required: false
+              type: integer
+            state_fan_medium:
+              description: "Value corresponding to Fan Medium mode."
+              required: false
+              type: integer
+            state_fan_high:
+              description: "Value corresponding to Fan High mode."
+              required: false
+              type: integer
+            state_fan_auto:
+              description: "Value corresponding to Fan Auto mode."
+              required: false
+              type: integer
+            state_fan_top:
+              description: "Value corresponding to Fan Top mode."
+              required: false
+              type: integer
+            state_fan_middle:
+              description: "Value corresponding to Fan Middle mode."
+              required: false
+              type: integer
+            state_fan_focus:
+              description: "Value corresponding to Fan Focus mode."
+              required: false
+              type: integer
+            state_fan_diffuse:
+              description: "Value corresponding to Fan Diffuse mode."
+              required: false
+              type: integer
+    hvac_onoff_coil:
+      description: "Address of On/Off state.
+        Only use this setting if your On/Off state is not handled as an HVAC mode.
+        When zero is read from this coil, the HVAC state is set to Off, otherwise the `hvac_mode_register`
+        dictates the state of the HVAC. If no such coil is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value 0 is written to the coil, otherwise the
+        value 1 is written.
+        **Cannot be used with `hvac_onoff_register`.**"
+      required: false
+      type: integer
+    hvac_onoff_register:
+      description: "Address of On/Off state.
+        When the value defined by `hvac_off_value` is read from this register, the HVAC
+        state is set to Off. Otherwise, the `hvac_mode_register` dictates the state
+        of the HVAC. If no such register is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value defined by `hvac_off_value` is written to
+        the register, otherwise the value defined by `hvac_on_value` is written.
+        **Cannot be used with `hvac_onoff_coil`.**"
+      required: false
+      type: integer
+    hvac_on_value:
+      description: "The value that will be written to the `hvac_onoff_register` to turn the HVAC system on.
+        If not specified, the default value is 1."
+      required: false
+      type: integer
+    hvac_off_value:
+      description: "The value that will be written to the `hvac_onoff_register` to turn the HVAC system off.
+        If not specified, the default value is 0."
+      required: false
+      type: integer
+    swing_mode_register:
+      description: "Configuration of the register for swing mode"
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address of swing mode register. (int to call write_register, list of 1 int to call write_registers). - Reading done through holding register"
+          required: true
+          type: [integer, list]
+        values:
+          description: "Mapping between the register values and swing modes"
+          required: true
+          type: map
+          keys:
+            swing_mode_state_on:
+              description: "Value corresponding to swing mode on."
+              required: false
+              type: integer
+            swing_mode_state_off:
+              description: "Value corresponding to swing mode off."
+              required: false
+              type: integer
+            swing_mode_state_horizontal:
+              description: "Value corresponding to swing mode horizontal."
+              required: false
+              type: integer
+            swing_mode_state_vertical:
+              description: "Value corresponding to swing mode vertical."
+              required: false
+              type: integer
+            swing_mode_state_both:
+              description: "Value corresponding to Swing mode both."
+              required: false
+              type: integer
+    hvac_onoff_register:
+      description: "Address of On/Off state.
+        Only use this setting if your On/Off state is not handled as an HVAC mode.
+        When zero is read from this register, the HVAC state is set to Off, otherwise the `hvac_mode_register`
+        dictates the state of the HVAC. If no such register is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value 0 is written to the register, otherwise the
+        value 1 is written."
+      required: false
+      type: integer
+    write_registers:
+      description: "If `true` use `write_registers` to control the On/Off state (`hvac_onoff_register`), else use `write_register`.
+      Note that it is not yet possible to control the On/Off state via a coil."
+      required: false
+      type: boolean
+      default: false
+
+{% endconfiguration %}
+
+#### Example: Climate configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    climates:
+      - name: "Watlow F4T"
+        address: 0x6BC2
+        input_type: holding
+        count: 1
+        data_type: custom
+        max_temp: 35
+        min_temp: 15
+        offset: 0
+        precision: 1
+        scale: 0.1
+        structure: "&gt;f"
+        target_temp_register: 2782
+        target_temp_write_registers: true
+        temp_step: 1
+        temperature_unit: C
+</code></pre>
+<h3>Configuring cover entities</h3>
+<p>The <code>modbus</code> cover platform allows you to control covers (such as blinds, a roller shutter, or a garage door).</p>
+<p>At the moment, platform cover support the opening and closing of a cover. You can control your covers either using coils or holding registers.</p>
+<p>A cover that uses <code>input_type: coil</code> is not able to determine intermediate states such as opening and closing. A coil stores only two states: <code>0</code> means the cover is closed, and <code>1</code> means it's open. To allow detecting intermediate states, there is an optional <code>status_register</code> attribute. It will enable you to write your command (for example, to open a cover) into a coil, and read current cover status back through the register. Additionally, you can specify values for <code>state_open</code>, <code>state_opening</code>, <code>state_closed</code>, and <code>state_closing</code> attributes. These will be matched with the value read from the <code>status_register</code>.</p>
+<p>If your cover uses <code>input_type: holding</code> (default) to send commands, it can also read the intermediate states. To adjust which value represents what state, you can fine-tune the optional state attributes, like <code>state_open</code>. These optional state values are also used for specifying values written into the register. If you specify an optional status_register attribute, cover states will be read from status_register instead of the register used for sending commands.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<p>{% configuration %}
+covers:
+description: "A list of all cover entities configured for this connection."
+required: true
+type: map
+keys:
+device_class:
+description: "The <a href="../cover/">type/class</a> of the cover to set the icon in the frontend."
+required: false
+type: device_class
+default: None
+input_type:
+description: "Cover register type."
+default: holding
+required: false
+type: list
+keys:
+holding:
+description: "Holding register."
+input:
+description: "Input register."
+state_open:
+description: "A value in <code>status_register</code> or <code>register</code> representing an open cover.
+If your configuration uses the <code>register</code> attribute, this value will be written into the holding register to open the cover."
+required: false
+default: 1
+type: integer
+state_closed:
+description: "A value in <code>status_register</code> or <code>register</code> representing a closed cover.
+If your configuration uses the <code>register</code> attribute, this value will be written into the holding register to close the cover."
+required: false
+default: 0
+type: integer
+state_opening:
+description: "A value in <code>status_register</code> or <code>register</code> representing an opening cover.
+Note that this state should be also supported on your connected Modbus cover.
+If it won't report the state, this state won't be detected."
+required: false
+default: 2
+type: integer
+state_closing:
+description: "A value in <code>status_register</code> or <code>register</code> representing a closing cover.
+Note that this state should be also supported on your connected Modbus cover.
+If it will not report the state, this state won't be detected."
+required: false
+default: 3
+type: integer
+status_register:
+description: "Address of register, from which all the cover states will be read.
+If you specified <code>register</code> attribute, and not <code>status_register</code> attribute,
+your main register will also be used as a status register."
+required: false
+type: integer
+status_register_type:
+description: Cover status register type (holding, input), default holding.
+required: false
+type: list
+keys:
+holding:
+description: "Holding register."
+input:
+description: "Input register."
+{% endconfiguration %}</p>
+<h4>Example: Modbus cover</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        device_class: door
+        input_type: coil
+        address: 117
+        state_open: 1
+        state_opening: 2
+        state_closed: 0
+        state_closing: 3
+        status_register: 119
+        status_register_type: holding
+      - name: "Door2"
+        address: 118
+</code></pre>
+<h4>Example: Modbus cover controlled by a coil</h4>
+<p>This example shows a configuration for a Modbus cover controlled using a coil. Intermediate states like opening/closing are not supported. The cover state is polled from Modbus every 10 seconds.</p>
+<pre><code>modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        coil: 1
+        device_class: door
+        scan_interval: 10
+      - name: Door2
+        slave: 2
+        coil: 2
+        device_class: door
+        scan_interval: 10
+</code></pre>
+<h4>Example: Modbus cover controlled by a coil, its state is read from the register</h4>
+<p>This example shows a configuration for a Modbus cover controlled using a coil. Actual cover state is read from the <code>status_register</code>. We've also specified register values to match with the states open/opening/closed/closing. The cover state is polled from Modbus every 10 seconds.</p>
+<pre><code>modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        coil: 1
+        status_register: 1
+        status_register_type: input
+        state_opening: 1
+        state_open: 2
+        state_closing: 3
+        state_closed: 4
+</code></pre>
+<h4>Example: Modbus cover controlled by a holding register</h4>
+<p>This example shows a configuration for a Modbus cover controlled using a holding register, from which we also read current cover state. We've also specified register values to match with the states open/opening/closed/closing. The cover state is polled from Modbus every 10 seconds.</p>
+<pre><code>modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        register: 1
+        state_opening: 1
+        state_open: 2
+        state_closing: 3
+        state_closed: 4
+</code></pre>
+<h4>Example: Modbus cover controlled by a holding register, its state is read from the status register</h4>
+<p>This example shows a configuration for a Modbus cover controlled using a holding register. However, cover state is read from a <code>status_register</code>. In this case, we've specified only values for <code>state_open</code> and <code>state_closed</code>, for the rest, default values are used. The cover state is polled from Modbus every 10 seconds.</p>
+<pre><code>modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        register: 1
+        status_register: 2
+        register_type: holding
+        state_open: 1
+        state_closed: 0
+</code></pre>
+<h3>Configuring fan entities</h3>
+<p>The <code>modbus</code> fan platform allows you to control <a>Modbus</a> coils or registers.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+fans:
+  description: "A list of all fan entities in this Modbus hub."
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: "Value to write to turn on the fan."
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: "Value to write to turn off the fan."
+      required: false
+      default: 0x00
+      type: integer
+    write_type:
+      description: Type of write request.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: "Write Single Register (function code 06)."
+        holdings:
+          description: "Write Multiple Registers (function code 16)."
+        coil:
+          description: "Write Single Coil (function code 05)."
+        coils:
+          description: "Write Multiple Coils (function code 15)."
+    verify:
+      description: "Read from Modbus device to verify fan.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted, no verification is done, but the state of the fan is set with each toggle."
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address to read from."
+          required: false
+          default: write address
+          type: integer
+        delay:
+          description: "Delay between write and verify."
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: same as `write_type`
+          type: list
+          keys:
+            coil:
+              description: "Coil: a single bit that can be read and written."
+            discrete_input:
+              description: "Discrete input: a single bit that can only be read."
+            holding:
+              description: "Holding register."
+            input:
+              description: "Input register."
+        state_on:
+          description: "Value when the fan is on."
+          required: false
+          default: same as `command_on`
+          type: integer
+        state_off:
+          description: "Value when the fan is off."
+          required: false
+          default: same as `command_off`
+          type: integer
+
+</code></pre>
+<h4>Example: Fan configuration</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    fans:
+      - name: "Fan1"
+        address: 13
+        write_type: coil
+      - name: "Fan2"
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: "Register1"
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+</code></pre>
+<h3>Configuring light entities</h3>
+<p>The <code>modbus</code> light platform allows you to control <a>Modbus</a> coils or registers.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+lights:
+  description: "A list of all light entities in this Modbus hub."
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: "Value to write to turn on the light."
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: "Value to write to turn off the light."
+      required: false
+      default: 0x00
+      type: integer
+    brightness_address:&#32;
+      description: "Address to read/write color brightness."
+      required: false
+      default: None
+      type: integer
+    color_temp_address:
+      description: "Address to read/write color temperature."
+      required: false
+      default: None
+      type: integer
+    min_temp:
+      description: "Minimal level of color temperature in Kelvin."
+      required: false
+      default: 2000
+      type: integer
+    max_temp:
+      description: "Maximal level of color temperature in Kelvin."
+      required: false
+      default: 7000
+      type: integer
+    write_type:
+      description: "Type of write request."
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: "Write Single Register (function code 06)."
+        holdings:
+          description: "Write Multiple Registers (function code 16)."
+        coil:
+          description: "Write Single Coil (function code 05)."
+        coils:
+          description: "Write Multiple Coils (function code 15)."
+    verify:
+      description: "Read from Modbus device to verify the light.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted no verification, is done, but the state of the light is set with each toggle."
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address to read from."
+          required: false
+          default: "Same as `address`"
+          type: integer
+        delay:
+          description: delay between write and verify.
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: "Same as `write_type`"
+          type: list
+          keys:
+            coil:
+              description: "Coil: a single bit that can be read and written."
+            discrete_input:
+              description: "Discrete input: a single bit that can only be read."
+            holding:
+              description: "Holding register."
+            input:
+              description: "Input register."
+        state_on:
+          description: "Value when the light is on."
+          required: false
+          default: "Same as `command_on`"
+          type: integer
+        state_off:
+          description: "Value when the light is off."
+          required: false
+          default: "Same as `command_off`"
+          type: integer
+
+
+</code></pre>
+<h4>Example: Light configuration</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    lights:
+      - name: "light1"
+        address: 13
+        write_type: coil
+      - name: "light2"
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        verify:
+      - name: "light3"
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        color_temp_address: 2006
+      - name: "light4"
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        color_temp_address: 2006
+        min_temp: 2500
+        max_temp: 5500
+        verify:
+      - name: "Register1"
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+</code></pre>
+<h3>Configuring sensor entities</h3>
+<p>The <code>modbus</code> sensor allows you to gather data from <a>Modbus</a> registers.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+sensors:
+  description: "A list of all sensors in this Modbus hub."
+  required: true
+  type: map
+  keys:
+    count:
+      description: "Number of registers to read.
+      **only valid for `data_type: custom` and `data_type: string`**, for other data types count is automatically calculated."
+      required: false
+      type: integer
+    data_type:
+      description: "Response representation."
+      required: false
+      default: int16
+      type: list
+      keys:
+        custom:
+          description: "user defined format, `structure:` and `count:` must be configured."
+        float16:
+          description: "16 bit signed float (1 register holds 1 value)."
+        float32:
+          description: "32 bit signed float (2 registers holds 1 value)."
+        float64:
+          description: "64 bit signed float (4 register holds 1 value)."
+        int:
+          description: "**DEPRECATED** is silently converted to `int16`"
+        int16:
+          description: "16 bit signed integer (1 register holds 1 value)."
+        int32:
+          description: "32 bit signed integer (2 registers holds 1 value)."
+        int64:
+          description: "64 bit signed integer (4 registers holds 1 value)."
+        string:
+          description: "set of 8 bit characters, `count:` must be configured."
+        uint:
+          description: "**DEPRECATED** is silently converted to `uint16`"
+        uint16:
+          description: "16 bit unsigned integer (1 register holds 1 value)."
+        uint32:
+          description: "32 bit unsigned integer (2 registers holds 1 value)."
+        uint64:
+          description: "64 bit unsigned integer (4 registers holds 1 value)."
+    device_class:
+      description: "The [type/class](/integrations/sensor/#device-class) of the sensor to set the icon in the frontend."
+      required: false
+      type: device_class
+      default: None
+    input_type:
+      description: "Modbus register type for sensor."
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: "Holding register."
+        input:
+          description: "Input register."
+    min_value:
+      description: "The minimum allowed value of a sensor. If value &lt; min_value --&gt; min_value. Can be float or integer"
+      required: false
+      type: float
+    max_value:
+      description: "The maximum allowed value of a sensor. If value &gt; max_value --&gt; max_value. Can be float or integer"
+      required: false
+      type: float
+    nan_value:
+      description: If a Modbus sensor has a defined NaN value, this value can be set as a hex string starting with `0x` containing one or more bytes (for example, `0xFFFF` or `0x80000000`) or provided as an integer directly. If triggered, the sensor becomes `unknown`. The conversion from hex to integer for `nan_value` doesn't use the `data_type`, `structure`, or `swap` options.
+      required: false
+      type: [string, integer]
+    zero_suppress:
+      description: Suppress values close to zero. If -zero_suppress &lt;= value &lt;= +zero_suppress --&gt; 0. Can be float or integer
+      required: false
+      type: float
+    offset:
+      description: "Final offset (output = scale * value + offset)."
+      required: false
+      type: float
+      default: 0
+    precision:
+      description: "Number of valid decimals."
+      required: false
+      type: integer
+      default: 0
+    scale:
+      description: "Scale factor (output = scale * value + offset)."
+      required: false
+      type: float
+      default: 1
+    slave_count:
+      description: "Identical to `virtual_count`."
+      required: false
+      type: integer
+    virtual_count:
+      description: "Creates this sensor plus this number of additional sensors. All their registers are read with a single request."
+      required: false
+      type: integer
+    state_class:
+      description: "The [state_class](/integrations/sensor/#state-class) of the sensor."
+      required: false
+      type: string
+    structure:
+      description: "If `data_type: custom` is specified a double-quoted Python struct is expected,
+      to format the string to unpack the value. See Python documentation for details.
+      Example: `&gt;i`."
+      required: false
+      type: string
+      default: "&gt;f"
+    swap:
+      description: "Swap the order of bytes/words, **not valid with `custom` and `datatype: string`**"
+      required: false
+      default: none
+      type: list
+      keys:
+        byte:
+          description: "Swap bytes AB -&gt; BA."
+        word:
+          description: "Swap word ABCD -&gt; CDAB, **not valid with data types: `int16`, `uint16`**"
+        word_byte:
+          description: "Swap word ABCD -&gt; DCBA, **not valid with data types: `int16`, `uint16`**"
+    unit_of_measurement:
+      description: "Unit to attach to value. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes)."
+      required: false
+      type: string
+    unique_id:
+      description: ID that uniquely identifies the entity. If two sensors have the same unique ID, Home Assistant will raise an exception.
+      required: false
+      type: string
+
+</code></pre>
+<p><strong>Note</strong></p>
+<p>If you specify scale or offset as floating point values, double precision floating point arithmetic will be used to calculate final value. This can cause loss of precision for values that are larger than 2^53.</p>
+<h4>Example: Sensor configuration</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    sensors:
+      - name: Sensor1
+        unit_of_measurement: °C
+        slave: 1
+        address: 100
+      - name: Sensor2
+        unit_of_measurement: mg
+        address: 110
+        count: 2
+      - name: Sensor3
+        unit_of_measurement: °C
+        slave: 1
+        address: 120
+        input_type: input
+        data_type: float
+        scale: 0.01
+        offset: -273.16
+        precision: 2
+</code></pre>
+<h4>Example: Sensor full configuration</h4>
+<p>Example temperature sensor with a default scan interval:</p>
+<pre><code>modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    sensors:
+      - name: Room_1
+        slave: 10
+        address: 0x9A
+        input_type: holding
+        unit_of_measurement: °C
+        state_class: measurement
+        count: 1
+        scale: 0.1
+        offset: 0
+        precision: 1
+        data_type: integer
+</code></pre>
+<h3>Configuring switch entities</h3>
+<p>The <code>modbus</code> switch platform allows you to control <a>Modbus</a> coils or registers.</p>
+<p>For parameters that can't be used together, refer to the <a>Parameters usage matrix</a>.</p>
+<pre><code>
+switches:
+  description: "A list of all switches in this Modbus hub."
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: "Value to write to turn on the switch."
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: "Value to write to turn off the switch."
+      required: false
+      default: 0x00
+      type: integer
+    write_type:
+      description: Type of write request.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: "Write Single Register (function code 06)."
+        holdings:
+          description: "Write Multiple Registers (function code 16)."
+        coil:
+          description: "Write Single Coil (function code 05)."
+        coils:
+          description: "Write Multiple Coils (function code 15)."
+    verify:
+      description: "Read from Modbus device to verify switch.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted, no verification is done, but the state of the switch is set with each toggle."
+      required: false
+      type: map
+      keys:
+        address:
+          description: "Address to read from."
+          required: false
+          default: "Same as `write address`"
+          type: integer
+        delay:
+          description: "Delay between write and verify."
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: same as `write_type`
+          type: list
+          keys:
+            coil:
+              description: "Coil: a single bit that can be read and written."
+            discrete_input:
+              description: "Discrete input: a single bit that can only be read."
+            holding:
+              description: "Holding register."
+            input:
+              description: "Input register."
+        state_on:
+          description: "Value(s) when switch is on. The value must be an `integer` or a list of integers."
+          required: false
+          default: "Same as `command_on`"
+          type: [integer, list]
+        state_off:
+          description: "Value(s) when switch is off. The value must be an `integer` or a list of integers."
+          required: false
+          default: "Same as `command_off`"
+          type: [integer, list]
+
+
+</code></pre>
+<h4>Example: Switch configuration</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    switches:
+      - name: Switch1
+        address: 13
+        write_type: coil
+      - name: Switch2
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: Register1
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+</code></pre>
+<h4>Example: Switch full configuration</h4>
+<pre><code># Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    switches:
+      - name: Switch1
+        address: 13
+        write_type: coil
+      - name: Switch2
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: Register1
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+</code></pre>
+<h3>Parameters usage matrix</h3>
+<p>Some parameters exclude other parameters, the following tables show what can be combined:</p>
+<table>
+<thead>
+<tr>
+  <th>Datatype:</th>
+  <th>custom</th>
+  <th>string</th>
+  <th>*16</th>
+  <th>*32</th>
+  <th>*64</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>count</td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>structure</td>
+  <td>Yes</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>slave_count</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>virtual_count</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>swap: byte</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>swap: word</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>swap: word_byte</td>
+  <td>No</td>
+  <td>No</td>
+  <td>No</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Opening an issue</h2>
+<p>When you open an issue, add your current configuration, or a shortened version of it, with at least:</p>
+<ul>
+<li>The Modbus configuration lines</li>
+<li>The entity lines, such as for a sensor</li>
+</ul>
+<p>To help the developers find the problem, include a debug log:</p>
+<ol>
+<li><p>Add the following lines to your <code>configuration.yaml</code> file:</p>
+<pre><code>logger:
+  default: warning
+  logs:
+    homeassistant.components.modbus: debug
+    pymodbus: debug
+</code></pre>
+</li>
+<li><p>Restart Home Assistant.</p>
+</li>
+<li><p>Reproduce the problem.</p>
+</li>
+<li><p>Add the log to the issue.</p>
+</li>
+</ol>
+<h2>Building on top of Modbus</h2>
+<p>The only recommended way is to inherit the entities needed.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/modbus.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to manually register Modbus entities and platforms.
+ha_release: pre 0.7
+ha_domain: modbus
+related:
+  - docs: /connectivity/modbus/
+    title: About Modbus
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The **Modbus** {% term integration %} connects Home Assistant to devices that have a Modbus interface. Many integrations for these devices use the Modbus integration to connect, so you usually don&#x27;t set it up yourself.
+
+This page documents the **Modbus** integration. To learn more about Modbus, refer to [Modbus](/connectivity/modbus/).
+
+If no integration supports your device, you can still get to its data by manually configuring the Modbus registers in YAML. For the steps, refer to [Setting up a Modbus hub in YAML](#setting-up-a-modbus-hub-in-yaml).
+
+## Setting up a Modbus hub in YAML
+
+Use a Modbus hub in YAML only if no integration supports your device. You then configure the Modbus registers of your device yourself.
+
+Prerequisites:
+
+- You have administrator rights.
+- You can edit your {% term &quot;`configuration.yaml`&quot; %} file.
+- You have a device with a Modbus interface, and its Modbus documentation with the addresses of the values you want to use.
+  - For the terms, such as register types and addresses, refer to [Modbus terms used in YAML](#modbus-terms-used-in-yaml).
+- Home Assistant can reach the Modbus interface of the device in one of these ways:
+  - Over the network (Modbus TCP or Modbus UDP): the device, or a Modbus gateway that translates to Modbus TCP or UDP, is on your network.
+  - Over a serial connection (Modbus RTU): the RS-485 wires of the device are connected to one of these, but not to an ESPHome serial proxy:
+    - A [USB-to-RS-485 adapter](/connectivity/serial/#usb-to-serial-adapter) that is connected to your Home Assistant system.
+    - A [serial device server](/connectivity/serial/#serial-device-server) on your network.
+
+1. If needed, turn on the Modbus interface of your device.
+2. In your {% term &quot;`configuration.yaml`&quot; %} file, add a Modbus hub for the connection to your device.
+   - For the options, refer to [Configuring Modbus communication](#configuring-modbus-communication).
+   - For a serial device server, use `type: rtuovertcp`. Set the baud rate on the serial device server itself. For details, refer to [Configuring a Modbus RTU over TCP connection](#configuring-a-modbus-rtu-over-tcp-connection).
+3. Under the hub, add an entity for each value you want to read or control. Set `address` to where the device stores the value.
+   - For the options, refer to [Configuring Modbus entities](#configuring-modbus-entities).
+4. Restart Home Assistant.
+   - Result: The entities of your device appear in Home Assistant.
+5. Optional: To check the connection, go to {% my config_modbus title=&quot;**Settings** &gt; **Connectivity** &gt; **Modbus**&quot; %}.
+   - For details, refer to [Viewing your Modbus connections](/connectivity/modbus/#viewing-your-modbus-connections).
+
+## Modbus YAML reference
+
+Use these options when you set up a Modbus hub in YAML. For the steps, refer to [Setting up a Modbus hub in YAML](#setting-up-a-modbus-hub-in-yaml).
+
+### Modbus terms used in YAML
+
+When you set up a Modbus hub in YAML, you also need the following terms. For general terms, such as a Modbus gateway or the unit ID, refer to [Modbus terminology](/connectivity/modbus/#modbus-terminology).
+
+#### Modbus hub
+
+A connection that you configure in YAML, under `modbus:`. A Modbus hub keeps a connection of its own, even if an integration uses the same device.
+
+#### Connection type
+
+The `type` of a Modbus hub sets how Home Assistant reaches the device:
+
+- `tcp`: [Modbus TCP](/connectivity/modbus/#modbus-tcp), to a device with a network interface, or to a [Modbus gateway](/connectivity/modbus/#modbus-gateway) that translates.
+- `rtuovertcp`: [Modbus RTU over TCP](/connectivity/modbus/#modbus-rtu-over-tcp), to a [serial device server](/connectivity/modbus/#serial-device-server), or to a Modbus gateway in transparent mode.
+- `udp`: [Modbus UDP](#modbus-udp).
+- `serial`: [Modbus RTU](/connectivity/modbus/#modbus-rtu) or [Modbus ASCII](#modbus-ascii), over a serial port, such as a [USB-to-RS-485 adapter](/connectivity/modbus/#usb-to-rs-485-adapter).
+
+#### Modbus &lt;abbr title=&quot;American Standard Code for Information Interchange&quot;&gt;ASCII&lt;/abbr&gt;
+
+Modbus over a serial connection, with the data sent as text characters. Only a few devices use it. With `type: serial`, set `method: ascii`. For Modbus RTU, use `method: rtu`.
+
+#### Modbus &lt;abbr title=&quot;User Datagram Protocol&quot;&gt;UDP&lt;/abbr&gt;
+
+Modbus over your network, with UDP instead of TCP. It&#x27;s rarely used. Set `type: udp`.
+
+#### Device address
+
+The [unit ID](/connectivity/modbus/#unit-id) of the device, set with `device_address` on each entity. Most devices use `1`. Older configurations use `slave`, which works the same.
+
+#### Register
+
+A place in the device that stores one value of 16 bits. Values that need more space, such as a 32-bit number, use several registers in a row.
+
+Modbus defines four types of data: coils, discrete inputs, input registers, and holding registers. A device only uses the types it needs.
+
+#### Coil
+
+A single bit that you can read and write, for example, to turn a relay on or off. In YAML, it&#x27;s `coil`.
+
+#### Discrete input
+
+A single bit that you can only read, for example, the state of a contact. In YAML, it&#x27;s `discrete_input`.
+
+#### Input register
+
+A register that you can only read, for example, a measured value. In YAML, it&#x27;s `input`.
+
+#### Holding register
+
+A register that you can read and write, for example, a setting. In YAML, it&#x27;s `holding`.
+
+#### Register address
+
+The position of a coil, discrete input, or register in the device. Home Assistant counts addresses from `0`.
+
+Some manuals count from `1`, or add the type of data in front, such as `40001` for the first holding register. In that case, the address in Home Assistant is `0`.
+
+### Configuring Modbus communication
+
+Configure the Modbus communication with your Modbus devices. This general setup is needed to access the device.
+
+The Modbus integration allows you to use multiple connections, each with multiple entities.
+
+The Modbus integration provides several parameters to help communicate with &quot;difficult&quot; devices. These parameters are independent of the type of communication.
+
+To enable this integration, add it to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+{% configuration %}
+delay:
+  description: &quot;Time to delay sending messages in seconds after connecting.
+  Some Modbus devices need a delay of typically 1-2 seconds after connection is established to prepare the communication.
+  If a device does not respond to messages after connecting, then try this parameter.
+  The delay only affects the first message.&quot;
+  required: false
+  default: 0
+  type: integer
+message_wait_milliseconds:
+  description: &quot;Time to wait in milliseconds between requests.&quot;
+  required: false
+  default: 30 for serial connection, 0 for all other connections.
+  type: integer
+name:
+  description: &quot;Name of this hub. Must be unique.&quot;
+  required: true
+  type: string
+timeout:
+  description: &quot;Timeout while waiting for a response in seconds.&quot;
+  required: false
+  default: 3
+  type: integer
+type:
+  description: &quot;Type of connection.&quot;
+  required: true
+  type: list
+  keys:
+    tcp:
+      description: &quot;Modbus TCP, for devices with a Modbus TCP interface, or for a Modbus gateway on your network.&quot;
+    udp:
+      description: &quot;Modbus UDP, over the network. Rarely used.&quot;
+    rtuovertcp:
+      description: &quot;Modbus RTU over TCP, for a serial device server, or a Modbus gateway in transparent mode.&quot;
+    serial:
+      description: &quot;Serial connection (Modbus RTU or Modbus ASCII), for a serial port or a USB-to-RS-485 adapter.&quot;
+
+{% endconfiguration %}
+
+### Configuring a Modbus TCP connection
+
+`type: tcp` is required. Use it for devices with a Modbus TCP interface, and for Modbus gateways that translate to Modbus TCP.
+
+{% configuration %}
+host:
+  description: &quot;IP address or name of your Modbus device, for example, `192.168.1.1`.&quot;
+  required: true
+  type: string
+port:
+  description: &quot;Network port for the communication.&quot;
+  required: true
+  type: integer
+
+{% endconfiguration %}
+
+#### Example: Typical Modbus TCP configuration
+
+```yaml
+# Example YAML: typical Modbus TCP connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+```
+
+#### Example: Full Modbus TCP configuration
+
+```yaml
+# Example YAML: full Modbus TCP connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+```
+
+### Configuring a Modbus RTU over TCP connection
+
+`type: rtuovertcp` is required. Use it for a serial device server, or for a Modbus gateway in transparent mode. Both pass Modbus RTU unchanged between your network and one or more serial connections.
+
+{% configuration %}
+host:
+  description: &quot;IP address or name of your Modbus device, for example, `192.168.1.1`.&quot;
+  required: true
+  type: string
+port:
+  description: &quot;Network port for the communication.&quot;
+  required: true
+  type: integer
+
+{% endconfiguration %}
+
+#### Example: Typical Modbus RTU over TCP configuration
+
+```yaml
+# Example YAML: typical Modbus RTU over TCP connection
+modbus:
+  - name: modbus_hub
+    type: rtuovertcp
+    host: IP_ADDRESS
+    port: 502
+```
+
+#### Example: Full Modbus RTU over TCP configuration
+
+```yaml
+# Example YAML: full Modbus RTU over TCP connection
+modbus:
+  - name: modbus_hub
+    type: rtuovertcp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+```
+
+### Configuring a Modbus UDP connection
+
+`type: udp` is required. This is rarely used, and only for very special configurations.
+
+{% configuration %}
+host:
+  description: &quot;IP address or name of your Modbus device, for example, `192.168.1.1`.&quot;
+  required: true
+  type: string
+port:
+  description: &quot;Network port for the communication.&quot;
+  required: true
+  type: integer
+
+{% endconfiguration %}
+
+#### Example: Typical Modbus UDP configuration
+
+```yaml
+# Example YAML: typical Modbus UDP connection
+modbus:
+  - name: modbus_hub
+    type: udp
+    host: IP_ADDRESS
+    port: 502
+```
+
+#### Example: Full Modbus UDP configuration
+
+```yaml
+# Example YAML: full Modbus UDP connection
+modbus:
+  - name: modbus_hub
+    type: udp
+    host: IP_ADDRESS
+    port: 502
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+```
+
+### Configuring a serial connection
+
+`type: serial` is required. Use it for devices with an RS-485 interface.
+
+The device is typically connected through a USB-to-RS-485 adapter, or through an RS-232-to-RS-485 adapter on a serial port.
+
+{% configuration %}
+baudrate:
+  description: &quot;Speed of the serial connection, higher speed gives better performance.&quot;
+  required: true
+  type: integer
+bytesize:
+  description: &quot;Data size in bits of each byte.&quot;
+  required: true
+  type: list
+  keys:
+    &quot;5&quot;:
+      description: &quot;5 bit for data, rarely used.&quot;
+    &quot;6&quot;:
+      description: &quot;6 bit for data, rarely used.&quot;
+    &quot;7&quot;:
+      description: &quot;7 bit for data, used for very old devices.&quot;
+    &quot;8&quot;:
+      description: &quot;8 bit for data, standard.&quot;
+method:
+  description: &quot;The Modbus variant that the device uses on the serial connection.&quot;
+  required: true
+  type: list
+  keys:
+    rtu:
+      description: &quot;Modbus RTU: binary data, preceded by the unit ID and followed by a checksum. Standard.&quot;
+    ascii:
+      description: &quot;Modbus ASCII: data as text characters, preceded by the unit ID and followed by a checksum. Only a few devices use it.&quot;
+parity:
+  description: &quot;Parity of the data bytes.&quot;
+  required: true
+  type: list
+  keys:
+    E:
+      description: &quot;Even parity bit.&quot;
+    O:
+      description: &quot;Odd parity bit.&quot;
+    N:
+      description: &quot;No parity bit, standard.&quot;
+port:
+  description: &quot;Serial port or USB device where your Modbus device is connected to your Home Assistant host.&quot;
+  required: true
+  type: string
+stopbits:
+  description: &quot;Stopbits of the data bytes.&quot;
+  required: true
+  type: list
+  keys:
+    &#x27;1&#x27;:
+      description: &quot;1 stop bit.&quot;
+    &#x27;2&#x27;:
+      description: &quot;2 stop bits, standard.&quot;
+
+{% endconfiguration %}
+
+#### Example: Typical serial configuration
+
+```yaml
+# Example YAML: typical serial connection
+modbus:
+  - name: modbus_hub
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+```
+
+#### Example: Full serial configuration
+
+```yaml
+# Example YAML: full serial connection
+modbus:
+  - name: modbus_hub
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+
+    delay: 0
+    message_wait_milliseconds: 30
+    timeout: 5
+```
+
+
+### Configuring multiple connections
+
+Multiple connections can freely mix different communications:
+
+```yaml
+# Example YAML: multiple Modbus TCP connections
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+
+  - name: modbus_hub2
+    type: tcp
+    host: IP_ADDRESS_2
+    port: 502
+```
+
+
+```yaml
+# Example YAML: Modbus TCP connection and serial connection
+modbus:
+  - name: modbus_hub
+    type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+
+  - name: modbus_hub2
+    type: serial
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    bytesize: 8
+    method: rtu
+    parity: E
+    stopbits: 1
+```
+
+### Configuring Modbus entities
+
+Modbus entities are grouped below each Modbus hub.
+
+Each Modbus hub must have at least 1 entity. Otherwise, Home Assistant doesn&#x27;t load that hub, and shows a repair in {% my repairs title=&quot;**Settings** &gt; **System** &gt; **Repairs**&quot; %}.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+All Modbus entities have the following parameters:
+
+{% configuration %}
+address:
+  description: &quot;Address (0-based) of the coil or register. You can also enter it in hexadecimal, for example, `0x789A`.&quot;
+  required: true
+  type: integer
+name:
+  description: &quot;Name of the entity which must be unique within the entity type.&quot;
+  required: true
+  type: string
+scan_interval:
+  description: &quot;Update interval in seconds.
+  scan_interval = 0 for no polling.
+  Entities are read shortly after startup and then according to scan_interval.
+  When Home Assistant restarts, the last known value is restored.&quot;
+  required: false
+  type: integer
+  default: 15
+slave:
+  description: &quot;Identical to `device_address`&quot;
+  required: false
+  type: integer
+  default: 1
+device_address:
+  description: &quot;Unit ID of the device. Use it to address several devices on an RS-485 bus, or devices behind a Modbus gateway. On these connections, `0` is the broadcast address.&quot;
+  required: false
+  type: integer
+  default: 1
+unique_id:
+  description: &quot;ID that uniquely identifies this entity.
+  With `virtual_count`, the additional entities get this unique ID with a number added, for example, `my_unique_id_1`.
+  If two entities have the same unique ID, Home Assistant will raise an exception.&quot;
+  required: false
+  type: string
+
+{% endconfiguration %}
+
+#### Example: Entities grouping
+
+```yaml
+# Example YAML: entities grouping
+modbus:
+  - type: tcp
+    host: IP_ADDRESS_1
+    port: 2020
+    name: &quot;modbus_hub&quot;
+    binary_sensors:
+      - name: binary_sensor1
+        address: 100
+    climates:
+      - name: &quot;Watlow F4T&quot;
+        address: 200
+    covers:
+      - name: Door1
+        address: 300
+    fans:
+      - name: Fan1
+        address: 400
+    lights:
+      - name: light1
+        address: 500
+    sensors:
+      - name: sensor1
+        address: 600
+    switches:
+      - name: Switch1
+        address: 700
+```
+
+The different types of entities are detailed in the following.
+
+### Configuring binary sensor entities
+
+The Modbus binary sensor allows you to gather data from coils which as per standard have state ON/OFF.
+
+Normally, a register contains 16 coils, giving different addresses depending on the request used.
+
+```yaml
+Register 512: Coil 1 - 16
+Register 513: Coil 17 - 32
+```
+
+`input_type: coils` would use addresses from 1 through 32, while `input_type: input` would use addresses 512 and 513.
+For that reason, many devices (especially older ones) do not share the coil address space with the register address space,
+and this `input` would read from a different address space than `coil`. The problem is present in devices with
+shared address space and are a frequent cause of problems when configuring entities.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+binary_sensors:
+  description: &quot;A list of all binary sensors configured for this connection.&quot;
+  required: false
+  type: map
+  keys:
+    device_class:
+      description: &quot;The [type/class](/integrations/binary_sensor/#device-class) to be used for the UI.&quot;
+      required: false
+      type: string
+    input_type:
+      description: &quot;Type of request `discrete_input`, `coil`, `holding` or `input`&quot;
+      required: false
+      default: coil
+      type: string
+    slave_count:
+      description: &quot;Identical to `virtual_count`.&quot;
+      required: false
+      type: integer
+    virtual_count:
+      description: &quot;Creates this binary sensor plus this number of additional binary sensors.
+      Addresses are automatically incremented.
+      The parameter simplifies configuration and provides a much better performance by not using count+1 requests but a single request.&quot;
+      required: false
+      type: integer
+    unique_id:
+      description: &quot;ID that uniquely identifies the entity. The additional binary sensors get this unique ID with a number added, for example, `my_unique_id_1`. If two sensors have the same unique ID, Home Assistant will raise an exception.&quot;
+      required: false
+      type: string
+
+{% endconfiguration %}
+
+#### Example: Typical binary sensor configuration
+
+```yaml
+# Example YAML: typical binary_sensor
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        slave: 1
+```
+
+#### Example: Full binary sensor configuration
+
+```yaml
+# Example YAML: binary_sensor with all options
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        device_class: door
+        input_type: coil
+        scan_interval: 15
+        slave: 1
+        slave_count: 0
+        unique_id: my_relay
+```
+
+#### Example: Multiple identical binary sensor configuration
+
+```yaml
+# Example of 10 identical binary_sensor
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    binary_sensors:
+      - name: my_relay
+        address: 100
+        slave: 1
+        slave_count: 10
+        unique_id: my_relay
+```
+
+This configuration will poll coil addresses 100 to 110 every 15 seconds and update the binary_sensors: `my_relay`
+and `my_relay_1` to `my_relay_10`.
+
+The additional binary sensors get the same configuration as the first one, such as `device_class`.
+
+### Configuring climate entities
+
+The Modbus climate platform allows you to monitor a thermostat or heaters as well as set a target temperature, HVAC action, HVAC mode, swing mode, and fan state.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+climates:
+  description: &quot;A list of all climate entities in this Modbus hub.&quot;
+  required: false
+  type: map
+  keys:
+    temperature_unit:
+      description: &quot;Temperature unit: C or F.&quot;
+      required: false
+      default: C
+      type: list
+      keys:
+        C:
+          description: &quot;Celsius&quot;
+        F:
+          description: &quot;Fahrenheit&quot;
+    precision:
+      description: &quot;Number of valid decimals for temperature.&quot;
+      required: false
+      type: integer
+      default: 0
+    temp_step:
+      description: &quot;Step size target temperature.&quot;
+      required: false
+      type: float
+      default: 0.5
+    max_temp:
+      description: &quot;Maximum setpoint for target temperature.&quot;
+      required: false
+      type: integer
+      default: 35
+    min_temp:
+      description: &quot;Minimum setpoint for target temperature.&quot;
+      required: false
+      type: integer
+      default: 5
+    count:
+      description: &quot;Number of registers to read to fetch the current temperature.
+      **only valid for `data_type: custom` and `data_type: string`**, for other data types count is automatically calculated.&quot;
+      required: false
+      type: integer
+    data_type:
+      description: &quot;Response representation when reading the current temperature register(s).&quot;
+      required: false
+      default: int16
+      type: list
+      keys:
+        custom:
+          description: &quot;user defined format, `structure:` and `count:` must be configured.&quot;
+        float16:
+          description: &quot;16 bit signed float (1 register holds 1 value).&quot;
+        float32:
+          description: &quot;32 bit signed float (2 registers holds 1 value).&quot;
+        float64:
+          description: &quot;64 bit signed float (4 register holds 1 value).&quot;
+        int:
+          description: &quot;**DEPRECATED** is silently converted to `int16`&quot;
+        int16:
+          description: &quot;16 bit signed integer (1 register holds 1 value).&quot;
+        int32:
+          description: &quot;32 bit signed integer (2 registers holds 1 value).&quot;
+        int64:
+          description: &quot;64 bit signed integer (4 registers holds 1 value).&quot;
+        string:
+          description: &quot;set of 8 bit characters, `count:` must be configured.&quot;
+        uint:
+          description: &quot;**DEPRECATED** is silently converted to `uint16`&quot;
+        uint16:
+          description: &quot;16 bit unsigned integer (1 register holds 1 value).&quot;
+        uint32:
+          description: &quot;32 bit unsigned integer (2 registers holds 1 value).&quot;
+        uint64:
+          description: &quot;64 bit unsigned integer (4 registers holds 1 value).&quot;
+    input_type:
+      description: Modbus register type for current temperature.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: &quot;Holding register.&quot;
+        input:
+          description: &quot;Input register.&quot;
+    scale:
+      description: &quot;Scale factor (`output` = `scale` * `value` + offset) for setting target and current temperature. Cannot be used together with `current_temp_scale` or `target_temp_scale.&quot;
+      required: false
+      type: float
+      default: 1
+    offset:
+      description: &quot;Final offset for target and current temperature (`output` = `scale` * `value` + `offset). Cannot be used together with current_temp_offset or target_temp_offset`.&quot;
+      required: false
+      type: float
+      default: 0
+    current_temp_scale:
+      description: &quot;Scale factor for current temperature (output = `current_temp_scale` * `value` + `current_temp_offset`). Cannot be used together with `scale`&quot;
+      required: false
+      type: float
+      default: 1.0
+    current_temp_offset:
+      description: &quot;Offset for current temperature (output` = current_temp_scale` * `value` + `current_temp_offset`). Cannot be used together with *offset*.&quot;
+      required: false
+      type: float
+      default: 0.0
+    target_temp_scale:
+      description: &quot;Scale factor for target temperature (`output` = `target_temp_scale` * `value` + `target_temp_offset`). Cannot be used together with scale`.&quot;
+      required: false
+      type: float
+      default: 1.0
+    target_temp_offset:
+      description: &quot;Offset for target temperature (`output` = `target_temp_scale` * `value` + `target_temp_offset`). Cannot be used together with offset`.&quot;
+      required: false
+      type: float
+      default: 0.0
+    target_temp_register:
+      description: &quot;Register address for target temperature (Setpoint). Using a list, it is possible to define one register for each of the available HVAC Modes. The list has to have a fixed size of 7 registers corresponding to the 7 available HVAC Modes, as follows: Register **1: HVAC AUTO mode**; Register **2: HVAC Cool mode**; Register **3: HVAC Dry mode**; Register **4: HVAC Fan only mode**; Register **5: HVAC Heat mode**; Register **6: HVAC Heat Cool mode**; Register **7: HVAC OFF mode**. It is possible to set duplicated values for the modes where the devices don&#x27;t have a related register.&quot;
+      required: true
+      type: [integer, list]
+    target_temp_write_registers:
+      description: &quot;If `true` use `write_registers` for target temperature (`target_temp_register`), else use `write_register`.&quot;
+      required: false
+      type: boolean
+      default: false
+    structure:
+      description: &quot;If `data_type: custom` is specified a double-quoted Python struct is expected,
+      to format the string to unpack the value. See Python documentation for details.
+      Example: `&gt;i`.&quot;
+      required: false
+      type: string
+      default: &quot;&gt;f&quot;
+    swap:
+      description: &quot;Swap the order of bytes/words, **not valid with `custom` and `datatype: string`** when setting target temperature&quot;
+      required: false
+      default: none
+      type: list
+      keys:
+        byte:
+          description: &quot;Swap bytes AB -&gt; BA.&quot;
+        word:
+          description: &quot;Swap word ABCD -&gt; CDAB, **not valid with data types: `int16`, `uint16`**&quot;
+        word_byte:
+          description: &quot;Swap word ABCD -&gt; DCBA, **not valid with data types: `int16`, `uint16`**&quot;
+    hvac_action_register:
+      description: &quot;Configuration of register for HVAC action&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address of HVAC action register.&quot;
+          required: true
+          type: integer
+        input_type:
+          description: &quot;Type of register, either `holding` or `input`&quot;
+          required: false
+          default: holding
+          type: string
+        values:
+          description: &quot;Mapping between the register values and HVAC actions&quot;
+          required: true
+          type: map
+          keys:
+            action_off:
+              description: &quot;Value corresponding to HVAC Off action.&quot;
+              required: false
+              type: [integer, list]
+            action_cooling:
+              description: &quot;Value corresponding to HVAC Cooling action.&quot;
+              required: false
+              type: [integer, list]
+            action_defrosting:
+              description: &quot;Value corresponding to HVAC Defrosting action.&quot;
+              required: false
+              type: [integer, list]
+            action_drying:
+              description: &quot;Value corresponding to HVAC Drying action.&quot;
+              required: false
+              type: [integer, list]
+            action_fan:
+              description: &quot;Value corresponding to HVAC Fan action.&quot;
+              required: false
+              type: [integer, list]
+            action_heating:
+              description: &quot;Value corresponding to HVAC Heating action.&quot;
+              required: false
+              type: [integer, list]
+            action_idle:
+              description: &quot;Value corresponding to HVAC Idle action.&quot;
+              required: false
+              type: [integer, list]
+            action_preheating:
+              description: &quot;Value corresponding to HVAC Preheating action.&quot;
+              required: false
+              type: [integer, list]
+    hvac_mode_register:
+      description: &quot;Configuration of register for HVAC mode&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address of HVAC mode register.&quot;
+          required: true
+          type: integer
+        write_registers:
+          description: &quot;Request type for setting HVAC mode, use `write_registers` if true else `write_register`.
+            If more than one value is specified for a specific mode, only the first one is used for writing to the register.&quot;
+          required: false
+          type: boolean
+          default: false
+        values:
+          description: &quot;Mapping between the register values and HVAC modes&quot;
+          required: true
+          type: map
+          keys:
+            state_off:
+              description: &quot;Value corresponding to HVAC Off mode.
+                If the On/Off state handled on a different address and/or register the `state_off` state should be omitted from your configuration&quot;
+              required: false
+              type: [integer, list]
+            state_heat:
+              description: &quot;Value corresponding to HVAC Heat mode.&quot;
+              required: false
+              type: [integer, list]
+            state_cool:
+              description: &quot;Value corresponding to HVAC Cool mode.&quot;
+              required: false
+              type: [integer, list]
+            state_auto:
+              description: &quot;Value corresponding to HVAC Auto mode.&quot;
+              required: false
+              type: [integer, list]
+            state_dry:
+              description: &quot;Value corresponding to HVAC Dry mode.&quot;
+              required: false
+              type: [integer, list]
+            state_fan_only:
+              description: &quot;Value corresponding to HVAC Fan only mode.&quot;
+              required: false
+              type: [integer, list]
+            state_heat_cool:
+              description: &quot;Value corresponding to HVAC Heat/Cool mode.&quot;
+              required: false
+              type: [integer, list]
+    fan_mode_register:
+      description: &quot;Configuration of register for Fan mode&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address of Fan mode register. (int to call write_register, list of 1 int to call write_registers)&quot;
+          required: true
+          type: [integer, list]
+        values:
+          description: &quot;Mapping between the register values and Fan modes
+            This is typically used to control one of: Speed, Direction or On/Off state.&quot;
+          required: true
+          type: map
+          keys:
+            state_fan_on:
+              description: &quot;Value corresponding to Fan On mode.&quot;
+              required: false
+              type: integer
+            state_fan_off:
+              description: &quot;Value corresponding to Fan Off mode.&quot;
+              required: false
+              type: integer
+            state_fan_low:
+              description: &quot;Value corresponding to Fan Low mode.&quot;
+              required: false
+              type: integer
+            state_fan_medium:
+              description: &quot;Value corresponding to Fan Medium mode.&quot;
+              required: false
+              type: integer
+            state_fan_high:
+              description: &quot;Value corresponding to Fan High mode.&quot;
+              required: false
+              type: integer
+            state_fan_auto:
+              description: &quot;Value corresponding to Fan Auto mode.&quot;
+              required: false
+              type: integer
+            state_fan_top:
+              description: &quot;Value corresponding to Fan Top mode.&quot;
+              required: false
+              type: integer
+            state_fan_middle:
+              description: &quot;Value corresponding to Fan Middle mode.&quot;
+              required: false
+              type: integer
+            state_fan_focus:
+              description: &quot;Value corresponding to Fan Focus mode.&quot;
+              required: false
+              type: integer
+            state_fan_diffuse:
+              description: &quot;Value corresponding to Fan Diffuse mode.&quot;
+              required: false
+              type: integer
+    hvac_onoff_coil:
+      description: &quot;Address of On/Off state.
+        Only use this setting if your On/Off state is not handled as an HVAC mode.
+        When zero is read from this coil, the HVAC state is set to Off, otherwise the `hvac_mode_register`
+        dictates the state of the HVAC. If no such coil is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value 0 is written to the coil, otherwise the
+        value 1 is written.
+        **Cannot be used with `hvac_onoff_register`.**&quot;
+      required: false
+      type: integer
+    hvac_onoff_register:
+      description: &quot;Address of On/Off state.
+        When the value defined by `hvac_off_value` is read from this register, the HVAC
+        state is set to Off. Otherwise, the `hvac_mode_register` dictates the state
+        of the HVAC. If no such register is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value defined by `hvac_off_value` is written to
+        the register, otherwise the value defined by `hvac_on_value` is written.
+        **Cannot be used with `hvac_onoff_coil`.**&quot;
+      required: false
+      type: integer
+    hvac_on_value:
+      description: &quot;The value that will be written to the `hvac_onoff_register` to turn the HVAC system on.
+        If not specified, the default value is 1.&quot;
+      required: false
+      type: integer
+    hvac_off_value:
+      description: &quot;The value that will be written to the `hvac_onoff_register` to turn the HVAC system off.
+        If not specified, the default value is 0.&quot;
+      required: false
+      type: integer
+    swing_mode_register:
+      description: &quot;Configuration of the register for swing mode&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address of swing mode register. (int to call write_register, list of 1 int to call write_registers). - Reading done through holding register&quot;
+          required: true
+          type: [integer, list]
+        values:
+          description: &quot;Mapping between the register values and swing modes&quot;
+          required: true
+          type: map
+          keys:
+            swing_mode_state_on:
+              description: &quot;Value corresponding to swing mode on.&quot;
+              required: false
+              type: integer
+            swing_mode_state_off:
+              description: &quot;Value corresponding to swing mode off.&quot;
+              required: false
+              type: integer
+            swing_mode_state_horizontal:
+              description: &quot;Value corresponding to swing mode horizontal.&quot;
+              required: false
+              type: integer
+            swing_mode_state_vertical:
+              description: &quot;Value corresponding to swing mode vertical.&quot;
+              required: false
+              type: integer
+            swing_mode_state_both:
+              description: &quot;Value corresponding to Swing mode both.&quot;
+              required: false
+              type: integer
+    hvac_onoff_register:
+      description: &quot;Address of On/Off state.
+        Only use this setting if your On/Off state is not handled as an HVAC mode.
+        When zero is read from this register, the HVAC state is set to Off, otherwise the `hvac_mode_register`
+        dictates the state of the HVAC. If no such register is defined, it defaults to Auto.
+        When the HVAC mode is set to Off, the value 0 is written to the register, otherwise the
+        value 1 is written.&quot;
+      required: false
+      type: integer
+    write_registers:
+      description: &quot;If `true` use `write_registers` to control the On/Off state (`hvac_onoff_register`), else use `write_register`.
+      Note that it is not yet possible to control the On/Off state via a coil.&quot;
+      required: false
+      type: boolean
+      default: false
+
+{% endconfiguration %}
+
+#### Example: Climate configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    climates:
+      - name: &quot;Watlow F4T&quot;
+        address: 0x6BC2
+        input_type: holding
+        count: 1
+        data_type: custom
+        max_temp: 35
+        min_temp: 15
+        offset: 0
+        precision: 1
+        scale: 0.1
+        structure: &quot;&gt;f&quot;
+        target_temp_register: 2782
+        target_temp_write_registers: true
+        temp_step: 1
+        temperature_unit: C
+```
+
+### Configuring cover entities
+
+The `modbus` cover platform allows you to control covers (such as blinds, a roller shutter, or a garage door).
+
+At the moment, platform cover support the opening and closing of a cover. You can control your covers either using coils or holding registers.
+
+A cover that uses `input_type: coil` is not able to determine intermediate states such as opening and closing. A coil stores only two states: `0` means the cover is closed, and `1` means it&#x27;s open. To allow detecting intermediate states, there is an optional `status_register` attribute. It will enable you to write your command (for example, to open a cover) into a coil, and read current cover status back through the register. Additionally, you can specify values for `state_open`, `state_opening`, `state_closed`, and `state_closing` attributes. These will be matched with the value read from the `status_register`.
+
+If your cover uses `input_type: holding` (default) to send commands, it can also read the intermediate states. To adjust which value represents what state, you can fine-tune the optional state attributes, like `state_open`. These optional state values are also used for specifying values written into the register. If you specify an optional status_register attribute, cover states will be read from status_register instead of the register used for sending commands.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+covers:
+  description: &quot;A list of all cover entities configured for this connection.&quot;
+  required: true
+  type: map
+  keys:
+    device_class:
+      description: &quot;The [type/class](/integrations/cover/#device-class) of the cover to set the icon in the frontend.&quot;
+      required: false
+      type: device_class
+      default: None
+    input_type:
+      description: &quot;Cover register type.&quot;
+      default: holding
+      required: false
+      type: list
+      keys:
+        holding:
+          description: &quot;Holding register.&quot;
+        input:
+          description: &quot;Input register.&quot;
+    state_open:
+      description: &quot;A value in `status_register` or `register` representing an open cover.
+        If your configuration uses the `register` attribute, this value will be written into the holding register to open the cover.&quot;
+      required: false
+      default: 1
+      type: integer
+    state_closed:
+      description: &quot;A value in `status_register` or `register` representing a closed cover.
+        If your configuration uses the `register` attribute, this value will be written into the holding register to close the cover.&quot;
+      required: false
+      default: 0
+      type: integer
+    state_opening:
+      description: &quot;A value in `status_register` or `register` representing an opening cover.
+        Note that this state should be also supported on your connected Modbus cover.
+        If it won&#x27;t report the state, this state won&#x27;t be detected.&quot;
+      required: false
+      default: 2
+      type: integer
+    state_closing:
+      description: &quot;A value in `status_register` or `register` representing a closing cover.
+        Note that this state should be also supported on your connected Modbus cover.
+        If it will not report the state, this state won&#x27;t be detected.&quot;
+      required: false
+      default: 3
+      type: integer
+    status_register:
+      description: &quot;Address of register, from which all the cover states will be read.
+        If you specified `register` attribute, and not `status_register` attribute,
+        your main register will also be used as a status register.&quot;
+      required: false
+      type: integer
+    status_register_type:
+      description: Cover status register type (holding, input), default holding.
+      required: false
+      type: list
+      keys:
+        holding:
+          description: &quot;Holding register.&quot;
+        input:
+          description: &quot;Input register.&quot;
+{% endconfiguration %}
+
+#### Example: Modbus cover
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        device_class: door
+        input_type: coil
+        address: 117
+        state_open: 1
+        state_opening: 2
+        state_closed: 0
+        state_closing: 3
+        status_register: 119
+        status_register_type: holding
+      - name: &quot;Door2&quot;
+        address: 118
+```
+
+
+#### Example: Modbus cover controlled by a coil
+
+This example shows a configuration for a Modbus cover controlled using a coil. Intermediate states like opening/closing are not supported. The cover state is polled from Modbus every 10 seconds.
+
+```yaml
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        coil: 1
+        device_class: door
+        scan_interval: 10
+      - name: Door2
+        slave: 2
+        coil: 2
+        device_class: door
+        scan_interval: 10
+```
+
+#### Example: Modbus cover controlled by a coil, its state is read from the register
+
+This example shows a configuration for a Modbus cover controlled using a coil. Actual cover state is read from the `status_register`. We&#x27;ve also specified register values to match with the states open/opening/closed/closing. The cover state is polled from Modbus every 10 seconds.
+
+```yaml
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        coil: 1
+        status_register: 1
+        status_register_type: input
+        state_opening: 1
+        state_open: 2
+        state_closing: 3
+        state_closed: 4
+```
+
+#### Example: Modbus cover controlled by a holding register
+
+This example shows a configuration for a Modbus cover controlled using a holding register, from which we also read current cover state. We&#x27;ve also specified register values to match with the states open/opening/closed/closing. The cover state is polled from Modbus every 10 seconds.
+
+```yaml
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        register: 1
+        state_opening: 1
+        state_open: 2
+        state_closing: 3
+        state_closed: 4
+```
+
+#### Example: Modbus cover controlled by a holding register, its state is read from the status register
+
+This example shows a configuration for a Modbus cover controlled using a holding register. However, cover state is read from a `status_register`. In this case, we&#x27;ve specified only values for `state_open` and `state_closed`, for the rest, default values are used. The cover state is polled from Modbus every 10 seconds.
+
+```yaml
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+
+    covers:
+      - name: Door1
+        slave: 1
+        device_class: door
+        scan_interval: 10
+        register: 1
+        status_register: 2
+        register_type: holding
+        state_open: 1
+        state_closed: 0
+```
+
+### Configuring fan entities
+
+The `modbus` fan platform allows you to control [Modbus](http://www.modbus.org/) coils or registers.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+fans:
+  description: &quot;A list of all fan entities in this Modbus hub.&quot;
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: &quot;Value to write to turn on the fan.&quot;
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: &quot;Value to write to turn off the fan.&quot;
+      required: false
+      default: 0x00
+      type: integer
+    write_type:
+      description: Type of write request.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: &quot;Write Single Register (function code 06).&quot;
+        holdings:
+          description: &quot;Write Multiple Registers (function code 16).&quot;
+        coil:
+          description: &quot;Write Single Coil (function code 05).&quot;
+        coils:
+          description: &quot;Write Multiple Coils (function code 15).&quot;
+    verify:
+      description: &quot;Read from Modbus device to verify fan.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted, no verification is done, but the state of the fan is set with each toggle.&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address to read from.&quot;
+          required: false
+          default: write address
+          type: integer
+        delay:
+          description: &quot;Delay between write and verify.&quot;
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: same as `write_type`
+          type: list
+          keys:
+            coil:
+              description: &quot;Coil: a single bit that can be read and written.&quot;
+            discrete_input:
+              description: &quot;Discrete input: a single bit that can only be read.&quot;
+            holding:
+              description: &quot;Holding register.&quot;
+            input:
+              description: &quot;Input register.&quot;
+        state_on:
+          description: &quot;Value when the fan is on.&quot;
+          required: false
+          default: same as `command_on`
+          type: integer
+        state_off:
+          description: &quot;Value when the fan is off.&quot;
+          required: false
+          default: same as `command_off`
+          type: integer
+{% endconfiguration %}
+
+#### Example: Fan configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    fans:
+      - name: &quot;Fan1&quot;
+        address: 13
+        write_type: coil
+      - name: &quot;Fan2&quot;
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: &quot;Register1&quot;
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+```
+
+### Configuring light entities
+
+The `modbus` light platform allows you to control [Modbus](http://www.modbus.org/) coils or registers.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+lights:
+  description: &quot;A list of all light entities in this Modbus hub.&quot;
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: &quot;Value to write to turn on the light.&quot;
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: &quot;Value to write to turn off the light.&quot;
+      required: false
+      default: 0x00
+      type: integer
+    brightness_address:&#32;
+      description: &quot;Address to read/write color brightness.&quot;
+      required: false
+      default: None
+      type: integer
+    color_temp_address:
+      description: &quot;Address to read/write color temperature.&quot;
+      required: false
+      default: None
+      type: integer
+    min_temp:
+      description: &quot;Minimal level of color temperature in Kelvin.&quot;
+      required: false
+      default: 2000
+      type: integer
+    max_temp:
+      description: &quot;Maximal level of color temperature in Kelvin.&quot;
+      required: false
+      default: 7000
+      type: integer
+    write_type:
+      description: &quot;Type of write request.&quot;
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: &quot;Write Single Register (function code 06).&quot;
+        holdings:
+          description: &quot;Write Multiple Registers (function code 16).&quot;
+        coil:
+          description: &quot;Write Single Coil (function code 05).&quot;
+        coils:
+          description: &quot;Write Multiple Coils (function code 15).&quot;
+    verify:
+      description: &quot;Read from Modbus device to verify the light.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted no verification, is done, but the state of the light is set with each toggle.&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address to read from.&quot;
+          required: false
+          default: &quot;Same as `address`&quot;
+          type: integer
+        delay:
+          description: delay between write and verify.
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: &quot;Same as `write_type`&quot;
+          type: list
+          keys:
+            coil:
+              description: &quot;Coil: a single bit that can be read and written.&quot;
+            discrete_input:
+              description: &quot;Discrete input: a single bit that can only be read.&quot;
+            holding:
+              description: &quot;Holding register.&quot;
+            input:
+              description: &quot;Input register.&quot;
+        state_on:
+          description: &quot;Value when the light is on.&quot;
+          required: false
+          default: &quot;Same as `command_on`&quot;
+          type: integer
+        state_off:
+          description: &quot;Value when the light is off.&quot;
+          required: false
+          default: &quot;Same as `command_off`&quot;
+          type: integer
+
+{% endconfiguration %}
+
+#### Example: Light configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    lights:
+      - name: &quot;light1&quot;
+        address: 13
+        write_type: coil
+      - name: &quot;light2&quot;
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        verify:
+      - name: &quot;light3&quot;
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        color_temp_address: 2006
+      - name: &quot;light4&quot;
+        slave: 2
+        address: 14
+        write_type: coil
+        brightness_address: 1006
+        color_temp_address: 2006
+        min_temp: 2500
+        max_temp: 5500
+        verify:
+      - name: &quot;Register1&quot;
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+```
+
+### Configuring sensor entities
+
+The `modbus` sensor allows you to gather data from [Modbus](http://www.modbus.org/) registers.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+sensors:
+  description: &quot;A list of all sensors in this Modbus hub.&quot;
+  required: true
+  type: map
+  keys:
+    count:
+      description: &quot;Number of registers to read.
+      **only valid for `data_type: custom` and `data_type: string`**, for other data types count is automatically calculated.&quot;
+      required: false
+      type: integer
+    data_type:
+      description: &quot;Response representation.&quot;
+      required: false
+      default: int16
+      type: list
+      keys:
+        custom:
+          description: &quot;user defined format, `structure:` and `count:` must be configured.&quot;
+        float16:
+          description: &quot;16 bit signed float (1 register holds 1 value).&quot;
+        float32:
+          description: &quot;32 bit signed float (2 registers holds 1 value).&quot;
+        float64:
+          description: &quot;64 bit signed float (4 register holds 1 value).&quot;
+        int:
+          description: &quot;**DEPRECATED** is silently converted to `int16`&quot;
+        int16:
+          description: &quot;16 bit signed integer (1 register holds 1 value).&quot;
+        int32:
+          description: &quot;32 bit signed integer (2 registers holds 1 value).&quot;
+        int64:
+          description: &quot;64 bit signed integer (4 registers holds 1 value).&quot;
+        string:
+          description: &quot;set of 8 bit characters, `count:` must be configured.&quot;
+        uint:
+          description: &quot;**DEPRECATED** is silently converted to `uint16`&quot;
+        uint16:
+          description: &quot;16 bit unsigned integer (1 register holds 1 value).&quot;
+        uint32:
+          description: &quot;32 bit unsigned integer (2 registers holds 1 value).&quot;
+        uint64:
+          description: &quot;64 bit unsigned integer (4 registers holds 1 value).&quot;
+    device_class:
+      description: &quot;The [type/class](/integrations/sensor/#device-class) of the sensor to set the icon in the frontend.&quot;
+      required: false
+      type: device_class
+      default: None
+    input_type:
+      description: &quot;Modbus register type for sensor.&quot;
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: &quot;Holding register.&quot;
+        input:
+          description: &quot;Input register.&quot;
+    min_value:
+      description: &quot;The minimum allowed value of a sensor. If value &lt; min_value --&gt; min_value. Can be float or integer&quot;
+      required: false
+      type: float
+    max_value:
+      description: &quot;The maximum allowed value of a sensor. If value &gt; max_value --&gt; max_value. Can be float or integer&quot;
+      required: false
+      type: float
+    nan_value:
+      description: If a Modbus sensor has a defined NaN value, this value can be set as a hex string starting with `0x` containing one or more bytes (for example, `0xFFFF` or `0x80000000`) or provided as an integer directly. If triggered, the sensor becomes `unknown`. The conversion from hex to integer for `nan_value` doesn&#x27;t use the `data_type`, `structure`, or `swap` options.
+      required: false
+      type: [string, integer]
+    zero_suppress:
+      description: Suppress values close to zero. If -zero_suppress &lt;= value &lt;= +zero_suppress --&gt; 0. Can be float or integer
+      required: false
+      type: float
+    offset:
+      description: &quot;Final offset (output = scale * value + offset).&quot;
+      required: false
+      type: float
+      default: 0
+    precision:
+      description: &quot;Number of valid decimals.&quot;
+      required: false
+      type: integer
+      default: 0
+    scale:
+      description: &quot;Scale factor (output = scale * value + offset).&quot;
+      required: false
+      type: float
+      default: 1
+    slave_count:
+      description: &quot;Identical to `virtual_count`.&quot;
+      required: false
+      type: integer
+    virtual_count:
+      description: &quot;Creates this sensor plus this number of additional sensors. All their registers are read with a single request.&quot;
+      required: false
+      type: integer
+    state_class:
+      description: &quot;The [state_class](/integrations/sensor/#state-class) of the sensor.&quot;
+      required: false
+      type: string
+    structure:
+      description: &quot;If `data_type: custom` is specified a double-quoted Python struct is expected,
+      to format the string to unpack the value. See Python documentation for details.
+      Example: `&gt;i`.&quot;
+      required: false
+      type: string
+      default: &quot;&gt;f&quot;
+    swap:
+      description: &quot;Swap the order of bytes/words, **not valid with `custom` and `datatype: string`**&quot;
+      required: false
+      default: none
+      type: list
+      keys:
+        byte:
+          description: &quot;Swap bytes AB -&gt; BA.&quot;
+        word:
+          description: &quot;Swap word ABCD -&gt; CDAB, **not valid with data types: `int16`, `uint16`**&quot;
+        word_byte:
+          description: &quot;Swap word ABCD -&gt; DCBA, **not valid with data types: `int16`, `uint16`**&quot;
+    unit_of_measurement:
+      description: &quot;Unit to attach to value. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes).&quot;
+      required: false
+      type: string
+    unique_id:
+      description: ID that uniquely identifies the entity. If two sensors have the same unique ID, Home Assistant will raise an exception.
+      required: false
+      type: string
+{% endconfiguration %}
+
+{% note %}
+If you specify scale or offset as floating point values, double precision floating point arithmetic will be used to calculate final value. This can cause loss of precision for values that are larger than 2^53.
+{% endnote %}
+
+#### Example: Sensor configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    sensors:
+      - name: Sensor1
+        unit_of_measurement: °C
+        slave: 1
+        address: 100
+      - name: Sensor2
+        unit_of_measurement: mg
+        address: 110
+        count: 2
+      - name: Sensor3
+        unit_of_measurement: °C
+        slave: 1
+        address: 120
+        input_type: input
+        data_type: float
+        scale: 0.01
+        offset: -273.16
+        precision: 2
+```
+
+
+#### Example: Sensor full configuration
+
+Example temperature sensor with a default scan interval:
+
+```yaml
+modbus:
+  - name: hub1
+    type: tcp
+    host: IP_ADDRESS
+    port: 502
+    sensors:
+      - name: Room_1
+        slave: 10
+        address: 0x9A
+        input_type: holding
+        unit_of_measurement: °C
+        state_class: measurement
+        count: 1
+        scale: 0.1
+        offset: 0
+        precision: 1
+        data_type: integer
+```
+
+### Configuring switch entities
+
+The `modbus` switch platform allows you to control [Modbus](http://www.modbus.org/) coils or registers.
+
+For parameters that can&#x27;t be used together, refer to the [Parameters usage matrix](#parameters-usage-matrix).
+
+{% configuration %}
+switches:
+  description: &quot;A list of all switches in this Modbus hub.&quot;
+  required: true
+  type: map
+  keys:
+    command_on:
+      description: &quot;Value to write to turn on the switch.&quot;
+      required: false
+      default: 0x01
+      type: integer
+    command_off:
+      description: &quot;Value to write to turn off the switch.&quot;
+      required: false
+      default: 0x00
+      type: integer
+    write_type:
+      description: Type of write request.
+      required: false
+      default: holding
+      type: list
+      keys:
+        holding:
+          description: &quot;Write Single Register (function code 06).&quot;
+        holdings:
+          description: &quot;Write Multiple Registers (function code 16).&quot;
+        coil:
+          description: &quot;Write Single Coil (function code 05).&quot;
+        coils:
+          description: &quot;Write Multiple Coils (function code 15).&quot;
+    verify:
+      description: &quot;Read from Modbus device to verify switch.
+        If used without attributes, it uses the toggle register configuration.
+        If omitted, no verification is done, but the state of the switch is set with each toggle.&quot;
+      required: false
+      type: map
+      keys:
+        address:
+          description: &quot;Address to read from.&quot;
+          required: false
+          default: &quot;Same as `write address`&quot;
+          type: integer
+        delay:
+          description: &quot;Delay between write and verify.&quot;
+          required: false
+          default: 0
+          type: integer
+        input_type:
+          description: Type of address.
+          required: false
+          default: same as `write_type`
+          type: list
+          keys:
+            coil:
+              description: &quot;Coil: a single bit that can be read and written.&quot;
+            discrete_input:
+              description: &quot;Discrete input: a single bit that can only be read.&quot;
+            holding:
+              description: &quot;Holding register.&quot;
+            input:
+              description: &quot;Input register.&quot;
+        state_on:
+          description: &quot;Value(s) when switch is on. The value must be an `integer` or a list of integers.&quot;
+          required: false
+          default: &quot;Same as `command_on`&quot;
+          type: [integer, list]
+        state_off:
+          description: &quot;Value(s) when switch is off. The value must be an `integer` or a list of integers.&quot;
+          required: false
+          default: &quot;Same as `command_off`&quot;
+          type: [integer, list]
+
+{% endconfiguration %}
+
+#### Example: Switch configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    switches:
+      - name: Switch1
+        address: 13
+        write_type: coil
+      - name: Switch2
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: Register1
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+```
+
+
+#### Example: Switch full configuration
+
+```yaml
+# Example configuration.yaml entry
+modbus:
+  - type: tcp
+    host: IP_ADDRESS
+    port: 502
+    switches:
+      - name: Switch1
+        address: 13
+        write_type: coil
+      - name: Switch2
+        slave: 2
+        address: 14
+        write_type: coil
+        verify:
+      - name: Register1
+        address: 11
+        command_on: 1
+        command_off: 0
+        verify:
+            input_type: holding
+            address: 127
+            state_on: 25
+            state_off: 1
+```
+
+### Parameters usage matrix
+
+Some parameters exclude other parameters, the following tables show what can be combined:
+
+| Datatype:       | custom | string | *16 | *32 | *64 |
+| --------------- | ------ | ------ | --- | --- | --- |
+| count           | Yes    | Yes    | No  | No  | No  |
+| structure       | Yes    | No     | No  | No  | No  |
+| slave_count     | No     | No     | Yes | Yes | Yes |
+| virtual_count   | No     | No     | Yes | Yes | Yes |
+| swap: byte      | No     | No     | Yes | Yes | Yes |
+| swap: word      | No     | No     | No  | Yes | Yes |
+| swap: word_byte | No     | No     | No  | Yes | Yes |
+
+
+{% include integrations/actions.md %}
+
+## Opening an issue
+
+When you open an issue, add your current configuration, or a shortened version of it, with at least:
+
+- The Modbus configuration lines
+- The entity lines, such as for a sensor
+
+To help the developers find the problem, include a debug log:
+
+1. Add the following lines to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+   ```yaml
+   logger:
+     default: warning
+     logs:
+       homeassistant.components.modbus: debug
+       pymodbus: debug
+   ```
+
+2. Restart Home Assistant.
+3. Reproduce the problem.
+4. Add the log to the issue.
+
+## Building on top of Modbus
+
+The only recommended way is to inherit the entities needed.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Modbus in Home Assistant is <code>modbus</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>fan</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>stop</li><li>write coil</li><li>write register</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setting up a Modbus hub in YAML</li><li>Modbus YAML reference</li><li>Opening an issue</li><li>Building on top of Modbus</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/modbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/modbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/modbus</code></dd></dl></section><p><a href="../../integrations/modbus/">Return to the Modbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

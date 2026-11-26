@@ -1,1 +1,745 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HomematicIP Cloud reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:42" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homematicip_cloud/">HomematicIP Cloud guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>HomematicIP Cloud</h1><p>Instructions for integrating HomematicIP into Home Assistant.</p><section><h2>Overview</h2><p>The HomematicIP integration is used as an interface to the cloud server. Since there is no official documentation about this API, everything was done via reverse engineering. Use at your own risk.</p></section><section><h2>Manual configuration</h2><p>Add the information to your configuration.yaml file:</p></section><section><h2>Adding and removing devices and groups via the Homematic IP app</h2><p>Devices and groups you add or remove in the Homematic IP app are mirrored into Home Assistant:</p></section><section><h2>Use HmIP-DLD Door Lock Drive in Home Assistant</h2><p>If you are unable to control the HmIP-DLD device via Home Assistant, you might need to allow the Home Assistant access point to control the lock in the Homematic IP app.</p></section><section><h2>Use HmIP-FLC and HmIP-FDC door openers in Home Assistant</h2><p>The door opener of the HmIP-FLC and HmIP-FDC is a button entity. As with the HmIP-DLD, the Home Assistant access point must be allowed to control it under Access Control in the Homematic IP app.</p></section><section><h2>Supported devices</h2><p>The list below shows which Home Assistant entities each supported Homematic IP device contributes. Devices are grouped by Home Assistant entity platform; a single physical device often contributes entities on more than one platform (for example, a wall thermostat appears under *Climate*, *Sensors*, and *Binary sensors* for the battery state). If your device isn&#x27;t listed, see My device isn&#x27;t recognized.</p></section><section><h2>Climate</h2><p>The integration creates one climate entity per room as a Homematic IP heating group (HmIP-HeatingGroup). The group reads temperature and humidity from any of the following devices in that room and drives the floor heating or radiator actuators behind it:</p></section><section><h2>My device isn&#x27;t recognized</h2><p>If your device shows up in the Homematic IP app but Home Assistant doesn&#x27;t pick it up, the device family is most likely not yet implemented in the Python library that this integration uses. Each device family has to be added there first.</p></section><section><h2>Button events</h2><p>Devices with physical buttons expose an event entity per button channel. You can use these to trigger automations on a short release, a long press, or a long release.</p></section><section><h2>Trigger an action on a double press</h2><p>The cloud delivers a double press as two consecutive short_release events. Use wait_for_trigger with a short timeout to detect the second press:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for HomematicIP Cloud.</p><p>The <strong>init</strong> configuration step lists <code>hapid</code>, <code>name</code>, <code>pin</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>pin</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>sensor</li><li>siren</li><li>switch</li><li>valve</li><li>weather</li></ul><h3>Documented actions</h3><ul class="chips"><li>activate eco mode with duration</li><li>activate eco mode with period</li><li>activate vacation</li><li>deactivate eco mode</li><li>deactivate vacation</li><li>dump hap config</li><li>pull latch</li><li>reset energy counter</li><li>set active climate profile</li><li>set home cooling mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Manual configuration</li><li>Adding and removing devices and groups via the Homematic IP app</li><li>Use HmIP-DLD Door Lock Drive in Home Assistant</li><li>Use HmIP-FLC and HmIP-FDC door openers in Home Assistant</li><li>Supported devices</li><li>My device isn&#x27;t recognized</li><li>Button events</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homematicip_cloud/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homematicip_cloud</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homematicip_cloud</code></dd></dl></section><p><a href="../../integrations/homematicip_cloud/">Return to the HomematicIP Cloud guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HomematicIP Cloud reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:42" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homematicip_cloud/">HomematicIP Cloud guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>HomematicIP Cloud</h1><p>Instructions for integrating HomematicIP into Home Assistant.</p><div class="reader-body"><p>The <a>HomematicIP</a> integration is used as an interface to the cloud server. Since there is no official documentation about this API, everything was done via reverse engineering. Use at your own risk.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li>Alarm</li>
+<li>Binary sensor</li>
+<li>Button</li>
+<li>Climate</li>
+<li>Cover</li>
+<li>Event</li>
+<li>Fan</li>
+<li>Light</li>
+<li>Lock</li>
+<li>Sensor</li>
+<li>Switch</li>
+<li>Valve</li>
+<li>Weather</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>HomematicIP Cloud</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>HomematicIP Cloud</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Manual configuration</h2>
+<p>Generate the authentication token:</p>
+<p><code>hmip_generate_auth_token.py</code></p>
+<p>Add the information to your <code>configuration.yaml</code> file:</p>
+<pre><code>homematicip_cloud:
+  - accesspoint: IDENTIFIER
+    authtoken: AUTHTOKEN
+  - name: Location2
+    accesspoint: IDENTIFIER2
+    authtoken: AUTHTOKEN2
+</code></pre>
+<pre><code>
+name:
+  required: false
+  description: Name to identify your access point, this will be used to prefix your device names.
+  type: string
+accesspoint:
+  required: true
+  description: This is the access point ID (Serialized Global Trade Item Number, or SGTIN).
+  type: string
+authtoken:
+  required: true
+  description: "Authentication token generated with `generate_auth_token.py`."
+  type: string
+
+</code></pre>
+<h2>Adding and removing devices and groups via the Homematic IP app</h2>
+<p>Devices and groups you add or remove in the Homematic IP app are mirrored into Home Assistant:</p>
+<ul>
+<li>Groups appear and disappear immediately.</li>
+<li>Devices appear with a delay of about 30 seconds, and disappear immediately. Within this delay, finish naming the device in the Homematic IP app; otherwise Home Assistant uses a default name based on the device type. You can rename the device later in the entity registry.</li>
+</ul>
+<h2>Use HmIP-DLD Door Lock Drive in Home Assistant</h2>
+<p>If you are unable to control the HmIP-DLD device via Home Assistant, you might need to allow the Home Assistant access point to control the lock in the Homematic IP app.</p>
+<p>To do this, navigate to <strong>Access Control</strong> in the Homematic IP app and enable the necessary permissions.</p>
+<p>Currently, you can only use the HmIP-DLD in Home Assistant without a PIN. Make sure no PIN is set for the device in the Homematic IP app.</p>
+<h2>Use HmIP-FLC and HmIP-FDC door openers in Home Assistant</h2>
+<p>The door opener of the HmIP-FLC and HmIP-FDC is a button entity. As with the HmIP-DLD, the Home Assistant access point must be allowed to control it under <strong>Access Control</strong> in the Homematic IP app.</p>
+<p>If the access authorization has a PIN, use the <code>homematicip_cloud.pull_latch</code> action with its <code>pin</code> field. The button itself cannot pass a PIN.</p>
+<h2>Supported devices</h2>
+<p>The list below shows which Home Assistant entities each supported Homematic IP device contributes. Devices are grouped by Home Assistant entity platform; a single physical device often contributes entities on more than one platform (for example, a wall thermostat appears under <em>Climate</em>, <em>Sensors</em>, and <em>Binary sensors</em> for the battery state). If your device isn't listed, see <a>My device isn't recognized</a>.</p>
+<h3>Alarm control panel</h3>
+<ul>
+<li>Combined alarm control panel with internal and external security zones (<code>HmIP-SecurityZone</code>)</li>
+</ul>
+<h3>Binary sensors</h3>
+<ul>
+<li>Access point cloud connection (<code>HmIP-HAP</code>, <code>HmIP-HAP-B1</code>)</li>
+<li>Window and door contacts, including the rotary handle sensor (<code>HmIP-SWDO</code>, <code>HmIP-SWDO-PL</code>, <code>HmIP-SWDO-I</code>, <code>HmIP-SWDM</code>, <code>HmIP-SWDM-B2</code>, <code>HmIP-SRH</code>)</li>
+<li>Contact interfaces (<code>HmIP-FCI1</code>, <code>HmIP-FCI6</code>, <code>HmIP-SCI</code>)</li>
+<li>Smoke detectors (<code>HmIP-SWSD</code>, <code>HmIP-SWSD-2</code>)</li>
+<li>Motion and presence sensors (<code>HmIP-SMI</code>, <code>HmIP-SMI55</code>, <code>HmIP-SMO</code>, <code>HmIP-SMO-A</code>, <code>HmIP-SMO230</code>, <code>HmIP-SPI</code>)</li>
+<li>Acceleration and tilt sensors (<code>HmIP-SAM</code>, <code>HmIP-STV</code>)</li>
+<li>Rain sensor (<code>HmIP-SRD</code>)</li>
+<li>Water sensor (<code>HmIP-SWD</code>)</li>
+<li>Water alarm of the water stop and supply unit (<code>HmIP-WSS</code>, <code>HmIP-WSS-GB</code>)</li>
+<li>Alarm sirens (<code>HmIP-ASIR</code>, <code>HmIP-ASIR-O</code>, <code>HmIP-ASIR-B1</code>)</li>
+<li>Pluggable power supply monitoring (<code>HmIP-PMFS</code>)</li>
+<li>Wired input module – 32 channels (<code>HmIPW-DRI32</code>)</li>
+<li>Battery sensors on remote controls (<code>HmIP-RC8</code>, <code>HmIP-WRC2</code>, <code>HmIP-WRCC2</code>, <code>HmIP-WRC6</code>, <code>HmIP-WRC6-230</code>, <code>HmIPW-WRC6</code>, <code>HmIP-KRC4</code>, <code>HmIP-KRCA</code>, <code>HmIP-BRC2</code>, <code>HmIP-MOD-RC8</code>)</li>
+<li>Full Flush Lock Controller glass-break and lock state sensors (<code>HmIP-FLC</code>)</li>
+<li>Heating output of wall thermostats, shown when the thermostat's switching output is enabled (<code>HmIP-BWTH</code>, <code>HmIP-WGT</code>, <code>HmIP-WGT-A</code>, <code>HmIP-WGTC</code>)</li>
+</ul>
+<h3>Buttons</h3>
+<ul>
+<li>Wall-mounted garage door controller (<code>HmIP-WGC</code>)</li>
+<li>Full Flush Lock Controller door opener (<code>HmIP-FLC</code>)</li>
+<li>Full Flush Door Controller door opener (<code>HmIP-FDC</code>)</li>
+<li>Identify, which makes the device signal its location, on devices that support it</li>
+</ul>
+<h3>Climate</h3>
+<p>The integration creates one climate entity per room as a Homematic IP heating group (<code>HmIP-HeatingGroup</code>). The group reads temperature and humidity from any of the following devices in that room and drives the floor heating or radiator actuators behind it:</p>
+<ul>
+<li>Wall thermostats (<code>HmIP-WTH</code>, <code>HmIP-WTH-1</code>, <code>HmIP-WTH-2</code>, <code>HmIP-WTH-B</code>, <code>HmIP-BWTH</code>, <code>HmIP-BWTH-24</code>, <code>ALPHA-IP-RBG</code>, <code>ALPHA-IP-RBGa</code>)</li>
+<li>Radiator thermostats (<code>HmIP-eTRV</code>, <code>HmIP-eTRV-2</code>, <code>HmIP-eTRV-2-UK</code>, <code>HmIP-eTRV-2-B</code>, <code>HmIP-eTRV-2-B1</code>, <code>HmIP-eTRV-C</code>, <code>HmIP-eTRV-E</code>)</li>
+<li>Temperature and humidity sensors (<code>HmIP-STH</code>, <code>HmIP-STHD</code>)</li>
+</ul>
+<p>Floor heating actuators are operated through the climate group and don't need their own entity (<code>HMIP-FAL230-C6</code>, <code>HMIP-FAL230-C10</code>, <code>HMIP-FAL24-C6</code>, <code>HMIP-FAL24-C10</code>, <code>HMIP-FALMOT-C12</code>).</p>
+<h3>Covers</h3>
+<ul>
+<li>Shutter actuators (<code>HmIP-BROLL</code>, <code>HmIP-FROLL</code>)</li>
+<li>Blind actuators (<code>HmIP-BBL</code>, <code>HmIP-FBL</code>, <code>HMIP-DRBLI4</code>)</li>
+<li>Garage door modules (<code>HmIP-MOD-TM</code>, <code>HMIP-MOD-HO</code>)</li>
+<li>Hunter Douglas and Erfal window blinds (<code>HMIP-HDM1</code>)</li>
+</ul>
+<h3>Events</h3>
+<ul>
+<li>Doorbell events for devices that expose a <code>DOOR_BELL_INPUT</code> channel, like <code>HmIP-DSD-PCB</code>.</li>
+</ul>
+<h3>Fans</h3>
+<ul>
+<li>Wall-mounted universal actuator, as a ventilation actuator (<code>HmIP-WUA</code>)</li>
+</ul>
+<h3>Lights</h3>
+<ul>
+<li>Dimming actuators (<code>HmIP-BDT</code>, <code>HmIP-FDT</code>, <code>HmIP-PDT</code>)</li>
+<li>Switch actuators with signal lamp or meter (<code>HmIP-BSL</code>, <code>HmIP-BSM</code>)</li>
+<li>Wired dimmer module – 3 channels (<code>HmIPW-DRD3</code>)</li>
+</ul>
+<h3>Locks</h3>
+<ul>
+<li>Door lock drive – currently usable without a PIN only (<code>HmIP-DLD</code>)</li>
+<li>Full Flush Lock Controller (<code>HmIP-FLC</code>)</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li>Access point duty cycle (<code>HmIP-HAP</code>, <code>HmIP-HAP-B1</code>)</li>
+<li>Wall thermostats (<code>HmIP-WTH</code>, <code>HmIP-WTH-1</code>, <code>HmIP-WTH-2</code>, <code>HmIP-WTH-B</code>, <code>ALPHA-IP-RBG</code>, <code>ALPHA-IP-RBGa</code>)</li>
+<li>Radiator thermostats (<code>HmIP-eTRV</code>, <code>HmIP-eTRV-2</code>, <code>HmIP-eTRV-C</code>, <code>HmIP-eTRV-E</code>)</li>
+<li>Temperature and humidity sensors (<code>HmIP-STH</code>, <code>HmIP-STHD</code>, <code>HmIP-STHO</code>, <code>HmIP-STHO-A</code>)</li>
+<li>External temperature sensors with two probes (<code>HmIP-STE2-PCB</code>, <code>ELV-SH-PTI2</code>)</li>
+<li>Light sensor – outdoor (<code>HmIP-SLO</code>)</li>
+<li>Motion and presence sensors (<code>HmIP-SMI</code>, <code>HmIP-SMO</code>, <code>HmIP-SMO230</code>, <code>HmIP-SPI</code>)</li>
+<li>Passage sensor with direction recognition (<code>HmIP-SPDR</code>)</li>
+<li>Floor heating actuator – 12 channels, valve positions (<code>HMIP-FALMOT-C12</code>)</li>
+<li>Fine dust sensor (<code>HmIP-SFD</code>)</li>
+<li>Soil moisture sensor (<code>ELV-SH-SMSI</code>)</li>
+<li>Ultrasonic distance sensor interface, distance and height (<code>ELV-SH-DUSI</code>)</li>
+<li>Door lock pad (<code>HmIP-DLP</code>)</li>
+<li>Carbon dioxide sensors (<code>HmIP-SCTH230</code>, <code>HmIP-WGTC</code>, <code>HmIPW-SCTHD</code>)</li>
+<li>Water flow of the water stop and supply unit (<code>HmIP-WSS</code>, <code>HmIP-WSS-GB</code>)</li>
+</ul>
+<h3>Switches</h3>
+<ul>
+<li>Pluggable switches and meters (<code>HmIP-PS</code>, <code>HmIP-PSM</code>, <code>HmIP-PSM-CH</code>, <code>HmIP-PSM-IT</code>, <code>HmIP-PSM-UK</code>, <code>HmIP-PSM-PE</code>)</li>
+<li>Flush-mount switch actuators and meters (<code>HmIP-FSM</code>, <code>HmIP-FSM16</code>)</li>
+<li>Switch actuator with push-button input – flush-mount (<code>HmIP-FSI16</code>)</li>
+<li>Open collector module receiver – 8 channels (<code>HmIP-MOD-OC8</code>)</li>
+<li>Multi-IO box (<code>HmIP-MIOB</code>)</li>
+<li>Switch circuit boards (<code>HmIP-PCBS</code>, <code>HmIP-PCBS2</code>, <code>HmIP-PCBS-BAT</code>)</li>
+<li>Switch actuator for heating systems – 2 channels (<code>HmIP-WHS2</code>)</li>
+<li>Wired switch actuator – 8 channels (<code>HmIPW-DRS8</code>)</li>
+<li>DIN rail switch actuators (<code>HMIP-DRSI1</code>, <code>HMIP-DRSI4</code>)</li>
+<li>Switch actuator – 2 channels (<code>HmIP-BS2</code>)</li>
+<li>Switchable power supply – 25 W (<code>ELV-SH-SPS25</code>)</li>
+</ul>
+<h3>Valves</h3>
+<ul>
+<li>Smart watering actuator (<code>ELV-SH-WSM</code>)</li>
+<li>Water stop and supply unit (<code>HmIP-WSS</code>, <code>HmIP-WSS-GB</code>)</li>
+</ul>
+<h3>Weather</h3>
+<ul>
+<li>Weather sensors – basic, plus, and pro (<code>HmIP-SWO-B</code>, <code>HmIP-SWO-PL</code>, <code>HmIP-SWO-PR</code>)</li>
+</ul>
+<h2>My device isn't recognized</h2>
+<p>If your device shows up in the Homematic IP app but Home Assistant doesn't pick it up, the device family is most likely not yet implemented in the <a>Python library</a> that this integration uses. Each device family has to be added there first.</p>
+<p>Here is how you can help getting it added:</p>
+<ol>
+<li>Download diagnostics for your access point:<ul>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, open the <strong>HomematicIP Cloud</strong> integration, and select <strong>Download diagnostics</strong>.</li>
+<li>Result: Home Assistant downloads an anonymized JSON file.</li>
+<li>Device IDs, labels, location, and the refresh token are replaced with placeholders, so you can share the file publicly without exposing your home layout.</li>
+</ul>
+</li>
+<li>Open an issue on the library repository. File a <a>new issue</a> describing what the device does (model number, what you use it for), and attach the diagnostics file.</li>
+<li>Wait for the device to land. Adding a new device runs through several steps: library pull request, library release on PyPI, Home Assistant integration update, and finally a Home Assistant release. Each step usually takes a few days to a few weeks. You can follow progress on the library issue and on the linked pull requests.</li>
+</ol>
+<p>While you wait, you can often expose the device through the Homematic IP app's own automations. The effects on devices that Home Assistant already supports will then show up there.</p>
+<p><strong>Note</strong></p>
+<p>All actions that operate on the access point accept an optional <code>accesspoint_id</code> parameter (Serialized Global Trade Item Number, or SGTIN). If your installation has only one access point, you can leave this out. With multiple access points, you can find the ID at the top of the integration page or printed on the back of the access point.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Button events</h2>
+<p>Devices with physical buttons expose an event entity per button channel. You can use these to trigger automations on a short release, a long press, or a long release.</p>
+<p><strong>Important</strong></p>
+<p>If a button is directly paired to an actuator inside the Homematic IP app (<em>Direct Device Connection</em>, called <em>Direktverknüpfung</em> in the German app), the cloud doesn't see the press, so Home Assistant can't react to it either. To use the button in Home Assistant, either remove the direct pairing in the Homematic IP app, or add an automation in the Homematic IP app that references the button. The cloud then forwards the press to Home Assistant.</p>
+<p><strong>Note</strong></p>
+<p>The cloud doesn't deliver a dedicated double-press event. A double-press arrives as two consecutive <code>short_release</code> events, so double-press automations are built on top of the same event entity, as shown below.</p>
+<h3>Trigger an action on a short release</h3>
+<h4>Example</h4>
+<p>automation:</p>
+<ul>
+<li>alias: "Toggle living room light on button 3 short release"
+triggers:<ul>
+<li>trigger: state
+entity_id: event.wandtaster_6_fach_button_3
+attribute: event_type
+to: short_release
+actions:</li>
+<li>action: light.toggle
+target:
+entity_id: light.living_room</li>
+</ul>
+</li>
+</ul>
+<h3>Trigger an action on a double press</h3>
+<p>The cloud delivers a double press as two consecutive <code>short_release</code> events. Use <code>wait_for_trigger</code> with a short timeout to detect the second press:</p>
+<h4>Example</h4>
+<p>automation:</p>
+<ul>
+<li>alias: "Activate movie scene on button 3 double press"
+triggers:<ul>
+<li>trigger: state
+entity_id: event.wandtaster_6_fach_button_3
+attribute: event_type
+to: short_release
+actions:</li>
+<li>wait_for_trigger:<ul>
+<li>trigger: state
+entity_id: event.wandtaster_6_fach_button_3
+attribute: event_type
+to: short_release
+timeout: "00:00:00.500"
+continue_on_timeout: false</li>
+</ul>
+</li>
+<li>action: scene.turn_on
+target:
+entity_id: scene.movie_night</li>
+</ul>
+</li>
+</ul>
+<h3>Dim a light while holding a button</h3>
+<p>The button reports <code>long_press</code> when held and <code>long_release</code> when released. Use a <code>repeat</code> loop that keeps dimming until the release event fires:</p>
+<h4>Example</h4>
+<p>automation:</p>
+<ul>
+<li>alias: "Dim living room while holding button 3"
+triggers:<ul>
+<li>trigger: state
+entity_id: event.wandtaster_6_fach_button_3
+attribute: event_type
+to: long_press
+actions:</li>
+<li>repeat:
+sequence:
+- action: light.turn_on
+target:
+entity_id: light.living_room
+data:
+brightness_step_pct: -5
+- delay: "00:00:00.200"
+while:
+- condition: state
+entity_id: event.wandtaster_6_fach_button_3
+attribute: event_type
+state: long_press</li>
+</ul>
+</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/homematicip_cloud.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions for integrating HomematicIP into Home Assistant.
+ha_release: 0.66
+ha_domain: homematicip_cloud
+---
+
+The [HomematicIP](https://www.homematic-ip.com/) {% term integration %} is used as an interface to the cloud server. Since there is no official documentation about this API, everything was done via reverse engineering. Use at your own risk.
+
+There is currently support for the following device types within Home Assistant:
+
+- Alarm
+- Binary sensor
+- Button
+- Climate
+- Cover
+- Event
+- Fan
+- Light
+- Lock
+- Sensor
+- Switch
+- Valve
+- Weather
+
+{% include integrations/config_flow.md %}
+
+## Manual configuration
+
+Generate the authentication token:
+
+`hmip_generate_auth_token.py`
+
+Add the information to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+homematicip_cloud:
+  - accesspoint: IDENTIFIER
+    authtoken: AUTHTOKEN
+  - name: Location2
+    accesspoint: IDENTIFIER2
+    authtoken: AUTHTOKEN2
+```
+
+{% configuration %}
+name:
+  required: false
+  description: Name to identify your access point, this will be used to prefix your device names.
+  type: string
+accesspoint:
+  required: true
+  description: This is the access point ID (Serialized Global Trade Item Number, or SGTIN).
+  type: string
+authtoken:
+  required: true
+  description: &quot;Authentication token generated with `generate_auth_token.py`.&quot;
+  type: string
+{% endconfiguration %}
+
+## Adding and removing devices and groups via the Homematic IP app
+
+Devices and groups you add or remove in the Homematic IP app are mirrored into Home Assistant:
+
+- Groups appear and disappear immediately.
+- Devices appear with a delay of about 30 seconds, and disappear immediately. Within this delay, finish naming the device in the Homematic IP app; otherwise Home Assistant uses a default name based on the device type. You can rename the device later in the entity registry.
+
+## Use HmIP-DLD Door Lock Drive in Home Assistant
+
+If you are unable to control the HmIP-DLD device via Home Assistant, you might need to allow the Home Assistant access point to control the lock in the Homematic IP app.
+
+To do this, navigate to **Access Control** in the Homematic IP app and enable the necessary permissions.
+
+Currently, you can only use the HmIP-DLD in Home Assistant without a PIN. Make sure no PIN is set for the device in the Homematic IP app.
+
+## Use HmIP-FLC and HmIP-FDC door openers in Home Assistant
+
+The door opener of the HmIP-FLC and HmIP-FDC is a button entity. As with the HmIP-DLD, the Home Assistant access point must be allowed to control it under **Access Control** in the Homematic IP app.
+
+If the access authorization has a PIN, use the `homematicip_cloud.pull_latch` action with its `pin` field. The button itself cannot pass a PIN.
+
+## Supported devices
+
+The list below shows which Home Assistant entities each supported Homematic IP device contributes. Devices are grouped by Home Assistant entity platform; a single physical device often contributes entities on more than one platform (for example, a wall thermostat appears under *Climate*, *Sensors*, and *Binary sensors* for the battery state). If your device isn&#x27;t listed, see [My device isn&#x27;t recognized](#my-device-isnt-recognized).
+
+### Alarm control panel
+
+- Combined alarm control panel with internal and external security zones (`HmIP-SecurityZone`)
+
+### Binary sensors
+
+- Access point cloud connection (`HmIP-HAP`, `HmIP-HAP-B1`)
+- Window and door contacts, including the rotary handle sensor (`HmIP-SWDO`, `HmIP-SWDO-PL`, `HmIP-SWDO-I`, `HmIP-SWDM`, `HmIP-SWDM-B2`, `HmIP-SRH`)
+- Contact interfaces (`HmIP-FCI1`, `HmIP-FCI6`, `HmIP-SCI`)
+- Smoke detectors (`HmIP-SWSD`, `HmIP-SWSD-2`)
+- Motion and presence sensors (`HmIP-SMI`, `HmIP-SMI55`, `HmIP-SMO`, `HmIP-SMO-A`, `HmIP-SMO230`, `HmIP-SPI`)
+- Acceleration and tilt sensors (`HmIP-SAM`, `HmIP-STV`)
+- Rain sensor (`HmIP-SRD`)
+- Water sensor (`HmIP-SWD`)
+- Water alarm of the water stop and supply unit (`HmIP-WSS`, `HmIP-WSS-GB`)
+- Alarm sirens (`HmIP-ASIR`, `HmIP-ASIR-O`, `HmIP-ASIR-B1`)
+- Pluggable power supply monitoring (`HmIP-PMFS`)
+- Wired input module – 32 channels (`HmIPW-DRI32`)
+- Battery sensors on remote controls (`HmIP-RC8`, `HmIP-WRC2`, `HmIP-WRCC2`, `HmIP-WRC6`, `HmIP-WRC6-230`, `HmIPW-WRC6`, `HmIP-KRC4`, `HmIP-KRCA`, `HmIP-BRC2`, `HmIP-MOD-RC8`)
+- Full Flush Lock Controller glass-break and lock state sensors (`HmIP-FLC`)
+- Heating output of wall thermostats, shown when the thermostat&#x27;s switching output is enabled (`HmIP-BWTH`, `HmIP-WGT`, `HmIP-WGT-A`, `HmIP-WGTC`)
+
+### Buttons
+
+- Wall-mounted garage door controller (`HmIP-WGC`)
+- Full Flush Lock Controller door opener (`HmIP-FLC`)
+- Full Flush Door Controller door opener (`HmIP-FDC`)
+- Identify, which makes the device signal its location, on devices that support it
+
+### Climate
+
+The integration creates one climate entity per room as a Homematic IP heating group (`HmIP-HeatingGroup`). The group reads temperature and humidity from any of the following devices in that room and drives the floor heating or radiator actuators behind it:
+
+- Wall thermostats (`HmIP-WTH`, `HmIP-WTH-1`, `HmIP-WTH-2`, `HmIP-WTH-B`, `HmIP-BWTH`, `HmIP-BWTH-24`, `ALPHA-IP-RBG`, `ALPHA-IP-RBGa`)
+- Radiator thermostats (`HmIP-eTRV`, `HmIP-eTRV-2`, `HmIP-eTRV-2-UK`, `HmIP-eTRV-2-B`, `HmIP-eTRV-2-B1`, `HmIP-eTRV-C`, `HmIP-eTRV-E`)
+- Temperature and humidity sensors (`HmIP-STH`, `HmIP-STHD`)
+
+Floor heating actuators are operated through the climate group and don&#x27;t need their own entity (`HMIP-FAL230-C6`, `HMIP-FAL230-C10`, `HMIP-FAL24-C6`, `HMIP-FAL24-C10`, `HMIP-FALMOT-C12`).
+
+### Covers
+
+- Shutter actuators (`HmIP-BROLL`, `HmIP-FROLL`)
+- Blind actuators (`HmIP-BBL`, `HmIP-FBL`, `HMIP-DRBLI4`)
+- Garage door modules (`HmIP-MOD-TM`, `HMIP-MOD-HO`)
+- Hunter Douglas and Erfal window blinds (`HMIP-HDM1`)
+
+### Events
+
+- Doorbell events for devices that expose a `DOOR_BELL_INPUT` channel, like `HmIP-DSD-PCB`.
+
+### Fans
+
+- Wall-mounted universal actuator, as a ventilation actuator (`HmIP-WUA`)
+
+### Lights
+
+- Dimming actuators (`HmIP-BDT`, `HmIP-FDT`, `HmIP-PDT`)
+- Switch actuators with signal lamp or meter (`HmIP-BSL`, `HmIP-BSM`)
+- Wired dimmer module – 3 channels (`HmIPW-DRD3`)
+
+### Locks
+
+- Door lock drive – currently usable without a PIN only (`HmIP-DLD`)
+- Full Flush Lock Controller (`HmIP-FLC`)
+
+### Sensors
+
+- Access point duty cycle (`HmIP-HAP`, `HmIP-HAP-B1`)
+- Wall thermostats (`HmIP-WTH`, `HmIP-WTH-1`, `HmIP-WTH-2`, `HmIP-WTH-B`, `ALPHA-IP-RBG`, `ALPHA-IP-RBGa`)
+- Radiator thermostats (`HmIP-eTRV`, `HmIP-eTRV-2`, `HmIP-eTRV-C`, `HmIP-eTRV-E`)
+- Temperature and humidity sensors (`HmIP-STH`, `HmIP-STHD`, `HmIP-STHO`, `HmIP-STHO-A`)
+- External temperature sensors with two probes (`HmIP-STE2-PCB`, `ELV-SH-PTI2`)
+- Light sensor – outdoor (`HmIP-SLO`)
+- Motion and presence sensors (`HmIP-SMI`, `HmIP-SMO`, `HmIP-SMO230`, `HmIP-SPI`)
+- Passage sensor with direction recognition (`HmIP-SPDR`)
+- Floor heating actuator – 12 channels, valve positions (`HMIP-FALMOT-C12`)
+- Fine dust sensor (`HmIP-SFD`)
+- Soil moisture sensor (`ELV-SH-SMSI`)
+- Ultrasonic distance sensor interface, distance and height (`ELV-SH-DUSI`)
+- Door lock pad (`HmIP-DLP`)
+- Carbon dioxide sensors (`HmIP-SCTH230`, `HmIP-WGTC`, `HmIPW-SCTHD`)
+- Water flow of the water stop and supply unit (`HmIP-WSS`, `HmIP-WSS-GB`)
+
+### Switches
+
+- Pluggable switches and meters (`HmIP-PS`, `HmIP-PSM`, `HmIP-PSM-CH`, `HmIP-PSM-IT`, `HmIP-PSM-UK`, `HmIP-PSM-PE`)
+- Flush-mount switch actuators and meters (`HmIP-FSM`, `HmIP-FSM16`)
+- Switch actuator with push-button input – flush-mount (`HmIP-FSI16`)
+- Open collector module receiver – 8 channels (`HmIP-MOD-OC8`)
+- Multi-IO box (`HmIP-MIOB`)
+- Switch circuit boards (`HmIP-PCBS`, `HmIP-PCBS2`, `HmIP-PCBS-BAT`)
+- Switch actuator for heating systems – 2 channels (`HmIP-WHS2`)
+- Wired switch actuator – 8 channels (`HmIPW-DRS8`)
+- DIN rail switch actuators (`HMIP-DRSI1`, `HMIP-DRSI4`)
+- Switch actuator – 2 channels (`HmIP-BS2`)
+- Switchable power supply – 25 W (`ELV-SH-SPS25`)
+
+### Valves
+
+- Smart watering actuator (`ELV-SH-WSM`)
+- Water stop and supply unit (`HmIP-WSS`, `HmIP-WSS-GB`)
+
+### Weather
+
+- Weather sensors – basic, plus, and pro (`HmIP-SWO-B`, `HmIP-SWO-PL`, `HmIP-SWO-PR`)
+
+## My device isn&#x27;t recognized
+
+If your device shows up in the Homematic IP app but Home Assistant doesn&#x27;t pick it up, the device family is most likely not yet implemented in the [Python library](https://github.com/hahn-th/homematicip-rest-api) that this integration uses. Each device family has to be added there first.
+
+Here is how you can help getting it added:
+
+1. Download diagnostics for your access point:
+    - Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, open the **HomematicIP Cloud** integration, and select **Download diagnostics**.
+    - Result: Home Assistant downloads an anonymized JSON file.
+    - Device IDs, labels, location, and the refresh token are replaced with placeholders, so you can share the file publicly without exposing your home layout.
+2. Open an issue on the library repository. File a [new issue](https://github.com/hahn-th/homematicip-rest-api/issues/new) describing what the device does (model number, what you use it for), and attach the diagnostics file.
+3. Wait for the device to land. Adding a new device runs through several steps: library pull request, library release on PyPI, Home Assistant integration update, and finally a Home Assistant release. Each step usually takes a few days to a few weeks. You can follow progress on the library issue and on the linked pull requests.
+
+While you wait, you can often expose the device through the Homematic IP app&#x27;s own automations. The effects on devices that Home Assistant already supports will then show up there.
+
+{% note %}
+All actions that operate on the access point accept an optional `accesspoint_id` parameter (Serialized Global Trade Item Number, or SGTIN). If your installation has only one access point, you can leave this out. With multiple access points, you can find the ID at the top of the integration page or printed on the back of the access point.
+{% endnote %}
+
+{% include integrations/actions.md %}
+
+## Button events
+
+Devices with physical buttons expose an event entity per button channel. You can use these to trigger automations on a short release, a long press, or a long release.
+
+{% important %}
+If a button is directly paired to an actuator inside the Homematic IP app (*Direct Device Connection*, called *Direktverknüpfung* in the German app), the cloud doesn&#x27;t see the press, so Home Assistant can&#x27;t react to it either. To use the button in Home Assistant, either remove the direct pairing in the Homematic IP app, or add an automation in the Homematic IP app that references the button. The cloud then forwards the press to Home Assistant.
+{% endimportant %}
+
+{% note %}
+The cloud doesn&#x27;t deliver a dedicated double-press event. A double-press arrives as two consecutive `short_release` events, so double-press automations are built on top of the same event entity, as shown below.
+{% endnote %}
+
+### Trigger an action on a short release
+
+{% example %}
+automation:
+  - alias: &quot;Toggle living room light on button 3 short release&quot;
+    triggers:
+      - trigger: state
+        entity_id: event.wandtaster_6_fach_button_3
+        attribute: event_type
+        to: short_release
+    actions:
+      - action: light.toggle
+        target:
+          entity_id: light.living_room
+{% endexample %}
+
+### Trigger an action on a double press
+
+The cloud delivers a double press as two consecutive `short_release` events. Use `wait_for_trigger` with a short timeout to detect the second press:
+
+{% example %}
+automation:
+  - alias: &quot;Activate movie scene on button 3 double press&quot;
+    triggers:
+      - trigger: state
+        entity_id: event.wandtaster_6_fach_button_3
+        attribute: event_type
+        to: short_release
+    actions:
+      - wait_for_trigger:
+          - trigger: state
+            entity_id: event.wandtaster_6_fach_button_3
+            attribute: event_type
+            to: short_release
+        timeout: &quot;00:00:00.500&quot;
+        continue_on_timeout: false
+      - action: scene.turn_on
+        target:
+          entity_id: scene.movie_night
+{% endexample %}
+
+### Dim a light while holding a button
+
+The button reports `long_press` when held and `long_release` when released. Use a `repeat` loop that keeps dimming until the release event fires:
+
+{% example %}
+automation:
+  - alias: &quot;Dim living room while holding button 3&quot;
+    triggers:
+      - trigger: state
+        entity_id: event.wandtaster_6_fach_button_3
+        attribute: event_type
+        to: long_press
+    actions:
+      - repeat:
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.living_room
+              data:
+                brightness_step_pct: -5
+            - delay: &quot;00:00:00.200&quot;
+          while:
+            - condition: state
+              entity_id: event.wandtaster_6_fach_button_3
+              attribute: event_type
+              state: long_press
+{% endexample %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for HomematicIP Cloud.</p><p>The <strong>init</strong> configuration step lists <code>hapid</code>, <code>name</code>, <code>pin</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>pin</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>sensor</li><li>siren</li><li>switch</li><li>valve</li><li>weather</li></ul><h3>Documented actions</h3><ul class="chips"><li>activate eco mode with duration</li><li>activate eco mode with period</li><li>activate vacation</li><li>deactivate eco mode</li><li>deactivate vacation</li><li>dump hap config</li><li>pull latch</li><li>reset energy counter</li><li>set active climate profile</li><li>set home cooling mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Manual configuration</li><li>Adding and removing devices and groups via the Homematic IP app</li><li>Use HmIP-DLD Door Lock Drive in Home Assistant</li><li>Use HmIP-FLC and HmIP-FDC door openers in Home Assistant</li><li>Supported devices</li><li>My device isn&#x27;t recognized</li><li>Button events</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homematicip_cloud/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homematicip_cloud</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homematicip_cloud</code></dd></dl></section><p><a href="../../integrations/homematicip_cloud/">Return to the HomematicIP Cloud guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

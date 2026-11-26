@@ -1,1 +1,654 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forecast.Solar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:67" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/forecast_solar/">Forecast.Solar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Forecast.Solar</h1><p>Instructions on how to integrate Forecast.Solar within Home Assistant.</p><section><h2>Overview</h2><p>The Forecast.Solar integration estimates how much energy your solar panels will produce, using the Forecast.Solar service. The forecast combines the location, orientation, and size of your panels with historic averages and weather data, so you can plan ahead and use your own solar energy as efficiently as possible.</p></section><section><h2>Prerequisites</h2><p>Forecast.Solar uses data from the EU Photovoltaic Geographical Information System, which covers almost the entire world. Your panels need to be in a location that this tool covers.</p></section><section><h2>Changing the location</h2><p>Reconfiguring the integration only changes the location. To change the location:</p></section><section><h2>Adding multiple planes</h2><p>A plane is a group of panels that share the same orientation. If your setup has panels facing different directions, such as an east-west roof, you can add each orientation as a separate plane within the same integration.</p></section><section><h2>Reconfiguring a plane</h2><p>Reconfiguring a plane also uses the same two steps, without the Location choice. It starts with the plane&#x27;s current choices selected and its current values filled in. This is also how you switch an angle between a fixed value and a sensor.</p></section><section><h2>Using a Forecast.Solar account</h2><p>You can use the public Forecast.Solar service for free, but the data has a lower resolution, the forecast updates less often, and you can configure only a single plane.</p></section><section><h2>Tweaking the estimations</h2><p>A forecast will never perfectly match what your panels produce, because it is based on weather and historical data rather than the power you actually generate. Even so, you can make it more accurate for your situation in a few ways:</p></section><section><h2>Supported functionality</h2><p>The integration provides sensors that you can show on a dashboard or use in automations.</p></section><section><h2>Using the forecast in the Energy dashboard</h2><p>If you track your solar panels in the Energy dashboard, you can pair them with Forecast.Solar. The solar production graph then shows the forecasted production alongside what your panels actually generate, so you can see at a glance whether the day is living up to its prediction.</p></section><section><h2>Automation: Act on a high solar forecast for tomorrow</h2><p>This example sends a notification when the estimated energy production for tomorrow rises above 10 kWh.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Forecast.Solar.</p><p>The <strong>plane</strong> configuration step lists <code>azimuth</code>, <code>azimuth_sensor</code>, <code>coordinates</code>, <code>declination</code>, <code>declination_sensor</code>, <code>modules_power</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>location</code>.</p><p>The <strong>reconfigure fixed location</strong> configuration step lists <code>coordinates</code>.</p><p>The <strong>user</strong> configuration step lists <code>azimuth_source</code>, <code>declination_source</code>, <code>location</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get forecast</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Configuration options</li><li>Adding multiple planes</li><li>Using a Forecast.Solar account</li><li>Tweaking the estimations</li><li>Supported functionality</li><li>Using the forecast in the Energy dashboard</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/forecast_solar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/forecast_solar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/forecast_solar</code></dd></dl></section><p><a href="../../integrations/forecast_solar/">Return to the Forecast.Solar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Forecast.Solar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:67" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/forecast_solar/">Forecast.Solar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Forecast.Solar</h1><p>Instructions on how to integrate Forecast.Solar within Home Assistant.</p><div class="reader-body"><p>The <strong>Forecast.Solar</strong> integration estimates how much energy your solar panels will produce, using the <a>Forecast.Solar</a> service. The forecast combines the location, orientation, and size of your panels with historic averages and weather data, so you can plan ahead and use your own solar energy as efficiently as possible.</p>
+<p>For example, you could use the forecast to decide whether you will produce enough solar energy in the next hour to run the washing machine, or whether to charge your electric vehicle from the sun tomorrow instead of from the grid overnight.</p>
+<h2>Prerequisites</h2>
+<p>Forecast.Solar uses data from the <a>EU Photovoltaic Geographical Information System</a>, which covers almost the entire world. Your panels need to be in a location that this tool covers.</p>
+<p>To create a forecast, the integration needs a few details about your solar setup:</p>
+<ul>
+<li><strong>Location</strong>: The latitude and longitude of your panels. You can enter fixed coordinates or follow your Home Assistant home location. Following the home location keeps the forecast up to date when your home moves, for example, with panels on a camper van, motorhome, or boat.</li>
+<li><strong>Declination</strong>: The tilt of your panels in degrees. A value of <code>0</code> means the panels lie flat, facing straight up, and <code>90</code> means they stand fully upright. You can enter a fixed tilt or select a sensor that reports it.</li>
+<li><strong>Azimuth</strong>: The compass direction the panels face, on a 360-degree scale. <code>0</code> is north, <code>90</code> is east, <code>180</code> is south, and <code>270</code> is west. You can enter a fixed direction or select a sensor that reports it, such as a compass.</li>
+<li><strong>Total Watt peak power</strong>: The combined maximum power of all your panels, in Watt peak. Add up the peak power of every panel in the group to get this value.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Forecast.Solar</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Forecast.Solar</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Setup has two steps. In the first step, you choose where the location and the panel angles come from:</p>
+<pre><code>
+Location:
+  description: "Where the location comes from. Select **Enter fixed coordinates** to enter the latitude and longitude of your panels. The forecast keeps using them even if your Home Assistant home location changes. Select **Follow the Home Assistant location, for homes that move such as campers or boats** to use your home location and follow it when it changes. You don't need to enter any coordinates."
+Declination:
+  description: "Where the tilt comes from. Select **Enter a fixed tilt** or **Read the tilt from a sensor**."
+Azimuth:
+  description: "Where the direction comes from. Select **Enter a fixed direction** or **Read the direction from a sensor, such as a compass**."
+
+</code></pre>
+<p>The second step asks only for what you chose in the first step. For each angle, you enter either a fixed value or a sensor, never both.</p>
+<pre><code>
+Location:
+  description: "The location of your solar panels. Only asked for if you selected **Enter fixed coordinates**. Pre-filled with your Home Assistant home location."
+Declination (0 = Horizontal, 90 = Vertical):
+  description: "The tilt of your panels in degrees, from 0 (flat) to 90 (upright). Only asked for if you selected **Enter a fixed tilt**."
+Declination sensor:
+  description: "A sensor that reports the tilt of your panels. Only asked for if you selected **Read the tilt from a sensor**. The sensor must report a value from 0 to 90. The value is read as degrees. The sensor's unit isn't checked."
+Azimuth (360 degrees, 0 = North, 90 = East, 180 = South, 270 = West):
+  description: "The direction your panels face on a 360-degree scale. Only asked for if you selected **Enter a fixed direction**."
+Azimuth sensor:
+  description: "A sensor that reports the direction your panels face. Only asked for if you selected **Read the direction from a sensor, such as a compass**. The sensor can report a value from 0 to 360 or from -180 to 180. Both are accepted. The value is read as degrees. The sensor's unit isn't checked."
+Total Watt peak power of your solar modules:
+  description: "The combined maximum power of all panels in this group, in Watt peak."
+
+</code></pre>
+<p>When you select a sensor, the form checks its current state:</p>
+<ul>
+<li>If the sensor doesn't exist, it isn't accepted, and the form shows <strong>The selected sensor doesn't exist.</strong></li>
+<li>If the state isn't a number or is out of range, it isn't accepted.</li>
+<li>A sensor that is <code>unavailable</code> or <code>unknown</code> is accepted.</li>
+<li>A sensor that has no state yet is accepted only if Home Assistant already knows about it, for example, when its integration hasn't finished loading.</li>
+</ul>
+<p>When you reconfigure a plane, sensors it already uses aren't checked again. A sensor that is briefly unusable doesn't stop you from changing other settings.</p>
+<p>If you rename a sensor's entity ID, the plane keeps using it automatically.</p>
+<h3>Changing the location</h3>
+<p>Reconfiguring the integration only changes the location. To change the location:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>Forecast.Solar</strong>.</li>
+<li>Select <strong>Reconfigure</strong>. Your current choice is already selected.</li>
+<li>Select one of the following, then select <strong>Submit</strong>:<ul>
+<li><strong>Follow the Home Assistant location, for homes that move such as campers or boats</strong>: Applies right away.</li>
+<li><strong>Enter fixed coordinates</strong>: Shows the latitude and longitude, pre-filled with the current coordinates or your Home Assistant home location, so you can change them.</li>
+</ul>
+</li>
+</ol>
+<p>To change the angles or power of a plane, reconfigure the plane instead. See <a>Reconfiguring a plane</a>.</p>
+<h2>Configuration options</h2>
+<p>After setup, you can fine-tune the forecast. Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select the <strong>Forecast.Solar</strong> integration, and then select the cogwheel  (<strong>Configure</strong>).</p>
+<pre><code>
+API key:
+  description: "The API key for your Forecast.Solar account. An account is only needed for more frequent updates or more than one plane. See [Using a Forecast.Solar account](#using-a-forecastsolar-account)."
+Damping factor (morning):
+  description: "Lower the forecast for the morning using a value between `0` and `1`. See [Tweaking the estimations](#tweaking-the-estimations)."
+Damping factor (evening):
+  description: "Lower the forecast for the evening using a value between `0` and `1`. See [Tweaking the estimations](#tweaking-the-estimations)."
+Inverter size (Watt):
+  description: "The maximum power of your inverter. See [Tweaking the estimations](#tweaking-the-estimations)."
+
+</code></pre>
+<h2>Adding multiple planes</h2>
+<p>A plane is a group of panels that share the same orientation. If your setup has panels facing different directions, such as an east-west roof, you can add each orientation as a separate plane within the same integration.</p>
+<p>Adding more than one plane requires a paid Forecast.Solar account. See <a>Using a Forecast.Solar account</a>. You can configure up to four planes, and the integration combines their data into a single set of sensors, taking your inverter size into account if you set one.</p>
+<p>Adding a plane uses the same two steps as setup, without the <strong>Location</strong> choice. When a plane uses a sensor, its title shows the sensor's entity ID, for example <code>30° / sensor.roof_azimuth / 5100W</code>. If you rename the sensor's entity ID, the title follows. If you give the plane your own title, it is kept.</p>
+<p>To add a plane:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>Forecast.Solar</strong>.</li>
+<li>Select <strong>Add plane</strong>.</li>
+</ol>
+<h3>Reconfiguring a plane</h3>
+<p>Reconfiguring a plane also uses the same two steps, without the <strong>Location</strong> choice. It starts with the plane's current choices selected and its current values filled in. This is also how you switch an angle between a fixed value and a sensor.</p>
+<p>To reconfigure a plane:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>Forecast.Solar</strong>.</li>
+<li>Next to the plane, select the three dots  menu, then select <strong>Reconfigure</strong>.</li>
+</ol>
+<h2>Using a Forecast.Solar account</h2>
+<p>You can use the public <a>Forecast.Solar</a> service for free, but the data has a lower resolution, the forecast updates less often, and you can configure only a single plane.</p>
+<p>If you would like more frequent updates or want to add multiple planes, you can <a>sign up for one of their plans</a>. The Personal Plus tier and above let you configure up to four planes.</p>
+<p>To use your account, add the API key in the integration's configuration options, as described under <a>Configuration options</a>.</p>
+<h2>Tweaking the estimations</h2>
+<p>A forecast will never perfectly match what your panels produce, because it is based on weather and historical data rather than the power you actually generate. Even so, you can make it more accurate for your situation in a few ways:</p>
+<ul>
+<li>Fine-tune the <strong>Azimuth</strong> and <strong>Declination</strong> if the real orientation of your panels differs slightly from what you first entered, or select a sensor for either so it follows a moving or adjustable mount. To change these, <a>reconfigure the plane</a>.</li>
+<li>Set a damping factor between <code>0</code> and <code>1</code> for the morning and the evening if your panels catch some shade early or late in the day. A value of <code>0</code> applies no damping; higher values lower the forecast more. For example, if trees shade your panels in the morning but not in the evening, set the morning damping factor above <code>0</code> and leave the evening damping factor at <code>0</code>. Adjust the value over time by comparing the forecast with your actual production.</li>
+<li>Set the inverter size if your inverter can deliver less power than your panels can produce together, so the forecast does not exceed what your inverter can handle.</li>
+</ul>
+<p>You can change the damping factors and inverter size at any time under <a>Configuration options</a>. For more background on damping, see the <a>Forecast.Solar damping documentation</a>.</p>
+<h2>Supported functionality</h2>
+<p>The integration provides sensors that you can show on a dashboard or use in automations.</p>
+<p>The following sensors are enabled by default:</p>
+<ul>
+<li><strong>Estimated energy production - today</strong>: Total estimated production for today, in kWh.</li>
+<li><strong>Estimated energy production - remaining today</strong>: Estimated production still to come today, in kWh.</li>
+<li><strong>Estimated energy production - tomorrow</strong>: Total estimated production for tomorrow, in kWh.</li>
+<li><strong>Estimated energy production - this hour</strong>: Estimated production for the current hour, in kWh.</li>
+<li><strong>Estimated energy production - next hour</strong>: Estimated production for the next hour, in kWh.</li>
+<li><strong>Estimated power production - now</strong>: Estimated power being produced right now, in Watt.</li>
+<li><strong>Highest power peak time - today</strong>: The time of the highest expected power peak today.</li>
+<li><strong>Highest power peak time - tomorrow</strong>: The time of the highest expected power peak tomorrow.</li>
+</ul>
+<p>The following sensors are <a>disabled by default</a>. Enable them in the user interface if you want to use them:</p>
+<ul>
+<li><strong>Estimated power production - in 1 hour</strong>: Estimated power production one hour from now, in Watt.</li>
+<li><strong>Estimated power production - in 12 hours</strong>: Estimated power production twelve hours from now, in Watt.</li>
+<li><strong>Estimated power production - in 24 hours</strong>: Estimated power production twenty-four hours from now, in Watt.</li>
+</ul>
+<h2>Using the forecast in the Energy dashboard</h2>
+<p>If you track your solar panels in the <a>Energy dashboard</a>, you can pair them with Forecast.Solar. The solar production graph then shows the forecasted production alongside what your panels actually generate, so you can see at a glance whether the day is living up to its prediction.</p>
+<p>To add the forecast:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Dashboards</strong> &gt; <strong>Energy</strong>.</li>
+<li>Under <strong>Solar panels</strong>, select your solar production entry. If you have not set one up yet, see <a>integrating your solar panels</a> first.</li>
+<li>Turn on the solar production forecast option and select <strong>Forecast.Solar</strong>.</li>
+<li>Save your changes.</li>
+</ol>
+<p>The Energy dashboard now overlays the expected production on your solar graph.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Examples</h2>
+<h3>Automation: Act on a high solar forecast for tomorrow</h3>
+<p>This example sends a notification when the estimated energy production for tomorrow rises above 10 kWh.</p>
+<pre><code>alias: "High solar forecast tomorrow"
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.energy_production_tomorrow
+    above: 10
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.my_device
+    data:
+      message: "More than 10 kWh of solar production is forecast for tomorrow."
+</code></pre>
+<h3>Automation: Act at the solar production peak</h3>
+<p>This example sends a notification at today's forecast highest-power-peak time.</p>
+<pre><code>alias: "Forecast.Solar production peak"
+triggers:
+  - trigger: time
+    at: sensor.power_highest_peak_time_today
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.my_device
+    data:
+      message: "The forecast solar production peak has started."
+</code></pre>
+<h2>Data updates</h2>
+<p>How often the forecast polling updates depends on your Forecast.Solar account:</p>
+<ul>
+<li>Free accounts update every hour.</li>
+<li>Accounts with an API key update every 30 minutes.</li>
+</ul>
+<p>Because Forecast.Solar limits how often the forecast can be requested, the integration reads your declination and azimuth sensors at each scheduled update, not the moment they change.</p>
+<p>When the integration follows your Home Assistant home location, a change to that location refreshes the forecast right away. To stay within the Forecast.Solar rate limit, a location that keeps changing, such as on a moving camper, refreshes the forecast at most once per update interval.</p>
+<p>The forecast always remains an estimate based on weather and historical data, not a measurement of the power your panels actually produce.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The free service offers a lower data resolution, updates less often, and supports only a single plane. More frequent updates and multiple planes require a paid Forecast.Solar account.</li>
+<li>Your panel location must be covered by the EU Photovoltaic Geographical Information System.</li>
+<li>Declination and azimuth sensors are read at each scheduled forecast update, not the moment they change. See <a>Data updates</a>.</li>
+<li>A selected sensor is never replaced by a fixed value. If a sensor can't be read after setup, the forecast keeps using its last reading and logs a warning once. When the sensor can be read again, the next forecast update uses its new value. The last reading isn't kept across a restart or a reload of the integration. If the sensor still can't be read at that point, setup retries. See <strong>Setup keeps retrying because of a sensor</strong> under <a>Troubleshooting</a>.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Setup keeps retrying because of a sensor</h4>
+<h3>Symptom: Setup retries with an error that names a sensor</h3>
+<p>The integration shows that it is retrying setup, and the error names a declination or azimuth sensor.</p>
+<h4>Description</h4>
+<p>During setup, including after a restart or a reload of the integration, every selected sensor must be readable. A sensor can't be read if it doesn't exist, is <code>unavailable</code> or <code>unknown</code>, reports something that isn't a number, or reports a value that is out of range. The integration keeps retrying until the sensor can be read. If Home Assistant is still starting, it retries as soon as startup finishes.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check that the sensor named in the error exists and reports a number in the accepted range. Refer to the sensor descriptions under <a>Configuration</a>.</li>
+<li>If you deleted the sensor, reconfigure the plane and select another sensor or a fixed value. Refer to <a>Reconfiguring a plane</a>.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/forecast_solar.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Forecast.Solar within Home Assistant.
+ha_release: 2021.7
+ha_domain: forecast_solar
+---
+
+The **Forecast.Solar** {% term integration %} estimates how much energy your solar panels will produce, using the [Forecast.Solar](https://forecast.solar/) service. The forecast combines the location, orientation, and size of your panels with historic averages and weather data, so you can plan ahead and use your own solar energy as efficiently as possible.
+
+For example, you could use the forecast to decide whether you will produce enough solar energy in the next hour to run the washing machine, or whether to charge your electric vehicle from the sun tomorrow instead of from the grid overnight.
+
+## Prerequisites
+
+Forecast.Solar uses data from the [EU Photovoltaic Geographical Information System](https://re.jrc.ec.europa.eu/pvg_tools/en/tools.html), which covers almost the entire world. Your panels need to be in a location that this tool covers.
+
+To create a forecast, the integration needs a few details about your solar setup:
+
+- **Location**: The latitude and longitude of your panels. You can enter fixed coordinates or follow your Home Assistant home location. Following the home location keeps the forecast up to date when your home moves, for example, with panels on a camper van, motorhome, or boat.
+- **Declination**: The tilt of your panels in degrees. A value of `0` means the panels lie flat, facing straight up, and `90` means they stand fully upright. You can enter a fixed tilt or select a sensor that reports it.
+- **Azimuth**: The compass direction the panels face, on a 360-degree scale. `0` is north, `90` is east, `180` is south, and `270` is west. You can enter a fixed direction or select a sensor that reports it, such as a compass.
+- **Total Watt peak power**: The combined maximum power of all your panels, in Watt peak. Add up the peak power of every panel in the group to get this value.
+
+{% include integrations/config_flow.md %}
+
+Setup has two steps. In the first step, you choose where the location and the panel angles come from:
+
+{% configuration_basic %}
+Location:
+  description: &quot;Where the location comes from. Select **Enter fixed coordinates** to enter the latitude and longitude of your panels. The forecast keeps using them even if your Home Assistant home location changes. Select **Follow the Home Assistant location, for homes that move such as campers or boats** to use your home location and follow it when it changes. You don&#x27;t need to enter any coordinates.&quot;
+Declination:
+  description: &quot;Where the tilt comes from. Select **Enter a fixed tilt** or **Read the tilt from a sensor**.&quot;
+Azimuth:
+  description: &quot;Where the direction comes from. Select **Enter a fixed direction** or **Read the direction from a sensor, such as a compass**.&quot;
+{% endconfiguration_basic %}
+
+The second step asks only for what you chose in the first step. For each angle, you enter either a fixed value or a sensor, never both.
+
+{% configuration_basic %}
+Location:
+  description: &quot;The location of your solar panels. Only asked for if you selected **Enter fixed coordinates**. Pre-filled with your Home Assistant home location.&quot;
+Declination (0 = Horizontal, 90 = Vertical):
+  description: &quot;The tilt of your panels in degrees, from 0 (flat) to 90 (upright). Only asked for if you selected **Enter a fixed tilt**.&quot;
+Declination sensor:
+  description: &quot;A sensor that reports the tilt of your panels. Only asked for if you selected **Read the tilt from a sensor**. The sensor must report a value from 0 to 90. The value is read as degrees. The sensor&#x27;s unit isn&#x27;t checked.&quot;
+Azimuth (360 degrees, 0 = North, 90 = East, 180 = South, 270 = West):
+  description: &quot;The direction your panels face on a 360-degree scale. Only asked for if you selected **Enter a fixed direction**.&quot;
+Azimuth sensor:
+  description: &quot;A sensor that reports the direction your panels face. Only asked for if you selected **Read the direction from a sensor, such as a compass**. The sensor can report a value from 0 to 360 or from -180 to 180. Both are accepted. The value is read as degrees. The sensor&#x27;s unit isn&#x27;t checked.&quot;
+Total Watt peak power of your solar modules:
+  description: &quot;The combined maximum power of all panels in this group, in Watt peak.&quot;
+{% endconfiguration_basic %}
+
+When you select a sensor, the form checks its current state:
+
+- If the sensor doesn&#x27;t exist, it isn&#x27;t accepted, and the form shows **The selected sensor doesn&#x27;t exist.**
+- If the state isn&#x27;t a number or is out of range, it isn&#x27;t accepted.
+- A sensor that is `unavailable` or `unknown` is accepted.
+- A sensor that has no state yet is accepted only if Home Assistant already knows about it, for example, when its integration hasn&#x27;t finished loading.
+
+When you reconfigure a plane, sensors it already uses aren&#x27;t checked again. A sensor that is briefly unusable doesn&#x27;t stop you from changing other settings.
+
+If you rename a sensor&#x27;s entity ID, the plane keeps using it automatically.
+
+### Changing the location
+
+Reconfiguring the integration only changes the location. To change the location:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **Forecast.Solar**.
+2. Select **Reconfigure**. Your current choice is already selected.
+3. Select one of the following, then select **Submit**:
+   - **Follow the Home Assistant location, for homes that move such as campers or boats**: Applies right away.
+   - **Enter fixed coordinates**: Shows the latitude and longitude, pre-filled with the current coordinates or your Home Assistant home location, so you can change them.
+
+To change the angles or power of a plane, reconfigure the plane instead. See [Reconfiguring a plane](#reconfiguring-a-plane).
+
+## Configuration options
+
+After setup, you can fine-tune the forecast. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select the **Forecast.Solar** integration, and then select the cogwheel {% icon &quot;mdi:cog-outline&quot; %} (**Configure**).
+
+{% configuration_basic %}
+API key:
+  description: &quot;The API key for your Forecast.Solar account. An account is only needed for more frequent updates or more than one plane. See [Using a Forecast.Solar account](#using-a-forecastsolar-account).&quot;
+Damping factor (morning):
+  description: &quot;Lower the forecast for the morning using a value between `0` and `1`. See [Tweaking the estimations](#tweaking-the-estimations).&quot;
+Damping factor (evening):
+  description: &quot;Lower the forecast for the evening using a value between `0` and `1`. See [Tweaking the estimations](#tweaking-the-estimations).&quot;
+Inverter size (Watt):
+  description: &quot;The maximum power of your inverter. See [Tweaking the estimations](#tweaking-the-estimations).&quot;
+{% endconfiguration_basic %}
+
+## Adding multiple planes
+
+A plane is a group of panels that share the same orientation. If your setup has panels facing different directions, such as an east-west roof, you can add each orientation as a separate plane within the same integration.
+
+Adding more than one plane requires a paid Forecast.Solar account. See [Using a Forecast.Solar account](#using-a-forecastsolar-account). You can configure up to four planes, and the integration combines their data into a single set of sensors, taking your inverter size into account if you set one.
+
+Adding a plane uses the same two steps as setup, without the **Location** choice. When a plane uses a sensor, its title shows the sensor&#x27;s entity ID, for example `30° / sensor.roof_azimuth / 5100W`. If you rename the sensor&#x27;s entity ID, the title follows. If you give the plane your own title, it is kept.
+
+To add a plane:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **Forecast.Solar**.
+2. Select **Add plane**.
+
+### Reconfiguring a plane
+
+Reconfiguring a plane also uses the same two steps, without the **Location** choice. It starts with the plane&#x27;s current choices selected and its current values filled in. This is also how you switch an angle between a fixed value and a sensor.
+
+To reconfigure a plane:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **Forecast.Solar**.
+2. Next to the plane, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu, then select **Reconfigure**.
+
+## Using a Forecast.Solar account
+
+You can use the public [Forecast.Solar](https://forecast.solar/) service for free, but the data has a lower resolution, the forecast updates less often, and you can configure only a single plane.
+
+If you would like more frequent updates or want to add multiple planes, you can [sign up for one of their plans](https://doc.forecast.solar/doku.php?id=account_models#compare_plans). The Personal Plus tier and above let you configure up to four planes.
+
+To use your account, add the API key in the integration&#x27;s configuration options, as described under [Configuration options](#configuration-options).
+
+## Tweaking the estimations
+
+A forecast will never perfectly match what your panels produce, because it is based on weather and historical data rather than the power you actually generate. Even so, you can make it more accurate for your situation in a few ways:
+
+- Fine-tune the **Azimuth** and **Declination** if the real orientation of your panels differs slightly from what you first entered, or select a sensor for either so it follows a moving or adjustable mount. To change these, [reconfigure the plane](#reconfiguring-a-plane).
+- Set a damping factor between `0` and `1` for the morning and the evening if your panels catch some shade early or late in the day. A value of `0` applies no damping; higher values lower the forecast more. For example, if trees shade your panels in the morning but not in the evening, set the morning damping factor above `0` and leave the evening damping factor at `0`. Adjust the value over time by comparing the forecast with your actual production.
+- Set the inverter size if your inverter can deliver less power than your panels can produce together, so the forecast does not exceed what your inverter can handle.
+
+You can change the damping factors and inverter size at any time under [Configuration options](#configuration-options). For more background on damping, see the [Forecast.Solar damping documentation](https://doc.forecast.solar/damping).
+
+## Supported functionality
+
+The integration provides sensors that you can show on a dashboard or use in automations.
+
+The following sensors are enabled by default:
+
+- **Estimated energy production - today**: Total estimated production for today, in kWh.
+- **Estimated energy production - remaining today**: Estimated production still to come today, in kWh.
+- **Estimated energy production - tomorrow**: Total estimated production for tomorrow, in kWh.
+- **Estimated energy production - this hour**: Estimated production for the current hour, in kWh.
+- **Estimated energy production - next hour**: Estimated production for the next hour, in kWh.
+- **Estimated power production - now**: Estimated power being produced right now, in Watt.
+- **Highest power peak time - today**: The time of the highest expected power peak today.
+- **Highest power peak time - tomorrow**: The time of the highest expected power peak tomorrow.
+
+The following sensors are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). Enable them in the user interface if you want to use them:
+
+- **Estimated power production - in 1 hour**: Estimated power production one hour from now, in Watt.
+- **Estimated power production - in 12 hours**: Estimated power production twelve hours from now, in Watt.
+- **Estimated power production - in 24 hours**: Estimated power production twenty-four hours from now, in Watt.
+
+## Using the forecast in the Energy dashboard
+
+If you track your solar panels in the [Energy dashboard](/docs/energy/solar-panels/), you can pair them with Forecast.Solar. The solar production graph then shows the forecasted production alongside what your panels actually generate, so you can see at a glance whether the day is living up to its prediction.
+
+To add the forecast:
+
+1. Go to {% my energy title=&quot;**Settings** &gt; **Dashboards** &gt; **Energy**&quot; %}.
+2. Under **Solar panels**, select your solar production entry. If you have not set one up yet, see [integrating your solar panels](/docs/energy/solar-panels/) first.
+3. Turn on the solar production forecast option and select **Forecast.Solar**.
+4. Save your changes.
+
+The Energy dashboard now overlays the expected production on your solar graph.
+
+{% include integrations/actions.md %}
+
+## Examples
+
+### Automation: Act on a high solar forecast for tomorrow
+
+This example sends a notification when the estimated energy production for tomorrow rises above 10 kWh.
+
+```yaml
+alias: &quot;High solar forecast tomorrow&quot;
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.energy_production_tomorrow
+    above: 10
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.my_device
+    data:
+      message: &quot;More than 10 kWh of solar production is forecast for tomorrow.&quot;
+```
+
+### Automation: Act at the solar production peak
+
+This example sends a notification at today&#x27;s forecast highest-power-peak time.
+
+```yaml
+alias: &quot;Forecast.Solar production peak&quot;
+triggers:
+  - trigger: time
+    at: sensor.power_highest_peak_time_today
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: notify.my_device
+    data:
+      message: &quot;The forecast solar production peak has started.&quot;
+```
+
+## Data updates
+
+How often the forecast {% term polling updates %} depends on your Forecast.Solar account:
+
+- Free accounts update every hour.
+- Accounts with an API key update every 30 minutes.
+
+Because Forecast.Solar limits how often the forecast can be requested, the integration reads your declination and azimuth sensors at each scheduled update, not the moment they change.
+
+When the integration follows your Home Assistant home location, a change to that location refreshes the forecast right away. To stay within the Forecast.Solar rate limit, a location that keeps changing, such as on a moving camper, refreshes the forecast at most once per update interval.
+
+The forecast always remains an estimate based on weather and historical data, not a measurement of the power your panels actually produce.
+
+## Known limitations
+
+- The free service offers a lower data resolution, updates less often, and supports only a single plane. More frequent updates and multiple planes require a paid Forecast.Solar account.
+- Your panel location must be covered by the EU Photovoltaic Geographical Information System.
+- Declination and azimuth sensors are read at each scheduled forecast update, not the moment they change. See [Data updates](#data-updates).
+- A selected sensor is never replaced by a fixed value. If a sensor can&#x27;t be read after setup, the forecast keeps using its last reading and logs a warning once. When the sensor can be read again, the next forecast update uses its new value. The last reading isn&#x27;t kept across a restart or a reload of the integration. If the sensor still can&#x27;t be read at that point, setup retries. See **Setup keeps retrying because of a sensor** under [Troubleshooting](#troubleshooting).
+
+## Troubleshooting
+
+{% details &quot;Setup keeps retrying because of a sensor&quot; %}
+
+### Symptom: Setup retries with an error that names a sensor
+
+The integration shows that it is retrying setup, and the error names a declination or azimuth sensor.
+
+#### Description
+
+During setup, including after a restart or a reload of the integration, every selected sensor must be readable. A sensor can&#x27;t be read if it doesn&#x27;t exist, is `unavailable` or `unknown`, reports something that isn&#x27;t a number, or reports a value that is out of range. The integration keeps retrying until the sensor can be read. If Home Assistant is still starting, it retries as soon as startup finishes.
+
+#### Resolution
+
+1. Check that the sensor named in the error exists and reports a number in the accepted range. Refer to the sensor descriptions under [Configuration](#configuration).
+2. If you deleted the sensor, reconfigure the plane and select another sensor or a fixed value. Refer to [Reconfiguring a plane](#reconfiguring-a-plane).
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Forecast.Solar.</p><p>The <strong>plane</strong> configuration step lists <code>azimuth</code>, <code>azimuth_sensor</code>, <code>coordinates</code>, <code>declination</code>, <code>declination_sensor</code>, <code>modules_power</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>location</code>.</p><p>The <strong>reconfigure fixed location</strong> configuration step lists <code>coordinates</code>.</p><p>The <strong>user</strong> configuration step lists <code>azimuth_source</code>, <code>declination_source</code>, <code>location</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get forecast</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Configuration options</li><li>Adding multiple planes</li><li>Using a Forecast.Solar account</li><li>Tweaking the estimations</li><li>Supported functionality</li><li>Using the forecast in the Energy dashboard</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/forecast_solar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/forecast_solar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/forecast_solar</code></dd></dl></section><p><a href="../../integrations/forecast_solar/">Return to the Forecast.Solar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

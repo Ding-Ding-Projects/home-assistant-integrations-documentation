@@ -1,1 +1,722 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenEVSE reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:333" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/openevse/">OpenEVSE guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenEVSE</h1><p>Instructions on how to integrate OpenEVSE charging stations with Home Assistant.</p><section><h2>Overview</h2><p>The OpenEVSE integration connects your Home Assistant installation to an OpenEVSE electric vehicle charging station that runs the OpenEVSE Wi-Fi firmware. The integration talks to the charger locally over your home network, so it works without an internet connection and without a cloud account.</p></section><section><h2>Use cases</h2><p>The OpenEVSE integration is useful in scenarios like the following:</p></section><section><h2>Supported devices</h2><p>This integration supports OpenEVSE charging stations that run the official OpenEVSE Wi-Fi firmware on either an ESP8266 or an ESP32 Wi-Fi module. The Wi-Fi module is what exposes the local HTTP API and WebSocket interface that this integration uses.</p></section><section><h2>Unsupported devices</h2><p>The following devices are not supported:</p></section><section><h2>Prerequisites</h2><p>In most cases, the charger is discovered automatically and shown as a newly discovered device. If automatic discovery does not find your charger, you can add it manually by entering its IP address or hostname.</p></section><section><h2>Supported functionality</h2><p>The integration adds a single device per charger to Home Assistant and exposes the following entities. Some entities are disabled by default to keep the device page tidy. You can enable them from the device page if you need them.</p></section><section><h2>Sensors</h2><p>Energy totals across different time windows (disabled by default):</p></section><section><h2>Switches</h2><p>Home Assistant only enables or disables solar divert mode. It does not send solar production or grid import/export data from other Home Assistant integrations to the charger. For solar divert to operate, configure the OpenEVSE firmware with a live solar generation or grid import/export feed. Refer to the OpenEVSE solar divert documentation for setup instructions.</p></section><section><h2>Automation: Notify when your car is plugged in</h2><p>This automation sends a notification whenever a vehicle is connected to the charger.</p></section><section><h2>Automation: Lower the charge rate during peak hours</h2><p>This automation reduces the charge rate to 10A between 5 PM and 9 PM, then returns it to 32A afterwards. Adjust the times and current values to match your electricity tariff and your charger’s limits.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenEVSE.</p><p>The <strong>auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set override</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>OpenEVSE automation examples</li><li>Energy dashboard</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/openevse/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/openevse</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/openevse</code></dd></dl></section><p><a href="../../integrations/openevse/">Return to the OpenEVSE guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenEVSE reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:333" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/openevse/">OpenEVSE guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenEVSE</h1><p>Instructions on how to integrate OpenEVSE charging stations with Home Assistant.</p><div class="reader-body"><p>The <strong>OpenEVSE</strong> integration connects your Home Assistant installation to an <a>OpenEVSE</a> electric vehicle charging station that runs the OpenEVSE Wi-Fi firmware. The integration talks to the charger locally over your home network, so it works without an internet connection and without a cloud account.</p>
+<p>Use the integration to monitor your EV charging sessions, track energy consumption for the <a>Energy dashboard</a>, adjust the charging current, and react to charger state changes in automations.</p>
+<h2>Use cases</h2>
+<p>The OpenEVSE integration is useful in scenarios like the following:</p>
+<ul>
+<li>Track how much energy each charging session uses and feed it into the <a>Energy dashboard</a> to see your home’s EV charging costs over time.</li>
+<li>Lower the charge rate during peak electricity hours and raise it again when off-peak rates start.</li>
+<li>Match the charge rate to the surplus power your solar panels produce, so your car charges from clean energy whenever possible.</li>
+<li>Get a notification when your car is plugged in, when charging starts or finishes, or when the charger reports a fault.</li>
+<li>Pause charging when other large loads (such as an oven or heat pump) are running, to stay below the limit of your electrical service.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>This integration supports OpenEVSE charging stations that run the official <a>OpenEVSE Wi-Fi firmware</a> on either an ESP8266 or an ESP32 Wi-Fi module. The Wi-Fi module is what exposes the local HTTP API and WebSocket interface that this integration uses.</p>
+<p>The OpenEVSE Advanced Series chargers are known to work with this integration. If your charger runs the OpenEVSE Wi-Fi firmware and exposes the local web interface in a browser, it is expected to work with this integration.</p>
+<h3>Unsupported devices</h3>
+<p>The following devices are not supported:</p>
+<ul>
+<li>OpenEVSE chargers without the Wi-Fi module, since they have no network interface to communicate with.</li>
+<li>Older OpenEVSE Wi-Fi firmware versions that do not expose the modern HTTP API. If the local web interface does not show energy totals or a status page, update the firmware first.</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>The OpenEVSE charger is on the same network as Home Assistant.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>OpenEVSE</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>OpenEVSE</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>In most cases, the charger is discovered automatically and shown as a newly discovered device. If automatic discovery does not find your charger, you can add it manually by entering its IP address or hostname.</p>
+<pre><code>
+Host:
+  description: "The IP address or hostname of your OpenEVSE charger on your local network, for example `192.168.1.50` or `openevse.local`. This is the same address you use to open the OpenEVSE web interface in a browser."
+Username:
+  description: "The username for the OpenEVSE web interface. Only required if you have enabled authentication on the charger. Leave empty if you have not set a username."
+Password:
+  description: "The password for the OpenEVSE web interface. Only required if you have enabled authentication on the charger. Leave empty if you have not set a password."
+
+</code></pre>
+<p>If the credentials on the charger change later, Home Assistant prompts you to re-enter them through the reauthentication flow without removing and re-adding the integration.</p>
+<h2>Supported functionality</h2>
+<p>The integration adds a single device per charger to Home Assistant and exposes the following entities. Some entities are <a>disabled by default</a> to keep the device page tidy. You can enable them from the device page if you need them.</p>
+<h3>Sensors</h3>
+<p>Charging and session information:</p>
+<ul>
+<li><strong>Charging status</strong>: The current state reported by the charger, such as <code>Not connected</code>, <code>Connected</code>, <code>Charging</code>, or <code>Sleeping</code>.</li>
+<li><strong>Charge time elapsed</strong>: How long the current charging session has been running.</li>
+<li><strong>Usage this session</strong>: Energy delivered to the vehicle during the current session.</li>
+<li><strong>Total energy usage</strong>: Lifetime energy delivered by the charger. Use this with the <a>Energy dashboard</a> to track EV charging consumption.</li>
+<li><strong>Vehicle charge completion</strong>: Estimated time at which charging will finish, when the vehicle reports this value.</li>
+</ul>
+<p>Live electrical measurements:</p>
+<ul>
+<li><strong>Charging current</strong>: Current that is currently flowing to the vehicle.</li>
+<li><strong>Charging voltage</strong>: Voltage measured at the charger.</li>
+<li><strong>Charging power</strong>: Real-time power delivered to the vehicle.</li>
+<li><strong>Current power</strong>: Instantaneous power reading from the charger.</li>
+<li><strong>Current capacity</strong>: The charging current the charger is configured to deliver.</li>
+<li><strong>Current limit</strong>: The hard maximum the charger will deliver. This is the limit you select with the <strong>Charge rate</strong> number entity.</li>
+</ul>
+<p>Energy totals across different time windows (disabled by default):</p>
+<ul>
+<li><strong>Daily energy usage</strong></li>
+<li><strong>Weekly energy usage</strong></li>
+<li><strong>Monthly energy usage</strong></li>
+<li><strong>Yearly energy usage</strong></li>
+</ul>
+<p>Temperatures from the charger’s onboard sensors:</p>
+<ul>
+<li><strong>Ambient temperature</strong></li>
+<li><strong>IR temperature</strong> (disabled by default)</li>
+<li><strong>RTC temperature</strong> (disabled by default)</li>
+<li><strong>ESP temperature</strong> (disabled by default)</li>
+</ul>
+<p>Vehicle information, when the connected vehicle reports it through the charger:</p>
+<ul>
+<li><strong>Vehicle state of charge</strong>: The battery level reported by the car as a percentage.</li>
+<li><strong>Vehicle range</strong>: The remaining driving range reported by the car.</li>
+</ul>
+<p>Power shaper sensors, which are used when the charger limits power based on the rest of your home’s electrical load (disabled by default):</p>
+<ul>
+<li><strong>Shaper live power</strong></li>
+<li><strong>Shaper available current</strong></li>
+<li><strong>Shaper maximum power</strong></li>
+</ul>
+<p>Diagnostic sensors that help with troubleshooting and that are disabled by default:</p>
+<ul>
+<li><strong>Service level</strong>: Whether the charger is operating in Level 1 (120V), Level 2 (240V), or automatic mode.</li>
+<li><strong>Minimum amperage</strong> and <strong>Maximum amperage</strong>: The current range the charger supports.</li>
+<li><strong>Wi-Fi signal</strong>: Signal strength of the charger’s Wi-Fi connection.</li>
+<li><strong>GFCI trip count</strong>, <strong>No ground trip count</strong>, <strong>Stuck relay trip count</strong>: Counters for safety events.</li>
+<li><strong>Uptime</strong> and <strong>Free memory</strong>: Information about the Wi-Fi module itself.</li>
+</ul>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Vehicle connected</strong>: On when a vehicle is plugged in to the charger.</li>
+<li><strong>Station status</strong>: On when the charging station is active and ready to deliver power, and off when disabled.</li>
+<li><strong>Divert active</strong>: On when the charger is in solar divert (eco) mode and is matching its output to available surplus power.</li>
+<li><strong>Shaper active</strong>: On when the power shaper is actively limiting the charge rate to stay below a household power limit.</li>
+<li><strong>Limit active</strong> (disabled by default): On when an energy, time, or session limit is currently being enforced.</li>
+<li><strong>Ethernet connected</strong> (disabled by default): On when the charger is using its wired Ethernet connection instead of Wi-Fi.</li>
+<li><strong>MQTT connected</strong> (disabled by default): On when the charger has an active MQTT connection.</li>
+</ul>
+<h3>Number</h3>
+<ul>
+<li><strong>Charge rate</strong>: Sets the maximum current the charger will deliver, in amperes. The minimum and maximum follow the limits that the charger reports for itself, so you cannot set a value outside the safe range for your hardware.</li>
+</ul>
+<h3>Buttons</h3>
+<ul>
+<li><strong>Restart</strong>: Restarts the charging module.</li>
+<li><strong>Restart Wi-Fi</strong>: Restarts the charger's Wi-Fi module. Use this if the charger drops off your network but is otherwise powered.</li>
+</ul>
+<h3>Switches</h3>
+<ul>
+<li><strong>Current shaper</strong>: Enables or disables the power shaper feature to dynamically limit charging power based on whole-home electrical load.</li>
+<li><strong>Manual override</strong>: Toggles manual override on the charger to start or pause charging regardless of scheduled or automatic claim states.</li>
+<li><strong>Solar PV divert</strong>: Enables or disables solar divert (eco) mode to dynamically match charging output to surplus solar power generation.</li>
+</ul>
+<p>Home Assistant only enables or disables solar divert mode. It does not send solar production or grid import/export data from other Home Assistant integrations to the charger. For solar divert to operate, configure the OpenEVSE firmware with a live solar generation or grid import/export feed. Refer to the <a>OpenEVSE solar divert documentation</a> for setup instructions.</p>
+<h3>Select</h3>
+<ul>
+<li><strong>Override state</strong>: Sets the manual override state on the charger. Options are <strong>Auto</strong> (clears the override), <strong>Active</strong> (forces charging to start), and <strong>Disabled</strong> (forces charging to pause). This entity requires OpenEVSE Wi-Fi firmware version 4.0.1 or later.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>OpenEVSE automation examples</h2>
+<h3>Automation: Notify when your car is plugged in</h3>
+<p>This automation sends a notification whenever a vehicle is connected to the charger.</p>
+<h4>Example</h4>
+<p>automation:</p>
+<ul>
+<li>alias: "Notify when EV is plugged in"
+triggers:<ul>
+<li>trigger: state
+entity_id: binary_sensor.openevse_vehicle_connected
+from: "off"
+to: "on"
+actions:</li>
+<li>action: notify.mobile_app_my_phone
+data:
+title: "EV plugged in"
+message: "Your car is now connected to the charger."</li>
+</ul>
+</li>
+</ul>
+<h3>Automation: Lower the charge rate during peak hours</h3>
+<p>This automation reduces the charge rate to 10A between 5 PM and 9 PM, then returns it to 32A afterwards. Adjust the times and current values to match your electricity tariff and your charger’s limits.</p>
+<h4>Example</h4>
+<p>automation:</p>
+<ul>
+<li><p>alias: "OpenEVSE peak rate"
+triggers:</p>
+<ul>
+<li>trigger: time
+at: "17:00:00"
+actions:</li>
+<li>action: number.set_value
+target:
+entity_id: number.openevse_charge_rate
+data:
+value: 10</li>
+</ul>
+</li>
+<li><p>alias: "OpenEVSE off-peak rate"
+triggers:</p>
+<ul>
+<li>trigger: time
+at: "21:00:00"
+actions:</li>
+<li>action: number.set_value
+target:
+entity_id: number.openevse_charge_rate
+data:
+value: 32</li>
+</ul>
+</li>
+</ul>
+<h2>Energy dashboard</h2>
+<p>Use the <strong>Total energy usage</strong> sensor as an individual device on the <a>Energy dashboard</a>:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Dashboards</strong> &gt; <strong>Energy</strong>.</li>
+<li>Under <strong>Individual devices</strong>, select <strong>Add device</strong>.</li>
+<li>Choose the <strong>Total energy usage</strong> sensor from your OpenEVSE charger.</li>
+</ol>
+<p>The dashboard then shows how much energy your car consumes compared to the rest of your home.</p>
+<h2>Data updates</h2>
+<p>The OpenEVSE integration uses a push model. After it connects, it opens a WebSocket to the charger, and the charger sends new data as soon as a value changes. This means entity states reflect what the charger is doing within seconds, without waiting for a polling interval.</p>
+<p>As a safety net, the integration also polls the charger every five minutes. This catches the rare case where the WebSocket connection drops without a clean disconnect, so the entities are refreshed on the next polling poll even if the push channel is interrupted.</p>
+<p>You do not need to configure any update interval yourself.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration manages a single OpenEVSE charger per config entry. If you have multiple chargers, add each one as a separate integration instance.</li>
+<li>Only OpenEVSE chargers with the official Wi-Fi firmware are supported. Chargers reached only over MQTT, or third-party firmware variants, are not.</li>
+<li>The <strong>Vehicle state of charge</strong> and <strong>Vehicle range</strong> sensors depend on the connected vehicle reporting this information through the charger. Many vehicles do not, in which case these sensors stay unavailable.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>The charger is not discovered automatically</h3>
+<p>Automatic discovery uses zeroconf (mDNS), which only works when Home Assistant and the charger are on the same network segment. If your charger is on a different VLAN or subnet, add it manually:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>Select <strong>Add integration</strong> and search for <strong>OpenEVSE</strong>.</li>
+<li>Enter the charger’s IP address or hostname.</li>
+</ol>
+<h3>Setup fails with "Failed to connect"</h3>
+<p>This message means Home Assistant cannot reach the charger at the address you entered. To resolve it:</p>
+<ol>
+<li>Open the charger’s web interface in a browser on the same network as Home Assistant. If the page does not load, the problem is between your network and the charger, not Home Assistant.</li>
+<li>Check the address you entered. Use the same value (IP address or <code>*.local</code> hostname) that loads the web interface.</li>
+<li>Make sure the charger’s Wi-Fi signal is strong enough. Move the charger closer to your access point or use the Ethernet port if your hardware has one.</li>
+<li>Confirm that no firewall on your network is blocking traffic between Home Assistant and the charger.</li>
+</ol>
+<h3>Setup fails with "Invalid authentication"</h3>
+<p>The charger has authentication enabled and the username or password you entered is incorrect. Re-enter the credentials you use to log in to the OpenEVSE web interface. If you have forgotten them, reset the credentials from the charger’s web interface.</p>
+<h3>Home Assistant asks you to reauthenticate</h3>
+<p>If you change the username or password on the charger, Home Assistant detects the failed authentication and starts a reauthentication flow. Select <strong>Reconfigure</strong> on the integration’s notification and enter the new credentials. The integration reconnects without losing any of your existing entities or automations.</p>
+<h3>Entities show "Unavailable"</h3>
+<p>If most entities go unavailable at the same time, the integration has lost contact with the charger. Check the following:</p>
+<ol>
+<li>The charger has power and its status LED is on.</li>
+<li>The charger’s web interface still loads in a browser.</li>
+<li>The charger has not picked up a new IP address from your router. Use a static IP or a DHCP reservation to avoid this.</li>
+</ol>
+<p>After the charger is reachable again, entities recover automatically on the next WebSocket message or polling cycle.</p>
+<h3>A specific sensor is always "Unavailable" or shows 0</h3>
+<p>Some sensors only report values when the charger has the matching hardware or the connected vehicle provides the data:</p>
+<ul>
+<li>Temperature sensors (<strong>IR temperature</strong>, <strong>RTC temperature</strong>, <strong>Ambient temperature</strong>) require the corresponding optional temperature probe to be installed.</li>
+<li><strong>Vehicle state of charge</strong>, <strong>Vehicle range</strong>, and <strong>Vehicle charge completion</strong> require a vehicle that exposes this data through the charger’s integration.</li>
+<li>Power shaper sensors are only meaningful when the OpenEVSE power shaper feature is enabled in the charger’s configuration.</li>
+</ul>
+<p>If you do not need a sensor, you can leave it disabled.</p>
+<h3>Charging current cannot be set above a certain value</h3>
+<p>The <strong>Charge rate</strong> number entity is limited by the minimum and maximum amperage your charger reports. These values are set in the charger’s configuration and reflect the rating of your hardware and electrical installation. To raise the maximum, update the configuration in the OpenEVSE web interface, and only after confirming that your wiring and breaker support the higher current.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/openevse.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate OpenEVSE charging stations with Home Assistant.
+ha_release: 0.38
+ha_domain: openevse
+---
+
+The **OpenEVSE** {% term integration %} connects your Home Assistant installation to an [OpenEVSE](https://www.openevse.com/) electric vehicle charging station that runs the OpenEVSE Wi-Fi firmware. The integration talks to the charger locally over your home network, so it works without an internet connection and without a cloud account.
+
+Use the integration to monitor your &lt;abbr title=&quot;electric vehicle&quot;&gt;EV&lt;/abbr&gt; charging sessions, track energy consumption for the [Energy dashboard](/home-energy-management), adjust the charging current, and react to charger state changes in automations.
+
+## Use cases
+
+The OpenEVSE integration is useful in scenarios like the following:
+
+- Track how much energy each charging session uses and feed it into the [Energy dashboard](/home-energy-management) to see your home’s EV charging costs over time.
+- Lower the charge rate during peak electricity hours and raise it again when off-peak rates start.
+- Match the charge rate to the surplus power your solar panels produce, so your car charges from clean energy whenever possible.
+- Get a notification when your car is plugged in, when charging starts or finishes, or when the charger reports a fault.
+- Pause charging when other large loads (such as an oven or heat pump) are running, to stay below the limit of your electrical service.
+
+## Supported devices
+
+This integration supports OpenEVSE charging stations that run the official [OpenEVSE Wi-Fi firmware](https://github.com/OpenEVSE/openevse_esp32_firmware) on either an ESP8266 or an ESP32 Wi-Fi module. The Wi-Fi module is what exposes the local HTTP API and WebSocket interface that this integration uses.
+
+The OpenEVSE Advanced Series chargers are known to work with this integration. If your charger runs the OpenEVSE Wi-Fi firmware and exposes the local web interface in a browser, it is expected to work with this integration.
+
+### Unsupported devices
+
+The following devices are not supported:
+
+- OpenEVSE chargers without the Wi-Fi module, since they have no network interface to communicate with.
+- Older OpenEVSE Wi-Fi firmware versions that do not expose the modern HTTP API. If the local web interface does not show energy totals or a status page, update the firmware first.
+
+## Prerequisites
+
+- The OpenEVSE charger is on the same network as Home Assistant.
+
+{% include integrations/config_flow.md %}
+
+In most cases, the charger is discovered automatically and shown as a newly discovered device. If automatic discovery does not find your charger, you can add it manually by entering its IP address or hostname.
+
+{% configuration_basic %}
+Host:
+  description: &quot;The IP address or hostname of your OpenEVSE charger on your local network, for example `192.168.1.50` or `openevse.local`. This is the same address you use to open the OpenEVSE web interface in a browser.&quot;
+Username:
+  description: &quot;The username for the OpenEVSE web interface. Only required if you have enabled authentication on the charger. Leave empty if you have not set a username.&quot;
+Password:
+  description: &quot;The password for the OpenEVSE web interface. Only required if you have enabled authentication on the charger. Leave empty if you have not set a password.&quot;
+{% endconfiguration_basic %}
+
+If the credentials on the charger change later, Home Assistant prompts you to re-enter them through the reauthentication flow without removing and re-adding the integration.
+
+## Supported functionality
+
+The integration adds a single device per charger to Home Assistant and exposes the following entities. Some entities are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) to keep the device page tidy. You can enable them from the device page if you need them.
+
+### Sensors
+
+Charging and session information:
+
+- **Charging status**: The current state reported by the charger, such as `Not connected`, `Connected`, `Charging`, or `Sleeping`.
+- **Charge time elapsed**: How long the current charging session has been running.
+- **Usage this session**: Energy delivered to the vehicle during the current session.
+- **Total energy usage**: Lifetime energy delivered by the charger. Use this with the [Energy dashboard](/home-energy-management) to track EV charging consumption.
+- **Vehicle charge completion**: Estimated time at which charging will finish, when the vehicle reports this value.
+
+Live electrical measurements:
+
+- **Charging current**: Current that is currently flowing to the vehicle.
+- **Charging voltage**: Voltage measured at the charger.
+- **Charging power**: Real-time power delivered to the vehicle.
+- **Current power**: Instantaneous power reading from the charger.
+- **Current capacity**: The charging current the charger is configured to deliver.
+- **Current limit**: The hard maximum the charger will deliver. This is the limit you select with the **Charge rate** number entity.
+
+Energy totals across different time windows (disabled by default):
+
+- **Daily energy usage**
+- **Weekly energy usage**
+- **Monthly energy usage**
+- **Yearly energy usage**
+
+Temperatures from the charger’s onboard sensors:
+
+- **Ambient temperature**
+- **IR temperature** (disabled by default)
+- **RTC temperature** (disabled by default)
+- **ESP temperature** (disabled by default)
+
+Vehicle information, when the connected vehicle reports it through the charger:
+
+- **Vehicle state of charge**: The battery level reported by the car as a percentage.
+- **Vehicle range**: The remaining driving range reported by the car.
+
+Power shaper sensors, which are used when the charger limits power based on the rest of your home’s electrical load (disabled by default):
+
+- **Shaper live power**
+- **Shaper available current**
+- **Shaper maximum power**
+
+Diagnostic sensors that help with troubleshooting and that are disabled by default:
+
+- **Service level**: Whether the charger is operating in Level 1 (120V), Level 2 (240V), or automatic mode.
+- **Minimum amperage** and **Maximum amperage**: The current range the charger supports.
+- **Wi-Fi signal**: Signal strength of the charger’s Wi-Fi connection.
+- **GFCI trip count**, **No ground trip count**, **Stuck relay trip count**: Counters for safety events.
+- **Uptime** and **Free memory**: Information about the Wi-Fi module itself.
+
+### Binary sensors
+
+- **Vehicle connected**: On when a vehicle is plugged in to the charger.
+- **Station status**: On when the charging station is active and ready to deliver power, and off when disabled.
+- **Divert active**: On when the charger is in solar divert (eco) mode and is matching its output to available surplus power.
+- **Shaper active**: On when the power shaper is actively limiting the charge rate to stay below a household power limit.
+- **Limit active** (disabled by default): On when an energy, time, or session limit is currently being enforced.
+- **Ethernet connected** (disabled by default): On when the charger is using its wired Ethernet connection instead of Wi-Fi.
+- **MQTT connected** (disabled by default): On when the charger has an active MQTT connection.
+
+### Number
+
+- **Charge rate**: Sets the maximum current the charger will deliver, in amperes. The minimum and maximum follow the limits that the charger reports for itself, so you cannot set a value outside the safe range for your hardware.
+
+### Buttons
+
+- **Restart**: Restarts the charging module.
+- **Restart Wi-Fi**: Restarts the charger&#x27;s Wi-Fi module. Use this if the charger drops off your network but is otherwise powered.
+
+### Switches
+
+- **Current shaper**: Enables or disables the power shaper feature to dynamically limit charging power based on whole-home electrical load.
+- **Manual override**: Toggles manual override on the charger to start or pause charging regardless of scheduled or automatic claim states.
+- **Solar PV divert**: Enables or disables solar divert (eco) mode to dynamically match charging output to surplus solar power generation.
+
+Home Assistant only enables or disables solar divert mode. It does not send solar production or grid import/export data from other Home Assistant integrations to the charger. For solar divert to operate, configure the OpenEVSE firmware with a live solar generation or grid import/export feed. Refer to the [OpenEVSE solar divert documentation](https://github.com/OpenEVSE/openevse_esp32_firmware/blob/master/docs/user/solar-divert.md) for setup instructions.
+
+### Select
+
+- **Override state**: Sets the manual override state on the charger. Options are **Auto** (clears the override), **Active** (forces charging to start), and **Disabled** (forces charging to pause). This entity requires OpenEVSE Wi-Fi firmware version 4.0.1 or later.
+
+{% include integrations/actions.md %}
+
+## OpenEVSE automation examples
+
+### Automation: Notify when your car is plugged in
+
+This automation sends a notification whenever a vehicle is connected to the charger.
+
+{% example %}
+automation:
+  - alias: &quot;Notify when EV is plugged in&quot;
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.openevse_vehicle_connected
+        from: &quot;off&quot;
+        to: &quot;on&quot;
+    actions:
+      - action: notify.mobile_app_my_phone
+        data:
+          title: &quot;EV plugged in&quot;
+          message: &quot;Your car is now connected to the charger.&quot;
+{% endexample %}
+
+### Automation: Lower the charge rate during peak hours
+
+This automation reduces the charge rate to 10A between 5 PM and 9 PM, then returns it to 32A afterwards. Adjust the times and current values to match your electricity tariff and your charger’s limits.
+
+{% example %}
+automation:
+  - alias: &quot;OpenEVSE peak rate&quot;
+    triggers:
+      - trigger: time
+        at: &quot;17:00:00&quot;
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.openevse_charge_rate
+        data:
+          value: 10
+
+  - alias: &quot;OpenEVSE off-peak rate&quot;
+    triggers:
+      - trigger: time
+        at: &quot;21:00:00&quot;
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.openevse_charge_rate
+        data:
+          value: 32
+{% endexample %}
+
+## Energy dashboard
+
+Use the **Total energy usage** sensor as an individual device on the [Energy dashboard](/home-energy-management):
+
+1. Go to {% my energy title=&quot;**Settings** &gt; **Dashboards** &gt; **Energy**&quot; %}.
+2. Under **Individual devices**, select **Add device**.
+3. Choose the **Total energy usage** sensor from your OpenEVSE charger.
+
+The dashboard then shows how much energy your car consumes compared to the rest of your home.
+
+## Data updates
+
+The OpenEVSE integration uses a push model. After it connects, it opens a WebSocket to the charger, and the charger sends new data as soon as a value changes. This means entity states reflect what the charger is doing within seconds, without waiting for a polling interval.
+
+As a safety net, the integration also polls the charger every five minutes. This catches the rare case where the WebSocket connection drops without a clean disconnect, so the entities are refreshed on the next {% term polling poll %} even if the push channel is interrupted.
+
+You do not need to configure any update interval yourself.
+
+## Known limitations
+
+- The integration manages a single OpenEVSE charger per config entry. If you have multiple chargers, add each one as a separate integration instance.
+- Only OpenEVSE chargers with the official Wi-Fi firmware are supported. Chargers reached only over MQTT, or third-party firmware variants, are not.
+- The **Vehicle state of charge** and **Vehicle range** sensors depend on the connected vehicle reporting this information through the charger. Many vehicles do not, in which case these sensors stay unavailable.
+
+## Troubleshooting
+
+### The charger is not discovered automatically
+
+Automatic discovery uses zeroconf (mDNS), which only works when Home Assistant and the charger are on the same network segment. If your charger is on a different VLAN or subnet, add it manually:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. Select **Add integration** and search for **OpenEVSE**.
+3. Enter the charger’s IP address or hostname.
+
+### Setup fails with &quot;Failed to connect&quot;
+
+This message means Home Assistant cannot reach the charger at the address you entered. To resolve it:
+
+1. Open the charger’s web interface in a browser on the same network as Home Assistant. If the page does not load, the problem is between your network and the charger, not Home Assistant.
+2. Check the address you entered. Use the same value (IP address or `*.local` hostname) that loads the web interface.
+3. Make sure the charger’s Wi-Fi signal is strong enough. Move the charger closer to your access point or use the Ethernet port if your hardware has one.
+4. Confirm that no firewall on your network is blocking traffic between Home Assistant and the charger.
+
+### Setup fails with &quot;Invalid authentication&quot;
+
+The charger has authentication enabled and the username or password you entered is incorrect. Re-enter the credentials you use to log in to the OpenEVSE web interface. If you have forgotten them, reset the credentials from the charger’s web interface.
+
+### Home Assistant asks you to reauthenticate
+
+If you change the username or password on the charger, Home Assistant detects the failed authentication and starts a reauthentication flow. Select **Reconfigure** on the integration’s notification and enter the new credentials. The integration reconnects without losing any of your existing entities or automations.
+
+### Entities show &quot;Unavailable&quot;
+
+If most entities go unavailable at the same time, the integration has lost contact with the charger. Check the following:
+
+1. The charger has power and its status LED is on.
+2. The charger’s web interface still loads in a browser.
+3. The charger has not picked up a new IP address from your router. Use a static IP or a DHCP reservation to avoid this.
+
+After the charger is reachable again, entities recover automatically on the next WebSocket message or {% term polling %} cycle.
+
+### A specific sensor is always &quot;Unavailable&quot; or shows 0
+
+Some sensors only report values when the charger has the matching hardware or the connected vehicle provides the data:
+
+- Temperature sensors (**IR temperature**, **RTC temperature**, **Ambient temperature**) require the corresponding optional temperature probe to be installed.
+- **Vehicle state of charge**, **Vehicle range**, and **Vehicle charge completion** require a vehicle that exposes this data through the charger’s integration.
+- Power shaper sensors are only meaningful when the OpenEVSE power shaper feature is enabled in the charger’s configuration.
+
+If you do not need a sensor, you can leave it disabled.
+
+### Charging current cannot be set above a certain value
+
+The **Charge rate** number entity is limited by the minimum and maximum amperage your charger reports. These values are set in the charger’s configuration and reflect the rating of your hardware and electrical installation. To raise the maximum, update the configuration in the OpenEVSE web interface, and only after confirming that your wiring and breaker support the higher current.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenEVSE.</p><p>The <strong>auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set override</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>OpenEVSE automation examples</li><li>Energy dashboard</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/openevse/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/openevse</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/openevse</code></dd></dl></section><p><a href="../../integrations/openevse/">Return to the OpenEVSE guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

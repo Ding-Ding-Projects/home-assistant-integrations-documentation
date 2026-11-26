@@ -1,1 +1,886 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rejseplanen reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:44" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/rejseplanen/">Rejseplanen guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Rejseplanen</h1><p>Instructions on how to integrate timetable data for Danish Rejseplanen within Home Assistant.</p><section><h2>Overview</h2><p>The Rejseplanen integration provides you with travel details for Danish public transport, using timetable data from Rejseplanen.</p></section><section><h2>Prerequisites</h2><p>To use this integration, you need a Rejseplanen API key:</p></section><section><h2>Migrating from YAML configuration</h2><p>If you previously configured Rejseplanen through configuration.yaml, it can&#x27;t be imported automatically. Rejseplanen now requires an API key, which the YAML configuration didn&#x27;t provide.</p></section><section><h2>Adding a stop</h2><p>Each stop you want to monitor is added as a separate device. After you set up the integration with your API key, add one stop for each location you want to track:</p></section><section><h2>Finding a stop ID</h2><p>The stop ID is a unique identifier for each public transport stop or station. You can find it using either a text search or coordinates.</p></section><section><h2>To search by name or location</h2><p>1. Open a web browser and visit the following URL:</p></section><section><h2>Example search for &quot;Roskilde St.&quot;</h2><p>The response includes stops matching your search. In this example, the stop ID is 8600617. You can see it in the extId attribute of the StopLocation element.</p></section><section><h2>To search by coordinates</h2><p>1. Find your location on OpenStreetMap. 2. The URL shows the coordinates (for example: #map=18/56.15756/10.20674). 3. Visit the following URL:</p></section><section><h2>Example search for nearby stops in Roskilde</h2><p>Find the stop you want in the list and use the extId attribute as your stop ID. In this example, you can see two stops: 8651617 and 8650617.</p></section><section><h2>Finding direction values</h2><p>To filter by direction, you need the exact direction values available from your stop. These values come from the direction attribute in the API response.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Rejseplanen.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Migrating from YAML configuration</li><li>Adding a stop</li><li>Finding a stop ID</li><li>Finding direction values</li><li>Supported functionality</li><li>Rejseplanen automation examples</li><li>Data updates</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/rejseplanen/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/rejseplanen</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/rejseplanen</code></dd></dl></section><p><a href="../../integrations/rejseplanen/">Return to the Rejseplanen guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rejseplanen reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:44" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/rejseplanen/">Rejseplanen guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Rejseplanen</h1><p>Instructions on how to integrate timetable data for Danish Rejseplanen within Home Assistant.</p><div class="reader-body"><p>The <strong>Rejseplanen</strong> integration provides you with travel details for Danish public transport, using timetable data from <a>Rejseplanen</a>.</p>
+<p>When you set it up, the integration connects to the Rejseplanen cloud API with your API key. You then add one device per stop that you want to monitor, and each stop device provides sensor entities for the next departure.</p>
+<p><strong>Important</strong></p>
+<p>Extra attributes that were previously available on the sensors have been removed to conform to Home Assistant standards.</p>
+<h2>Prerequisites</h2>
+<p>To use this integration, you need a Rejseplanen API key:</p>
+<ol>
+<li>Visit the <a>Rejseplanen API request form</a>.</li>
+<li>Select <strong>Private user</strong> when applying.</li>
+<li>Fill out the form and submit your request.</li>
+<li>You'll receive your API key by email.</li>
+</ol>
+<p>Private API keys allow up to 50,000 API calls per month, which is enough to monitor multiple stops with regular polling.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Rejseplanen</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Rejseplanen</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>During setup, you're asked for the following:</p>
+<pre><code>
+API key:
+  description: The API key provided by Rejseplanen.dk. It authenticates all API requests and determines your access level and rate limits.
+
+</code></pre>
+<p><strong>Note</strong></p>
+<p>Rejseplanen supports a single integration entry. To use a different API key, remove the integration and set it up again.</p>
+<h2>Migrating from YAML configuration</h2>
+<p>If you previously configured Rejseplanen through <code>configuration.yaml</code>, it can't be imported automatically. Rejseplanen now requires an API key, which the YAML configuration didn't provide.</p>
+<ol>
+<li>Set up the integration through the UI to provide your API key, then <a>add a stop</a> for each location you want to monitor.</li>
+<li>Remove the <code>rejseplanen</code> entry under <code>sensor:</code> from your <code>configuration.yaml</code> file.</li>
+<li><a>Restart Home Assistant</a> to apply the change.</li>
+</ol>
+<p>A repair issue under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong> reminds you to remove the YAML configuration.</p>
+<h2>Adding a stop</h2>
+<p>Each stop you want to monitor is added as a separate device. After you set up the integration with your API key, add one stop for each location you want to track:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>Rejseplanen</strong>.</li>
+<li>Select <strong>Add stop</strong>.</li>
+<li>Enter the details for the stop. Only the stop ID is required. The options are described after these steps.</li>
+<li>Select <strong>Submit</strong>.<ul>
+<li>Result: The integration immediately starts monitoring the stop and creates sensor entities for the next departure.</li>
+</ul>
+</li>
+</ol>
+<p>When you add a stop, you're asked for the following:</p>
+<pre><code>
+Stop ID:
+  description: The unique identifier for the stop or station you want to monitor. See [Finding a stop ID](#finding-a-stop-id) for how to obtain this value.
+Name:
+  description: An optional name for this stop. The name is used in the device and entity names. It defaults to **Unknown stop**, so give each stop its own name to keep your devices and entities easy to tell apart.
+Direction:
+  description: An optional filter that only shows departures toward a specific destination. Leave it empty to show all departures. You can add multiple directions, and each value must match exactly what the Rejseplanen API returns (case-sensitive). See [Finding direction values](#finding-direction-values).
+Departure type:
+  description: An optional filter that only shows specific types of departures, such as S-trains, buses, or metro. You can select multiple types. Leave it empty to show all departure types available at the stop. See [Departure types](#departure-types) for all options.
+
+</code></pre>
+<h2>Finding a stop ID</h2>
+<p>The stop ID is a unique identifier for each public transport stop or station. You can find it using either a text search or coordinates.</p>
+<h3>To search by name or location</h3>
+<ol>
+<li><p>Open a web browser and visit the following URL:</p>
+<pre><code>https://www.rejseplanen.dk/api/location.name?input=&lt;search_term&gt;&amp;accessId=&lt;YOUR_API_KEY&gt;
+</code></pre>
+</li>
+<li><p>Replace <code>&lt;search_term&gt;</code> with the name of your stop (for example, "Roskilde St." or "Copenhagen Airport").</p>
+</li>
+<li><p>Replace <code>&lt;YOUR_API_KEY&gt;</code> with your Rejseplanen API key.</p>
+</li>
+<li><p>Look for your stop in the XML response and find the <code>extId</code> attribute. This is your stop ID.</p>
+</li>
+</ol>
+<h4>Example search for "Roskilde St."</h4>
+<pre><code>https://www.rejseplanen.dk/api/location.name?input=Roskilde%20St.&amp;accessId=YOUR_API_KEY
+</code></pre>
+<p>The response includes stops matching your search. In this example, the stop ID is <code>8600617</code>. You can see it in the <code>extId</code> attribute of the <code>StopLocation</code> element.</p>
+<h4>Example XML response</h4>
+<pre><code>&lt;LocationList
+  xmlns="http://hacon.de/hafas/proxy/hafas-proxy"
+  serverVersion="2.49.1"
+  dialectVersion="2.45-Rejseplanen"
+  requestId="r2gm7s2iiist82wg"&gt;
+  &lt;TechnicalMessages&gt;
+    &lt;TechnicalMessage key="requestTime"&gt;
+      2025-06-16 11:53:58
+    &lt;/TechnicalMessage&gt;
+    &lt;TechnicalMessage key="backendInfo"&gt;
+      ttp=16601#16676 plancode0=72z27 planid=1749820065
+      planid0=1749820065 planid_adr=1746438686 plancode_adr=52iz0
+      planid_poi=1746518115 plancode_poi=538ad
+      srvv=5.45.Rejseplanen.17.3.12 (customer/hcudk/release/2025.2.0.3)
+      [2025-04-21] tlibv=TRFVER: rel/dk/11.00.8 2025-02-10 16:37:34
+      +0100 Rejsekort v11.0.8 jno=1
+    &lt;/TechnicalMessage&gt;
+  &lt;/TechnicalMessages&gt;
+  &lt;StopLocation
+    id="A=1@O=Roskilde St.@X=12088550@Y=55639093@U=86@L=8600617@..."
+    extId="8600617"
+    isMainMast="true"
+    name="Roskilde St."
+    lon="12.08855"
+    lat="55.639093"
+    weight="22212"
+    products="239"
+    minimumChangeDuration="PT5M"&gt;
+    ...
+  &lt;/StopLocation&gt;
+  ...
+&lt;/LocationList&gt;
+</code></pre>
+<h3>To search by coordinates</h3>
+<ol>
+<li><p>Find your location on <a>OpenStreetMap</a>.</p>
+</li>
+<li><p>The URL shows the coordinates (for example: <code>#map=18/56.15756/10.20674</code>).</p>
+</li>
+<li><p>Visit the following URL:</p>
+<pre><code>https://www.rejseplanen.dk/api/location.nearbystops?originCoordLong=&lt;longitude&gt;&amp;originCoordLat=&lt;latitude&gt;&amp;maxNo=10&amp;accessId=&lt;YOUR_API_KEY&gt;
+</code></pre>
+</li>
+<li><p>Replace the coordinates and API key with your values.</p>
+</li>
+<li><p>The response shows the 10 nearest stops to your location. Find the one you want and use its <code>extId</code> as the stop ID.</p>
+</li>
+</ol>
+<h4>Example search for nearby stops in Roskilde</h4>
+<pre><code>https://www.rejseplanen.dk/api/location.nearbystops?originCoordLong=12.088367&amp;originCoordLat=55.637912&amp;maxNo=10&amp;accessId=YOUR_API_KEY
+</code></pre>
+<p>Result:</p>
+<h4>Example XML response</h4>
+<pre><code>&lt;LocationList
+  xmlns="http://hacon.de/hafas/proxy/hafas-proxy"
+  serverVersion="2.49.1"
+  dialectVersion="2.45-Rejseplanen"
+  requestId="m54u7sm8gq4pww8x"&gt;
+  &lt;TechnicalMessages&gt;
+    &lt;TechnicalMessage key="requestTime"&gt;
+      2025-06-16 12:28:27
+    &lt;/TechnicalMessage&gt;
+    &lt;TechnicalMessage key="backendInfo"&gt;
+      ttp=16601#16676 plancode0=72z27 planid=1749820065
+      planid0=1749820065 planid_adr=1746438686 plancode_adr=52iz0
+      planid_poi=1746518115 plancode_poi=538ad srvv=5.45.Rejseplanen
+      (customer/hcudk/release/2025.2.0.3) [2025-04-21]
+      tlibv=TRFVER: rel/dk/11.00.8 2025-02-10 16:37:34 +0100
+      Rejsekort v11.0.8 jno=1
+    &lt;/TechnicalMessage&gt;
+  &lt;/TechnicalMessages&gt;
+  &lt;StopLocation
+    id="A=1@O=Roskilde St. (togbus)@X=12088388@Y=55637826@U=86@L=8651617@"
+    extId="8651617"
+    name="Roskilde St. (togbus)"
+    lon="12.088388"
+    lat="55.637826"
+    weight="1563"
+    dist="10"
+    products="8"
+    minimumChangeDuration="PT5M"&gt;
+    ...
+  &lt;/StopLocation&gt;
+  &lt;StopLocation
+    id="A=1@O=Roskilde St. (togbus)@X=12088334@Y=55637799@U=86@L=8650617@"
+    extId="8650617"
+    name="Roskilde St. (togbus)"
+    lon="12.088334"
+    lat="55.637799"
+    weight="1563"
+    dist="13"
+    products="8"
+    minimumChangeDuration="PT5M"&gt;
+    ...
+  &lt;/StopLocation&gt;
+&lt;/LocationList&gt;
+</code></pre>
+<p>Find the stop you want in the list and use the <code>extId</code> attribute as your stop ID. In this example, you can see two stops: <code>8651617</code> and <code>8650617</code>.</p>
+<h2>Finding direction values</h2>
+<p>To filter by direction, you need the exact direction values available from your stop. These values come from the <code>direction</code> attribute in the API response.</p>
+<ol>
+<li><p>Open a web browser and visit the following URL:</p>
+<pre><code>https://www.rejseplanen.dk/api/departureBoard?id=&lt;YOUR_STOP_ID&gt;&amp;accessId=&lt;YOUR_API_KEY&gt;
+</code></pre>
+</li>
+<li><p>Replace <code>&lt;YOUR_STOP_ID&gt;</code> with your stop ID (see <a>Finding a stop ID</a>).</p>
+</li>
+<li><p>Replace <code>&lt;YOUR_API_KEY&gt;</code> with your Rejseplanen API key.</p>
+</li>
+<li><p>In the XML response, find the <code>direction</code> attribute on each <code>Departure</code> element. These are the available direction values for your stop.</p>
+</li>
+</ol>
+<h4>Example XML response</h4>
+<pre><code>&lt;DepartureBoard&gt;
+  &lt;Departure name="1A" type="BUS" direction="Nørrebro St." ... /&gt;
+  &lt;Departure name="2C" type="BUS" direction="Airport" ... /&gt;
+  &lt;Departure name="S" type="S" direction="København H" ... /&gt;
+&lt;/DepartureBoard&gt;
+</code></pre>
+<ol>
+<li>Use the exact text from the <code>direction</code> attribute in the direction filter. For example, to only show departures toward "Nørrebro St.", enter <code>Nørrebro St.</code> (case-sensitive).<ul>
+<li>After setup, the direction of the next departure is exposed through the <strong>Towards</strong> sensor.</li>
+</ul>
+</li>
+</ol>
+<h3>Departure types</h3>
+<p>You can filter a stop by the following departure types:</p>
+<ul>
+<li><strong>City buses</strong> (<code>bus</code>): Regular city bus services</li>
+<li><strong>Express buses</strong> (<code>express_bus</code>): Long-distance or high-speed bus services</li>
+<li><strong>Ferry</strong> (<code>ferry</code>): Ferry services</li>
+<li><strong>Flexible transport</strong> (<code>flexible_bus</code>): On-demand or flexible bus services</li>
+<li><strong>Flight</strong> (<code>flight</code>): Flights, where available</li>
+<li><strong>InterCity trains</strong> (<code>ic</code>): IC and IB long-distance trains</li>
+<li><strong>InterCity Lyn trains</strong> (<code>icl</code>): Fast trains (ICL, ICL-X, ICL+)</li>
+<li><strong>Light rail</strong> (<code>letbane</code>): Light rail or tram services (Letbanen)</li>
+<li><strong>Metro</strong> (<code>metro</code>): Metro or subway services</li>
+<li><strong>Night &amp; special buses</strong> (<code>night_bus</code>): Night bus and other special bus services</li>
+<li><strong>Regional trains</strong> (<code>re</code>): Regional trains (Re, RA, RX)</li>
+<li><strong>S-trains</strong> (<code>s_tog</code>): S-trains (Copenhagen suburban rail)</li>
+<li><strong>Long distance trains</strong> (<code>tog</code>): EC, IR, ICE, SJ, and other long-distance trains</li>
+</ul>
+<h2>Supported functionality</h2>
+<h3>Sensors</h3>
+<p>After you add a stop, the integration creates the following sensor entities, based on the next departure:</p>
+<ul>
+<li><strong>Line</strong> (<code>sensor.&lt;stop_name&gt;_line</code>): The line number or name of the next departure</li>
+<li><strong>Departing in</strong> (<code>sensor.&lt;stop_name&gt;_departing_in</code>): The timestamp of the next departure</li>
+<li><strong>Delayed by</strong> (<code>sensor.&lt;stop_name&gt;_delayed_by</code>): The number of minutes the departure is delayed, or 0 if it is on time</li>
+<li><strong>Towards</strong> (<code>sensor.&lt;stop_name&gt;_towards</code>): The destination or direction of the next departure</li>
+<li><strong>Departing from track</strong> (<code>sensor.&lt;stop_name&gt;_departing_from_track</code>): The track or platform number, if available</li>
+<li><strong>Number of departures</strong> (<code>sensor.&lt;stop_name&gt;_number_of_departures</code>): The number of upcoming departures that match your filters</li>
+</ul>
+<p>The sensors don't add extra state attributes.</p>
+<h2>Rejseplanen automation examples</h2>
+<p>The integration polls departure data every 5 minutes by default. You can use automations to update the sensors more often at specific times. Before you do, turn off automatic updates so the default polling doesn't run in addition to your automation (see <a>Data updates</a>).</p>
+<p>The integration fetches the departures for all your stops in a single request, so refreshing one sensor refreshes every stop. The examples below therefore update a single sensor.</p>
+<h3>Automation: More frequent updates during peak hours</h3>
+<p>This example updates the sensors every 2 minutes during the morning rush hour (7:00–9:00) and every minute during the last 5 minutes before a typical commute time.</p>
+<ul>
+<li><strong>Triggers</strong>:<ul>
+<li>Time pattern, every 2 minutes</li>
+<li>Time, at 08:55, 08:56, 08:57, 08:58, and 08:59</li>
+</ul>
+</li>
+<li><strong>Condition</strong>: Time, between 07:00 and 09:00</li>
+<li><strong>Action</strong>: Home Assistant Core Integration: Update entity</li>
+</ul>
+<h4>YAML example: more frequent updates during peak hours</h4>
+<pre><code>automation:
+  - alias: "Peak hour frequent departure updates"
+    triggers:
+      - trigger: time_pattern
+        minutes: "/2"
+      - trigger: time
+        at:
+          - "08:55:00"
+          - "08:56:00"
+          - "08:57:00"
+          - "08:58:00"
+          - "08:59:00"
+    conditions:
+      - condition: time
+        after: "07:00:00"
+        before: "09:00:00"
+    actions:
+      - action: homeassistant.update_entity
+        data:
+          entity_id:
+            - sensor.my_station_departing_in
+</code></pre>
+<h3>Automation: Update on demand with a button</h3>
+<p>This example refreshes the departure data whenever you press a dashboard button. The button is an input button helper that you create separately under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>. This example uses a helper with the entity ID <code>input_button.refresh_departures</code>.</p>
+<ul>
+<li><strong>Trigger</strong>: The dashboard button is pressed</li>
+<li><strong>Action</strong>: Home Assistant Core Integration: Update entity</li>
+</ul>
+<h4>YAML example: update on demand with a button</h4>
+<pre><code>automation:
+  - alias: "Refresh departures on button press"
+    triggers:
+      - trigger: state
+        entity_id: input_button.refresh_departures
+    actions:
+      - action: homeassistant.update_entity
+        data:
+          entity_id:
+            - sensor.my_station_departing_in
+</code></pre>
+<p><strong>Important</strong></p>
+<p>Be mindful of the API rate limit (50,000 calls per month for private keys). Frequent updates can quickly use up your allocation. Monitor your usage and adjust your intervals.
+Each data update uses one API call, regardless of the number of configured stops.</p>
+<h2>Data updates</h2>
+<p>The integration polling polls departure data from the Rejseplanen API every 5 minutes by default.</p>
+<p>To manage polling yourself, for example to update sensors at different frequencies during the day, turn off automatic updates first. Otherwise, the default 5-minute polling continues in addition to your own updates and uses more of your monthly API quota:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>Rejseplanen</strong>.</li>
+<li>Next to the integration entry, select the three dots  menu, then <strong>System options</strong>.</li>
+<li>Turn off <strong>Enable polling for changes</strong>.</li>
+</ol>
+<p>For more on updating entities on your own schedule, see <a>defining a custom polling interval</a>.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The sensor entities show only the next departure. The full list of upcoming departures with all their details isn't available. To see how many upcoming departures match your filters, check the <strong>Number of departures</strong> sensor.</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/rejseplanen.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate timetable data for Danish Rejseplanen within Home Assistant.
+ha_release: 0.88
+ha_domain: rejseplanen
+related:
+  - url: https://labs.rejseplanen.dk/hc/en-us/articles/21553113674909-Adgang-til-data-fra-Labs
+    title: Rejseplanen Labs
+---
+
+The **Rejseplanen** {% term integration %} provides you with travel details for Danish public transport, using timetable data from [Rejseplanen](https://www.rejseplanen.dk/).
+
+When you set it up, the integration connects to the Rejseplanen cloud API with your API key. You then add one device per stop that you want to monitor, and each stop device provides sensor entities for the next departure.
+
+{% important %}
+Extra attributes that were previously available on the sensors have been removed to conform to Home Assistant standards.
+{% endimportant %}
+
+## Prerequisites
+
+To use this integration, you need a Rejseplanen API key:
+
+1. Visit the [Rejseplanen API request form](https://labs.rejseplanen.dk/hc/da/requests/new).
+2. Select **Private user** when applying.
+3. Fill out the form and submit your request.
+4. You&#x27;ll receive your API key by email.
+
+Private API keys allow up to 50,000 API calls per month, which is enough to monitor multiple stops with regular polling.
+
+{% include integrations/config_flow.md %}
+
+During setup, you&#x27;re asked for the following:
+
+{% configuration_basic %}
+API key:
+  description: The API key provided by Rejseplanen.dk. It authenticates all API requests and determines your access level and rate limits.
+{% endconfiguration_basic %}
+
+{% note %}
+Rejseplanen supports a single integration entry. To use a different API key, remove the integration and set it up again.
+{% endnote %}
+
+## Migrating from YAML configuration
+
+If you previously configured Rejseplanen through {% term &quot;`configuration.yaml`&quot; %}, it can&#x27;t be imported automatically. Rejseplanen now requires an API key, which the YAML configuration didn&#x27;t provide.
+
+1. Set up the integration through the UI to provide your API key, then [add a stop](#adding-a-stop) for each location you want to monitor.
+2. Remove the `rejseplanen` entry under `sensor:` from your {% term &quot;`configuration.yaml`&quot; %} file.
+3. [Restart Home Assistant](/docs/configuration/#reloading-the-configuration-to-apply-changes) to apply the change.
+
+A repair issue under {% my repairs title=&quot;**Settings** &gt; **System** &gt; **Repairs**&quot; %} reminds you to remove the YAML configuration.
+
+## Adding a stop
+
+Each stop you want to monitor is added as a separate device. After you set up the integration with your API key, add one stop for each location you want to track:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **Rejseplanen**.
+2. Select **Add stop**.
+3. Enter the details for the stop. Only the stop ID is required. The options are described after these steps.
+4. Select **Submit**.
+   - Result: The integration immediately starts monitoring the stop and creates sensor entities for the next departure.
+
+When you add a stop, you&#x27;re asked for the following:
+
+{% configuration_basic %}
+Stop ID:
+  description: The unique identifier for the stop or station you want to monitor. See [Finding a stop ID](#finding-a-stop-id) for how to obtain this value.
+Name:
+  description: An optional name for this stop. The name is used in the device and entity names. It defaults to **Unknown stop**, so give each stop its own name to keep your devices and entities easy to tell apart.
+Direction:
+  description: An optional filter that only shows departures toward a specific destination. Leave it empty to show all departures. You can add multiple directions, and each value must match exactly what the Rejseplanen API returns (case-sensitive). See [Finding direction values](#finding-direction-values).
+Departure type:
+  description: An optional filter that only shows specific types of departures, such as S-trains, buses, or metro. You can select multiple types. Leave it empty to show all departure types available at the stop. See [Departure types](#departure-types) for all options.
+{% endconfiguration_basic %}
+
+## Finding a stop ID
+
+The stop ID is a unique identifier for each public transport stop or station. You can find it using either a text search or coordinates.
+
+### To search by name or location
+
+1. Open a web browser and visit the following URL:
+
+   ```text
+   https://www.rejseplanen.dk/api/location.name?input=&lt;search_term&gt;&amp;accessId=&lt;YOUR_API_KEY&gt;
+   ```
+
+2. Replace `&lt;search_term&gt;` with the name of your stop (for example, &quot;Roskilde St.&quot; or &quot;Copenhagen Airport&quot;).
+3. Replace `&lt;YOUR_API_KEY&gt;` with your Rejseplanen API key.
+4. Look for your stop in the XML response and find the `extId` attribute. This is your stop ID.
+
+#### Example search for &quot;Roskilde St.&quot;
+
+```text
+https://www.rejseplanen.dk/api/location.name?input=Roskilde%20St.&amp;accessId=YOUR_API_KEY
+```
+
+The response includes stops matching your search. In this example, the stop ID is `8600617`. You can see it in the `extId` attribute of the `StopLocation` element.
+
+{% details &quot;Example XML response&quot; %}
+
+```xml
+&lt;LocationList
+  xmlns=&quot;http://hacon.de/hafas/proxy/hafas-proxy&quot;
+  serverVersion=&quot;2.49.1&quot;
+  dialectVersion=&quot;2.45-Rejseplanen&quot;
+  requestId=&quot;r2gm7s2iiist82wg&quot;&gt;
+  &lt;TechnicalMessages&gt;
+    &lt;TechnicalMessage key=&quot;requestTime&quot;&gt;
+      2025-06-16 11:53:58
+    &lt;/TechnicalMessage&gt;
+    &lt;TechnicalMessage key=&quot;backendInfo&quot;&gt;
+      ttp=16601#16676 plancode0=72z27 planid=1749820065
+      planid0=1749820065 planid_adr=1746438686 plancode_adr=52iz0
+      planid_poi=1746518115 plancode_poi=538ad
+      srvv=5.45.Rejseplanen.17.3.12 (customer/hcudk/release/2025.2.0.3)
+      [2025-04-21] tlibv=TRFVER: rel/dk/11.00.8 2025-02-10 16:37:34
+      +0100 Rejsekort v11.0.8 jno=1
+    &lt;/TechnicalMessage&gt;
+  &lt;/TechnicalMessages&gt;
+  &lt;StopLocation
+    id=&quot;A=1@O=Roskilde St.@X=12088550@Y=55639093@U=86@L=8600617@...&quot;
+    extId=&quot;8600617&quot;
+    isMainMast=&quot;true&quot;
+    name=&quot;Roskilde St.&quot;
+    lon=&quot;12.08855&quot;
+    lat=&quot;55.639093&quot;
+    weight=&quot;22212&quot;
+    products=&quot;239&quot;
+    minimumChangeDuration=&quot;PT5M&quot;&gt;
+    ...
+  &lt;/StopLocation&gt;
+  ...
+&lt;/LocationList&gt;
+```
+
+{% enddetails %}
+
+### To search by coordinates
+
+1. Find your location on [OpenStreetMap](https://www.openstreetmap.org).
+2. The URL shows the coordinates (for example: `#map=18/56.15756/10.20674`).
+3. Visit the following URL:
+
+   ```text
+   https://www.rejseplanen.dk/api/location.nearbystops?originCoordLong=&lt;longitude&gt;&amp;originCoordLat=&lt;latitude&gt;&amp;maxNo=10&amp;accessId=&lt;YOUR_API_KEY&gt;
+   ```
+
+4. Replace the coordinates and API key with your values.
+5. The response shows the 10 nearest stops to your location. Find the one you want and use its `extId` as the stop ID.
+
+#### Example search for nearby stops in Roskilde
+
+```text
+https://www.rejseplanen.dk/api/location.nearbystops?originCoordLong=12.088367&amp;originCoordLat=55.637912&amp;maxNo=10&amp;accessId=YOUR_API_KEY
+```
+
+Result:
+
+{% details &quot;Example XML response&quot; %}
+
+```xml
+&lt;LocationList
+  xmlns=&quot;http://hacon.de/hafas/proxy/hafas-proxy&quot;
+  serverVersion=&quot;2.49.1&quot;
+  dialectVersion=&quot;2.45-Rejseplanen&quot;
+  requestId=&quot;m54u7sm8gq4pww8x&quot;&gt;
+  &lt;TechnicalMessages&gt;
+    &lt;TechnicalMessage key=&quot;requestTime&quot;&gt;
+      2025-06-16 12:28:27
+    &lt;/TechnicalMessage&gt;
+    &lt;TechnicalMessage key=&quot;backendInfo&quot;&gt;
+      ttp=16601#16676 plancode0=72z27 planid=1749820065
+      planid0=1749820065 planid_adr=1746438686 plancode_adr=52iz0
+      planid_poi=1746518115 plancode_poi=538ad srvv=5.45.Rejseplanen
+      (customer/hcudk/release/2025.2.0.3) [2025-04-21]
+      tlibv=TRFVER: rel/dk/11.00.8 2025-02-10 16:37:34 +0100
+      Rejsekort v11.0.8 jno=1
+    &lt;/TechnicalMessage&gt;
+  &lt;/TechnicalMessages&gt;
+  &lt;StopLocation
+    id=&quot;A=1@O=Roskilde St. (togbus)@X=12088388@Y=55637826@U=86@L=8651617@&quot;
+    extId=&quot;8651617&quot;
+    name=&quot;Roskilde St. (togbus)&quot;
+    lon=&quot;12.088388&quot;
+    lat=&quot;55.637826&quot;
+    weight=&quot;1563&quot;
+    dist=&quot;10&quot;
+    products=&quot;8&quot;
+    minimumChangeDuration=&quot;PT5M&quot;&gt;
+    ...
+  &lt;/StopLocation&gt;
+  &lt;StopLocation
+    id=&quot;A=1@O=Roskilde St. (togbus)@X=12088334@Y=55637799@U=86@L=8650617@&quot;
+    extId=&quot;8650617&quot;
+    name=&quot;Roskilde St. (togbus)&quot;
+    lon=&quot;12.088334&quot;
+    lat=&quot;55.637799&quot;
+    weight=&quot;1563&quot;
+    dist=&quot;13&quot;
+    products=&quot;8&quot;
+    minimumChangeDuration=&quot;PT5M&quot;&gt;
+    ...
+  &lt;/StopLocation&gt;
+&lt;/LocationList&gt;
+```
+
+{% enddetails %}
+
+Find the stop you want in the list and use the `extId` attribute as your stop ID. In this example, you can see two stops: `8651617` and `8650617`.
+
+## Finding direction values
+
+To filter by direction, you need the exact direction values available from your stop. These values come from the `direction` attribute in the API response.
+
+1. Open a web browser and visit the following URL:
+
+   ```text
+   https://www.rejseplanen.dk/api/departureBoard?id=&lt;YOUR_STOP_ID&gt;&amp;accessId=&lt;YOUR_API_KEY&gt;
+   ```
+
+2. Replace `&lt;YOUR_STOP_ID&gt;` with your stop ID (see [Finding a stop ID](#finding-a-stop-id)).
+3. Replace `&lt;YOUR_API_KEY&gt;` with your Rejseplanen API key.
+4. In the XML response, find the `direction` attribute on each `Departure` element. These are the available direction values for your stop.
+
+   {% details &quot;Example XML response&quot; %}
+
+   ```xml
+   &lt;DepartureBoard&gt;
+     &lt;Departure name=&quot;1A&quot; type=&quot;BUS&quot; direction=&quot;Nørrebro St.&quot; ... /&gt;
+     &lt;Departure name=&quot;2C&quot; type=&quot;BUS&quot; direction=&quot;Airport&quot; ... /&gt;
+     &lt;Departure name=&quot;S&quot; type=&quot;S&quot; direction=&quot;København H&quot; ... /&gt;
+   &lt;/DepartureBoard&gt;
+   ```
+
+   {% enddetails %}
+
+5. Use the exact text from the `direction` attribute in the direction filter. For example, to only show departures toward &quot;Nørrebro St.&quot;, enter `Nørrebro St.` (case-sensitive).
+   - After setup, the direction of the next departure is exposed through the **Towards** sensor.
+
+### Departure types
+
+You can filter a stop by the following departure types:
+
+- **City buses** (`bus`): Regular city bus services
+- **Express buses** (`express_bus`): Long-distance or high-speed bus services
+- **Ferry** (`ferry`): Ferry services
+- **Flexible transport** (`flexible_bus`): On-demand or flexible bus services
+- **Flight** (`flight`): Flights, where available
+- **InterCity trains** (`ic`): IC and IB long-distance trains
+- **InterCity Lyn trains** (`icl`): Fast trains (ICL, ICL-X, ICL+)
+- **Light rail** (`letbane`): Light rail or tram services (Letbanen)
+- **Metro** (`metro`): Metro or subway services
+- **Night &amp; special buses** (`night_bus`): Night bus and other special bus services
+- **Regional trains** (`re`): Regional trains (Re, RA, RX)
+- **S-trains** (`s_tog`): S-trains (Copenhagen suburban rail)
+- **Long distance trains** (`tog`): EC, IR, ICE, SJ, and other long-distance trains
+
+## Supported functionality
+
+### Sensors
+
+After you add a stop, the integration creates the following sensor entities, based on the next departure:
+
+- **Line** (`sensor.&lt;stop_name&gt;_line`): The line number or name of the next departure
+- **Departing in** (`sensor.&lt;stop_name&gt;_departing_in`): The timestamp of the next departure
+- **Delayed by** (`sensor.&lt;stop_name&gt;_delayed_by`): The number of minutes the departure is delayed, or 0 if it is on time
+- **Towards** (`sensor.&lt;stop_name&gt;_towards`): The destination or direction of the next departure
+- **Departing from track** (`sensor.&lt;stop_name&gt;_departing_from_track`): The track or platform number, if available
+- **Number of departures** (`sensor.&lt;stop_name&gt;_number_of_departures`): The number of upcoming departures that match your filters
+
+The sensors don&#x27;t add extra state attributes.
+
+## Rejseplanen automation examples
+
+The integration polls departure data every 5 minutes by default. You can use automations to update the sensors more often at specific times. Before you do, turn off automatic updates so the default polling doesn&#x27;t run in addition to your automation (see [Data updates](#data-updates)).
+
+The integration fetches the departures for all your stops in a single request, so refreshing one sensor refreshes every stop. The examples below therefore update a single sensor.
+
+### Automation: More frequent updates during peak hours
+
+This example updates the sensors every 2 minutes during the morning rush hour (7:00–9:00) and every minute during the last 5 minutes before a typical commute time.
+
+- **Triggers**:
+  - Time pattern, every 2 minutes
+  - Time, at 08:55, 08:56, 08:57, 08:58, and 08:59
+- **Condition**: Time, between 07:00 and 09:00
+- **Action**: Home Assistant Core Integration: Update entity
+
+{% details &quot;YAML example: more frequent updates during peak hours&quot; %}
+
+```yaml
+automation:
+  - alias: &quot;Peak hour frequent departure updates&quot;
+    triggers:
+      - trigger: time_pattern
+        minutes: &quot;/2&quot;
+      - trigger: time
+        at:
+          - &quot;08:55:00&quot;
+          - &quot;08:56:00&quot;
+          - &quot;08:57:00&quot;
+          - &quot;08:58:00&quot;
+          - &quot;08:59:00&quot;
+    conditions:
+      - condition: time
+        after: &quot;07:00:00&quot;
+        before: &quot;09:00:00&quot;
+    actions:
+      - action: homeassistant.update_entity
+        data:
+          entity_id:
+            - sensor.my_station_departing_in
+```
+
+{% enddetails %}
+
+### Automation: Update on demand with a button
+
+This example refreshes the departure data whenever you press a dashboard button. The button is an input button {% term helper %} that you create separately under {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}. This example uses a helper with the entity ID `input_button.refresh_departures`.
+
+- **Trigger**: The dashboard button is pressed
+- **Action**: Home Assistant Core Integration: Update entity
+
+{% details &quot;YAML example: update on demand with a button&quot; %}
+
+```yaml
+automation:
+  - alias: &quot;Refresh departures on button press&quot;
+    triggers:
+      - trigger: state
+        entity_id: input_button.refresh_departures
+    actions:
+      - action: homeassistant.update_entity
+        data:
+          entity_id:
+            - sensor.my_station_departing_in
+```
+
+{% enddetails %}
+
+{% important %}
+Be mindful of the API rate limit (50,000 calls per month for private keys). Frequent updates can quickly use up your allocation. Monitor your usage and adjust your intervals.
+Each data update uses one API call, regardless of the number of configured stops.
+{% endimportant %}
+
+## Data updates
+
+The integration {% term polling polls %} departure data from the Rejseplanen API every 5 minutes by default.
+
+To manage polling yourself, for example to update sensors at different frequencies during the day, turn off automatic updates first. Otherwise, the default 5-minute polling continues in addition to your own updates and uses more of your monthly API quota:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **Rejseplanen**.
+2. Next to the integration entry, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu, then **System options**.
+3. Turn off **Enable polling for changes**.
+
+For more on updating entities on your own schedule, see [defining a custom polling interval](/common-tasks/general/#defining-a-custom-polling-interval).
+
+## Known limitations
+
+- The sensor entities show only the next departure. The full list of upcoming departures with all their details isn&#x27;t available. To see how many upcoming departures match your filters, check the **Number of departures** sensor.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Rejseplanen.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Migrating from YAML configuration</li><li>Adding a stop</li><li>Finding a stop ID</li><li>Finding direction values</li><li>Supported functionality</li><li>Rejseplanen automation examples</li><li>Data updates</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/rejseplanen/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/rejseplanen</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/rejseplanen</code></dd></dl></section><p><a href="../../integrations/rejseplanen/">Return to the Rejseplanen guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

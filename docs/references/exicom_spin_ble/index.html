@@ -1,1 +1,689 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spin EV Charger reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:7" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/exicom_spin_ble/">Spin EV Charger guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Spin EV Charger</h1><p>Instructions on how to integrate Exicom Spin EV chargers over Bluetooth Low Energy with Home Assistant.</p><section><h2>Overview</h2><p>The Spin EV Charger integration connects Home Assistant to Exicom Spin EV chargers over Bluetooth Low Energy.</p></section><section><h2>Use cases</h2><p>The Spin EV Charger integration is useful in scenarios like the following:</p></section><section><h2>Supported devices</h2><p>The following device has been verified to work with this integration:</p></section><section><h2>Prerequisites</h2><p>Home Assistant discovers chargers that are in range and advertising. If your charger is not offered automatically, add the integration manually and pick it from the list of discovered devices. Setup connects to the charger and reads a value from it, so a charger that is out of range or already claimed by another client cannot be added.</p></section><section><h2>Configuration options</h2><p>Changing this option reloads the integration.</p></section><section><h2>Sensors</h2><p>The integration creates the following sensors:</p></section><section><h2>Spin EV Charger automation examples</h2><p>The integration talks to the charger locally, so automations that read or control the charger keep working without an internet connection. Here are a few ideas to get you started.</p></section><section><h2>Automation: Charge during off-peak hours</h2><p>If your electricity tariff is cheaper at night, you can leave the vehicle plugged in and start charging when the off-peak period begins.</p></section><section><h2>Automation: Get notified when the charger reports a problem</h2><p>The Problem binary sensor turns on when the charger reports an alarm, such as a mains fault. A notification lets you check on the charger before you need the vehicle.</p></section><section><h2>Automation: Get notified when a charging session ends</h2><p>When the charging session closes, a notification tells you how much energy the session delivered.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Spin EV Charger.</p><p>The <strong>user</strong> configuration step lists <code>address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>Spin EV Charger automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/exicom_spin_ble/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/exicom_spin_ble</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/exicom_spin_ble</code></dd></dl></section><p><a href="../../integrations/exicom_spin_ble/">Return to the Spin EV Charger guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spin EV Charger reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:7" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/exicom_spin_ble/">Spin EV Charger guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Spin EV Charger</h1><p>Instructions on how to integrate Exicom Spin EV chargers over Bluetooth Low Energy with Home Assistant.</p><div class="reader-body"><p>The <strong>Spin EV Charger</strong> integration connects Home Assistant to <a>Exicom</a> Spin EV chargers over Bluetooth Low Energy.</p>
+<p>The charger is read directly through Home Assistant's <a href="../bluetooth/">Bluetooth</a> stack. There is no cloud service and no vendor account involved.</p>
+<p>Use it to track the energy your vehicle uses in the <a>Energy dashboard</a>, start and stop charging from automations, for example to charge during off-peak hours, and get notified when the charger reports a problem.</p>
+<h2>Use cases</h2>
+<p>The Spin EV Charger integration is useful in scenarios like the following:</p>
+<ul>
+<li>Track how much energy each charging session uses and add the charger to the <a>Energy dashboard</a> to see what EV charging costs over time.</li>
+<li>Start charging when your off-peak tariff begins, and stop it before the peak tariff starts.</li>
+<li>Pause charging while other large loads, such as an oven or a heat pump, are running, to stay below the limit of your electrical service.</li>
+<li>Get a notification when your vehicle is plugged in, when a charging session ends, or when the charger reports a problem.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The following device has been verified to work with this integration:</p>
+<ul>
+<li>Exicom Spin AC wall charger</li>
+</ul>
+<p>The charger advertises its serial number as its Bluetooth name, in the form <code>123456789012_ab12</code>. Some units advertise it with a leading space, which Home Assistant ignores when matching.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Bluetooth adapter or an <a>ESPHome Bluetooth proxy</a> in range of the charger. The proxy must have active connections enabled, because the charger is read over a GATT connection rather than from its advertisements.</li>
+<li>No other Bluetooth client connected to the charger during setup. The charger accepts <strong>one Bluetooth client at a time</strong>, so close the vendor phone app before adding the integration.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Spin EV Charger</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Spin EV Charger</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Home Assistant discovers chargers that are in range and advertising. If your charger is not offered automatically, add the integration manually and pick it from the list of discovered devices. Setup connects to the charger and reads a value from it, so a charger that is out of range or already claimed by another client cannot be added.</p>
+<h2>Configuration options</h2>
+<pre><code>
+Bluetooth connection:
+  description: "How the integration uses the charger's single Bluetooth slot. **Reconnect each poll** (the default) gives the slot up between polls, which leaves the vendor phone app usable. **Stay connected** holds the slot for Home Assistant, which makes polling faster and less prone to failure, but locks every other client out of the charger, the phone app included."
+
+</code></pre>
+<p>Changing this option reloads the integration.</p>
+<h2>Supported functionality</h2>
+<h3>Sensors</h3>
+<p>The integration creates the following sensors:</p>
+<ul>
+<li><strong>State</strong>: What the charger is doing. One of <em>Available</em>, <em>Starting up</em>, <em>Starting</em>, <em>Charging</em>, <em>Paused by vehicle</em>, <em>Paused by charger</em>, <em>Finishing</em>, <em>Idle</em>, <em>Fault</em>, or <em>Out of service</em>.</li>
+<li><strong>Power</strong>: Power currently being delivered, in watts (W).</li>
+<li><strong>Current</strong>: Current currently being delivered, in amperes (A).</li>
+<li><strong>Session energy</strong>: Energy delivered during the current or most recent charging session, in kilowatt-hours (kWh). This value resets when a new session starts.</li>
+<li><strong>Lifetime energy</strong>: Total energy the charger has delivered over its life, in kilowatt-hours (kWh). Use this sensor when adding the charger to the <a>Energy dashboard</a>.</li>
+</ul>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Plug</strong>: On while a vehicle is plugged in. The charger cannot tell while it is starting up or out of service, so the sensor is off then.</li>
+<li><strong>Problem</strong>: On while the charger reports at least one active alarm, such as a mains fault or an open earth wire.</li>
+</ul>
+<h3>Switches</h3>
+<ul>
+<li><strong>Charging</strong>: Starts and stops a charging session. The switch is on while a session is open, including while it is paused by the vehicle or by the charger, since a paused session resumes without a command. A vehicle must be plugged in for charging to start.</li>
+</ul>
+<h2>Spin EV Charger automation examples</h2>
+<p>The integration talks to the charger locally, so automations that read or control the charger keep working without an internet connection. Here are a few ideas to get you started.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: Charge during off-peak hours</h3>
+<p>If your electricity tariff is cheaper at night, you can leave the vehicle plugged in and start charging when the off-peak period begins.</p>
+<ul>
+<li><strong>Trigger</strong>: Time: 22:00</li>
+<li><strong>Condition</strong>: State: The <strong>Plug</strong> binary sensor is on<ul>
+<li><strong>Entity</strong>: Plug sensor of the charger (<code>binary_sensor.ev_charger_plug</code>)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Turn on switch<ul>
+<li><strong>Target</strong>: Charging switch of the charger (<code>switch.ev_charger_charging</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for charging during off-peak hours</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Start EV charging at off-peak hours"
+triggers:
+- trigger: time
+at: "22:00:00"
+conditions:
+- condition: state
+entity_id: binary_sensor.ev_charger_plug
+state: "on"
+actions:
+- action: switch.turn_on
+target:
+entity_id: switch.ev_charger_charging</p>
+<h3>Automation: Get notified when the charger reports a problem</h3>
+<p>The <strong>Problem</strong> binary sensor turns on when the charger reports an alarm, such as a mains fault. A notification lets you check on the charger before you need the vehicle.</p>
+<ul>
+<li><strong>Trigger</strong>: State: The <strong>Problem</strong> binary sensor turns on<ul>
+<li><strong>Entity</strong>: Problem sensor of the charger (<code>binary_sensor.ev_charger_problem</code>)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: Your notification entity (<code>notify.my_device</code>)</li>
+<li><strong>Message</strong>: <code>The EV charger reports a problem.</code></li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a problem notification</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when the EV charger reports a problem"
+triggers:
+- trigger: state
+entity_id: binary_sensor.ev_charger_problem
+to: "on"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "The EV charger reports a problem."</p>
+<h3>Automation: Get notified when a charging session ends</h3>
+<p>When the charging session closes, a notification tells you how much energy the session delivered.</p>
+<ul>
+<li><strong>Trigger</strong>: State: The <strong>Charging</strong> switch turns off<ul>
+<li><strong>Entity</strong>: Charging switch of the charger (<code>switch.ev_charger_charging</code>)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message with the <strong>Session energy</strong> sensor value<ul>
+<li><strong>Target</strong>: Your notification entity (<code>notify.my_device</code>)</li>
+<li><strong>Message</strong>: <code>Charging finished after {{ states('sensor.ev_charger_session_energy') }} kWh.</code></li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a session summary notification</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when EV charging ends"
+triggers:
+- trigger: state
+entity_id: switch.ev_charger_charging
+from: "on"
+to: "off"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: &gt;
+Charging finished after
+{{ states('sensor.ev_charger_session_energy') }} kWh.</p>
+<h2>Data updates</h2>
+<p>The integration polling polls the charger over Bluetooth. The interval follows what the charger is doing:</p>
+<ul>
+<li>Every 60 seconds while a charging session is open, which includes sessions paused by the vehicle or by the charger, since those can resume without a command.</li>
+<li>Every 5 minutes otherwise, so that a slot handed back between polls leaves the phone app long uncontested stretches.</li>
+</ul>
+<p>The charger is also read again about 2 seconds after a command, once it has had time to report the new state. The interval is not configurable. Entities become unavailable when the charger cannot be reached, for example when it is out of range or another Bluetooth client holds its slot.</p>
+<h2>Known limitations</h2>
+<h3>Bluetooth connections</h3>
+<ul>
+<li>The charger accepts only <strong>one Bluetooth client at a time</strong>. While Home Assistant is talking to it, the vendor phone app cannot connect, and vice versa. Which side wins in between polls is what the <strong>Bluetooth connection</strong> option decides.</li>
+<li>Each charger needs a free active connection slot on the Bluetooth adapter or proxy that reaches it. A charger set to <strong>Reconnect each poll</strong> only uses a slot while it is being read, while a charger set to <strong>Stay connected</strong> occupies one for as long as it is configured.</li>
+</ul>
+<h3>Charger control</h3>
+<ul>
+<li>Setting the charging current is not supported.</li>
+<li>The charger refuses to start charging with no vehicle plugged in, and refuses to stop when no session is open. The charger does not say why it refused, so Home Assistant shows the same error for every refusal.</li>
+<li>A command needs the charger's Bluetooth slot, the same as a poll. While the vendor phone app holds the slot, commands fail.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>No charger is found during setup</h4>
+<h3>Symptom: "No Spin EV charger was found over Bluetooth"</h3>
+<p>Setup reports that no charger was found.</p>
+<h4>Resolution</h4>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Check that the charger is powered on.</li>
+<li>Close the vendor phone app, and stop any other tool that may be connected to the charger.</li>
+<li>Confirm the charger appears in <strong>Settings</strong> &gt; <strong>Connectivity</strong> &gt; <strong>Bluetooth</strong> &gt; <strong>Advertisement monitor</strong>, with a name in the form <code>123456789012_ab12</code>.</li>
+<li>Move an ESPHome Bluetooth proxy closer to the charger, or place a local Bluetooth adapter near it.</li>
+<li>Make sure the proxy has active connections enabled. A passive-only adapter can see the charger advertise but cannot read from it.</li>
+</ol>
+<h4>The charger cannot be connected to</h4>
+<h3>Symptom: "Failed to connect"</h3>
+<p>Setup finds the charger but fails to read from it.</p>
+<h4>Description</h4>
+<p>Another Bluetooth client already holds the charger's single slot, or the charger is at the edge of range.</p>
+<h4>Resolution</h4>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Close the vendor phone app and try again.</li>
+<li>Check <strong>Settings</strong> &gt; <strong>Connectivity</strong> &gt; <strong>Bluetooth</strong> &gt; <strong>Connection monitor</strong> and confirm the adapter or proxy has a free active connection slot.</li>
+<li>Move the charger, the proxy, or the adapter so they are closer together.</li>
+</ol>
+<h4>The charger refuses to start or stop charging</h4>
+<h3>Symptom: "The charger refused the command"</h3>
+<p>Turning the <strong>Charging</strong> switch on or off reports that the charger refused the command.</p>
+<h4>Resolution</h4>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>To start charging, check that the vehicle is plugged in and that the <strong>State</strong> sensor does not show <em>Starting up</em>.</li>
+<li>To stop charging, check that the <strong>State</strong> sensor shows a session in progress. If no session is open, there is nothing to stop.</li>
+</ol>
+<h4>The sensors become unavailable</h4>
+<h3>Symptom: All charger sensors show as unavailable</h3>
+<p>The charger was set up successfully, but its sensors later become unavailable.</p>
+<h4>Resolution</h4>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Check whether the vendor phone app, or another client, is connected to the charger. It is holding the slot that Home Assistant needs.</li>
+<li>Verify that the adapter or proxy that reaches the charger still has free active connection slots.</li>
+<li>If the charger is reached through a proxy at the edge of its range, move the proxy closer, or prefer an Ethernet-connected proxy.</li>
+<li>Set the <strong>Bluetooth connection</strong> option to <strong>Stay connected</strong>, which keeps the slot claimed rather than competing for it at every poll.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/exicom_spin_ble.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Exicom Spin EV chargers over Bluetooth Low Energy with Home Assistant.
+ha_release: &quot;2026.11&quot;
+ha_domain: exicom_spin_ble
+---
+
+The **Spin EV Charger** {% term integration %} connects Home Assistant to [Exicom](https://www.exicom.in/) Spin EV chargers over Bluetooth Low Energy.
+
+The charger is read directly through Home Assistant&#x27;s [Bluetooth](/integrations/bluetooth) stack. There is no cloud service and no vendor account involved.
+
+Use it to track the energy your vehicle uses in the [Energy dashboard](/home-energy-management), start and stop charging from automations, for example to charge during off-peak hours, and get notified when the charger reports a problem.
+
+## Use cases
+
+The Spin EV Charger integration is useful in scenarios like the following:
+
+- Track how much energy each charging session uses and add the charger to the [Energy dashboard](/home-energy-management) to see what EV charging costs over time.
+- Start charging when your off-peak tariff begins, and stop it before the peak tariff starts.
+- Pause charging while other large loads, such as an oven or a heat pump, are running, to stay below the limit of your electrical service.
+- Get a notification when your vehicle is plugged in, when a charging session ends, or when the charger reports a problem.
+
+## Supported devices
+
+The following device has been verified to work with this integration:
+
+- Exicom Spin AC wall charger
+
+The charger advertises its serial number as its Bluetooth name, in the form `123456789012_ab12`. Some units advertise it with a leading space, which Home Assistant ignores when matching.
+
+## Prerequisites
+
+- A Bluetooth adapter or an [ESPHome Bluetooth proxy](https://esphome.io/projects/?type=bluetooth) in range of the charger. The proxy must have active connections enabled, because the charger is read over a GATT connection rather than from its advertisements.
+- No other Bluetooth client connected to the charger during setup. The charger accepts **one Bluetooth client at a time**, so close the vendor phone app before adding the integration.
+
+{% include integrations/config_flow.md %}
+
+Home Assistant discovers chargers that are in range and advertising. If your charger is not offered automatically, add the integration manually and pick it from the list of discovered devices. Setup connects to the charger and reads a value from it, so a charger that is out of range or already claimed by another client cannot be added.
+
+## Configuration options
+
+{% configuration_basic %}
+Bluetooth connection:
+  description: &quot;How the integration uses the charger&#x27;s single Bluetooth slot. **Reconnect each poll** (the default) gives the slot up between polls, which leaves the vendor phone app usable. **Stay connected** holds the slot for Home Assistant, which makes polling faster and less prone to failure, but locks every other client out of the charger, the phone app included.&quot;
+{% endconfiguration_basic %}
+
+Changing this option reloads the integration.
+
+## Supported functionality
+
+### Sensors
+
+The integration creates the following sensors:
+
+- **State**: What the charger is doing. One of *Available*, *Starting up*, *Starting*, *Charging*, *Paused by vehicle*, *Paused by charger*, *Finishing*, *Idle*, *Fault*, or *Out of service*.
+- **Power**: Power currently being delivered, in watts (W).
+- **Current**: Current currently being delivered, in amperes (A).
+- **Session energy**: Energy delivered during the current or most recent charging session, in kilowatt-hours (kWh). This value resets when a new session starts.
+- **Lifetime energy**: Total energy the charger has delivered over its life, in kilowatt-hours (kWh). Use this sensor when adding the charger to the [Energy dashboard](/home-energy-management).
+
+### Binary sensors
+
+- **Plug**: On while a vehicle is plugged in. The charger cannot tell while it is starting up or out of service, so the sensor is off then.
+- **Problem**: On while the charger reports at least one active alarm, such as a mains fault or an open earth wire.
+
+### Switches
+
+- **Charging**: Starts and stops a charging session. The switch is on while a session is open, including while it is paused by the vehicle or by the charger, since a paused session resumes without a command. A vehicle must be plugged in for charging to start.
+
+## Spin EV Charger automation examples
+
+The integration talks to the charger locally, so automations that read or control the charger keep working without an internet connection. Here are a few ideas to get you started.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: Charge during off-peak hours
+
+If your electricity tariff is cheaper at night, you can leave the vehicle plugged in and start charging when the off-peak period begins.
+
+- **Trigger**: Time: 22:00
+- **Condition**: State: The **Plug** binary sensor is on
+  - **Entity**: Plug sensor of the charger (`binary_sensor.ev_charger_plug`)
+- **Action**: Turn on switch
+  - **Target**: Charging switch of the charger (`switch.ev_charger_charging`)
+
+{% details &quot;YAML example for charging during off-peak hours&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Start EV charging at off-peak hours&quot;
+  triggers:
+    - trigger: time
+      at: &quot;22:00:00&quot;
+  conditions:
+    - condition: state
+      entity_id: binary_sensor.ev_charger_plug
+      state: &quot;on&quot;
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.ev_charger_charging
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Get notified when the charger reports a problem
+
+The **Problem** binary sensor turns on when the charger reports an alarm, such as a mains fault. A notification lets you check on the charger before you need the vehicle.
+
+- **Trigger**: State: The **Problem** binary sensor turns on
+  - **Entity**: Problem sensor of the charger (`binary_sensor.ev_charger_problem`)
+- **Action**: Send a notification message
+  - **Target**: Your notification entity (`notify.my_device`)
+  - **Message**: `The EV charger reports a problem.`
+
+{% details &quot;YAML example for a problem notification&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when the EV charger reports a problem&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.ev_charger_problem
+      to: &quot;on&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;The EV charger reports a problem.&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Get notified when a charging session ends
+
+When the charging session closes, a notification tells you how much energy the session delivered.
+
+- **Trigger**: State: The **Charging** switch turns off
+  - **Entity**: Charging switch of the charger (`switch.ev_charger_charging`)
+- **Action**: Send a notification message with the **Session energy** sensor value
+  - **Target**: Your notification entity (`notify.my_device`)
+  - **Message**: `Charging finished after {{ states(&#x27;sensor.ev_charger_session_energy&#x27;) }} kWh.`
+
+{% details &quot;YAML example for a session summary notification&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when EV charging ends&quot;
+  triggers:
+    - trigger: state
+      entity_id: switch.ev_charger_charging
+      from: &quot;on&quot;
+      to: &quot;off&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &gt;
+          Charging finished after
+          {{ states(&#x27;sensor.ev_charger_session_energy&#x27;) }} kWh.
+{% endexample %}
+
+{% enddetails %}
+
+## Data updates
+
+The integration {% term polling polls %} the charger over Bluetooth. The interval follows what the charger is doing:
+
+- Every 60 seconds while a charging session is open, which includes sessions paused by the vehicle or by the charger, since those can resume without a command.
+- Every 5 minutes otherwise, so that a slot handed back between polls leaves the phone app long uncontested stretches.
+
+The charger is also read again about 2 seconds after a command, once it has had time to report the new state. The interval is not configurable. Entities become unavailable when the charger cannot be reached, for example when it is out of range or another Bluetooth client holds its slot.
+
+## Known limitations
+
+### Bluetooth connections
+
+- The charger accepts only **one Bluetooth client at a time**. While Home Assistant is talking to it, the vendor phone app cannot connect, and vice versa. Which side wins in between polls is what the **Bluetooth connection** option decides.
+- Each charger needs a free active connection slot on the Bluetooth adapter or proxy that reaches it. A charger set to **Reconnect each poll** only uses a slot while it is being read, while a charger set to **Stay connected** occupies one for as long as it is configured.
+
+### Charger control
+
+- Setting the charging current is not supported.
+- The charger refuses to start charging with no vehicle plugged in, and refuses to stop when no session is open. The charger does not say why it refused, so Home Assistant shows the same error for every refusal.
+- A command needs the charger&#x27;s Bluetooth slot, the same as a poll. While the vendor phone app holds the slot, commands fail.
+
+## Troubleshooting
+
+{% details &quot;No charger is found during setup&quot; %}
+
+### Symptom: &quot;No Spin EV charger was found over Bluetooth&quot;
+
+Setup reports that no charger was found.
+
+#### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Check that the charger is powered on.
+2. Close the vendor phone app, and stop any other tool that may be connected to the charger.
+3. Confirm the charger appears in **Settings** &gt; **Connectivity** &gt; **Bluetooth** &gt; **Advertisement monitor**, with a name in the form `123456789012_ab12`.
+4. Move an ESPHome Bluetooth proxy closer to the charger, or place a local Bluetooth adapter near it.
+5. Make sure the proxy has active connections enabled. A passive-only adapter can see the charger advertise but cannot read from it.
+
+{% enddetails %}
+
+{% details &quot;The charger cannot be connected to&quot; %}
+
+### Symptom: &quot;Failed to connect&quot;
+
+Setup finds the charger but fails to read from it.
+
+#### Description
+
+Another Bluetooth client already holds the charger&#x27;s single slot, or the charger is at the edge of range.
+
+#### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Close the vendor phone app and try again.
+2. Check **Settings** &gt; **Connectivity** &gt; **Bluetooth** &gt; **Connection monitor** and confirm the adapter or proxy has a free active connection slot.
+3. Move the charger, the proxy, or the adapter so they are closer together.
+
+{% enddetails %}
+
+{% details &quot;The charger refuses to start or stop charging&quot; %}
+
+### Symptom: &quot;The charger refused the command&quot;
+
+Turning the **Charging** switch on or off reports that the charger refused the command.
+
+#### Resolution
+
+To resolve this issue, try the following steps:
+
+1. To start charging, check that the vehicle is plugged in and that the **State** sensor does not show *Starting up*.
+2. To stop charging, check that the **State** sensor shows a session in progress. If no session is open, there is nothing to stop.
+
+{% enddetails %}
+
+{% details &quot;The sensors become unavailable&quot; %}
+
+### Symptom: All charger sensors show as unavailable
+
+The charger was set up successfully, but its sensors later become unavailable.
+
+#### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Check whether the vendor phone app, or another client, is connected to the charger. It is holding the slot that Home Assistant needs.
+2. Verify that the adapter or proxy that reaches the charger still has free active connection slots.
+3. If the charger is reached through a proxy at the edge of its range, move the proxy closer, or prefer an Ethernet-connected proxy.
+4. Set the **Bluetooth connection** option to **Stay connected**, which keeps the slot claimed rather than competing for it at every poll.
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Spin EV Charger.</p><p>The <strong>user</strong> configuration step lists <code>address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>Spin EV Charger automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/exicom_spin_ble/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/exicom_spin_ble</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/exicom_spin_ble</code></dd></dl></section><p><a href="../../integrations/exicom_spin_ble/">Return to the Spin EV Charger guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

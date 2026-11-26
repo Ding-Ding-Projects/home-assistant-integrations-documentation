@@ -1,1 +1,2166 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RESTful reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:13" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/rest/">RESTful guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>RESTful</h1><p>Instructions on how to integrate REST switches into Home Assistant.</p><section><h2>Overview</h2><p>The RESTful Switch integration allows you to control a given endpoint that supports a RESTful API. The switch can get the state via GET and set the state via POST on a given REST resource.</p></section><section><h2>Configuration</h2><p>To enable this switch, add the following lines to your configuration.yaml file:</p></section><section><h2>Switch with templated value</h2><p>This example shows a switch that uses a template to allow Home Assistant to determine its state. In this example, the REST endpoint returns this JSON response with true indicating the switch is on.</p></section><section><h2>Configuration details</h2><p>The domain used to identify RESTful in Home Assistant is <code>rest</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration</li><li>Example</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/switch.rest/</code></dd><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/integrations/rest</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/rest</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/rest</code></dd></dl></section><p><a href="../../integrations/rest/">Return to the RESTful guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RESTful reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:13" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/rest/">RESTful guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>RESTful</h1><p>Instructions on how to integrate REST sensors and binary sensors into Home Assistant.</p><h2>Rest</h2><div class="reader-body"><p>The <strong>RESTful</strong> integration is consuming a given endpoint which is exposed by a <a>RESTful API</a> of a device, an application, or a web service. The sensor has support for GET and POST requests.</p>
+<p><a href="../rest/">RESTful Sensor</a> and <a href="../rest/">RESTful Binary Sensor</a> can also be set up as platforms if there is only a single sensor per endpoint.</p>
+<pre><code># Example configuration.yaml entry
+rest:
+  - authentication: basic
+    username: "admin"
+    password: "password"
+    scan_interval: 60
+    resource: http://192.168.1.12/status.xml
+    sensor:
+      - name: "Adult Pool Data System"
+        json_attributes_path: "$.response.system"
+        value_template: "OK"
+        json_attributes:
+          - "runstate"
+          - "model"
+          - "opmode"
+          - "freeze"
+          - "time"
+          - "sensor1"
+          - "sensor2"
+          - "sensor3"
+          - "sensor4"
+          - "sensor5"
+          - "version"
+      - name: "Adult Pool Data Equipment"
+        json_attributes_path: "$.response.equipment"
+        value_template: "OK"
+        json_attributes:
+          - "circuit1"
+          - "circuit2"
+          - "circuit3"
+          - "circuit4"
+          - "circuit5"
+          - "circuit6"
+          - "circuit7"
+          - "circuit8"
+      - name: "Adult Pool Data Temp"
+        json_attributes_path: "$.response.temp"
+        value_template: "OK"
+        json_attributes:
+          - "htstatus"
+          - "poolsp"
+          - "spasp"
+          - "pooltemp"
+          - "spatemp"
+          - "airtemp"
+  - authentication: basic
+    username: "admin"
+    password: "password"
+    scan_interval: 60
+    resource: "http://192.168.1.13/status.xml"
+    sensor:
+      - name: "Kiddie Pool Data System"
+        json_attributes_path: "$.response.system"
+        value_template: "OK"
+        json_attributes:
+          - "runstate"
+          - "model"
+          - "opmode"
+          - "freeze"
+          - "time"
+          - "sensor1"
+          - "sensor2"
+          - "sensor3"
+          - "sensor4"
+          - "version"
+      - name: "Kiddie Pool Data Equipment"
+        json_attributes_path: "$.response.equipment"
+        value_template: "OK"
+        json_attributes:
+          - "circuit1"
+          - "circuit2"
+          - "circuit3"
+          - "circuit4"
+          - "circuit5"
+          - "circuit6"
+          - "circuit7"
+          - "circuit8"
+      - name: "Kiddie Pool Data Temp"
+        json_attributes_path: "$.response.temp"
+        value_template: "OK"
+        json_attributes:
+          - "htstatus"
+          - "poolsp"
+          - "spasp"
+          - "pooltemp"
+          - "spatemp"
+          - "airtemp"
+</code></pre>
+<pre><code>
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: true
+  type: template
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+payload_template:
+  description: The payload to send with a POST request, with template support. Depends on the service, but usually formed as JSON.
+  required: false
+  type: template
+verify_ssl:
+  description: Whether to verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+ssl_cipher_list:
+  description: The list of SSL ciphers to be accepted from this endpoint. `python_default` (_default_), `modern` or `intermediate` (_inspired by [Mozilla Security/Server Side TLS](https://wiki.mozilla.org/Security/Server_Side_TLS)_).
+  required: false
+  type: string
+  default: default
+timeout:
+  description: The maximum time in seconds to wait for data from the endpoint. If the timeout is reached, the sensor will become `unavailable`.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+scan_interval:
+  description: The frequency in seconds to call the REST endpoint.
+  required: false
+  type: integer
+  default: 30
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+sensor:
+  description: A list of sensors to create from the shared data. All configuration settings that are supported by [RESTful Sensor](/integrations/sensor.rest#configuration-variables) not listed above can be used here.
+  required: false
+  type: list
+binary_sensor:
+  description: A list of binary sensors to create from the shared data. All configuration settings that are supported by [RESTful Binary Sensor](/integrations/binary_sensor.rest#configuration-variables) not listed above can be used here.
+  required: false
+  type: list
+
+</code></pre>
+<p><strong>Important</strong></p>
+<p>Use either <code>resource</code> or <code>resource_template</code>.</p>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/rest.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate REST sensors and binary sensors into Home Assistant.
+ha_release: 0.7.4
+ha_domain: rest
+---
+
+The **RESTful** {% term integration %} is consuming a given endpoint which is exposed by a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) of a device, an application, or a web service. The sensor has support for GET and POST requests.
+
+[RESTful Sensor](/integrations/sensor.rest) and [RESTful Binary Sensor](/integrations/binary_sensor.rest) can also be set up as platforms if there is only a single sensor per endpoint.
+
+```yaml
+# Example configuration.yaml entry
+rest:
+  - authentication: basic
+    username: &quot;admin&quot;
+    password: &quot;password&quot;
+    scan_interval: 60
+    resource: http://192.168.1.12/status.xml
+    sensor:
+      - name: &quot;Adult Pool Data System&quot;
+        json_attributes_path: &quot;$.response.system&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;runstate&quot;
+          - &quot;model&quot;
+          - &quot;opmode&quot;
+          - &quot;freeze&quot;
+          - &quot;time&quot;
+          - &quot;sensor1&quot;
+          - &quot;sensor2&quot;
+          - &quot;sensor3&quot;
+          - &quot;sensor4&quot;
+          - &quot;sensor5&quot;
+          - &quot;version&quot;
+      - name: &quot;Adult Pool Data Equipment&quot;
+        json_attributes_path: &quot;$.response.equipment&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;circuit1&quot;
+          - &quot;circuit2&quot;
+          - &quot;circuit3&quot;
+          - &quot;circuit4&quot;
+          - &quot;circuit5&quot;
+          - &quot;circuit6&quot;
+          - &quot;circuit7&quot;
+          - &quot;circuit8&quot;
+      - name: &quot;Adult Pool Data Temp&quot;
+        json_attributes_path: &quot;$.response.temp&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;htstatus&quot;
+          - &quot;poolsp&quot;
+          - &quot;spasp&quot;
+          - &quot;pooltemp&quot;
+          - &quot;spatemp&quot;
+          - &quot;airtemp&quot;
+  - authentication: basic
+    username: &quot;admin&quot;
+    password: &quot;password&quot;
+    scan_interval: 60
+    resource: &quot;http://192.168.1.13/status.xml&quot;
+    sensor:
+      - name: &quot;Kiddie Pool Data System&quot;
+        json_attributes_path: &quot;$.response.system&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;runstate&quot;
+          - &quot;model&quot;
+          - &quot;opmode&quot;
+          - &quot;freeze&quot;
+          - &quot;time&quot;
+          - &quot;sensor1&quot;
+          - &quot;sensor2&quot;
+          - &quot;sensor3&quot;
+          - &quot;sensor4&quot;
+          - &quot;version&quot;
+      - name: &quot;Kiddie Pool Data Equipment&quot;
+        json_attributes_path: &quot;$.response.equipment&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;circuit1&quot;
+          - &quot;circuit2&quot;
+          - &quot;circuit3&quot;
+          - &quot;circuit4&quot;
+          - &quot;circuit5&quot;
+          - &quot;circuit6&quot;
+          - &quot;circuit7&quot;
+          - &quot;circuit8&quot;
+      - name: &quot;Kiddie Pool Data Temp&quot;
+        json_attributes_path: &quot;$.response.temp&quot;
+        value_template: &quot;OK&quot;
+        json_attributes:
+          - &quot;htstatus&quot;
+          - &quot;poolsp&quot;
+          - &quot;spasp&quot;
+          - &quot;pooltemp&quot;
+          - &quot;spatemp&quot;
+          - &quot;airtemp&quot;
+```
+
+{% configuration %}
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: true
+  type: template
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+payload_template:
+  description: The payload to send with a POST request, with template support. Depends on the service, but usually formed as JSON.
+  required: false
+  type: template
+verify_ssl:
+  description: Whether to verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+ssl_cipher_list:
+  description: The list of SSL ciphers to be accepted from this endpoint. `python_default` (_default_), `modern` or `intermediate` (_inspired by [Mozilla Security/Server Side TLS](https://wiki.mozilla.org/Security/Server_Side_TLS)_).
+  required: false
+  type: string
+  default: default
+timeout:
+  description: The maximum time in seconds to wait for data from the endpoint. If the timeout is reached, the sensor will become `unavailable`.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+scan_interval:
+  description: The frequency in seconds to call the REST endpoint.
+  required: false
+  type: integer
+  default: 30
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+sensor:
+  description: A list of sensors to create from the shared data. All configuration settings that are supported by [RESTful Sensor](/integrations/sensor.rest#configuration-variables) not listed above can be used here.
+  required: false
+  type: list
+binary_sensor:
+  description: A list of binary sensors to create from the shared data. All configuration settings that are supported by [RESTful Binary Sensor](/integrations/binary_sensor.rest#configuration-variables) not listed above can be used here.
+  required: false
+  type: list
+{% endconfiguration %}
+
+{% important %}
+Use either `resource` or `resource_template`.
+{% endimportant %}
+
+
+{% include integrations/using_templates.md %}
+
+{% include integrations/actions.md %}
+</pre></details></section><h2>Binary Sensor.Rest</h2><div class="reader-body"><p>The <strong>RESTful binary sensor</strong> integration is consuming a given endpoint which is exposed
+by a
+<a>RESTful API</a>
+of a device, an application, or a web service.
+The binary sensor has support for GET and POST requests.</p>
+<p><em>Tip:</em> If you want to create multiple <code>sensors</code> using the same endpoint, use the <a href="../rest/">RESTful</a> configuration instructions.</p>
+<p>If the endpoint returns one of the values of these pairs: <code>0</code>/<code>1</code>,
+<code>"0"</code>/<code>"1"</code>, <code>FALSE</code>/<code>TRUE</code>, <code>false</code>/<code>true</code>, <code>off</code>/<code>on</code> or <code>closed</code>/<code>open</code>
+it can be used as-is. If the return value differs, use a
+<a>template</a>.
+If the endpoint returns XML with the <code>text/xml</code>, <code>application/xml</code>, or
+<code>application/xhtml+xml</code> content type, it will automatically be converted
+to JSON according to this <a>specification</a>.</p>
+<pre><code>{
+    "name": "Binary sensor",
+    "state": {
+        "open": "true",
+        "timestamp": "2016-06-20 15:42:52.926733"
+    }
+}
+</code></pre>
+<h2>Configuration</h2>
+<p>To enable this sensor,
+add the following lines to your <code>configuration.yaml</code> file for a GET request:</p>
+<pre><code># Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+</code></pre>
+<p>or for a POST request:</p>
+<pre><code># Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+    method: POST
+</code></pre>
+<p>or a template based request:</p>
+<pre><code># Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource_template: "http://IP_ADDRESS/{{ now().strftime('%Y-%m-%d') }}"
+</code></pre>
+<pre><code>
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+  default: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: false
+  type: template
+method:
+  description: The method of the request.
+  required: false
+  type: string
+  default: GET
+name:
+  description: Name of the REST binary sensor.
+  required: false
+  type: template
+  default: REST Binary Sensor
+icon:
+  description: Defines a template for the icon of the entity.
+  required: false
+  type: template
+picture:
+  description: Defines a template for the entity picture of the entity.
+  required: false
+  type: template
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+value_template:
+  description: &gt;
+    Defines a [template](/docs/templating/where-to-use/#processing-incoming-data)
+    to extract the value.
+  required: false
+  type: template
+payload:
+  description: The payload to send with a POST request. Usually formed as a dictionary.
+  required: false
+  type: string
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+verify_ssl:
+  description: Verify the certification of the endpoint.
+  required: false
+  type: boolean
+  default: true
+timeout:
+  description: Defines max time to wait data from the endpoint.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description: "Type of the HTTP authentication. `basic` or `digest`."
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+
+</code></pre>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>Examples</h2>
+<p>In this section you find some real-life examples of how to use this sensor.</p>
+<h3>aREST sensor</h3>
+<p>Instead of using an <a href="../arest/">aREST</a> binary sensor,
+you could retrieve the value of a device supporting
+aREST directly with a REST binary sensor.</p>
+<pre><code>binary_sensor:
+  - platform: rest
+    resource: http://192.168.0.5/digital/9
+    method: GET
+    name: Light
+    device_class: light
+    value_template: '{{ value_json.return_value }}'
+</code></pre>
+<h3>Accessing an HTTP authentication protected endpoint</h3>
+<p>The REST sensor supports HTTP authentication and template-enabled customized headers.</p>
+<pre><code>binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/binary_sensor
+    username: ha1
+    password: test1
+    authentication: basic
+    headers:
+      User-Agent: Home Assistant
+      Content-Type: application/json
+      X-Custom-Header: '{{ states("input_text.the_custom_header") }}'
+</code></pre>
+<p>The headers will contain all relevant details. This will also give
+you the ability to access endpoints that are protected by tokens.</p>
+<pre><code>Content-Length: 1024
+Host: IP_ADDRESS1:5000
+Authorization: Basic aGExOnRlc3Qx
+Accept-Encoding: identity
+Content-Type: application/json
+User-Agent: Home Assistant
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/binary_sensor.rest.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+title: &quot;RESTful binary sensor&quot;
+description: &quot;Instructions on how to integrate REST binary sensors into Home Assistant.&quot;
+ha_release: &quot;0.10&quot;
+ha_iot_class: Local Polling
+ha_domain: rest
+---
+
+The **RESTful binary sensor** {% term integration %} is consuming a given endpoint which is exposed
+by a
+[RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer)
+of a device, an application, or a web service.
+The binary sensor has support for GET and POST requests.
+
+_Tip:_ If you want to create multiple `sensors` using the same endpoint, use the [RESTful](/integrations/rest) configuration instructions.
+
+If the endpoint returns one of the values of these pairs: `0`/`1`,
+`&quot;0&quot;`/`&quot;1&quot;`, `FALSE`/`TRUE`, `false`/`true`, `off`/`on` or `closed`/`open`
+it can be used as-is. If the return value differs, use a
+[template](/docs/templating/where-to-use/#processing-incoming-data).
+If the endpoint returns XML with the `text/xml`, `application/xml`, or&#32;
+`application/xhtml+xml` content type, it will automatically be converted&#32;
+to JSON according to this [specification](https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html).
+
+```json
+{
+    &quot;name&quot;: &quot;Binary sensor&quot;,
+    &quot;state&quot;: {
+        &quot;open&quot;: &quot;true&quot;,
+        &quot;timestamp&quot;: &quot;2016-06-20 15:42:52.926733&quot;
+    }
+}
+```
+
+## Configuration
+
+To enable this sensor,
+add the following lines to your {% term &quot;`configuration.yaml`&quot; %} file for a GET request:
+
+```yaml
+# Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+```
+
+or for a POST request:
+
+```yaml
+# Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+    method: POST
+```
+
+or a template based request:
+
+
+```yaml
+# Example configuration.yaml entry
+binary_sensor:
+  - platform: rest
+    resource_template: &quot;http://IP_ADDRESS/{{ now().strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
+```
+
+
+{% configuration %}
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+  default: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: false
+  type: template
+method:
+  description: The method of the request.
+  required: false
+  type: string
+  default: GET
+name:
+  description: Name of the REST binary sensor.
+  required: false
+  type: template
+  default: REST Binary Sensor
+icon:
+  description: Defines a template for the icon of the entity.
+  required: false
+  type: template
+picture:
+  description: Defines a template for the entity picture of the entity.
+  required: false
+  type: template
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+value_template:
+  description: &gt;
+    Defines a [template](/docs/templating/where-to-use/#processing-incoming-data)
+    to extract the value.
+  required: false
+  type: template
+payload:
+  description: The payload to send with a POST request. Usually formed as a dictionary.
+  required: false
+  type: string
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+verify_ssl:
+  description: Verify the certification of the endpoint.
+  required: false
+  type: boolean
+  default: true
+timeout:
+  description: Defines max time to wait data from the endpoint.
+  required: false
+  type: integer
+  default: 10
+authentication:
+  description: &quot;Type of the HTTP authentication. `basic` or `digest`.&quot;
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+{% endconfiguration %}
+
+{% include integrations/using_templates.md %}
+
+## Examples
+
+In this section you find some real-life examples of how to use this sensor.
+
+### aREST sensor
+
+Instead of using an [aREST](/integrations/arest#binary-sensor) binary sensor,
+you could retrieve the value of a device supporting
+aREST directly with a REST binary sensor.
+
+
+```yaml
+binary_sensor:
+  - platform: rest
+    resource: http://192.168.0.5/digital/9
+    method: GET
+    name: Light
+    device_class: light
+    value_template: &#x27;{{ value_json.return_value }}&#x27;
+```
+
+
+### Accessing an HTTP authentication protected endpoint
+
+The REST sensor supports HTTP authentication and template-enabled customized headers.
+
+
+```yaml
+binary_sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/binary_sensor
+    username: ha1
+    password: test1
+    authentication: basic
+    headers:
+      User-Agent: Home Assistant
+      Content-Type: application/json
+      X-Custom-Header: &#x27;{{ states(&quot;input_text.the_custom_header&quot;) }}&#x27;
+```
+
+
+The headers will contain all relevant details. This will also give
+you the ability to access endpoints that are protected by tokens.
+
+```bash
+Content-Length: 1024
+Host: IP_ADDRESS1:5000
+Authorization: Basic aGExOnRlc3Qx
+Accept-Encoding: identity
+Content-Type: application/json
+User-Agent: Home Assistant
+```
+</pre></details></section><h2>Notify.Rest</h2><div class="reader-body"><p>The <strong>RESTful Notifications</strong> integration allows you to deliver <a>RESTful</a> notifications from Home Assistant to another party.</p>
+<p>To enable the REST notification in your installation, add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+notify:
+  - name: NOTIFIER_NAME
+    platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+</code></pre>
+<pre><code>
+name:
+  description: Setting the optional parameter `name` allows multiple notifiers to be created. The notifier will bind to the `notify.NOTIFIER_NAME` action.
+  required: false
+  default: notify
+  type: string
+resource:
+  description: The resource or endpoint that will receive the value.
+  required: true
+  type: string
+method:
+  description: The method of the request. Valid options are `GET`, `POST` or `POST_JSON`.
+  required: false
+  default: GET
+  type: string
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  default: basic
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the request.
+  required: false
+  type: string
+message_param_name:
+  description: Parameter name for the message.
+  required: false
+  default: message
+  type: string
+title_param_name:
+  description: Parameter name for the title.
+  required: false
+  type: string
+target_param_name:
+  description: Parameter name for the target.
+  required: false
+  type: string
+data:
+  description: Dictionary of extra parameters to send to the resource.
+  required: false
+  type: string
+data:
+  description: Template dictionary of extra parameters to send to the resource.
+  required: false
+  type: template
+
+</code></pre>
+<p>To use notifications, please see the <a>getting started with automation page</a>.</p>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/notify.rest.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+title: &quot;RESTful Notifications&quot;
+description: &quot;Instructions on how to add RESTful notifications to Home Assistant.&quot;
+ha_release: 0.13
+ha_domain: rest
+---
+
+The **RESTful Notifications** {% term integration %} allows you to deliver [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) notifications from Home Assistant to another party.
+
+To enable the REST notification in your installation, add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+notify:
+  - name: NOTIFIER_NAME
+    platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+```
+
+{% configuration %}
+name:
+  description: Setting the optional parameter `name` allows multiple notifiers to be created. The notifier will bind to the `notify.NOTIFIER_NAME` action.
+  required: false
+  default: notify
+  type: string
+resource:
+  description: The resource or endpoint that will receive the value.
+  required: true
+  type: string
+method:
+  description: The method of the request. Valid options are `GET`, `POST` or `POST_JSON`.
+  required: false
+  default: GET
+  type: string
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  default: basic
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the request.
+  required: false
+  type: string
+message_param_name:
+  description: Parameter name for the message.
+  required: false
+  default: message
+  type: string
+title_param_name:
+  description: Parameter name for the title.
+  required: false
+  type: string
+target_param_name:
+  description: Parameter name for the target.
+  required: false
+  type: string
+data:
+  description: Dictionary of extra parameters to send to the resource.
+  required: false
+  type: string
+data:
+  description: Template dictionary of extra parameters to send to the resource.
+  required: false
+  type: template
+{% endconfiguration %}
+
+To use notifications, please see the [getting started with automation page](/getting-started/automation/).
+
+{% include integrations/using_templates.md %}
+</pre></details></section><h2>Sensor.Rest</h2><div class="reader-body"><p>The <strong>RESTful Sensor</strong> integration is consuming a given endpoint which is exposed by a <a>RESTful API</a> of a device, an application, or a web service. The sensor has support for GET and POST requests.</p>
+<p><em>Tip:</em> If you want to create multiple <code>sensors</code> using the same endpoint, use the <a href="../rest/">RESTful</a> configuration instructions.</p>
+<p>To enable this sensor, add the following lines to your <code>configuration.yaml</code> file for a GET request:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+</code></pre>
+<p>or for a POST request:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+    method: POST
+    payload: '{ "device" : "heater" }'
+</code></pre>
+<p>or a template based request:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource_template: http://IP_ADDRESS/{{ now().strftime('%Y-%m-%d') }}
+    headers:
+      Authorization: &gt;
+        Bearer {{ states("input_text.my_access_token") }}
+    params:
+      start_date: &gt;
+        {{ (now() - timedelta(days = 1)).strftime('%Y-%m-%d') }}
+</code></pre>
+<pre><code>
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/sensor#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+force_update:
+  description: Sends update events even if the value hasn't changed. Useful if you want to have meaningful value graphs in history.
+  required: false
+  type: boolean
+  default: false
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [template, list]
+icon:
+  description: Defines a template for the icon of the REST sensor.
+  required: false
+  type: template
+json_attributes:
+  description: "A list of keys to extract values from a JSON dictionary result and then set as sensor attributes. If the endpoint returns XML with the `text/xml`, `application/xml` or `application/xhtml+xml` content type, it will automatically be converted to JSON according to this [specification](https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html)"
+  required: false
+  type: [string, list]
+json_attributes_path:
+  description: A [JSONPath](https://goessner.net/articles/JsonPath/) that references the location of the `json_attributes` in the JSON content.
+  required: false
+  type: string
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+name:
+  description: Defines a template for the name of the REST sensor.
+  required: false
+  type: template
+  default: REST Sensor
+params:
+  description: The query params for the requests.
+  required: false
+  type: [template, list]&#32;&#32;
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+picture:
+  description: Defines a template for the entity picture of the REST sensor.
+  required: false
+  type: template
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: true
+  type: template
+scan_interval:
+  description: The frequency in seconds to call the REST endpoint.
+  required: false
+  type: integer
+  default: 30
+state_class:
+  description: The [state_class](/integrations/sensor/#state-class) of the sensor.
+  required: false
+  type: string
+timeout:
+  description: Defines the maximum time in seconds to wait for data from the endpoint before the sensor is marked as `unavailable`.
+  required: false
+  type: integer
+  default: 10
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+unit_of_measurement:
+  description: Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes).
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+value_template:
+  description: "Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract the value."
+  required: false
+  type: template
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+
+</code></pre>
+<p><strong>Important</strong></p>
+<p>Use either <code>resource</code> or <code>resource_template</code>.</p>
+<p><code>curl</code> can help you identify the variable you want to display in your Home Assistant frontend. The example below shows the JSON response of a device that is running with <a>aREST</a>.</p>
+<pre><code>$ curl -X GET http://192.168.1.31/temperature/
+{"temperature": 77, "id": "sensor02", "name": "livingroom", "connected": true}
+</code></pre>
+<p>The response is expected to be a dictionary or a list with a dictionary as its 0th element.</p>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>Data updates</h2>
+<p>The RESTful sensor polling polls the configured endpoint every 30 seconds by default. To change how often it polls, set the <code>scan_interval</code> option to a different value in seconds.</p>
+<p>If you want to refresh the sensor manually, for example, from an automation or a script, call the <a href="../homeassistant/"><code>homeassistant.update_entity</code> action</a> and target the sensor. This triggers an immediate request to the endpoint, outside of the normal polling schedule.</p>
+<p>The <code>force_update</code> option changes how state updates are published, not how often the endpoint is polled. When <code>force_update</code> is enabled, the sensor still polls on the configured interval, but it emits a state change event on every poll even if the returned value has not changed. This is useful for long-term statistics and history graphs that rely on state change events.</p>
+<h2>Examples</h2>
+<p>In this section you find some real-life examples of how to use this sensor.</p>
+<h3>External IP address</h3>
+<p>You can find your external IP address using the <a>ipify</a> service for both IPv4 and IPv6.</p>
+<pre><code>sensor:
+  - platform: rest
+    name: "External IP"
+    resource: "https://api.ipify.org/?format=json"
+    value_template: "{{ value_json.ip }}"
+
+  - platform: rest
+    name: "External IPv6"
+    resource: "https://api6.ipify.org/?format=json"
+    value_template: "{{ value_json.ip }}"
+</code></pre>
+<h3>Single value from a local Glances instance</h3>
+<p>The <a href="../glances/">glances</a> sensor is doing the exact same thing for all exposed values.</p>
+<pre><code>sensor:
+  - platform: rest
+    resource: http://IP_ADRRESS:61208/api/2/mem/used
+    name: Used mem
+    value_template: "{{ value_json.used| multiply(0.000000954) | round(0) }}"
+    unit_of_measurement: MB
+</code></pre>
+<h3>Value from another Home Assistant instance</h3>
+<p>The Home Assistant <a>API</a> exposes the data from your attached sensors. If you are running multiple Home Assistant instances which are not connected you can still get information from them.</p>
+<p>If the Home Assistant instance in the resource variable is protected by an API password, you can append <code>?api_password=YOUR_PASSWORD</code> to the resource URL to authenticate or use <code>headers:</code>.</p>
+<pre><code>sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:8123/api/states/sensor.weather_temperature
+    name: Temperature
+    value_template: "{{ value_json.state }}"
+    unit_of_measurement: "°C"
+</code></pre>
+<h3>Accessing an HTTP authentication protected endpoint</h3>
+<p>The REST sensor supports HTTP authentication and customized headers.</p>
+<pre><code>sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/sensor
+    username: ha1
+    password: test1
+    authentication: basic
+    headers:
+      User-Agent: Home Assistant
+      Content-Type: application/json
+</code></pre>
+<p>The headers will contain all relevant details. This will also give you the ability to access endpoints that are protected by tokens.</p>
+<pre><code>Content-Length: 1024
+Host: IP_ADDRESS1:5000
+Authorization: Basic aGExOnRlc3Qx
+Accept-Encoding: identity
+Content-Type: application/json
+User-Agent: Home Assistant
+</code></pre>
+<p>If you are accessing a resource protected by a <code>Bearer</code> token in an <code>Authorization</code> header, you can either put the token in the header field of the sensor configuration (not recommended) or store the token in your <a><code>secrets.yaml</code></a> file. In that case, be sure to include the word <code>Bearer</code> in the <code>secrets</code> file.</p>
+<pre><code>sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/sensor
+    headers:
+      Authorization: !secret my_sensor_secret_token
+</code></pre>
+<p>Example entry for the <code>secrets.yaml</code> file:</p>
+<pre><code>my_sensor_secret_token: Bearer gh_DHQIXKVf6Pr4H8Yqz8uhApk_mnV6Zje6Pr4H8Yqz8A8nCxz6SBghQdS51
+</code></pre>
+<h3>Use GitHub to get the latest release of Home Assistant</h3>
+<p>This sample retrieves the latest Home Assistant release information from GitHub.</p>
+<pre><code>sensor:
+  - platform: rest
+    resource: https://api.github.com/repos/home-assistant/home-assistant/releases/latest
+    username: YOUR_GITHUB_USERNAME
+    password: YOUR_GITHUB_ACCESS_TOKEN
+    authentication: basic
+    value_template: "{{ value_json.tag_name }}"
+    headers:
+      Accept: application/vnd.github.v3+json
+      Content-Type: application/json
+      User-Agent: Home Assistant REST sensor
+</code></pre>
+<h3>Fetch multiple JSON attributes and present them as values</h3>
+<p><strong>Note</strong></p>
+<p>Most examples below use the <code>rest:</code> configuration format, which belongs to the <a href="../rest/">RESTful integration</a>. The RESTful integration allows defining multiple sensors from a single HTTP endpoint, reducing the number of requests to the same service. If you only need a single sensor from an endpoint, use the <code>sensor</code> platform configuration shown in the examples above.</p>
+<p><a>JSON Test</a> returns the current time, date and milliseconds since epoch from <a>http://date.jsontest.com/</a>.</p>
+<pre><code>rest:
+  - resource: "http://date.jsontest.com/"
+    sensor:
+      - name: "Time"
+        value_template: "{{ value_json.time }}"
+
+      - name: "Date"
+        value_template: "{{ value_json.date }}"
+
+      - name: "Milliseconds"
+        value_template: "{{ value_json.milliseconds_since_epoch }}"
+</code></pre>
+<p><a>JSONPlaceholder</a> provides sample JSON data for testing. In the below example, JSONPath locates the attributes in the JSON document. <a>JSONPath Online Evaluator</a> provides a tool to test your JSONPath. If the endpoint returns XML, it will be converted to JSON using <code>xmltodict</code> before searching for attributes. You may find this <a>XML to JSON Converter</a> helpful for testing how your XML converts to JSON.</p>
+<pre><code>sensor:
+  - platform: rest
+    name: JSON users
+    json_attributes_path: "$.[0].address"
+    json_attributes:
+      - street
+      - suite
+      - city
+      - zipcode
+    resource: https://jsonplaceholder.typicode.com/users
+    value_template: "{{ value_json[0].name }}"
+</code></pre>
+<p>This sample fetches a weather report from <a>OpenWeatherMap</a>, maps the resulting data into attributes of the RESTful sensor and then creates a set of <a href="../template/">template</a> sensors that monitor the attributes and present the values in a usable form.</p>
+<pre><code>rest:
+  - resource: "https://api.openweathermap.org/data/2.5/weather?zip=80302,us&amp;APPID=VERYSECRETAPIKEY"
+    sensor:
+      - name: "Report"
+        value_template: "{{ value_json['weather'][0]['description'].title() }}"
+        picture: "{{ 'https://openweathermap.org/img/w/' + value_json['weather'][0]['icon'].lower() + '.png' }}"
+
+      - name: "Outside temp"
+        value_template: "{{ value_json['main']['temp'] - 273.15 }}"
+        unit_of_measurement: "°C"
+
+      - name: "Outside pressure"
+        value_template: "{{ value_json['main']['pressure'] }}"
+        unit_of_measurement: "hP"
+
+      - name: "Outside humidity"
+        value_template: "{{ value_json['main']['humidity'] }}"
+        unit_of_measurement: "%"
+</code></pre>
+<p>This configuration shows how to extract multiple values from a dictionary. This method avoids flooding the REST service because the result is only requested once. From that single request, multiple sensors can be created by using template sensors.</p>
+<pre><code>{
+    "bedroom1": {
+        "temperature": 15.79,
+        "humidity": 55.78,
+        "battery": 5.26,
+        "timestamp": "2019-02-27T22:21:37Z"
+    },
+    "bedroom2": {
+        "temperature": 18.99,
+        "humidity": 49.81,
+        "battery": 5.08,
+        "timestamp": "2019-02-27T22:23:44Z"
+    },
+    "bedroom3": {
+        "temperature": 18.58,
+        "humidity": 47.95,
+        "battery": 5.15,
+        "timestamp": "2019-02-27T22:21:22Z"
+    }
+}
+</code></pre>
+<pre><code>rest:
+    resource: "http://&lt;address_to_rest_service&gt;"
+    sensor:
+      - name: "Bedroom1 Temperature"
+        value_template: "{{ value_json['bedroom1']['temperature'] }}"
+        device_class: temperature
+        unit_of_measurement: "°C"
+      - name: "Bedroom1 Humidity"
+        value_template: "{{ value_json['bedroom1']['humidity'] }}"
+        device_class: humidity
+        unit_of_measurement: "%"
+      - name: "Bedroom1 Battery"
+        value_template: "{{ value_json['bedroom1']['battery'] }}"
+        device_class: battery
+        unit_of_measurement: "V"
+      - name: "Bedroom2 Temperature"
+        value_template: "{{ value_json['bedroom2']['temperature'] }}"
+        device_class: temperature
+        unit_of_measurement: "°C"
+</code></pre>
+<p>The example below shows how to extract multiple values from a dictionary from the XML file of a Steamist Steambath Wi-Fi interface. The values are used to create multiple sensors without having to poll the endpoint numerous times.</p>
+<pre><code>rest:
+  # Steam Controller
+  - resource: "http://192.168.1.105/status.xml"
+    scan_interval: 15
+&#32;&#32;
+    sensor:
+      - name: "Steam Temp"
+        value_template: "{{ value_json['response']['temp0'] | regex_findall_index('([0-9]+)XF') }}"
+        unit_of_measurement: "°F"
+
+       steam_time_remaining:
+      - name: "Steam Time Remaining"
+        value_template: "{{ value_json['response']['time0'] }}"
+        unit_of_measurement: "minutes"
+
+rest_command:&#32;&#32;
+  set_steam_led:
+    url: http://192.168.1.105/leds.cgi?led={{ led }}
+</code></pre>
+<p>For reference, the XML content of endpoint shown above example is below:</p>
+<pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+ &lt;response&gt;
+ &#9;&lt;scan&gt;0&lt;/scan&gt;
+&#9;&lt;ver&gt;12556&lt;/ver&gt;
+&#9;&lt;count&gt;48&lt;/count&gt;
+&#9;&lt;ssid&gt;alexander&lt;/ssid&gt;
+&#9;&lt;bss&gt;
+&#9;&#9;&lt;valid&gt;0&lt;/valid&gt;
+&#9;&#9;&lt;name&gt;0&lt;/name&gt;
+&#9;&#9;&lt;privacy&gt;0&lt;/privacy&gt;
+&#9;&#9;&lt;wlan&gt;0&lt;/wlan&gt;
+&#9;&#9;&lt;strength&gt;0&lt;/strength&gt;
+&#9;&lt;/bss&gt;
+&#9;&lt;led0&gt;0&lt;/led0&gt;
+&#9;&lt;led1&gt;0&lt;/led1&gt;
+&#9;&lt;led2&gt;0&lt;/led2&gt;
+&#9;&lt;led3&gt;0&lt;/led3&gt;
+&#9;&lt;led4&gt;0&lt;/led4&gt;
+&#9;&lt;led5&gt;0&lt;/led5&gt;
+&#9;&lt;led6&gt;0&lt;/led6&gt;
+&#9;&lt;led7&gt;0&lt;/led7&gt;
+&#9;&lt;btn0&gt;up&lt;/btn0&gt;
+&#9;&lt;btn1&gt;up&lt;/btn1&gt;
+&#9;&lt;btn2&gt;up&lt;/btn2&gt;
+&#9;&lt;btn3&gt;up&lt;/btn3&gt;
+&#9;&lt;pot0&gt;0&lt;/pot0&gt;
+&#9;&lt;usr0&gt;0&lt;/usr0&gt;
+&#9;&lt;temp0&gt;0x73XF0x73XF&lt;/temp0&gt;
+&#9;&lt;time0&gt; 0&lt;/time0&gt;
+ &lt;/response&gt;
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/sensor.rest.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+title: &quot;RESTful Sensor&quot;
+description: Instructions on how to integrate REST sensors into Home Assistant.
+ha_release: 0.7.4
+ha_iot_class: Local Polling
+ha_domain: rest
+---
+
+The **RESTful Sensor** {% term integration %} is consuming a given endpoint which is exposed by a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer) of a device, an application, or a web service. The sensor has support for GET and POST requests.
+
+_Tip:_ If you want to create multiple `sensors` using the same endpoint, use the [RESTful](/integrations/rest) configuration instructions.
+
+To enable this sensor, add the following lines to your {% term &quot;`configuration.yaml`&quot; %} file for a GET request:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+```
+
+or for a POST request:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+    method: POST
+    payload: &#x27;{ &quot;device&quot; : &quot;heater&quot; }&#x27;
+```
+
+or a template based request:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: rest
+    resource_template: http://IP_ADDRESS/{{ now().strftime(&#x27;%Y-%m-%d&#x27;) }}
+    headers:
+      Authorization: &gt;
+        Bearer {{ states(&quot;input_text.my_access_token&quot;) }}
+    params:
+      start_date: &gt;
+        {{ (now() - timedelta(days = 1)).strftime(&#x27;%Y-%m-%d&#x27;) }}
+```
+
+{% configuration %}
+authentication:
+  description:  Type of the HTTP authentication. `basic` or `digest`.
+  required: false
+  type: string
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/sensor#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+encoding:
+  description: The character encoding to use if none provided in the header of the shared data.
+  required: false
+  type: string
+  default: UTF-8
+force_update:
+  description: Sends update events even if the value hasn&#x27;t changed. Useful if you want to have meaningful value graphs in history.
+  required: false
+  type: boolean
+  default: false
+headers:
+  description: The headers for the requests.
+  required: false
+  type: [template, list]
+icon:
+  description: Defines a template for the icon of the REST sensor.
+  required: false
+  type: template
+json_attributes:
+  description: &quot;A list of keys to extract values from a JSON dictionary result and then set as sensor attributes. If the endpoint returns XML with the `text/xml`, `application/xml` or `application/xhtml+xml` content type, it will automatically be converted to JSON according to this [specification](https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html)&quot;
+  required: false
+  type: [string, list]
+json_attributes_path:
+  description: A [JSONPath](https://goessner.net/articles/JsonPath/) that references the location of the `json_attributes` in the JSON content.
+  required: false
+  type: string
+method:
+  description: The method of the request. Either `POST` or `GET`.
+  required: false
+  type: string
+  default: GET
+name:
+  description: Defines a template for the name of the REST sensor.
+  required: false
+  type: template
+  default: REST Sensor
+params:
+  description: The query params for the requests.
+  required: false
+  type: [template, list]&#32;&#32;
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+payload:
+  description: The payload to send with a POST request. Depends on the service, but usually formed as JSON.
+  required: false
+  type: string
+picture:
+  description: Defines a template for the entity picture of the REST sensor.
+  required: false
+  type: template
+resource:
+  description: The resource or endpoint that contains the value.
+  required: true
+  type: string
+resource_template:
+  description: The resource or endpoint that contains the value with template support.
+  required: true
+  type: template
+scan_interval:
+  description: The frequency in seconds to call the REST endpoint.
+  required: false
+  type: integer
+  default: 30
+state_class:
+  description: The [state_class](/integrations/sensor/#state-class) of the sensor.
+  required: false
+  type: string
+timeout:
+  description: Defines the maximum time in seconds to wait for data from the endpoint before the sensor is marked as `unavailable`.
+  required: false
+  type: integer
+  default: 10
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+unit_of_measurement:
+  description: Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes).
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+value_template:
+  description: &quot;Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract the value.&quot;
+  required: false
+  type: template
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+{% endconfiguration %}
+
+{% important %}
+Use either `resource` or `resource_template`.
+{% endimportant %}
+
+`curl` can help you identify the variable you want to display in your Home Assistant frontend. The example below shows the JSON response of a device that is running with [aREST](https://arest.io/).
+
+```bash
+$ curl -X GET http://192.168.1.31/temperature/
+{&quot;temperature&quot;: 77, &quot;id&quot;: &quot;sensor02&quot;, &quot;name&quot;: &quot;livingroom&quot;, &quot;connected&quot;: true}
+```
+
+The response is expected to be a dictionary or a list with a dictionary as its 0th element.
+
+{% include integrations/using_templates.md %}
+
+## Data updates
+
+The RESTful sensor {% term polling polls %} the configured endpoint every 30 seconds by default. To change how often it polls, set the `scan_interval` option to a different value in seconds.
+
+If you want to refresh the sensor manually, for example, from an automation or a script, call the [`homeassistant.update_entity` action](/integrations/homeassistant/#action-update-entity) and target the sensor. This triggers an immediate request to the endpoint, outside of the normal polling schedule.
+
+The `force_update` option changes how state updates are published, not how often the endpoint is polled. When `force_update` is enabled, the sensor still polls on the configured interval, but it emits a state change event on every poll even if the returned value has not changed. This is useful for long-term statistics and history graphs that rely on state change events.
+
+## Examples
+
+In this section you find some real-life examples of how to use this sensor.
+
+### External IP address
+
+You can find your external IP address using the [ipify](https://www.ipify.org) service for both IPv4 and IPv6.
+
+```yaml
+sensor:
+  - platform: rest
+    name: &quot;External IP&quot;
+    resource: &quot;https://api.ipify.org/?format=json&quot;
+    value_template: &quot;{{ value_json.ip }}&quot;
+
+  - platform: rest
+    name: &quot;External IPv6&quot;
+    resource: &quot;https://api6.ipify.org/?format=json&quot;
+    value_template: &quot;{{ value_json.ip }}&quot;
+```
+
+### Single value from a local Glances instance
+
+The [glances](/integrations/glances) sensor is doing the exact same thing for all exposed values.
+
+```yaml
+sensor:
+  - platform: rest
+    resource: http://IP_ADRRESS:61208/api/2/mem/used
+    name: Used mem
+    value_template: &quot;{{ value_json.used| multiply(0.000000954) | round(0) }}&quot;
+    unit_of_measurement: MB
+```
+
+### Value from another Home Assistant instance
+
+The Home Assistant [API](/developers/rest_api/) exposes the data from your attached sensors. If you are running multiple Home Assistant instances which are not connected you can still get information from them.
+
+If the Home Assistant instance in the resource variable is protected by an API password, you can append `?api_password=YOUR_PASSWORD` to the resource URL to authenticate or use `headers:`.
+
+```yaml
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:8123/api/states/sensor.weather_temperature
+    name: Temperature
+    value_template: &quot;{{ value_json.state }}&quot;
+    unit_of_measurement: &quot;°C&quot;
+```
+
+### Accessing an HTTP authentication protected endpoint
+
+The REST sensor supports HTTP authentication and customized headers.
+
+```yaml
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/sensor
+    username: ha1
+    password: test1
+    authentication: basic
+    headers:
+      User-Agent: Home Assistant
+      Content-Type: application/json
+```
+
+The headers will contain all relevant details. This will also give you the ability to access endpoints that are protected by tokens.
+
+```bash
+Content-Length: 1024
+Host: IP_ADDRESS1:5000
+Authorization: Basic aGExOnRlc3Qx
+Accept-Encoding: identity
+Content-Type: application/json
+User-Agent: Home Assistant
+```
+
+If you are accessing a resource protected by a `Bearer` token in an `Authorization` header, you can either put the token in the header field of the sensor configuration (not recommended) or store the token in your [`secrets.yaml`](/docs/configuration/secrets/) file. In that case, be sure to include the word `Bearer` in the `secrets` file.
+
+```yaml
+sensor:
+  - platform: rest
+    resource: http://IP_ADDRESS:5000/sensor
+    headers:
+      Authorization: !secret my_sensor_secret_token
+```
+
+Example entry for the `secrets.yaml` file:
+
+```yaml
+my_sensor_secret_token: Bearer gh_DHQIXKVf6Pr4H8Yqz8uhApk_mnV6Zje6Pr4H8Yqz8A8nCxz6SBghQdS51
+```
+
+### Use GitHub to get the latest release of Home Assistant
+
+This sample retrieves the latest Home Assistant release information from GitHub.
+
+```yaml
+sensor:
+  - platform: rest
+    resource: https://api.github.com/repos/home-assistant/home-assistant/releases/latest
+    username: YOUR_GITHUB_USERNAME
+    password: YOUR_GITHUB_ACCESS_TOKEN
+    authentication: basic
+    value_template: &quot;{{ value_json.tag_name }}&quot;
+    headers:
+      Accept: application/vnd.github.v3+json
+      Content-Type: application/json
+      User-Agent: Home Assistant REST sensor
+```
+
+### Fetch multiple JSON attributes and present them as values
+
+{% note %}
+Most examples below use the `rest:` configuration format, which belongs to the [RESTful integration](/integrations/rest). The RESTful integration allows defining multiple sensors from a single HTTP endpoint, reducing the number of requests to the same service. If you only need a single sensor from an endpoint, use the `sensor` platform configuration shown in the examples above.
+{% endnote %}
+
+[JSON Test](https://www.jsontest.com/) returns the current time, date and milliseconds since epoch from [http://date.jsontest.com/](http://date.jsontest.com/).
+
+```yaml
+rest:
+  - resource: &quot;http://date.jsontest.com/&quot;
+    sensor:
+      - name: &quot;Time&quot;
+        value_template: &quot;{{ value_json.time }}&quot;
+
+      - name: &quot;Date&quot;
+        value_template: &quot;{{ value_json.date }}&quot;
+
+      - name: &quot;Milliseconds&quot;
+        value_template: &quot;{{ value_json.milliseconds_since_epoch }}&quot;
+```
+
+[JSONPlaceholder](https://jsonplaceholder.typicode.com/) provides sample JSON data for testing. In the below example, JSONPath locates the attributes in the JSON document. [JSONPath Online Evaluator](https://jsonpath.com/) provides a tool to test your JSONPath. If the endpoint returns XML, it will be converted to JSON using `xmltodict` before searching for attributes. You may find this [XML to JSON Converter](https://xmlable.com/json/) helpful for testing how your XML converts to JSON.
+
+```yaml
+sensor:
+  - platform: rest
+    name: JSON users
+    json_attributes_path: &quot;$.[0].address&quot;
+    json_attributes:
+      - street
+      - suite
+      - city
+      - zipcode
+    resource: https://jsonplaceholder.typicode.com/users
+    value_template: &quot;{{ value_json[0].name }}&quot;
+```
+
+This sample fetches a weather report from [OpenWeatherMap](https://openweathermap.org/), maps the resulting data into attributes of the RESTful sensor and then creates a set of [template](/integrations/template) sensors that monitor the attributes and present the values in a usable form.
+
+```yaml
+rest:
+  - resource: &quot;https://api.openweathermap.org/data/2.5/weather?zip=80302,us&amp;APPID=VERYSECRETAPIKEY&quot;
+    sensor:
+      - name: &quot;Report&quot;
+        value_template: &quot;{{ value_json[&#x27;weather&#x27;][0][&#x27;description&#x27;].title() }}&quot;
+        picture: &quot;{{ &#x27;https://openweathermap.org/img/w/&#x27; + value_json[&#x27;weather&#x27;][0][&#x27;icon&#x27;].lower() + &#x27;.png&#x27; }}&quot;
+
+      - name: &quot;Outside temp&quot;
+        value_template: &quot;{{ value_json[&#x27;main&#x27;][&#x27;temp&#x27;] - 273.15 }}&quot;
+        unit_of_measurement: &quot;°C&quot;
+
+      - name: &quot;Outside pressure&quot;
+        value_template: &quot;{{ value_json[&#x27;main&#x27;][&#x27;pressure&#x27;] }}&quot;
+        unit_of_measurement: &quot;hP&quot;
+
+      - name: &quot;Outside humidity&quot;
+        value_template: &quot;{{ value_json[&#x27;main&#x27;][&#x27;humidity&#x27;] }}&quot;
+        unit_of_measurement: &quot;%&quot;
+```
+
+This configuration shows how to extract multiple values from a dictionary. This method avoids flooding the REST service because the result is only requested once. From that single request, multiple sensors can be created by using template sensors.
+
+{% raw %}
+
+```json
+{
+    &quot;bedroom1&quot;: {
+        &quot;temperature&quot;: 15.79,
+        &quot;humidity&quot;: 55.78,
+        &quot;battery&quot;: 5.26,
+        &quot;timestamp&quot;: &quot;2019-02-27T22:21:37Z&quot;
+    },
+    &quot;bedroom2&quot;: {
+        &quot;temperature&quot;: 18.99,
+        &quot;humidity&quot;: 49.81,
+        &quot;battery&quot;: 5.08,
+        &quot;timestamp&quot;: &quot;2019-02-27T22:23:44Z&quot;
+    },
+    &quot;bedroom3&quot;: {
+        &quot;temperature&quot;: 18.58,
+        &quot;humidity&quot;: 47.95,
+        &quot;battery&quot;: 5.15,
+        &quot;timestamp&quot;: &quot;2019-02-27T22:21:22Z&quot;
+    }
+}
+```
+
+{% endraw %}
+
+```yaml
+rest:
+    resource: &quot;http://&lt;address_to_rest_service&gt;&quot;
+    sensor:
+      - name: &quot;Bedroom1 Temperature&quot;
+        value_template: &quot;{{ value_json[&#x27;bedroom1&#x27;][&#x27;temperature&#x27;] }}&quot;
+        device_class: temperature
+        unit_of_measurement: &quot;°C&quot;
+      - name: &quot;Bedroom1 Humidity&quot;
+        value_template: &quot;{{ value_json[&#x27;bedroom1&#x27;][&#x27;humidity&#x27;] }}&quot;
+        device_class: humidity
+        unit_of_measurement: &quot;%&quot;
+      - name: &quot;Bedroom1 Battery&quot;
+        value_template: &quot;{{ value_json[&#x27;bedroom1&#x27;][&#x27;battery&#x27;] }}&quot;
+        device_class: battery
+        unit_of_measurement: &quot;V&quot;
+      - name: &quot;Bedroom2 Temperature&quot;
+        value_template: &quot;{{ value_json[&#x27;bedroom2&#x27;][&#x27;temperature&#x27;] }}&quot;
+        device_class: temperature
+        unit_of_measurement: &quot;°C&quot;
+```
+
+The example below shows how to extract multiple values from a dictionary from the XML file of a Steamist Steambath Wi-Fi interface. The values are used to create multiple sensors without having to poll the endpoint numerous times.
+
+```yaml
+rest:
+  # Steam Controller
+  - resource: &quot;http://192.168.1.105/status.xml&quot;
+    scan_interval: 15
+&#32;&#32;
+    sensor:
+      - name: &quot;Steam Temp&quot;
+        value_template: &quot;{{ value_json[&#x27;response&#x27;][&#x27;temp0&#x27;] | regex_findall_index(&#x27;([0-9]+)XF&#x27;) }}&quot;
+        unit_of_measurement: &quot;°F&quot;
+
+       steam_time_remaining:
+      - name: &quot;Steam Time Remaining&quot;
+        value_template: &quot;{{ value_json[&#x27;response&#x27;][&#x27;time0&#x27;] }}&quot;
+        unit_of_measurement: &quot;minutes&quot;
+
+rest_command:&#32;&#32;
+  set_steam_led:
+    url: http://192.168.1.105/leds.cgi?led={{ led }}
+```
+
+For reference, the XML content of endpoint shown above example is below:
+
+```xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+
+ &lt;response&gt;
+ &#9;&lt;scan&gt;0&lt;/scan&gt;
+&#9;&lt;ver&gt;12556&lt;/ver&gt;
+&#9;&lt;count&gt;48&lt;/count&gt;
+&#9;&lt;ssid&gt;alexander&lt;/ssid&gt;
+&#9;&lt;bss&gt;
+&#9;&#9;&lt;valid&gt;0&lt;/valid&gt;
+&#9;&#9;&lt;name&gt;0&lt;/name&gt;
+&#9;&#9;&lt;privacy&gt;0&lt;/privacy&gt;
+&#9;&#9;&lt;wlan&gt;0&lt;/wlan&gt;
+&#9;&#9;&lt;strength&gt;0&lt;/strength&gt;
+&#9;&lt;/bss&gt;
+&#9;&lt;led0&gt;0&lt;/led0&gt;
+&#9;&lt;led1&gt;0&lt;/led1&gt;
+&#9;&lt;led2&gt;0&lt;/led2&gt;
+&#9;&lt;led3&gt;0&lt;/led3&gt;
+&#9;&lt;led4&gt;0&lt;/led4&gt;
+&#9;&lt;led5&gt;0&lt;/led5&gt;
+&#9;&lt;led6&gt;0&lt;/led6&gt;
+&#9;&lt;led7&gt;0&lt;/led7&gt;
+&#9;&lt;btn0&gt;up&lt;/btn0&gt;
+&#9;&lt;btn1&gt;up&lt;/btn1&gt;
+&#9;&lt;btn2&gt;up&lt;/btn2&gt;
+&#9;&lt;btn3&gt;up&lt;/btn3&gt;
+&#9;&lt;pot0&gt;0&lt;/pot0&gt;
+&#9;&lt;usr0&gt;0&lt;/usr0&gt;
+&#9;&lt;temp0&gt;0x73XF0x73XF&lt;/temp0&gt;
+&#9;&lt;time0&gt; 0&lt;/time0&gt;
+ &lt;/response&gt;
+```
+</pre></details></section><h2>Switch.Rest</h2><div class="reader-body"><p>The <strong>RESTful Switch</strong> integration allows you to control a given endpoint that supports a <a>RESTful API</a>. The switch can get the state via GET and set the state via POST on a given REST resource.</p>
+<h2>Configuration</h2>
+<p>To enable this switch, add the following lines to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+switch:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+</code></pre>
+<pre><code>
+resource:
+  description: The resource or endpoint used to control the REST switch.
+  required: true
+  type: string
+state_resource:
+  description: "The resource or endpoint that reports the state if different from `resource`. Used by `is_on_template`. Defaults to `resource`."
+  required: false
+  type: string
+method:
+  description: "The method of the request. Supported `post`, `put` or `patch`."
+  required: false
+  type: string
+  default: post
+name:
+  description: Name of the REST Switch.
+  required: false
+  type: template
+  default: REST Switch
+icon:
+  description: Defines a template for the icon of the entity.
+  required: false
+  type: template
+picture:
+  description: Defines a template for the entity picture of the entity.
+  required: false
+  type: template
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/switch/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+timeout:
+  description: Timeout for the request.
+  required: false
+  type: integer
+  default: 10
+body_on:
+  description: "The body of the POST request that commands the switch to become enabled. This value can be a [template](/docs/templating/)."
+  required: false
+  type: string
+  default: "ON"
+body_off:
+  description: "The body of the POST request that commands the switch to become disabled. This value can also be a [template](/docs/templating/)."
+  required: false
+  type: string
+  default: "OFF"
+is_on_template:
+  description: "A [template](/docs/templating/where-to-use/#processing-incoming-data) that determines the state of the switch from the value returned by the GET request on the resource URL. This template should compute to a boolean (True or False). If the value is valid JSON, it will be available in the template as the variable `value_json`. Default is equivalent to `'{{ value_json == body_on }}'`. This means that by default, the state of the switch is on if and only if the response to the GET request matches."
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the request.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+
+</code></pre>
+<p><strong>Important</strong></p>
+<p>Make sure that the URL matches exactly your endpoint or resource.</p>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>Example</h2>
+<h3>Switch with templated value</h3>
+<p>This example shows a switch that uses a <a>template</a> to allow Home Assistant to determine its state. In this example, the REST endpoint returns this JSON response with true indicating the switch is on.</p>
+<pre><code>{"is_active": "true"}
+</code></pre>
+<pre><code>switch:
+  - platform: rest
+    resource: http://IP_ADDRESS/led_endpoint
+    body_on: '{"active": "true"}'
+    body_off: '{"active": "false"}'
+    is_on_template: "{{ value_json.is_active }}"
+    headers:
+      Content-Type: application/json
+      X-Custom-Header: '{{ states("input_text.the_custom_header") }}'
+    verify_ssl: true
+</code></pre>
+<p><code>body_on</code> and <code>body_off</code> can also depend on the state of the system. For example, to enable a remote temperature sensor tracking on a radio thermostat, one has to send the current value of the remote temperature sensor. This can be achieved by using the template <code>'{"rem_temp":{{states('sensor.bedroom_temp')}}}'</code>.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/switch.rest.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+title: &quot;RESTful Switch&quot;
+description: &quot;Instructions on how to integrate REST switches into Home Assistant.&quot;
+ha_release: 0.7.6
+ha_iot_class: Local Polling
+ha_domain: rest
+---
+
+The **RESTful Switch** {% term integration %} allows you to control a given endpoint that supports a [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer). The switch can get the state via GET and set the state via POST on a given REST resource.
+
+## Configuration
+
+To enable this switch, add the following lines to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+switch:
+  - platform: rest
+    resource: http://IP_ADDRESS/ENDPOINT
+```
+
+{% configuration %}
+resource:
+  description: The resource or endpoint used to control the REST switch.
+  required: true
+  type: string
+state_resource:
+  description: &quot;The resource or endpoint that reports the state if different from `resource`. Used by `is_on_template`. Defaults to `resource`.&quot;
+  required: false
+  type: string
+method:
+  description: &quot;The method of the request. Supported `post`, `put` or `patch`.&quot;
+  required: false
+  type: string
+  default: post
+name:
+  description: Name of the REST Switch.
+  required: false
+  type: template
+  default: REST Switch
+icon:
+  description: Defines a template for the icon of the entity.
+  required: false
+  type: template
+picture:
+  description: Defines a template for the entity picture of the entity.
+  required: false
+  type: template
+availability:
+  description: Defines a template if the entity state is available or not.
+  required: false
+  type: template
+device_class:
+  description: Sets the [class of the device](/integrations/switch/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+timeout:
+  description: Timeout for the request.
+  required: false
+  type: integer
+  default: 10
+body_on:
+  description: &quot;The body of the POST request that commands the switch to become enabled. This value can be a [template](/docs/templating/).&quot;
+  required: false
+  type: string
+  default: &quot;ON&quot;
+body_off:
+  description: &quot;The body of the POST request that commands the switch to become disabled. This value can also be a [template](/docs/templating/).&quot;
+  required: false
+  type: string
+  default: &quot;OFF&quot;
+is_on_template:
+  description: &quot;A [template](/docs/templating/where-to-use/#processing-incoming-data) that determines the state of the switch from the value returned by the GET request on the resource URL. This template should compute to a boolean (True or False). If the value is valid JSON, it will be available in the template as the variable `value_json`. Default is equivalent to `&#x27;{% raw %}{{ value_json == body_on }}{% endraw %}&#x27;`. This means that by default, the state of the switch is on if and only if the response to the GET request matches.&quot;
+  required: false
+  type: string
+username:
+  description: The username for accessing the REST endpoint.
+  required: false
+  type: string
+password:
+  description: The password for accessing the REST endpoint.
+  required: false
+  type: string
+headers:
+  description: The headers for the request.
+  required: false
+  type: [list, template]
+params:
+  description: The query params for the requests.
+  required: false
+  type: [list, template]
+verify_ssl:
+  description: Verify the SSL certificate of the endpoint.
+  required: false
+  type: boolean
+  default: true
+{% endconfiguration %}
+
+{% important %}
+Make sure that the URL matches exactly your endpoint or resource.
+{% endimportant %}
+
+{% include integrations/using_templates.md %}
+
+## Example
+
+### Switch with templated value
+
+This example shows a switch that uses a [template](/docs/templating/) to allow Home Assistant to determine its state. In this example, the REST endpoint returns this JSON response with true indicating the switch is on.
+
+```json
+{&quot;is_active&quot;: &quot;true&quot;}
+```
+
+```yaml
+switch:
+  - platform: rest
+    resource: http://IP_ADDRESS/led_endpoint
+    body_on: &#x27;{&quot;active&quot;: &quot;true&quot;}&#x27;
+    body_off: &#x27;{&quot;active&quot;: &quot;false&quot;}&#x27;
+    is_on_template: &quot;{{ value_json.is_active }}&quot;
+    headers:
+      Content-Type: application/json
+      X-Custom-Header: &#x27;{{ states(&quot;input_text.the_custom_header&quot;) }}&#x27;
+    verify_ssl: true
+```
+
+`body_on` and `body_off` can also depend on the state of the system. For example, to enable a remote temperature sensor tracking on a radio thermostat, one has to send the current value of the remote temperature sensor. This can be achieved by using the template `{% raw %}&#x27;{&quot;rem_temp&quot;:{{states(&#x27;sensor.bedroom_temp&#x27;)}}}&#x27;{% endraw %}`.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify RESTful in Home Assistant is <code>rest</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/rest/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/rest</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/rest</code></dd></dl></section><p><a href="../../integrations/rest/">Return to the RESTful guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

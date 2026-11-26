@@ -1,1 +1,509 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Input Datetime reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:285" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/input_datetime/">Input Datetime guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Input Datetime</h1><p>Instructions on how to integrate the Input Datetime integration into Home Assistant.</p><section><h2>Overview</h2><p>The Input Datetime integration lets you create a date and time helper: an entity that stores a date, a time, or both, which you can set yourself. Because the value is not tied to a physical device, you can use it as an adjustable date or time setting for your automations, scripts, and dashboards. For example, you can create a date and time helper to store a wake-up time, a target date, or the moment an automation should run.</p></section><section><h2>Attributes</h2><p>A datetime input entity&#x27;s state exports several attributes that can be useful in automations and templates.</p></section><section><h2>Restore state</h2><p>If you set a valid value for initial, this integration will start with the state set to that value. Otherwise, it will restore the state it had before Home Assistant stopping.</p></section><section><h2>Examples</h2><p>The following example shows the usage of the input_datetime as a trigger in an automation:</p></section><section><h2>Description</h2><p>Date and time helpers are provided through default_config:, which is part of your configuration.yaml by default. If you removed default_config:, the option is no longer available.</p></section><section><h2>Resolution</h2><p>1. Add input_datetime: to your configuration.yaml. 2. Restart Home Assistant. 3. After the restart, create your date and time helpers from the user interface.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Input Datetime in Home Assistant is <code>input_datetime</code>.</p><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>set datetime</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Attributes</li><li>Restore state</li><li>Examples</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/input_datetime/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/input_datetime</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/input_datetime</code></dd></dl></section><p><a href="../../integrations/input_datetime/">Return to the Input Datetime guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Input Datetime reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:285" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/input_datetime/">Input Datetime guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Input Datetime</h1><p>Instructions on how to integrate the Input Datetime integration into Home Assistant.</p><div class="reader-body"><p>The <strong>Input Datetime</strong> integration lets you create a date and time helper: an entity that stores a date, a time, or both, which you can set yourself. Because the value is not tied to a physical device, you can use it as an adjustable date or time setting for your automations, scripts, and dashboards. For example, you can create a date and time helper to store a wake-up time, a target date, or the moment an automation should run.</p>
+<p>On a dashboard, a date and time helper appears as a date picker, a time picker, or both. Each time the value changes, Home Assistant records a new state, which you can use in your automations and templates. Your automations and scripts can also change the value, which makes a date and time helper a convenient way to share a setting between the UI and your automations.</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>, and select <strong>Create helper</strong>.</li>
+<li>Select <strong>Date and/or time</strong>.</li>
+</ol>
+<p><code>input_datetime</code> can also be configured via YAML. To add three datetime inputs to your installation,
+one with both date and time, and one with date or time each,
+add the following lines to your <code>configuration.yaml</code>:</p>
+<pre><code># Example configuration.yaml entry
+input_datetime:
+  both_date_and_time:
+    name: Input with both date and time
+    has_date: true
+    has_time: true
+  only_date:
+    name: Input with only date
+    has_date: true
+    has_time: false
+  only_time:
+    name: Input with only time
+    has_date: false
+    has_time: true
+</code></pre>
+<pre><code>
+  input_datetime:
+    description: Alias for the datetime input. Multiple entries are allowed.
+    required: true
+    type: map
+    keys:
+      name:
+        description: Friendly name of the datetime input.
+        required: false
+        type: string
+      has_time:
+        description: Set to `true` if the input should have a time. At least one of `has_time` or `has_date` must be defined.
+        required: false
+        type: boolean
+        default: false
+      has_date:
+        description: Set to `true` if the input should have a date. At least one of `has_time` or `has_date` must be defined.
+        required: false
+        type: boolean
+        default: false
+      icon:
+        description: Icon to display in front of the input element in the frontend.
+        required: false
+        type: icon
+      initial:
+        description: Set the initial value of this input, depending on `has_time` and `has_date`.
+        required: false
+        type: [datetime, time, date]
+        default: &lt;today&gt; 00:00 | 00:00 | &lt;today&gt;
+
+</code></pre>
+<h2>Attributes</h2>
+<p>A datetime input entity's state exports several attributes that can be useful in
+automations and templates.</p>
+<table>
+<thead>
+<tr>
+  <th>Attribute</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>has_time</code></td>
+  <td><code>true</code> if this entity has a time.</td>
+</tr>
+<tr>
+  <td><code>has_date</code></td>
+  <td><code>true</code> if this entity has a date.</td>
+</tr>
+<tr>
+  <td><code>year</code><br><code>month</code><br><code>day</code></td>
+  <td>The year, month and day of the date.<br>(only available if <code>has_date: true</code>)</td>
+</tr>
+<tr>
+  <td><code>timestamp</code></td>
+  <td>A timestamp representing the time held in the input.<br>(only available if <code>has_time: true</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2>Restore state</h2>
+<p>If you set a valid value for <code>initial</code>, this integration will start with the state set to that value. Otherwise, it will restore the state it had before Home Assistant stopping.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Examples</h2>
+<p>The following example shows the usage of the <code>input_datetime</code> as a trigger in an
+automation:</p>
+<pre><code># Example configuration.yaml entry
+# Turns on bedroom light at the time specified.
+automation:
+  triggers:
+    - trigger: time
+      at: input_datetime.bedroom_alarm_clock_time
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.bedroom
+</code></pre>
+<p>To dynamically set the <code>input_datetime</code> you can call
+<code>input_datetime.set_datetime</code>. The values for <code>date</code>, <code>time</code> and/or <code>datetime</code> must be in a certain format for the call to be successful. See the <a>Set input datetime value</a> action for the expected formats.
+If you have a <code>datetime</code> object, you can use its <code>timestamp</code> method. Or, if you have a timestamp, you can just use it directly.</p>
+<pre><code># Sets time to 05:30:00
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    time: "05:30:00"
+# Sets time to time from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    time: "{{ now().strftime('%H:%M:%S') }}"
+# Sets date to 2020-08-24
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    date: "2020-08-24"
+# Sets date to date from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    date: "{{ now().strftime('%Y-%m-%d') }}"
+# Sets date and time to 2020-08-25 05:30:00
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    datetime: "2020-08-25 05:30:00"
+# Sets date and time from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
+# Sets date and/or time from UNIX timestamp
+# This can be used whether the input_datetime has just a date,
+# or just a time, or has both
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    timestamp: "{{ now().timestamp() }}"
+</code></pre>
+<h2>Troubleshooting</h2>
+<h3>The <strong>Date and/or time</strong> helper option is missing from the UI</h3>
+<h4>Symptom</h4>
+<p>When you go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong> to add a helper, the <strong>Date and/or time</strong> option is not listed.</p>
+<h4>Description</h4>
+<p>Date and time helpers are provided through <a href="../default_config/"><code>default_config:</code></a>, which is part of your <code>configuration.yaml</code> by default. If you removed <code>default_config:</code>, the option is no longer available.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Add <code>input_datetime:</code> to your <code>configuration.yaml</code>.</li>
+<li>Restart Home Assistant.</li>
+<li>After the restart, create your date and time helpers from the user interface.</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/input_datetime.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate the Input Datetime integration into Home Assistant.
+ha_release: 0.55
+ha_domain: input_datetime
+---
+
+The **Input Datetime** {% term integration %} lets you create a date and time {% term helper %}: an entity that stores a date, a time, or both, which you can set yourself. Because the value is not tied to a physical device, you can use it as an adjustable date or time setting for your automations, scripts, and dashboards. For example, you can create a date and time helper to store a wake-up time, a target date, or the moment an automation should run.
+
+On a dashboard, a date and time helper appears as a date picker, a time picker, or both. Each time the value changes, Home Assistant records a new {% term state %}, which you can use in your automations and templates. Your automations and scripts can also change the value, which makes a date and time helper a convenient way to share a setting between the UI and your automations.
+
+1. Go to {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}, and select **Create helper**.
+2. Select **{% my config_flow_start domain=&quot;input_datetime&quot; title=&quot;Date and/or time&quot; %}**.
+
+`input_datetime` can also be configured via YAML. To add three datetime inputs to your installation,
+one with both date and time, and one with date or time each,
+add the following lines to your {% term &quot;`configuration.yaml`&quot; %}:
+
+```yaml
+# Example configuration.yaml entry
+input_datetime:
+  both_date_and_time:
+    name: Input with both date and time
+    has_date: true
+    has_time: true
+  only_date:
+    name: Input with only date
+    has_date: true
+    has_time: false
+  only_time:
+    name: Input with only time
+    has_date: false
+    has_time: true
+```
+
+{% configuration %}
+  input_datetime:
+    description: Alias for the datetime input. Multiple entries are allowed.
+    required: true
+    type: map
+    keys:
+      name:
+        description: Friendly name of the datetime input.
+        required: false
+        type: string
+      has_time:
+        description: Set to `true` if the input should have a time. At least one of `has_time` or `has_date` must be defined.
+        required: false
+        type: boolean
+        default: false
+      has_date:
+        description: Set to `true` if the input should have a date. At least one of `has_time` or `has_date` must be defined.
+        required: false
+        type: boolean
+        default: false
+      icon:
+        description: Icon to display in front of the input element in the frontend.
+        required: false
+        type: icon
+      initial:
+        description: Set the initial value of this input, depending on `has_time` and `has_date`.
+        required: false
+        type: [datetime, time, date]
+        default: &lt;today&gt; 00:00 | 00:00 | &lt;today&gt;
+{% endconfiguration %}
+
+## Attributes
+
+A datetime input entity&#x27;s state exports several attributes that can be useful in
+automations and templates.
+
+| Attribute                  | Description                                                                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| `has_time`                 | `true` if this entity has a time.                                                            |
+| `has_date`                 | `true` if this entity has a date.                                                            |
+| `year`&lt;br&gt;`month`&lt;br&gt;`day` | The year, month and day of the date.&lt;br&gt;(only available if `has_date: true`)                 |
+| `timestamp`                | A timestamp representing the time held in the input.&lt;br&gt;(only available if `has_time: true`) |
+
+## Restore state
+
+If you set a valid value for `initial`, this integration will start with the state set to that value. Otherwise, it will restore the state it had before Home Assistant stopping.
+
+{% include integrations/actions.md %}
+
+## Examples
+
+The following example shows the usage of the `input_datetime` as a trigger in an
+automation:
+
+```yaml
+# Example configuration.yaml entry
+# Turns on bedroom light at the time specified.
+automation:
+  triggers:
+    - trigger: time
+      at: input_datetime.bedroom_alarm_clock_time
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.bedroom
+```
+
+To dynamically set the `input_datetime` you can call
+`input_datetime.set_datetime`. The values for `date`, `time` and/or `datetime` must be in a certain format for the call to be successful. See the [Set input datetime value](/actions/input_datetime.set_datetime/) action for the expected formats.
+If you have a `datetime` object, you can use its `timestamp` method. Or, if you have a timestamp, you can just use it directly.
+
+```yaml
+# Sets time to 05:30:00
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    time: &quot;05:30:00&quot;
+# Sets time to time from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    time: &quot;{{ now().strftime(&#x27;%H:%M:%S&#x27;) }}&quot;
+# Sets date to 2020-08-24
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    date: &quot;2020-08-24&quot;
+# Sets date to date from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    date: &quot;{{ now().strftime(&#x27;%Y-%m-%d&#x27;) }}&quot;
+# Sets date and time to 2020-08-25 05:30:00
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    datetime: &quot;2020-08-25 05:30:00&quot;
+# Sets date and time from datetime object
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    datetime: &quot;{{ now().strftime(&#x27;%Y-%m-%d %H:%M:%S&#x27;) }}&quot;
+# Sets date and/or time from UNIX timestamp
+# This can be used whether the input_datetime has just a date,
+# or just a time, or has both
+- action: input_datetime.set_datetime
+  target:
+    entity_id: input_datetime.XXX
+  data:
+    timestamp: &quot;{{ now().timestamp() }}&quot;
+```
+
+## Troubleshooting
+
+### The **Date and/or time** helper option is missing from the UI
+
+#### Symptom
+
+When you go to {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %} to add a helper, the **Date and/or time** option is not listed.
+
+#### Description
+
+Date and time helpers are provided through [`default_config:`](/integrations/default_config/), which is part of your {% term &quot;`configuration.yaml`&quot; %} by default. If you removed `default_config:`, the option is no longer available.
+
+#### Resolution
+
+1. Add `input_datetime:` to your {% term &quot;`configuration.yaml`&quot; %}.
+2. Restart Home Assistant.
+3. After the restart, create your date and time helpers from the user interface.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Input Datetime in Home Assistant is <code>input_datetime</code>.</p><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>set datetime</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Attributes</li><li>Restore state</li><li>Examples</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/input_datetime/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/input_datetime</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/input_datetime</code></dd></dl></section><p><a href="../../integrations/input_datetime/">Return to the Input Datetime guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

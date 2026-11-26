@@ -1,1 +1,1079 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SNMP reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:205" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/snmp/">SNMP guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SNMP</h1><p>Instructions on how to integrate SNMP into Home Assistant.</p><section><h2>Overview</h2><p>Many routers, Wi-Fi access points, printers, and other network-connected devices support the Simple Network Management Protocol (SNMP). This is a standardized method for monitoring/managing network-connected devices. SNMP uses a tree-like hierarchy where each node is an object. Many of these objects contain continuously updated lists of metrics like network interfaces throughput, disk activity, active devices on the network, toner levels, and such.</p></section><section><h2>Presence detection</h2><p>The following OIDs refer to the current MAC Address table from various common router brands. These reflect all recent devices seen on the network. However, since devices are usually not removed from these internal tables until after a predefined timeout (typically in a range of 5-15 minutes after they were last active on the network, depending on the specific manufacturer&#x27;s implementation), this is less effective for device tracking than desirable. If near-realtime values are needed, it is recommended to use Ping or Nmap integrations instead.</p></section><section><h2>Sensor</h2><p>The snmp sensor platform displays values made available by network devices through the SNMP protocol.</p></section><section><h2>Finding OIDs</h2><p>OIDs may vary on different systems because they are vendor-specific. The best place to find OIDs is in your device&#x27;s manual or vendor documentation. For example, the following OIDs are for the load of a Linux system.</p></section><section><h2>Printer uptime minutes</h2><p>According to the most common SNMP standard, the uptime of a device is accessible under OID 1.3.6.1.2.1.1.3.0. The value represented using a format called TimeTicks, in units of hundredths of a second.</p></section><section><h2>Switch</h2><p>The snmp switch platform allows you to control SNMP-enabled equipment.</p></section><section><h2>Configuration details</h2><p>The domain used to identify SNMP in Home Assistant is <code>snmp</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>device tracker</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Presence detection</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/snmp/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/snmp</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/snmp</code></dd></dl></section><p><a href="../../integrations/snmp/">Return to the SNMP guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SNMP reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:205" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/snmp/">SNMP guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SNMP</h1><p>Instructions on how to integrate SNMP into Home Assistant.</p><div class="reader-body"><p>Many routers, Wi-Fi access points, printers, and other network-connected devices support the <a>Simple Network Management Protocol (SNMP)</a>. This is a standardized method for monitoring/managing network-connected devices. SNMP uses a tree-like hierarchy where each node is an object. Many of these objects contain continuously updated lists of metrics like network interfaces throughput, disk activity, active devices on the network, toner levels, and such.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li><a>Presence detection</a></li>
+<li><a>Sensor</a><ul>
+<li><a>Finding OIDs</a></li>
+<li><a>Examples</a><ul>
+<li><a>Printer uptime minutes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a>Switch</a></li>
+</ul>
+<p><strong>Important</strong></p>
+<p>This device tracker needs SNMP to be enabled on the target network device. It could be that you need to install SNMP support manually on your router, switch, server, or any other device that you will be trying to extract information from.</p>
+<h2>Presence detection</h2>
+<p>The following OIDs refer to the current MAC Address table from various common router brands. These reflect all recent devices seen on the network. However, since devices are usually not removed from these internal tables until after a predefined timeout (typically in a range of 5-15 minutes after they were last active on the network, depending on the specific manufacturer's implementation), this is less effective for <a href="../device_tracker/">device tracking</a> than desirable. If near-realtime values are needed, it is recommended to use <a href="../ping/">Ping</a> or <a href="../nmap_tracker/">Nmap</a> integrations instead.</p>
+<table>
+<thead>
+<tr>
+  <th>Brand</th>
+  <th>Device/Firmware</th>
+  <th>OID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Aerohive</td>
+  <td>AP230</td>
+  <td><code>1.3.6.1.4.1.26928.1.1.1.2.1.2.1.1</code></td>
+</tr>
+<tr>
+  <td>Apple</td>
+  <td>Airport Express (2nd gen.) 7.6.9</td>
+  <td><code>1.3.6.1.2.1.3.1.1.2</code> or <code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>Aruba</td>
+  <td>IAP325 on AOS 6.5.4.8</td>
+  <td><code>1.3.6.1.4.1.14823.2.3.3.1.2.4.1.1</code></td>
+</tr>
+<tr>
+  <td>BiPAC</td>
+  <td>7800DXL Firmware 2.32e</td>
+  <td><code>1.3.6.1.2.1.17.7.1.2.2.1.1</code></td>
+</tr>
+<tr>
+  <td>DD-WRT</td>
+  <td>unknown version/model</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>IPFire</td>
+  <td>2.25</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>MikroTik</td>
+  <td>unknown RouterOS version/model</td>
+  <td><code>1.3.6.1.4.1.14988.1.1.1.2.1.1</code></td>
+</tr>
+<tr>
+  <td>MikroTik</td>
+  <td>RouterOS 6.x on RB2011</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>OpenWrt</td>
+  <td>Chaos Calmer 15.05</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>OPNsense</td>
+  <td>19.1</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>pfSense</td>
+  <td>2.2.4</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+<tr>
+  <td>Ruckus</td>
+  <td>ZoneDirector 9.13.3</td>
+  <td><code>1.3.6.1.4.1.25053.1.2.2.1.1.3.1.1.1.6</code></td>
+</tr>
+<tr>
+  <td>TP-Link</td>
+  <td>Archer VR1600v</td>
+  <td><code>1.3.6.1.2.1.3.1.1.2.16.1</code></td>
+</tr>
+<tr>
+  <td>TP-Link</td>
+  <td>Archer VR2600v</td>
+  <td><code>1.3.6.1.2.1.3.1.1.2.19.1</code></td>
+</tr>
+<tr>
+  <td>TP-Link</td>
+  <td>Archer VR600</td>
+  <td><code>1.3.6.1.2.1.3.1.1.2</code></td>
+</tr>
+<tr>
+  <td>Ubiquiti</td>
+  <td>Edgerouter Lite v1.9.0</td>
+  <td><code>1.3.6.1.2.1.4.22.1.2</code></td>
+</tr>
+</tbody>
+</table>
+<p>To use SNMP version 1 or 2c in your installation, add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry for SNMP version 1 or 2c
+device_tracker:
+  - platform: snmp
+    host: 192.168.1.1
+    community: public
+    baseoid: 1.3.6.1.4.1.14988.1.1.1.2.1.1
+</code></pre>
+<p>If your network device supports SNMP version 3 and is configured appropriately, you can enable encryption by adding <code>auth_key</code> and <code>priv_key</code> variables. Example configuration:</p>
+<pre><code># Example configuration.yaml entry for SNMP version 3
+device_tracker:
+  - platform: snmp
+    host: 192.168.1.1
+    community: USERNAME
+    auth_key: AUTHPASS
+    priv_key: PRIVPASS
+    baseoid: 1.3.6.1.4.1.14988.1.1.1.2.1.1
+</code></pre>
+<pre><code>
+host:
+  description: The IP address of the router, e.g., 192.168.1.1.
+  required: true
+  type: string
+community:
+  description: The SNMP community which is set for the device. Most devices have a default community set to `public` with read-only permission (which is sufficient for most purposes).
+  required: true
+  type: string
+baseoid:
+  description: The OID prefix where wireless client registrations can be found, usually vendor specific. It's advised to use the numerical notation. To find this base OID, check vendor documentation or check the MIB file for your device.
+  required: true
+  type: string
+auth_key:
+  description: "Authentication key for SNMPv3. Variable `priv_key` must also be set."
+  required: inclusive
+  type: string
+priv_key:
+  description: "Privacy key SNMPv3. Variable `auth_key` must also be set."
+  required: inclusive
+  type: string
+
+</code></pre>
+<p>See the <a href="../device_tracker/">device tracker integration page</a> for instructions how to configure the people to be tracked.</p>
+<h3>Using templates</h3>
+<p>For incoming data, a value template translates incoming JSON or raw data to a valid payload.
+Incoming payloads are rendered with possible JSON values, so when rendering, the <code>value_json</code> can be used to access the attributes in a JSON based payload, otherwise the <code>value</code> variable can be used for non-json based data.</p>
+<p>Additional, the <code>this</code> can be used as variables in the template. The <code>this</code> attribute refers to the current <a>entity state</a> of the entity.
+Further information about <code>this</code> variable can be found in the <a href="../template/">template documentation</a></p>
+<p><strong>Note</strong></p>
+<p><strong>Example value template with json:</strong></p>
+<p>With given payload:</p>
+<pre><code>{ "state": "ON", "temperature": 21.902 }
+</code></pre>
+<p>Template <code>{{ value_json.temperature | round(1) }}</code> renders to <code>21.9</code>.</p>
+<h2>Sensor</h2>
+<p>The <code>snmp</code> sensor platform displays values made available by network devices through the SNMP protocol.</p>
+<p>To enable this sensor in your installation, add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - platform: snmp
+    host: 192.168.1.32
+    baseoid: 1.3.6.1.4.1.2021.10.1.3.1
+</code></pre>
+<pre><code>
+accept_errors:
+  description: "Determines whether the sensor should start and keep working even if the SNMP host is unreachable or not responding. This allows the sensor to be initialized properly even if, for example, your printer is not on when you start Home Assistant."
+  required: false
+  type: string
+  default: false
+auth_key:
+  description: Authentication key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+auth_protocol:
+  description: Authentication protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: 'none'
+baseoid:
+  description: The OID where the information is located. It's advised to use the numerical notation.
+  required: true
+  type: string
+community:
+  description: "The SNMP community which is set for the device for SNMP v1 and v2c. Most devices have a default community set to `public` with read-only permission (which is sufficient for most devices that don't accept direct modifications of their parameters via SNMP, such as printers)."
+  required: false
+  type: string
+  default: 'public'
+default_value:
+  description: "Determines what value the sensor should take if `accept_errors` is set and the host is unreachable or not responding. If not set, the sensor will have value `unknown` in case of errors."
+  required: false
+  type: string
+device_class:
+  description: Sets the [class of the device](/integrations/sensor#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+host:
+  description: The IP address of your host, e.g., `192.168.1.32`.
+  required: false
+  type: string
+  default: 'localhost'
+icon:
+  description: Defines a template for the icon of the SNMP sensor.
+  required: false
+  type: template
+name:
+  description: Defines a template for the name of the SNMP sensor.
+  required: false
+  type: template
+  default: SNMP
+picture:
+  description: Defines a template for the entity picture of the SNMP sensor.
+  required: false
+  type: template
+port:
+  description: The SNMP port of your host.
+  required: false
+  type: string
+  default: '161'
+priv_key:
+  description: Privacy key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+priv_protocol:
+  description: Privacy protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: 'none'
+state_class:
+  description: The [state_class](/integrations/sensor/#state-class) of the sensor.
+  required: false
+  type: string
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+unit_of_measurement:
+  description: Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes).
+  required: false
+  type: string
+username:
+  description: Username to use for authentication.
+  required: false
+  type: string
+  default: ''
+value_template:
+  description: "Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to parse the value."
+  required: false
+  type: template
+version:
+  description: "Version of SNMP protocol, `1`, `2c` or `3`. Version `2c` or higher is needed to read data from 64-bit counters."
+  required: false
+  type: string
+  default: '1'
+
+</code></pre>
+<p>Valid values for <code>auth_protocol</code>:</p>
+<ul>
+<li><strong>none</strong></li>
+<li><strong>hmac-md5</strong></li>
+<li><strong>hmac-sha</strong></li>
+<li><strong>hmac128-sha224</strong></li>
+<li><strong>hmac192-sha256</strong></li>
+<li><strong>hmac256-sha384</strong></li>
+<li><strong>hmac384-sha512</strong></li>
+</ul>
+<p>Valid values for <code>priv_protocol</code>:</p>
+<ul>
+<li><strong>none</strong></li>
+<li><strong>des</strong></li>
+<li><strong>3des-ede</strong></li>
+<li><strong>aes-cfb-128</strong></li>
+<li><strong>aes-cfb-192</strong></li>
+<li><strong>aes-cfb-256</strong></li>
+</ul>
+<h3>Finding OIDs</h3>
+<p>OIDs may vary on different systems because they are vendor-specific. The best place to find OIDs is in your device's manual or vendor documentation. For example, the following OIDs are for the load of a Linux system.</p>
+<ul>
+<li>1 minute Load: <code>1.3.6.1.4.1.2021.10.1.3.1</code></li>
+<li>5 minute Load: <code>1.3.6.1.4.1.2021.10.1.3.2</code></li>
+<li>15 minute Load: <code>1.3.6.1.4.1.2021.10.1.3.3</code></li>
+</ul>
+<p>There is a large amount of tools available to work with SNMP. <code>snmpwalk</code> let you easily retrieve the value of an OID.</p>
+<pre><code>$ snmpwalk -Os -c public -v 2c 192.168.1.32 1.3.6.1.4.1.2021.10.1.3.1
+laLoad.1 = STRING: 0.19
+</code></pre>
+<h3>Examples</h3>
+<h4>Printer uptime minutes</h4>
+<p>According to the most common SNMP standard, the uptime of a device is accessible under OID <code>1.3.6.1.2.1.1.3.0</code>. The value represented using a format called <code>TimeTicks</code>, in units of hundredths of a second.</p>
+<p>To create a sensor that displays the uptime for your printer in minutes, you can use this configuration:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - platform: snmp
+    name: "Printer uptime"
+    host: 192.168.2.21
+    baseoid: 1.3.6.1.2.1.1.3.0
+    accept_errors: true
+    unit_of_measurement: "minutes"
+    value_template: "{{((value | int) / 6000) | int}}"
+</code></pre>
+<p>The <code>accept_errors</code> option will allow the sensor to work even if the printer is not on when Home Assistant is first started: the sensor will just display a <code>-</code> instead of a minute count.</p>
+<p>The <code>value_template</code> option converts the original value to minutes.</p>
+<h2>Switch</h2>
+<p>The <code>snmp</code> switch platform allows you to control SNMP-enabled equipment.</p>
+<p>Currently, only SNMP OIDs that accept integer values are supported. SNMP v1, v2c and v3 are supported.</p>
+<p>To use an SNMP switch in your installation:</p>
+<pre><code># Example configuration.yaml entry:
+switch:
+  - platform: snmp
+    host: 192.168.0.2
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+</code></pre>
+<pre><code>
+baseoid:
+  description: The SNMP BaseOID which to poll for the state of the switch.
+  required: true
+  type: string
+command_oid:
+  description: The SNMP OID which to set to turn the switch on and off, if different from `baseoid`.
+  required: false
+  type: string
+host:
+  description: The IP/host which to control.
+  required: false
+  type: string
+  default: 'localhost'
+port:
+  description: The port on which to communicate.
+  required: false
+  type: string
+  default: '161'
+community:
+  description: community string to use for authentication (SNMP v1 and v2c).
+  required: false
+  type: string
+  default: 'private'
+username:
+  description: Username to use for authentication.
+  required: false
+  type: string
+  default: ''
+auth_key:
+  description: Authentication key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+auth_protocol:
+  description: Authentication protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: 'none'
+priv_key:
+  description: Privacy key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+priv_protocol:
+  description: Privacy protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: 'none'
+version:
+  description: SNMP version to use - either `1`, `2c` or `3`.
+  required: false
+  type: string
+  default: '1'
+payload_on:
+  description: What return value represents an `On` state for the switch. The same value is used in writes to turn on the switch if `command_payload_on` is not set.
+  required: false
+  type: string
+  default: '1'
+payload_off:
+  description: What return value represents an `Off` state for the switch. The same value is used in writes to turn off the switch if `command_payload_off` is not set.
+  required: false
+  type: string
+  default: '0'
+command_payload_on:
+  description: The value to write to turn on the switch, if different from `payload_on`.
+  required: false
+  type: string
+command_payload_off:
+  description: The value to write to turn off the switch, if different from `payload_off`.
+  required: false
+  type: string
+vartype:
+  description: The SNMP vartype for the `payload_on` and `payload_off` commands as defined in [RFC1902](https://tools.ietf.org/html/rfc1902.html).
+  required: false
+  type: string
+  default: 'none'
+
+</code></pre>
+<p>You should check with your device's vendor to find out the correct OID and what values turn the switch on and off.</p>
+<p>Valid values for <code>auth_protocol</code>:</p>
+<ul>
+<li><strong>none</strong></li>
+<li><strong>hmac-md5</strong></li>
+<li><strong>hmac-sha</strong></li>
+<li><strong>hmac128-sha224</strong></li>
+<li><strong>hmac192-sha256</strong></li>
+<li><strong>hmac256-sha384</strong></li>
+<li><strong>hmac384-sha512</strong></li>
+</ul>
+<p>Valid values for <code>priv_protocol</code>:</p>
+<ul>
+<li><strong>none</strong></li>
+<li><strong>des</strong></li>
+<li><strong>3des-ede</strong></li>
+<li><strong>aes-cfb-128</strong></li>
+<li><strong>aes-cfb-192</strong></li>
+<li><strong>aes-cfb-256</strong></li>
+</ul>
+<p>Valid values for <code>vartype</code>:</p>
+<ul>
+<li><strong>Counter32</strong></li>
+<li><strong>Counter64</strong></li>
+<li><strong>Gauge32</strong></li>
+<li><strong>Integer32</strong></li>
+<li><strong>Integer</strong></li>
+<li><strong>IpAddress</strong></li>
+<li><strong>ObjectIdentifier</strong></li>
+<li><strong>OctetString</strong></li>
+<li><strong>Opaque</strong></li>
+<li><strong>TimeTicks</strong></li>
+<li><strong>Unsigned32</strong></li>
+</ul>
+<p>Complete examples:</p>
+<pre><code>switch:
+  - platform: snmp
+    name: SNMP v1 switch
+    host: 192.168.0.2
+    community: private
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+    payload_on: 1
+    payload_off: 0
+
+  - platform: snmp
+    name: SNMP v3 switch
+    host: 192.168.0.3
+    version: "3"
+    username: "myusername"
+    auth_key: "myauthkey"
+    auth_protocol: "hmac-sha"
+    priv_key: "myprivkey"
+    priv_protocol: "aes-cfb-128"
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+    payload_on: 1
+    payload_off: 0
+
+  - platform: snmp
+    name: Enable PoE on NETGEAR switch port 2 using SNMP v3
+    host: 192.168.0.4
+    version: "3"
+    username: "myusername"
+    auth_key: "myauthkey"
+    auth_protocol: "hmac-sha"
+    priv_key: "myprivkey"
+    priv_protocol: "des"
+    baseoid: 1.3.6.1.4.1.4526.11.15.1.1.1.1.1.2
+    payload_on: 15400
+    payload_off: 3000
+    vartype: Gauge32
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/snmp.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate SNMP into Home Assistant.
+ha_release: 0.57
+ha_domain: snmp
+---
+
+Many routers, Wi-Fi access points, printers, and other network-connected devices support the [Simple Network Management Protocol (SNMP)](https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol). This is a standardized method for monitoring/managing network-connected devices. SNMP uses a tree-like hierarchy where each node is an object. Many of these objects contain continuously updated lists of metrics like network interfaces throughput, disk activity, active devices on the network, toner levels, and such.
+
+There is currently support for the following device types within Home Assistant:
+
+- [Presence detection](#presence-detection)
+- [Sensor](#sensor)
+  - [Finding OIDs](#finding-oids)
+  - [Examples](#examples)
+    - [Printer uptime minutes](#printer-uptime-minutes)
+- [Switch](#switch)
+
+{% important %}
+This device tracker needs SNMP to be enabled on the target network device. It could be that you need to install SNMP support manually on your router, switch, server, or any other device that you will be trying to extract information from.
+{% endimportant %}
+
+## Presence detection
+
+The following OIDs refer to the current MAC Address table from various common router brands. These reflect all recent devices seen on the network. However, since devices are usually not removed from these internal tables until after a predefined timeout (typically in a range of 5-15 minutes after they were last active on the network, depending on the specific manufacturer&#x27;s implementation), this is less effective for [device tracking](/integrations/device_tracker/) than desirable. If near-realtime values are needed, it is recommended to use [Ping](/integrations/ping) or [Nmap](/integrations/nmap_tracker) integrations instead.
+
+| Brand    | Device/Firmware                  | OID                                             |
+| -------- | -------------------------------- | ----------------------------------------------- |
+| Aerohive | AP230                            | `1.3.6.1.4.1.26928.1.1.1.2.1.2.1.1`             |
+| Apple    | Airport Express (2nd gen.) 7.6.9 | `1.3.6.1.2.1.3.1.1.2` or `1.3.6.1.2.1.4.22.1.2` |
+| Aruba    | IAP325 on AOS 6.5.4.8            | `1.3.6.1.4.1.14823.2.3.3.1.2.4.1.1`             |
+| BiPAC    | 7800DXL Firmware 2.32e           | `1.3.6.1.2.1.17.7.1.2.2.1.1`                    |
+| DD-WRT   | unknown version/model            | `1.3.6.1.2.1.4.22.1.2`                          |
+| IPFire   | 2.25                             | `1.3.6.1.2.1.4.22.1.2`                          |
+| MikroTik | unknown RouterOS version/model   | `1.3.6.1.4.1.14988.1.1.1.2.1.1`                 |
+| MikroTik | RouterOS 6.x on RB2011           | `1.3.6.1.2.1.4.22.1.2`                          |
+| OpenWrt  | Chaos Calmer 15.05               | `1.3.6.1.2.1.4.22.1.2`                          |
+| OPNsense | 19.1                             | `1.3.6.1.2.1.4.22.1.2`                          |
+| pfSense  | 2.2.4                            | `1.3.6.1.2.1.4.22.1.2`                          |
+| Ruckus   | ZoneDirector 9.13.3              | `1.3.6.1.4.1.25053.1.2.2.1.1.3.1.1.1.6`         |
+| TP-Link  | Archer VR1600v                   | `1.3.6.1.2.1.3.1.1.2.16.1`                      |
+| TP-Link  | Archer VR2600v                   | `1.3.6.1.2.1.3.1.1.2.19.1`                      |
+| TP-Link  | Archer VR600                     | `1.3.6.1.2.1.3.1.1.2`                           |
+| Ubiquiti | Edgerouter Lite v1.9.0           | `1.3.6.1.2.1.4.22.1.2`                          |
+
+To use SNMP version 1 or 2c in your installation, add the following to your `configuration.yaml` file:
+
+```yaml
+# Example configuration.yaml entry for SNMP version 1 or 2c
+device_tracker:
+  - platform: snmp
+    host: 192.168.1.1
+    community: public
+    baseoid: 1.3.6.1.4.1.14988.1.1.1.2.1.1
+```
+
+If your network device supports SNMP version 3 and is configured appropriately, you can enable encryption by adding `auth_key` and `priv_key` variables. Example configuration:
+
+```yaml
+# Example configuration.yaml entry for SNMP version 3
+device_tracker:
+  - platform: snmp
+    host: 192.168.1.1
+    community: USERNAME
+    auth_key: AUTHPASS
+    priv_key: PRIVPASS
+    baseoid: 1.3.6.1.4.1.14988.1.1.1.2.1.1
+```
+
+{% configuration %}
+host:
+  description: The IP address of the router, e.g., 192.168.1.1.
+  required: true
+  type: string
+community:
+  description: The SNMP community which is set for the device. Most devices have a default community set to `public` with read-only permission (which is sufficient for most purposes).
+  required: true
+  type: string
+baseoid:
+  description: The OID prefix where wireless client registrations can be found, usually vendor specific. It&#x27;s advised to use the numerical notation. To find this base OID, check vendor documentation or check the MIB file for your device.
+  required: true
+  type: string
+auth_key:
+  description: &quot;Authentication key for SNMPv3. Variable `priv_key` must also be set.&quot;
+  required: inclusive
+  type: string
+priv_key:
+  description: &quot;Privacy key SNMPv3. Variable `auth_key` must also be set.&quot;
+  required: inclusive
+  type: string
+{% endconfiguration %}
+
+See the [device tracker integration page](/integrations/device_tracker/) for instructions how to configure the people to be tracked.
+
+{% include integrations/using_templates.md %}
+
+## Sensor
+
+The `snmp` sensor platform displays values made available by network devices through the SNMP protocol.
+
+To enable this sensor in your installation, add the following to your `configuration.yaml` file:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: snmp
+    host: 192.168.1.32
+    baseoid: 1.3.6.1.4.1.2021.10.1.3.1
+```
+
+{% configuration %}
+accept_errors:
+  description: &quot;Determines whether the sensor should start and keep working even if the SNMP host is unreachable or not responding. This allows the sensor to be initialized properly even if, for example, your printer is not on when you start Home Assistant.&quot;
+  required: false
+  type: string
+  default: false
+auth_key:
+  description: Authentication key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+auth_protocol:
+  description: Authentication protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: &#x27;none&#x27;
+baseoid:
+  description: The OID where the information is located. It&#x27;s advised to use the numerical notation.
+  required: true
+  type: string
+community:
+  description: &quot;The SNMP community which is set for the device for SNMP v1 and v2c. Most devices have a default community set to `public` with read-only permission (which is sufficient for most devices that don&#x27;t accept direct modifications of their parameters via SNMP, such as printers).&quot;
+  required: false
+  type: string
+  default: &#x27;public&#x27;
+default_value:
+  description: &quot;Determines what value the sensor should take if `accept_errors` is set and the host is unreachable or not responding. If not set, the sensor will have value `unknown` in case of errors.&quot;
+  required: false
+  type: string
+device_class:
+  description: Sets the [class of the device](/integrations/sensor#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: string
+host:
+  description: The IP address of your host, e.g., `192.168.1.32`.
+  required: false
+  type: string
+  default: &#x27;localhost&#x27;
+icon:
+  description: Defines a template for the icon of the SNMP sensor.
+  required: false
+  type: template
+name:
+  description: Defines a template for the name of the SNMP sensor.
+  required: false
+  type: template
+  default: SNMP
+picture:
+  description: Defines a template for the entity picture of the SNMP sensor.
+  required: false
+  type: template
+port:
+  description: The SNMP port of your host.
+  required: false
+  type: string
+  default: &#x27;161&#x27;
+priv_key:
+  description: Privacy key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+priv_protocol:
+  description: Privacy protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: &#x27;none&#x27;
+state_class:
+  description: The [state_class](/integrations/sensor/#state-class) of the sensor.
+  required: false
+  type: string
+unique_id:
+  description: An ID that uniquely identifies this entity. This allows changing the `name`, `icon` and `entity_id` from the web interface.
+  required: false
+  type: string
+unit_of_measurement:
+  description: Defines the units of measurement of the sensor, if any. When a `device_class` is set, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes).
+  required: false
+  type: string
+username:
+  description: Username to use for authentication.
+  required: false
+  type: string
+  default: &#x27;&#x27;
+value_template:
+  description: &quot;Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to parse the value.&quot;
+  required: false
+  type: template
+version:
+  description: &quot;Version of SNMP protocol, `1`, `2c` or `3`. Version `2c` or higher is needed to read data from 64-bit counters.&quot;
+  required: false
+  type: string
+  default: &#x27;1&#x27;
+{% endconfiguration %}
+
+Valid values for `auth_protocol`:
+
+- **none**
+- **hmac-md5**
+- **hmac-sha**
+- **hmac128-sha224**
+- **hmac192-sha256**
+- **hmac256-sha384**
+- **hmac384-sha512**
+
+Valid values for `priv_protocol`:
+
+- **none**
+- **des**
+- **3des-ede**
+- **aes-cfb-128**
+- **aes-cfb-192**
+- **aes-cfb-256**
+
+### Finding OIDs
+
+OIDs may vary on different systems because they are vendor-specific. The best place to find OIDs is in your device&#x27;s manual or vendor documentation. For example, the following OIDs are for the load of a Linux system.
+
+- 1 minute Load: `1.3.6.1.4.1.2021.10.1.3.1`
+- 5 minute Load: `1.3.6.1.4.1.2021.10.1.3.2`
+- 15 minute Load: `1.3.6.1.4.1.2021.10.1.3.3`
+
+There is a large amount of tools available to work with SNMP. `snmpwalk` let you easily retrieve the value of an OID.
+
+```bash
+$ snmpwalk -Os -c public -v 2c 192.168.1.32 1.3.6.1.4.1.2021.10.1.3.1
+laLoad.1 = STRING: 0.19
+```
+
+### Examples
+
+#### Printer uptime minutes
+
+According to the most common SNMP standard, the uptime of a device is accessible under OID `1.3.6.1.2.1.1.3.0`. The value represented using a format called `TimeTicks`, in units of hundredths of a second.
+
+To create a sensor that displays the uptime for your printer in minutes, you can use this configuration:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - platform: snmp
+    name: &quot;Printer uptime&quot;
+    host: 192.168.2.21
+    baseoid: 1.3.6.1.2.1.1.3.0
+    accept_errors: true
+    unit_of_measurement: &quot;minutes&quot;
+    value_template: &quot;{{((value | int) / 6000) | int}}&quot;
+```
+
+The `accept_errors` option will allow the sensor to work even if the printer is not on when Home Assistant is first started: the sensor will just display a `-` instead of a minute count.
+
+The `value_template` option converts the original value to minutes.
+
+## Switch
+
+The `snmp` switch platform allows you to control SNMP-enabled equipment.
+
+Currently, only SNMP OIDs that accept integer values are supported. SNMP v1, v2c and v3 are supported.
+
+To use an SNMP switch in your installation:
+
+```yaml
+# Example configuration.yaml entry:
+switch:
+  - platform: snmp
+    host: 192.168.0.2
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+```
+
+{% configuration %}
+baseoid:
+  description: The SNMP BaseOID which to poll for the state of the switch.
+  required: true
+  type: string
+command_oid:
+  description: The SNMP OID which to set to turn the switch on and off, if different from `baseoid`.
+  required: false
+  type: string
+host:
+  description: The IP/host which to control.
+  required: false
+  type: string
+  default: &#x27;localhost&#x27;
+port:
+  description: The port on which to communicate.
+  required: false
+  type: string
+  default: &#x27;161&#x27;
+community:
+  description: community string to use for authentication (SNMP v1 and v2c).
+  required: false
+  type: string
+  default: &#x27;private&#x27;
+username:
+  description: Username to use for authentication.
+  required: false
+  type: string
+  default: &#x27;&#x27;
+auth_key:
+  description: Authentication key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+auth_protocol:
+  description: Authentication protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: &#x27;none&#x27;
+priv_key:
+  description: Privacy key to use for SNMP v3.
+  required: false
+  type: string
+  default: no key
+priv_protocol:
+  description: Privacy protocol to use for SNMP v3.
+  required: false
+  type: string
+  default: &#x27;none&#x27;
+version:
+  description: SNMP version to use - either `1`, `2c` or `3`.
+  required: false
+  type: string
+  default: &#x27;1&#x27;
+payload_on:
+  description: What return value represents an `On` state for the switch. The same value is used in writes to turn on the switch if `command_payload_on` is not set.
+  required: false
+  type: string
+  default: &#x27;1&#x27;
+payload_off:
+  description: What return value represents an `Off` state for the switch. The same value is used in writes to turn off the switch if `command_payload_off` is not set.
+  required: false
+  type: string
+  default: &#x27;0&#x27;
+command_payload_on:
+  description: The value to write to turn on the switch, if different from `payload_on`.
+  required: false
+  type: string
+command_payload_off:
+  description: The value to write to turn off the switch, if different from `payload_off`.
+  required: false
+  type: string
+vartype:
+  description: The SNMP vartype for the `payload_on` and `payload_off` commands as defined in [RFC1902](https://tools.ietf.org/html/rfc1902.html).
+  required: false
+  type: string
+  default: &#x27;none&#x27;
+{% endconfiguration %}
+
+You should check with your device&#x27;s vendor to find out the correct OID and what values turn the switch on and off.
+
+Valid values for `auth_protocol`:
+
+- **none**
+- **hmac-md5**
+- **hmac-sha**
+- **hmac128-sha224**
+- **hmac192-sha256**
+- **hmac256-sha384**
+- **hmac384-sha512**
+
+Valid values for `priv_protocol`:
+
+- **none**
+- **des**
+- **3des-ede**
+- **aes-cfb-128**
+- **aes-cfb-192**
+- **aes-cfb-256**
+
+Valid values for `vartype`:
+
+- **Counter32**
+- **Counter64**
+- **Gauge32**
+- **Integer32**
+- **Integer**
+- **IpAddress**
+- **ObjectIdentifier**
+- **OctetString**
+- **Opaque**
+- **TimeTicks**
+- **Unsigned32**
+
+Complete examples:
+
+```yaml
+switch:
+  - platform: snmp
+    name: SNMP v1 switch
+    host: 192.168.0.2
+    community: private
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+    payload_on: 1
+    payload_off: 0
+
+  - platform: snmp
+    name: SNMP v3 switch
+    host: 192.168.0.3
+    version: &quot;3&quot;
+    username: &quot;myusername&quot;
+    auth_key: &quot;myauthkey&quot;
+    auth_protocol: &quot;hmac-sha&quot;
+    priv_key: &quot;myprivkey&quot;
+    priv_protocol: &quot;aes-cfb-128&quot;
+    baseoid: 1.3.6.1.4.1.19865.1.2.1.4.0
+    payload_on: 1
+    payload_off: 0
+
+  - platform: snmp
+    name: Enable PoE on NETGEAR switch port 2 using SNMP v3
+    host: 192.168.0.4
+    version: &quot;3&quot;
+    username: &quot;myusername&quot;
+    auth_key: &quot;myauthkey&quot;
+    auth_protocol: &quot;hmac-sha&quot;
+    priv_key: &quot;myprivkey&quot;
+    priv_protocol: &quot;des&quot;
+    baseoid: 1.3.6.1.4.1.4526.11.15.1.1.1.1.1.2
+    payload_on: 15400
+    payload_off: 3000
+    vartype: Gauge32
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify SNMP in Home Assistant is <code>snmp</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>device tracker</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Presence detection</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/snmp/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/snmp</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/snmp</code></dd></dl></section><p><a href="../../integrations/snmp/">Return to the SNMP guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

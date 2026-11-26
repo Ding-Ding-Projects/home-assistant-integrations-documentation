@@ -1,1 +1,2801 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teslemetry reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:115" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/teslemetry/">Teslemetry guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Teslemetry</h1><p>Instructions on how to integrate Teslemetry within Home Assistant.</p><section><h2>Overview</h2><p>The Teslemetry integration exposes various commands and sensors from the Tesla vehicles and energy sites connected to a Teslemetry subscription.</p></section><section><h2>Prerequisites</h2><p>You must have a Teslemetry account with active subscription.</p></section><section><h2>Bluetooth vehicle control</h2><p>By default, Teslemetry sends every vehicle command through the cloud. If Home Assistant has access to a Bluetooth adapter, you can pair a vehicle over Bluetooth so its commands are sent directly to the car over a local connection, with an automatic fallback to the cloud when the local connection isn&#x27;t available.</p></section><section><h2>Setting up Bluetooth control</h2><p>Bluetooth control is opt-in and set up per vehicle. You add each vehicle you want to control locally from the Teslemetry integration.</p></section><section><h2>Bluetooth connectivity sensors</h2><p>Each vehicle paired for Bluetooth control gets two diagnostic binary sensors. Vehicles without Bluetooth control don&#x27;t have them.</p></section><section><h2>Removing Bluetooth control</h2><p>Removing the Teslemetry integration, or the pairing for a single vehicle, stops Home Assistant from routing that vehicle&#x27;s commands over Bluetooth and forgets the stored Bluetooth address. It does not revoke Home Assistant&#x27;s virtual key from the vehicle itself. That key stays authorized on the car until you remove it there.</p></section><section><h2>Local Powerwall control</h2><p>By default, Teslemetry sends energy site commands through the cloud. If your energy site includes a Powerwall 2 or Powerwall 3, you can pair Home Assistant with your Powerwall so it can send commands directly over your local network. Local commands are faster. Home Assistant automatically falls back to the cloud whenever the local connection isn&#x27;t available, so your existing cloud-based energy entities keep working.</p></section><section><h2>Setting up local control</h2><p>Local control is optional and you add it per energy site. Only sites with a Powerwall can be added, so sites with only a wall connector or solar panels aren&#x27;t offered.</p></section><section><h2>Entities</h2><p>These are the entities available in the Teslemetry integration. Not all entities are enabled by default, and not all values are always available. Entities in the device tracker platform specifically require the Vehicle location scope, and will appear unavailable otherwise. The Charge on solar switch and Charge on solar lower limit number are part of a Labs preview feature and only appear once you enable it, as described in Charge on solar below. The Enable keep accessory power and Disable keep accessory power buttons are only created for vehicles on firmware 2025.38 or newer.</p></section><section><h2>Vehicles</h2><p>The Bluetooth column marks entities whose commands can control the vehicle over Bluetooth when it&#x27;s paired and within range of a Home Assistant Bluetooth adapter. See Bluetooth vehicle control for setup and requirements.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Teslemetry.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>device tracker</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>add charge schedule</li><li>add precondition schedule</li><li>dispatch battery power</li><li>navigation gps request</li><li>remove charge schedule</li><li>remove precondition schedule</li><li>resume battery operation</li><li>set scheduled charging</li><li>set scheduled departure</li><li>speed limit</li><li>time of use</li><li>valet mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Bluetooth vehicle control</li><li>Local Powerwall control</li><li>Entities</li><li>Charge on solar</li><li>Energy dashboard</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/teslemetry/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/teslemetry</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/teslemetry</code></dd></dl></section><p><a href="../../integrations/teslemetry/">Return to the Teslemetry guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teslemetry reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:115" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/teslemetry/">Teslemetry guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Teslemetry</h1><p>Instructions on how to integrate Teslemetry within Home Assistant.</p><div class="reader-body"><p>The <strong>Teslemetry</strong> integration exposes various commands and sensors from the Tesla vehicles and energy sites connected to a <a>Teslemetry</a> subscription.</p>
+<h2>Prerequisites</h2>
+<p>You must have a <a>Teslemetry</a> account with active subscription.</p>
+<p>The <a>virtual key</a> is Teslemetry's public key, installed in your vehicle through the Tesla app. It is required for fleet telemetry (live streaming) and signed vehicle commands. Since nearly all vehicles support both, nearly all customers need it: if your vehicle supports the virtual key, install it as a standard setup step. Vehicles without virtual-key support are the exception. They still work with Teslemetry at reduced capability—data by polling instead of streaming, and commands unsigned where Tesla permits.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Teslemetry</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Teslemetry</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Bluetooth vehicle control</h2>
+<p>By default, Teslemetry sends every vehicle command through the cloud. If Home Assistant has access to a <a href="../bluetooth/">Bluetooth adapter</a>, you can pair a vehicle over Bluetooth so its commands are sent directly to the car over a local connection, with an automatic fallback to the cloud when the local connection isn't available.</p>
+<h3>Requirements</h3>
+<ul>
+<li>A Bluetooth adapter available to Home Assistant, such as a built-in adapter or a <a>Bluetooth proxy</a>.</li>
+<li>The vehicle must be within Bluetooth range of that adapter while you set up pairing.</li>
+<li>The vehicle must support Tesla's vehicle command protocol. Vehicles that don't, such as certain pre-2021 Model S and Model X vehicles, are not listed when you add a local vehicle.</li>
+</ul>
+<h3>Setting up Bluetooth control</h3>
+<p>Bluetooth control is opt-in and set up per vehicle. You add each vehicle you want to control locally from the Teslemetry integration.</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the <strong>Teslemetry</strong> integration.</li>
+<li>Select <strong>Add local vehicle</strong>.</li>
+<li>Choose the account vehicle you want to control over Bluetooth, then select <strong>Submit</strong>.</li>
+<li>Home Assistant looks for the vehicle over Bluetooth. Make sure the vehicle is within range and that fewer than three phone keys are nearby, then continue.</li>
+<li>If the vehicle doesn't have Home Assistant's Bluetooth key on its key list yet, Home Assistant asks you to add it. Select <strong>Submit</strong>, then tap your key card on the center console card reader within about 30 seconds. The vehicle's touchscreen shows a prompt while it waits for the card. If the card isn't tapped in time, select <strong>Submit</strong> again and tap it sooner.</li>
+</ol>
+<p>You only need to do this once per vehicle. If Home Assistant's key is later removed from the vehicle's key list, the next time you add the vehicle, Home Assistant asks you to tap a key card again.</p>
+<p>When the vehicle is within Bluetooth range, its commands use the local connection first, with an automatic fallback to the cloud when needed. This can make commands like locking, unlocking, or flashing the lights feel noticeably faster. When the vehicle is away, its commands use the cloud, and it switches back to Bluetooth on its own when it returns.</p>
+<h3>Bluetooth connectivity sensors</h3>
+<p>Each vehicle paired for Bluetooth control gets two diagnostic binary sensors. Vehicles without Bluetooth control don't have them.</p>
+<ul>
+<li><strong>Bluetooth</strong>: On when a Home Assistant Bluetooth adapter can currently see the vehicle, meaning the car is in range and reachable over Bluetooth. It does not mean Home Assistant is connected to the vehicle. It only listens for the vehicle's Bluetooth broadcasts, so it never connects to or wakes the car. When the vehicle leaves range, it can take up to about 195 seconds for its broadcasts to be considered stale, plus up to 300 seconds for Home Assistant's next check, before this sensor turns off.</li>
+<li><strong>Bluetooth session</strong>: On while Home Assistant has an open Bluetooth connection to the vehicle. A connection is only held while a command is being sent, so this sensor is off most of the time. It is disabled by default.</li>
+</ul>
+<h3>Removing Bluetooth control</h3>
+<p>Removing the Teslemetry integration, or the pairing for a single vehicle, stops Home Assistant from routing that vehicle's commands over Bluetooth and forgets the stored Bluetooth address. It does not revoke Home Assistant's virtual key from the vehicle itself. That key stays authorized on the car until you remove it there.</p>
+<p>To fully revoke Home Assistant's access:</p>
+<ol>
+<li>Sit in the vehicle, and on the touchscreen, select <strong>Controls</strong> &gt; <strong>Locks</strong>.</li>
+<li>In the list of keys, find the one that was added when you set up Bluetooth control for Home Assistant, and select its trash icon.</li>
+<li>When prompted, confirm the removal by tapping an authenticated key card or key fob against the center console card reader.</li>
+</ol>
+<p>If you use other apps that also connect to the vehicle over a virtual key, they'll appear in the same list, so make sure you remove the correct one.</p>
+<h2>Local Powerwall control</h2>
+<p>By default, Teslemetry sends energy site commands through the cloud. If your energy site includes a Powerwall 2 or Powerwall 3, you can pair Home Assistant with your Powerwall so it can send commands directly over your local network. Local commands are faster. Home Assistant automatically falls back to the cloud whenever the local connection isn't available, so your existing cloud-based energy entities keep working.</p>
+<h3>Requirements</h3>
+<ul>
+<li>A Powerwall 2 or Powerwall 3 that's reachable on your local network.</li>
+</ul>
+<h3>Setting up local control</h3>
+<p>Local control is optional and you add it per energy site. Only sites with a Powerwall can be added, so sites with only a wall connector or solar panels aren't offered.</p>
+<p>To pair your Powerwall or Backup Gateway:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the <strong>Teslemetry</strong> integration.</li>
+<li>Select <strong>Add local energy site</strong>.</li>
+<li>Under <strong>Energy site</strong>, choose the site whose Powerwall you want to control over your local network, then continue.</li>
+<li>On the <strong>Approve the local access key</strong> step, flick the On/Off switch on your primary Powerwall off and back on to approve Home Assistant's access, then continue. You only need to do this once.</li>
+<li>On the <strong>Connect to your Powerwall system</strong> step, confirm the local network address that Home Assistant discovered, or edit it if needed, and enter your Powerwall's Wi-Fi password in the <strong>Password</strong> field. Only the last 5 characters are needed - find them on the QR label behind the front cover of your Powerwall 3, or behind the Backup Gateway door on Powerwall 2.</li>
+</ol>
+<p>Once paired, Home Assistant stores your Powerwall's address and password and sends energy commands to it directly, falling back to the cloud automatically whenever your Powerwall can't be reached.</p>
+<p>A paired energy site also gets extra entities that are only available from your Powerwall over your local network, such as <strong>Grid OK</strong> and <strong>Contactor closed</strong>. They are marked <strong>Local</strong> in the <a>energy site entity table</a>. Each one is only created when your Powerwall reports its value, and it becomes unavailable while your Powerwall can't be reached. If your Powerwall can't be reached when Home Assistant starts, these entities are still created and stay unavailable, then update on their own once your Powerwall responds, with no reload needed.</p>
+<p>A paired energy site can also be charged or discharged at a set power for a set time with the <a>Dispatch battery power</a> action, and returned to its normal operation early with the <a>Resume battery operation</a> action. These actions are sent directly to your Powerwall, so they only work while it can be reached on your local network.</p>
+<p>A paired energy site also gets the voltage and current of each solar string connected to your primary Powerwall 3, such as <strong>PV string A voltage</strong> and <strong>PV string A current</strong>. Like the other <strong>Local</strong> entities, each one is only created when your Powerwall reports its value.</p>
+<p><strong>Note</strong></p>
+<p>Removing the Teslemetry integration doesn't revoke the access key from your Powerwall system, so other apps or integrations using the same key keep working.</p>
+<h2>Entities</h2>
+<p>These are the entities available in the Teslemetry integration. Not all entities are enabled by default, and not all values are always available.
+Entities in the device tracker platform specifically require the <code>Vehicle location</code> scope, and will appear unavailable otherwise.
+The <strong>Charge on solar</strong> switch and <strong>Charge on solar lower limit</strong> number are part of a Labs preview feature and only appear once you enable it, as described in <a>Charge on solar</a> below.
+The <strong>Enable keep accessory power</strong> and <strong>Disable keep accessory power</strong> buttons are only created for vehicles on firmware 2025.38 or newer.</p>
+<h3>Vehicles</h3>
+<p>The <strong>Bluetooth</strong> column marks entities whose commands can control the vehicle over Bluetooth when it's paired and within range of a Home Assistant Bluetooth adapter. See <a>Bluetooth vehicle control</a> for setup and requirements.</p>
+<p><strong>Note</strong></p>
+<p>Only vehicle controls send commands over Bluetooth. While a paired vehicle that streams its data is within Bluetooth range, the states it broadcasts over Bluetooth also update the <strong>Lock</strong>, the four door binary sensors, the <strong>Charge port door</strong>, <strong>Frunk</strong>, and <strong>Trunk</strong> covers, the Cybertruck tonneau cover, and the <strong>Shift state</strong> sensor, alongside Teslemetry's data stream. Every other state, and all state for a vehicle that polls, comes through Teslemetry's cloud connection or data stream, even for an entity marked <strong>Yes</strong>. The exceptions are the <a>Bluetooth connectivity sensors</a>, which come from Home Assistant's own Bluetooth adapters. When the vehicle is out of Bluetooth range, its commands use the cloud, and individual commands the local connection can't complete fall back to the cloud automatically. Energy site and Wall Connector entities are not controlled over vehicle Bluetooth.</p>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+  <th>Data</th>
+  <th>Bluetooth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Binary sensor</td>
+  <td>Automatic blind spot camera</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Automatic emergency braking off</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Battery heater</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Blind spot collision warning chime</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Bluetooth</td>
+  <td>Yes</td>
+  <td>Bluetooth</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Bluetooth session</td>
+  <td>No</td>
+  <td>Bluetooth</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>BMS full charge</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Brake pedal</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Cabin overheat protection actively cooling</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Cellular</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charge cable</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charge enable request</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charge port cold weather mode</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charger has multiple phases</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Dashcam</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>DC DC</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Defrost for preconditioning</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Drive rail</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Driver seat belt warning</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Driver seat occupied</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Emergency lane departure avoidance</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Europe vehicle</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Fast charger present</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front driver door</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front driver window</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front passenger door</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front passenger window</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>GPS state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Guest mode enabled</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Hazard lights</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>High beams</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Homelink nearby</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>HVAC auto mode</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>High voltage interlock loop fault</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Located at favorite</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Located at home</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Located at work</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Offroad lightbar</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Pin to drive enabled</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Preconditioning enabled</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Preconditioning</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear display HVAC</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear driver door</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear driver window</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear passenger door</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear passenger window</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Remote start</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Right hand drive</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Scheduled charging pending</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Seat vent enabled</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Service mode</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Speed limited</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Status</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Supercharger session trip planner</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning front left</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning front right</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning rear left</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning rear right</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Trip charging</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>User present</td>
+  <td>Yes</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Wi-Fi</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Wiper heat</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Disable keep accessory power</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Enable keep accessory power</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Flash lights</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>HomeLink</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Honk horn</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Keyless driving</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Play fart</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Wake</td>
+  <td>Yes</td>
+  <td>—</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Climate</td>
+  <td>Cabin overheat protection</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Climate</td>
+  <td>Climate</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Charge port door</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Frunk</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Sunroof</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Trunk</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Vent windows</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Device tracker</td>
+  <td>Location</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Device tracker</td>
+  <td>Origin</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Device tracker</td>
+  <td>Route</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Lock</td>
+  <td>Charge cable lock</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Lock</td>
+  <td>Lock</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Lock</td>
+  <td>Speed limit</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Media player</td>
+  <td>Media player</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Charge current</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Charge limit</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Charge on solar lower limit</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat cooler front left</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat cooler front right</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater front left</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater front right</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear center</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear left</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear right</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater third row left</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater third row right</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Steering wheel heater</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery level</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery range</td>
+  <td>Yes</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>BMS state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Brake pedal position</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Brick voltage max</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Brick voltage min</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge cable</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge energy added</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge rate</td>
+  <td>Yes</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger current</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger power</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger voltage</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charging</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Cruise follow distance</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Cruise set speed</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Current speed limit</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>DC charging energy in</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>DC charging power</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Destination</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Distance to arrival</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Driver temperature setting</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Estimate battery range</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Exterior color</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Fast charger type</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter axle speed</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter battery voltage</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter heatsink temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter motor current</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive inverter temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive unit actual torque</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Front drive unit stator temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>HVAC power state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Ideal battery range</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Inside temperature</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Left temperature request</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Lifetime energy gained regen</td>
+  <td>No</td>
+  <td></td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Miles since reset</td>
+  <td>No</td>
+  <td></td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Odometer</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Outside temperature</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Passenger temperature setting</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Power</td>
+  <td>No</td>
+  <td>Polling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter axle speed</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter battery voltage</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter heatsink temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter motor current</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive inverter temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive unit actual torque</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear drive unit stator temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter axle speed</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter battery voltage</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter heatsink temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter motor current</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive inverter temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive unit actual torque</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear left drive unit stator temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter axle speed</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter battery voltage</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter heatsink temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter motor current</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter state</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive inverter temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive unit actual torque</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Rear right drive unit stator temperature</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Right temperature request</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Roof color</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Scheduled charging mode</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Scheduled charging start time</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Scheduled departure time</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Secondary drive unit torque command</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Self-driving miles since reset</td>
+  <td>No</td>
+  <td></td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Sentry mode</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Shift state</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Speed</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>State of charge at arrival</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time at arrival</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time at full charge</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time to arrival</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time to full charge</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure front left</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure front right</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure last measured front left</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure last measured front right</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure last measured rear left</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure last measured rear right</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure rear left</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure rear right</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Traffic delay</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Usable Battery level</td>
+  <td>No</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Drive unit torque command</td>
+  <td>No</td>
+  <td>Streaming</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto seat climate left</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto seat climate right</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto steering wheel heater</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Charge</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Charge on solar</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Defrost</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Guest mode</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Sentry mode</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Valet mode</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Update</td>
+  <td>Update</td>
+  <td>Yes</td>
+  <td>Both</td>
+  <td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3>Energy sites</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+  <th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Binary sensor</td>
+  <td>Backup capable</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Contactor closed</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>ESCAN firmware updating</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid OK</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid services active</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid services enabled</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid status</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Microgrid OK</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>PW3CAN firmware updating</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Site manager running</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Site running</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Storm watch active</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Calendar</td>
+  <td>Buy tariff</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Calendar</td>
+  <td>Sell tariff</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Backup reserve</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Off grid reserve</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Allow export</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Operation mode</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from battery</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from generator</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from grid</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from solar</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Generator exported</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Generator power</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from battery</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from generator</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from solar</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid imported</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services exported</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services imported</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Home usage</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Island status</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Load power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Percentage charged</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string A current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string A voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string B current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string B voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string C current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string C voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string D current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string D voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string E current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string E voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string F current</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>PV string F voltage</td>
+  <td>Yes</td>
+  <td>Local</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar exported</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar generated</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Version</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>VPP backup reserve</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Allow charging from grid</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Storm watch</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+</tbody>
+</table>
+<h3>Wall connector</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+  <th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Sensor</td>
+  <td>Energy delivered</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Fault state</td>
+  <td>No</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Power</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>State</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Vehicle</td>
+  <td>Yes</td>
+  <td>Polling</td>
+</tr>
+</tbody>
+</table>
+<h3>Metadata</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+  <th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Sensor</td>
+  <td>Teslemetry credits</td>
+  <td>Yes</td>
+  <td>Streaming</td>
+</tr>
+</tbody>
+</table>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Charge on solar</h2>
+<p><strong>Labs</strong></p>
+<p>Requires the <strong>Charge on solar</strong> Labs preview feature. Enable it at <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Labs</strong>.</p>
+<p>Charge on solar lets your Tesla vehicle keep charging while your home has excess solar power, and pause again once that excess runs out. Enabling the <strong>Charge on solar</strong> Labs preview feature adds two entities to each vehicle when your Teslemetry account has granted the <code>Vehicle commands</code> scope:</p>
+<ul>
+<li>A <strong>Charge on solar</strong> switch to turn the mode on or off.</li>
+<li>A <strong>Charge on solar lower limit</strong> number for the battery percentage the vehicle keeps charging to even without solar, so it doesn't sit too low.</li>
+</ul>
+<p>There's no separate upper limit entity for charge on solar. It reuses the vehicle's existing <strong>Charge limit</strong> number as the upper bound, so the lower limit can never be set above it. If you lower the charge limit below the current lower limit, the lower limit follows it down on the next update from the vehicle.</p>
+<p>If you disable the Labs preview feature, or the <code>Vehicle commands</code> scope is no longer granted, both entities are removed until they become available again.</p>
+<h2>Energy dashboard</h2>
+<p>The Tesla Fleet API only provides power data for Powerwall and Solar products. This means they cannot be used on the energy dashboard directly.</p>
+<p>Energy flows can be calculated from <code>Battery power</code> and <code>Grid power</code> sensors using a <a href="../template/">Template Sensor</a> to separate the positive and negative values into positive import and export values.
+The <code>Load power</code>, <code>Solar power</code>, and the templated sensors can then use a <a href="../integration/">Riemann Sum</a> to convert their instant power (kW) values into cumulative energy values (kWh),
+which then can be used within the energy dashboard.</p>
+<h2>Data updates</h2>
+<p>Teslemetry delivers data by streaming or polling, depending on the product. The <strong>Data</strong> column in the entity tables above shows how each entity is updated:</p>
+<ul>
+<li><strong>Streaming</strong>: the value arrives over the live stream in real time.</li>
+<li><strong>Polling</strong>: the value comes from Teslemetry's cached vehicle data.</li>
+<li><strong>Both</strong>: the value can arrive by streaming or polling, depending on the vehicle and its configuration.</li>
+<li><strong>Local</strong>: the value is polled directly from your Powerwall over your local network. These entities only exist for energy sites paired for <a>local Powerwall control</a>.</li>
+<li><strong>—</strong> (em dash): the entity does not report data. Buttons send commands, so they have no data source.</li>
+</ul>
+<h3>Vehicle data</h3>
+<p>Most vehicles stream their data to Home Assistant in real time. Streaming has no per-update cost, and the integration sets it up and manages it for you. These vehicles do not get entities parked as <strong>Polling</strong> in the tables above, as that would incur an ongoing command credit cost.</p>
+<p>Legacy vehicles (certain pre-2021 Model S &amp; Model X vehicles) that do not support streaming get all entities except those marked as <strong>Streaming</strong> in the tables above. Teslemetry handles the polling of this data in the cloud as part of your subscription, roughly every 15 minutes, or roughly every 90 seconds if the vehicle qualifies for a polling discount from Tesla.</p>
+<p>The integration does not wake a sleeping vehicle to fetch data. Updates pause until the vehicle wakes up on its own or you interact with it.</p>
+<h3>Energy site data</h3>
+<p>Energy site live status, site information, tariffs, and energy history arrive through the Teslemetry data stream. If you've paired a Powerwall for <a>local control</a>, Home Assistant also reads its live values directly over your local network every 5 seconds, and its backup reserve and operation mode every 30 seconds. Whenever your Powerwall can't be reached, Home Assistant uses the cloud values instead. Entity availability still follows the Teslemetry data stream.</p>
+<p>For an energy site paired for <a>local Powerwall control</a>, the local status entities marked <strong>Local</strong>, such as <strong>Grid OK</strong>, are polled from your Powerwall's status every 10 seconds. The solar string entities, such as <strong>PV string A voltage</strong>, are polled from your Powerwall every 30 seconds.</p>
+<p>The <strong>Energy delivered</strong> sensor of each Wall Connector is the energy it delivered on the current day, in the site's time zone. Teslemetry streams it while a Wall Connector at the site is charging, and once more after charging stops. A charging session counts on the day it started, so a session that continues past midnight adds to the previous day.</p>
+<h2>Known limitations</h2>
+<ul>
+<li><strong>Vehicle Sleep:</strong> The integration will not actively wake a vehicle to fetch data. However, sending commands (such as locking, unlocking, or climate control) will wake the vehicle.</li>
+<li><strong>Rate Limits:</strong> While Teslemetry handles upstream rate limiting with Tesla, excessive polling or command usage from aggressive automations may encounter temporary API limits.</li>
+<li><strong>Virtual Key:</strong> See <a>Prerequisites</a> for when a virtual key is needed. To set one up, follow the instructions on the <a>Teslemetry Console</a>.</li>
+<li><strong>Charge on solar assumed state:</strong> Tesla's API doesn't currently report charge on solar's status back from the vehicle, so the <strong>Charge on solar</strong> switch and its lower limit number show the state of the last command you sent rather than confirmed feedback from the vehicle.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Invalid tokens</h3>
+<p>If your Teslemetry authentication token becomes invalid or expires, Home Assistant will prompt you to re-authenticate. This typically involves signing in again via the integration's configuration flow.</p>
+<h3>Timeouts</h3>
+<p>Timeouts can occur due to connection issues between Home Assistant, Teslemetry, Tesla, or the vehicle itself (e.g., the vehicle is in an area with poor cellular reception). These are often temporary. If timeouts persist, please contact <code>support@teslemetry.com</code>.</p>
+<h2>Examples</h2>
+<h3>Common use cases</h3>
+<ul>
+<li><strong>Solar Charging:</strong> Automate your vehicle's charging current or state based on excess solar production to maximize renewable energy usage.</li>
+<li><strong>Smart Preconditioning:</strong> Use calendar events or time-based triggers to precondition your vehicle's cabin temperature before you depart.</li>
+<li><strong>Automatic Garage Door:</strong> Automatically open your garage door when you approach your home while navigating.</li>
+</ul>
+<h3>Automations</h3>
+<p><strong>Automate charging based on solar production</strong></p>
+<pre><code>automation:
+  - alias: "Charge Tesla from Solar"
+    trigger:
+      - trigger: numeric_state
+        entity_id: sensor.home_solar_power
+        above: 3000
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.my_tesla_charge
+      - action: number.set_value
+        target:
+          entity_id: number.my_tesla_charge_current
+        data:
+          value: 16
+</code></pre>
+<p><strong>Precondition vehicle before calendar events</strong></p>
+<pre><code>automation:
+  - alias: "Precondition for Work"
+    trigger:
+      - trigger: calendar
+        event: start
+        offset: "-00:15:00"
+        entity_id: calendar.work
+    actions:
+      - action: climate.turn_on
+        target:
+          entity_id: climate.my_tesla_climate
+</code></pre>
+<h3>Blueprints</h3>
+<p><strong>Open Garage Door based on Navigation</strong></p>
+<p>Uses the distance to arrival sensor to accurately know when you're close to a specific location (such as your home), and open a garage door, or other cover entity. Requires you to be navigating to your intended destination, even if you don't need the directions.</p>
+<pre><code>blueprint:
+  name: Teslemetry Garage Door Opener
+  author: Brett Adams
+  description: Opens a garage door when your Tesla is approaching
+  domain: automation
+  input:
+    distance_to_arrival_entity:
+      name: Distance to arrival entity
+      selector:
+        entity:
+          filter:
+            - integration: teslemetry
+              domain: sensor
+              device_class: distance
+    distance_to_arrival:
+      name: Distance to arrival value to trigger open
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: any
+          mode: box
+    route_entity:
+      name: Route entity
+      selector:
+        entity:
+          filter:
+            - integration: teslemetry
+              domain: device_tracker
+    route_zone:
+      name: Route destination
+      selector:
+        entity:
+          filter:
+            - domain: zone
+    cover_entity:
+      name: Garage door entity
+      selector:
+        entity:
+          filter:
+            - domain: cover
+trigger:
+  - trigger: numeric_state
+    entity_id:
+      - !input distance_to_arrival_entity
+    below: !input distance_to_arrival
+    above: 0
+condition:
+  - condition: zone.in_zone
+    target:
+      entity_id: !input route_entity
+    options:
+      zone: !input route_zone
+actions:
+  - action: cover.open_cover
+    target:
+      entity_id: !input cover_entity
+mode: restart
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/teslemetry.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Teslemetry within Home Assistant.
+ha_release: 2024.2
+ha_domain: teslemetry
+---
+
+The **Teslemetry** {% term integration %} exposes various commands and sensors from the Tesla vehicles and energy sites connected to a [Teslemetry](https://teslemetry.com/) subscription.
+
+## Prerequisites
+
+You must have a [Teslemetry](https://teslemetry.com) account with active subscription.
+
+The [virtual key](https://teslemetry.com/docs/topics/virtualkey) is Teslemetry&#x27;s public key, installed in your vehicle through the Tesla app. It is required for fleet telemetry (live streaming) and signed vehicle commands. Since nearly all vehicles support both, nearly all customers need it: if your vehicle supports the virtual key, install it as a standard setup step. Vehicles without virtual-key support are the exception. They still work with Teslemetry at reduced capability—data by polling instead of streaming, and commands unsigned where Tesla permits.
+
+{% include integrations/config_flow.md %}
+
+## Bluetooth vehicle control
+
+By default, Teslemetry sends every vehicle command through the cloud. If Home Assistant has access to a [Bluetooth adapter](/integrations/bluetooth/), you can pair a vehicle over Bluetooth so its commands are sent directly to the car over a local connection, with an automatic fallback to the cloud when the local connection isn&#x27;t available.
+
+### Requirements
+
+- A Bluetooth adapter available to Home Assistant, such as a built-in adapter or a [Bluetooth proxy](/connectivity/bluetooth/#remote-adapters-bluetooth-proxies).
+- The vehicle must be within Bluetooth range of that adapter while you set up pairing.
+- The vehicle must support Tesla&#x27;s vehicle command protocol. Vehicles that don&#x27;t, such as certain pre-2021 Model S and Model X vehicles, are not listed when you add a local vehicle.
+
+### Setting up Bluetooth control
+
+Bluetooth control is opt-in and set up per vehicle. You add each vehicle you want to control locally from the Teslemetry integration.
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select the **Teslemetry** integration.
+2. Select **Add local vehicle**.
+3. Choose the account vehicle you want to control over Bluetooth, then select **Submit**.
+4. Home Assistant looks for the vehicle over Bluetooth. Make sure the vehicle is within range and that fewer than three phone keys are nearby, then continue.
+5. If the vehicle doesn&#x27;t have Home Assistant&#x27;s Bluetooth key on its key list yet, Home Assistant asks you to add it. Select **Submit**, then tap your key card on the center console card reader within about 30 seconds. The vehicle&#x27;s touchscreen shows a prompt while it waits for the card. If the card isn&#x27;t tapped in time, select **Submit** again and tap it sooner.
+
+You only need to do this once per vehicle. If Home Assistant&#x27;s key is later removed from the vehicle&#x27;s key list, the next time you add the vehicle, Home Assistant asks you to tap a key card again.
+
+When the vehicle is within Bluetooth range, its commands use the local connection first, with an automatic fallback to the cloud when needed. This can make commands like locking, unlocking, or flashing the lights feel noticeably faster. When the vehicle is away, its commands use the cloud, and it switches back to Bluetooth on its own when it returns.
+
+### Bluetooth connectivity sensors
+
+Each vehicle paired for Bluetooth control gets two diagnostic binary sensors. Vehicles without Bluetooth control don&#x27;t have them.
+
+- **Bluetooth**: On when a Home Assistant Bluetooth adapter can currently see the vehicle, meaning the car is in range and reachable over Bluetooth. It does not mean Home Assistant is connected to the vehicle. It only listens for the vehicle&#x27;s Bluetooth broadcasts, so it never connects to or wakes the car. When the vehicle leaves range, it can take up to about 195 seconds for its broadcasts to be considered stale, plus up to 300 seconds for Home Assistant&#x27;s next check, before this sensor turns off.
+- **Bluetooth session**: On while Home Assistant has an open Bluetooth connection to the vehicle. A connection is only held while a command is being sent, so this sensor is off most of the time. It is disabled by default.
+
+### Removing Bluetooth control
+
+Removing the Teslemetry integration, or the pairing for a single vehicle, stops Home Assistant from routing that vehicle&#x27;s commands over Bluetooth and forgets the stored Bluetooth address. It does not revoke Home Assistant&#x27;s virtual key from the vehicle itself. That key stays authorized on the car until you remove it there.
+
+To fully revoke Home Assistant&#x27;s access:
+
+1. Sit in the vehicle, and on the touchscreen, select **Controls** &gt; **Locks**.
+2. In the list of keys, find the one that was added when you set up Bluetooth control for Home Assistant, and select its trash icon.
+3. When prompted, confirm the removal by tapping an authenticated key card or key fob against the center console card reader.
+
+If you use other apps that also connect to the vehicle over a virtual key, they&#x27;ll appear in the same list, so make sure you remove the correct one.
+
+## Local Powerwall control
+
+By default, Teslemetry sends energy site commands through the cloud. If your energy site includes a Powerwall 2 or Powerwall 3, you can pair Home Assistant with your Powerwall so it can send commands directly over your local network. Local commands are faster. Home Assistant automatically falls back to the cloud whenever the local connection isn&#x27;t available, so your existing cloud-based energy entities keep working.
+
+### Requirements
+
+- A Powerwall 2 or Powerwall 3 that&#x27;s reachable on your local network.
+
+### Setting up local control
+
+Local control is optional and you add it per energy site. Only sites with a Powerwall can be added, so sites with only a wall connector or solar panels aren&#x27;t offered.
+
+To pair your Powerwall or Backup Gateway:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select the **Teslemetry** integration.
+2. Select **Add local energy site**.
+3. Under **Energy site**, choose the site whose Powerwall you want to control over your local network, then continue.
+4. On the **Approve the local access key** step, flick the On/Off switch on your primary Powerwall off and back on to approve Home Assistant&#x27;s access, then continue. You only need to do this once.
+5. On the **Connect to your Powerwall system** step, confirm the local network address that Home Assistant discovered, or edit it if needed, and enter your Powerwall&#x27;s Wi-Fi password in the **Password** field. Only the last 5 characters are needed - find them on the QR label behind the front cover of your Powerwall 3, or behind the Backup Gateway door on Powerwall 2.
+
+Once paired, Home Assistant stores your Powerwall&#x27;s address and password and sends energy commands to it directly, falling back to the cloud automatically whenever your Powerwall can&#x27;t be reached.
+
+A paired energy site also gets extra entities that are only available from your Powerwall over your local network, such as **Grid OK** and **Contactor closed**. They are marked **Local** in the [energy site entity table](#energy-sites). Each one is only created when your Powerwall reports its value, and it becomes unavailable while your Powerwall can&#x27;t be reached. If your Powerwall can&#x27;t be reached when Home Assistant starts, these entities are still created and stay unavailable, then update on their own once your Powerwall responds, with no reload needed.
+
+A paired energy site can also be charged or discharged at a set power for a set time with the [Dispatch battery power](/actions/teslemetry.dispatch_battery_power/) action, and returned to its normal operation early with the [Resume battery operation](/actions/teslemetry.resume_battery_operation/) action. These actions are sent directly to your Powerwall, so they only work while it can be reached on your local network.
+
+A paired energy site also gets the voltage and current of each solar string connected to your primary Powerwall 3, such as **PV string A voltage** and **PV string A current**. Like the other **Local** entities, each one is only created when your Powerwall reports its value.
+
+{% note %}
+Removing the Teslemetry integration doesn&#x27;t revoke the access key from your Powerwall system, so other apps or integrations using the same key keep working.
+{% endnote %}
+
+## Entities
+
+These are the entities available in the Teslemetry integration. Not all entities are enabled by default, and not all values are always available.
+Entities in the device tracker platform specifically require the `Vehicle location` scope, and will appear unavailable otherwise.
+The **Charge on solar** switch and **Charge on solar lower limit** number are part of a Labs preview feature and only appear once you enable it, as described in [Charge on solar](#charge-on-solar) below.
+The **Enable keep accessory power** and **Disable keep accessory power** buttons are only created for vehicles on firmware 2025.38 or newer.
+
+### Vehicles
+
+The **Bluetooth** column marks entities whose commands can control the vehicle over Bluetooth when it&#x27;s paired and within range of a Home Assistant Bluetooth adapter. See [Bluetooth vehicle control](#bluetooth-vehicle-control) for setup and requirements.
+
+{% note %}
+Only vehicle controls send commands over Bluetooth. While a paired vehicle that streams its data is within Bluetooth range, the states it broadcasts over Bluetooth also update the **Lock**, the four door binary sensors, the **Charge port door**, **Frunk**, and **Trunk** covers, the Cybertruck tonneau cover, and the **Shift state** sensor, alongside Teslemetry&#x27;s data stream. Every other state, and all state for a vehicle that polls, comes through Teslemetry&#x27;s cloud connection or data stream, even for an entity marked **Yes**. The exceptions are the [Bluetooth connectivity sensors](#bluetooth-connectivity-sensors), which come from Home Assistant&#x27;s own Bluetooth adapters. When the vehicle is out of Bluetooth range, its commands use the cloud, and individual commands the local connection can&#x27;t complete fall back to the cloud automatically. Energy site and Wall Connector entities are not controlled over vehicle Bluetooth.
+{% endnote %}
+
+|Domain|Name|Enabled|Data|Bluetooth|
+|---|---|---|---|---|
+|Binary sensor|Automatic blind spot camera|No|Streaming|No|
+|Binary sensor|Automatic emergency braking off|No|Streaming|No|
+|Binary sensor|Battery heater|No|Both|No|
+|Binary sensor|Blind spot collision warning chime|No|Streaming|No|
+|Binary sensor|Bluetooth|Yes|Bluetooth|No|
+|Binary sensor|Bluetooth session|No|Bluetooth|No|
+|Binary sensor|BMS full charge|No|Streaming|No|
+|Binary sensor|Brake pedal|No|Streaming|No|
+|Binary sensor|Cabin overheat protection actively cooling|No|Polling|No|
+|Binary sensor|Cellular|Yes|Streaming|No|
+|Binary sensor|Charge cable|Yes|Both|No|
+|Binary sensor|Charge enable request|No|Streaming|No|
+|Binary sensor|Charge port cold weather mode|No|Streaming|No|
+|Binary sensor|Charger has multiple phases|No|Both|No|
+|Binary sensor|Dashcam|No|Polling|No|
+|Binary sensor|DC DC|No|Streaming|No|
+|Binary sensor|Defrost for preconditioning|No|Streaming|No|
+|Binary sensor|Drive rail|No|Streaming|No|
+|Binary sensor|Driver seat belt warning|No|Streaming|No|
+|Binary sensor|Driver seat occupied|No|Streaming|No|
+|Binary sensor|Emergency lane departure avoidance|No|Streaming|No|
+|Binary sensor|Europe vehicle|No|Streaming|No|
+|Binary sensor|Fast charger present|No|Streaming|No|
+|Binary sensor|Front driver door|Yes|Both|No|
+|Binary sensor|Front driver window|Yes|Both|No|
+|Binary sensor|Front passenger door|Yes|Both|No|
+|Binary sensor|Front passenger window|Yes|Both|No|
+|Binary sensor|GPS state|No|Streaming|No|
+|Binary sensor|Guest mode enabled|No|Streaming|No|
+|Binary sensor|Hazard lights|No|Streaming|No|
+|Binary sensor|High beams|No|Streaming|No|
+|Binary sensor|Homelink nearby|No|Streaming|No|
+|Binary sensor|HVAC auto mode|No|Streaming|No|
+|Binary sensor|High voltage interlock loop fault|No|Streaming|No|
+|Binary sensor|Located at favorite|Yes|Streaming|No|
+|Binary sensor|Located at home|Yes|Streaming|No|
+|Binary sensor|Located at work|Yes|Streaming|No|
+|Binary sensor|Offroad lightbar|No|Streaming|No|
+|Binary sensor|Pin to drive enabled|No|Streaming|No|
+|Binary sensor|Preconditioning enabled|No|Both|No|
+|Binary sensor|Preconditioning|No|Polling|No|
+|Binary sensor|Rear display HVAC|No|Streaming|No|
+|Binary sensor|Rear driver door|Yes|Both|No|
+|Binary sensor|Rear driver window|Yes|Both|No|
+|Binary sensor|Rear passenger door|Yes|Both|No|
+|Binary sensor|Rear passenger window|Yes|Both|No|
+|Binary sensor|Remote start|No|Streaming|No|
+|Binary sensor|Right hand drive|No|Streaming|No|
+|Binary sensor|Scheduled charging pending|No|Both|No|
+|Binary sensor|Seat vent enabled|No|Streaming|No|
+|Binary sensor|Service mode|No|Streaming|No|
+|Binary sensor|Speed limited|No|Streaming|No|
+|Binary sensor|Status|Yes|Both|No|
+|Binary sensor|Supercharger session trip planner|No|Streaming|No|
+|Binary sensor|Tire pressure warning front left|No|Polling|No|
+|Binary sensor|Tire pressure warning front right|No|Polling|No|
+|Binary sensor|Tire pressure warning rear left|No|Polling|No|
+|Binary sensor|Tire pressure warning rear right|No|Polling|No|
+|Binary sensor|Trip charging|No|Polling|No|
+|Binary sensor|User present|Yes|Polling|No|
+|Binary sensor|Wi-Fi|Yes|Streaming|No|
+|Binary sensor|Wiper heat|No|Streaming|No|
+|Button|Disable keep accessory power|Yes|—|Yes|
+|Button|Enable keep accessory power|Yes|—|Yes|
+|Button|Flash lights|Yes|—|Yes|
+|Button|HomeLink|Yes|—|Yes|
+|Button|Honk horn|Yes|—|Yes|
+|Button|Keyless driving|Yes|—|Yes|
+|Button|Play fart|Yes|—|Yes|
+|Button|Wake|Yes|—|Yes|
+|Climate|Cabin overheat protection|Yes|Both|Yes|
+|Climate|Climate|Yes|Both|Yes|
+|Cover|Charge port door|Yes|Both|Yes|
+|Cover|Frunk|Yes|Both|Yes|
+|Cover|Sunroof|No|Polling|Yes|
+|Cover|Trunk|Yes|Both|Yes|
+|Cover|Vent windows|Yes|Both|Yes|
+|Device tracker|Location|Yes|Both|No|
+|Device tracker|Origin|No|Streaming|No|
+|Device tracker|Route|Yes|Both|No|
+|Lock|Charge cable lock|Yes|Both|Yes|
+|Lock|Lock|Yes|Both|Yes|
+|Lock|Speed limit|Yes|Both|Yes|
+|Media player|Media player|Yes|Both|Yes|
+|Number|Charge current|Yes|Both|Yes|
+|Number|Charge limit|Yes|Both|Yes|
+|Number|Charge on solar lower limit|Yes|Both|No|
+|Select|Seat cooler front left|Yes|Both|Yes|
+|Select|Seat cooler front right|Yes|Both|Yes|
+|Select|Seat heater front left|Yes|Both|Yes|
+|Select|Seat heater front right|Yes|Both|Yes|
+|Select|Seat heater rear center|No|Both|Yes|
+|Select|Seat heater rear left|No|Both|Yes|
+|Select|Seat heater rear right|No|Both|Yes|
+|Select|Seat heater third row left|No|Polling|Yes|
+|Select|Seat heater third row right|No|Polling|Yes|
+|Select|Steering wheel heater|Yes|Both|Yes|
+|Sensor|Battery level|Yes|Both|No|
+|Sensor|Battery range|Yes|Polling|No|
+|Sensor|BMS state|No|Streaming|No|
+|Sensor|Brake pedal position|No|Streaming|No|
+|Sensor|Brick voltage max|No|Streaming|No|
+|Sensor|Brick voltage min|No|Streaming|No|
+|Sensor|Charge cable|No|Both|No|
+|Sensor|Charge energy added|Yes|Both|No|
+|Sensor|Charge rate|Yes|Polling|No|
+|Sensor|Charger current|Yes|Both|No|
+|Sensor|Charger power|Yes|Both|No|
+|Sensor|Charger voltage|Yes|Both|No|
+|Sensor|Charging|Yes|Both|No|
+|Sensor|Cruise follow distance|No|Streaming|No|
+|Sensor|Cruise set speed|No|Streaming|No|
+|Sensor|Current speed limit|No|Streaming|No|
+|Sensor|DC charging energy in|No|Streaming|No|
+|Sensor|DC charging power|No|Streaming|No|
+|Sensor|Destination|No|Both|No|
+|Sensor|Distance to arrival|Yes|Both|No|
+|Sensor|Driver temperature setting|No|Polling|No|
+|Sensor|Estimate battery range|No|Both|No|
+|Sensor|Exterior color|No|Both|No|
+|Sensor|Fast charger type|No|Both|No|
+|Sensor|Front drive inverter axle speed|No|Streaming|No|
+|Sensor|Front drive inverter battery voltage|No|Streaming|No|
+|Sensor|Front drive inverter heatsink temperature|No|Streaming|No|
+|Sensor|Front drive inverter motor current|No|Streaming|No|
+|Sensor|Front drive inverter state|No|Streaming|No|
+|Sensor|Front drive inverter temperature|No|Streaming|No|
+|Sensor|Front drive unit actual torque|No|Streaming|No|
+|Sensor|Front drive unit stator temperature|No|Streaming|No|
+|Sensor|HVAC power state|No|Streaming|No|
+|Sensor|Ideal battery range|No|Both|No|
+|Sensor|Inside temperature|Yes|Both|No|
+|Sensor|Left temperature request|No|Streaming|No|
+|Sensor|Lifetime energy gained regen|No||No|
+|Sensor|Miles since reset|No||No|
+|Sensor|Odometer|No|Both|No|
+|Sensor|Outside temperature|Yes|Both|No|
+|Sensor|Passenger temperature setting|No|Polling|No|
+|Sensor|Power|No|Polling|No|
+|Sensor|Rear drive inverter axle speed|No|Streaming|No|
+|Sensor|Rear drive inverter battery voltage|No|Streaming|No|
+|Sensor|Rear drive inverter heatsink temperature|No|Streaming|No|
+|Sensor|Rear drive inverter motor current|No|Streaming|No|
+|Sensor|Rear drive inverter state|No|Streaming|No|
+|Sensor|Rear drive inverter temperature|No|Streaming|No|
+|Sensor|Rear drive unit actual torque|No|Streaming|No|
+|Sensor|Rear drive unit stator temperature|No|Streaming|No|
+|Sensor|Rear left drive inverter axle speed|No|Streaming|No|
+|Sensor|Rear left drive inverter battery voltage|No|Streaming|No|
+|Sensor|Rear left drive inverter heatsink temperature|No|Streaming|No|
+|Sensor|Rear left drive inverter motor current|No|Streaming|No|
+|Sensor|Rear left drive inverter state|No|Streaming|No|
+|Sensor|Rear left drive inverter temperature|No|Streaming|No|
+|Sensor|Rear left drive unit actual torque|No|Streaming|No|
+|Sensor|Rear left drive unit stator temperature|No|Streaming|No|
+|Sensor|Rear right drive inverter axle speed|No|Streaming|No|
+|Sensor|Rear right drive inverter battery voltage|No|Streaming|No|
+|Sensor|Rear right drive inverter heatsink temperature|No|Streaming|No|
+|Sensor|Rear right drive inverter motor current|No|Streaming|No|
+|Sensor|Rear right drive inverter state|No|Streaming|No|
+|Sensor|Rear right drive inverter temperature|No|Streaming|No|
+|Sensor|Rear right drive unit actual torque|No|Streaming|No|
+|Sensor|Rear right drive unit stator temperature|No|Streaming|No|
+|Sensor|Right temperature request|No|Streaming|No|
+|Sensor|Roof color|No|Both|No|
+|Sensor|Scheduled charging mode|No|Streaming|No|
+|Sensor|Scheduled charging start time|No|Both|No|
+|Sensor|Scheduled departure time|No|Both|No|
+|Sensor|Secondary drive unit torque command|No|Streaming|No|
+|Sensor|Self-driving miles since reset|No||No|
+|Sensor|Sentry mode|Yes|Streaming|No|
+|Sensor|Shift state|No|Both|No|
+|Sensor|Speed|No|Both|No|
+|Sensor|State of charge at arrival|No|Both|No|
+|Sensor|Time at arrival|Yes|Both|No|
+|Sensor|Time at full charge|Yes|Both|No|
+|Sensor|Time to arrival|Yes|Both|No|
+|Sensor|Time to full charge|Yes|Both|No|
+|Sensor|Tire pressure front left|No|Both|No|
+|Sensor|Tire pressure front right|No|Both|No|
+|Sensor|Tire pressure last measured front left|No|Both|No|
+|Sensor|Tire pressure last measured front right|No|Both|No|
+|Sensor|Tire pressure last measured rear left|No|Both|No|
+|Sensor|Tire pressure last measured rear right|No|Both|No|
+|Sensor|Tire pressure rear left|No|Both|No|
+|Sensor|Tire pressure rear right|No|Both|No|
+|Sensor|Traffic delay|No|Both|No|
+|Sensor|Usable Battery level|No|Both|No|
+|Sensor|Drive unit torque command|No|Streaming|No|
+|Switch|Auto seat climate left|Yes|Both|Yes|
+|Switch|Auto seat climate right|Yes|Both|Yes|
+|Switch|Auto steering wheel heater|Yes|Both|Yes|
+|Switch|Charge|Yes|Both|Yes|
+|Switch|Charge on solar|Yes|Both|No|
+|Switch|Defrost|Yes|Both|Yes|
+|Switch|Guest mode|Yes|Streaming|Yes|
+|Switch|Sentry mode|Yes|Both|Yes|
+|Switch|Valet mode|Yes|Both|Yes|
+|Update|Update|Yes|Both|Yes|
+
+### Energy sites
+
+|Domain|Name|Enabled|Data|
+|---|---|---|---|
+|Binary sensor|Backup capable|Yes|Polling|
+|Binary sensor|Contactor closed|Yes|Local|
+|Binary sensor|ESCAN firmware updating|Yes|Local|
+|Binary sensor|Grid OK|Yes|Local|
+|Binary sensor|Grid services active|Yes|Polling|
+|Binary sensor|Grid services enabled|Yes|Polling|
+|Binary sensor|Grid status|Yes|Polling|
+|Binary sensor|Microgrid OK|Yes|Local|
+|Binary sensor|PW3CAN firmware updating|Yes|Local|
+|Binary sensor|Site manager running|Yes|Local|
+|Binary sensor|Site running|Yes|Local|
+|Binary sensor|Storm watch active|Yes|Polling|
+|Calendar|Buy tariff|Yes|Polling|
+|Calendar|Sell tariff|Yes|Polling|
+|Number|Backup reserve|Yes|Polling|
+|Number|Off grid reserve|Yes|Polling|
+|Select|Allow export|Yes|Polling|
+|Select|Operation mode|Yes|Polling|
+|Sensor|Battery power|Yes|Polling|
+|Sensor|Consumer imported from battery|No|Polling|
+|Sensor|Consumer imported from generator|No|Polling|
+|Sensor|Consumer imported from grid|No|Polling|
+|Sensor|Consumer imported from solar|No|Polling|
+|Sensor|Generator exported|Yes|Polling|
+|Sensor|Generator power|No|Polling|
+|Sensor|Grid exported|Yes|Polling|
+|Sensor|Grid exported from battery|No|Polling|
+|Sensor|Grid exported from generator|No|Polling|
+|Sensor|Grid exported from solar|No|Polling|
+|Sensor|Grid imported|No|Polling|
+|Sensor|Grid power|Yes|Polling|
+|Sensor|Grid services exported|No|Polling|
+|Sensor|Grid services imported|No|Polling|
+|Sensor|Grid services power|Yes|Polling|
+|Sensor|Home usage|Yes|Polling|
+|Sensor|Island status|Yes|Polling|
+|Sensor|Load power|Yes|Polling|
+|Sensor|Percentage charged|Yes|Polling|
+|Sensor|PV string A current|Yes|Local|
+|Sensor|PV string A voltage|Yes|Local|
+|Sensor|PV string B current|Yes|Local|
+|Sensor|PV string B voltage|Yes|Local|
+|Sensor|PV string C current|Yes|Local|
+|Sensor|PV string C voltage|Yes|Local|
+|Sensor|PV string D current|Yes|Local|
+|Sensor|PV string D voltage|Yes|Local|
+|Sensor|PV string E current|Yes|Local|
+|Sensor|PV string E voltage|Yes|Local|
+|Sensor|PV string F current|Yes|Local|
+|Sensor|PV string F voltage|Yes|Local|
+|Sensor|Solar exported|No|Polling|
+|Sensor|Solar generated|Yes|Polling|
+|Sensor|Solar power|Yes|Polling|
+|Sensor|Version|Yes|Polling|
+|Sensor|VPP backup reserve|Yes|Polling|
+|Switch|Allow charging from grid|Yes|Polling|
+|Switch|Storm watch|Yes|Polling|
+
+### Wall connector
+
+|Domain|Name|Enabled|Data|
+|---|---|---|---|
+|Sensor|Energy delivered|Yes|Streaming|
+|Sensor|Fault state|No|Polling|
+|Sensor|Power|Yes|Polling|
+|Sensor|State|Yes|Polling|
+|Sensor|Vehicle|Yes|Polling|
+
+### Metadata
+
+|Domain|Name|Enabled|Data|
+|---|---|---|---|
+|Sensor|Teslemetry credits|Yes|Streaming|
+
+{% include integrations/actions.md %}
+
+## Charge on solar
+
+{% labs %}
+Requires the **Charge on solar** Labs preview feature. Enable it at {% my labs title=&quot;**Settings** &gt; **System** &gt; **Labs**&quot; %}.
+{% endlabs %}
+
+Charge on solar lets your Tesla vehicle keep charging while your home has excess solar power, and pause again once that excess runs out. Enabling the **Charge on solar** Labs preview feature adds two entities to each vehicle when your Teslemetry account has granted the `Vehicle commands` scope:
+
+- A **Charge on solar** switch to turn the mode on or off.
+- A **Charge on solar lower limit** number for the battery percentage the vehicle keeps charging to even without solar, so it doesn&#x27;t sit too low.
+
+There&#x27;s no separate upper limit entity for charge on solar. It reuses the vehicle&#x27;s existing **Charge limit** number as the upper bound, so the lower limit can never be set above it. If you lower the charge limit below the current lower limit, the lower limit follows it down on the next update from the vehicle.
+
+If you disable the Labs preview feature, or the `Vehicle commands` scope is no longer granted, both entities are removed until they become available again.
+
+## Energy dashboard
+
+The Tesla Fleet API only provides power data for Powerwall and Solar products. This means they cannot be used on the energy dashboard directly.
+
+Energy flows can be calculated from `Battery power` and `Grid power` sensors using a [Template Sensor](/integrations/template/) to separate the positive and negative values into positive import and export values.
+The `Load power`, `Solar power`, and the templated sensors can then use a [Riemann Sum](/integrations/integration/) to convert their instant power (kW) values into cumulative energy values (kWh),
+which then can be used within the energy dashboard.
+
+## Data updates
+
+Teslemetry delivers data by streaming or polling, depending on the product. The **Data** column in the entity tables above shows how each entity is updated:
+
+- **Streaming**: the value arrives over the live stream in real time.
+- **Polling**: the value comes from Teslemetry&#x27;s cached vehicle data.
+- **Both**: the value can arrive by streaming or polling, depending on the vehicle and its configuration.
+- **Local**: the value is polled directly from your Powerwall over your local network. These entities only exist for energy sites paired for [local Powerwall control](#local-powerwall-control).
+- **—** (em dash): the entity does not report data. Buttons send commands, so they have no data source.
+
+### Vehicle data
+
+Most vehicles stream their data to Home Assistant in real time. Streaming has no per-update cost, and the integration sets it up and manages it for you. These vehicles do not get entities parked as **Polling** in the tables above, as that would incur an ongoing command credit cost.
+
+Legacy vehicles (certain pre-2021 Model S &amp; Model X vehicles) that do not support streaming get all entities except those marked as **Streaming** in the tables above. Teslemetry handles the polling of this data in the cloud as part of your subscription, roughly every 15 minutes, or roughly every 90 seconds if the vehicle qualifies for a polling discount from Tesla.
+
+The integration does not wake a sleeping vehicle to fetch data. Updates pause until the vehicle wakes up on its own or you interact with it.
+
+### Energy site data
+
+Energy site live status, site information, tariffs, and energy history arrive through the Teslemetry data stream. If you&#x27;ve paired a Powerwall for [local control](#local-powerwall-control), Home Assistant also reads its live values directly over your local network every 5 seconds, and its backup reserve and operation mode every 30 seconds. Whenever your Powerwall can&#x27;t be reached, Home Assistant uses the cloud values instead. Entity availability still follows the Teslemetry data stream.
+
+For an energy site paired for [local Powerwall control](#local-powerwall-control), the local status entities marked **Local**, such as **Grid OK**, are polled from your Powerwall&#x27;s status every 10 seconds. The solar string entities, such as **PV string A voltage**, are polled from your Powerwall every 30 seconds.
+
+The **Energy delivered** sensor of each Wall Connector is the energy it delivered on the current day, in the site&#x27;s time zone. Teslemetry streams it while a Wall Connector at the site is charging, and once more after charging stops. A charging session counts on the day it started, so a session that continues past midnight adds to the previous day.
+
+## Known limitations
+
+-   **Vehicle Sleep:** The integration will not actively wake a vehicle to fetch data. However, sending commands (such as locking, unlocking, or climate control) will wake the vehicle.
+-   **Rate Limits:** While Teslemetry handles upstream rate limiting with Tesla, excessive polling or command usage from aggressive automations may encounter temporary API limits.
+-   **Virtual Key:** See [Prerequisites](#prerequisites) for when a virtual key is needed. To set one up, follow the instructions on the [Teslemetry Console](https://teslemetry.com/console).
+-   **Charge on solar assumed state:** Tesla&#x27;s API doesn&#x27;t currently report charge on solar&#x27;s status back from the vehicle, so the **Charge on solar** switch and its lower limit number show the state of the last command you sent rather than confirmed feedback from the vehicle.
+
+## Troubleshooting
+
+### Invalid tokens
+
+If your Teslemetry authentication token becomes invalid or expires, Home Assistant will prompt you to re-authenticate. This typically involves signing in again via the integration&#x27;s configuration flow.
+
+### Timeouts
+
+Timeouts can occur due to connection issues between Home Assistant, Teslemetry, Tesla, or the vehicle itself (e.g., the vehicle is in an area with poor cellular reception). These are often temporary. If timeouts persist, please contact `support@teslemetry.com`.
+
+## Examples
+
+### Common use cases
+
+-   **Solar Charging:** Automate your vehicle&#x27;s charging current or state based on excess solar production to maximize renewable energy usage.
+-   **Smart Preconditioning:** Use calendar events or time-based triggers to precondition your vehicle&#x27;s cabin temperature before you depart.
+-   **Automatic Garage Door:** Automatically open your garage door when you approach your home while navigating.
+
+### Automations
+
+**Automate charging based on solar production**
+
+```yaml
+automation:
+  - alias: &quot;Charge Tesla from Solar&quot;
+    trigger:
+      - trigger: numeric_state
+        entity_id: sensor.home_solar_power
+        above: 3000
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.my_tesla_charge
+      - action: number.set_value
+        target:
+          entity_id: number.my_tesla_charge_current
+        data:
+          value: 16
+```
+
+**Precondition vehicle before calendar events**
+
+```yaml
+automation:
+  - alias: &quot;Precondition for Work&quot;
+    trigger:
+      - trigger: calendar
+        event: start
+        offset: &quot;-00:15:00&quot;
+        entity_id: calendar.work
+    actions:
+      - action: climate.turn_on
+        target:
+          entity_id: climate.my_tesla_climate
+```
+
+### Blueprints
+
+**Open Garage Door based on Navigation**
+
+Uses the distance to arrival sensor to accurately know when you&#x27;re close to a specific location (such as your home), and open a garage door, or other cover entity. Requires you to be navigating to your intended destination, even if you don&#x27;t need the directions.
+
+```yaml
+blueprint:
+  name: Teslemetry Garage Door Opener
+  author: Brett Adams
+  description: Opens a garage door when your Tesla is approaching
+  domain: automation
+  input:
+    distance_to_arrival_entity:
+      name: Distance to arrival entity
+      selector:
+        entity:
+          filter:
+            - integration: teslemetry
+              domain: sensor
+              device_class: distance
+    distance_to_arrival:
+      name: Distance to arrival value to trigger open
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: any
+          mode: box
+    route_entity:
+      name: Route entity
+      selector:
+        entity:
+          filter:
+            - integration: teslemetry
+              domain: device_tracker
+    route_zone:
+      name: Route destination
+      selector:
+        entity:
+          filter:
+            - domain: zone
+    cover_entity:
+      name: Garage door entity
+      selector:
+        entity:
+          filter:
+            - domain: cover
+trigger:
+  - trigger: numeric_state
+    entity_id:
+      - !input distance_to_arrival_entity
+    below: !input distance_to_arrival
+    above: 0
+condition:
+  - condition: zone.in_zone
+    target:
+      entity_id: !input route_entity
+    options:
+      zone: !input route_zone
+actions:
+  - action: cover.open_cover
+    target:
+      entity_id: !input cover_entity
+mode: restart
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Teslemetry.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>device tracker</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>add charge schedule</li><li>add precondition schedule</li><li>dispatch battery power</li><li>navigation gps request</li><li>remove charge schedule</li><li>remove precondition schedule</li><li>resume battery operation</li><li>set scheduled charging</li><li>set scheduled departure</li><li>speed limit</li><li>time of use</li><li>valet mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Bluetooth vehicle control</li><li>Local Powerwall control</li><li>Entities</li><li>Charge on solar</li><li>Energy dashboard</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/teslemetry/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/teslemetry</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/teslemetry</code></dd></dl></section><p><a href="../../integrations/teslemetry/">Return to the Teslemetry guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

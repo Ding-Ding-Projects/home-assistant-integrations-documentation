@@ -1,1 +1,1142 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grow light reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:304" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/grow_light/">Grow light guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Grow light</h1><p></p><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Grow light.</p><p>The <strong>user</strong> configuration step lists <code>doors</code>, <code>dry_below</code>, <code>hours</code>, <code>moisture</code>, <code>name</code>, <code>notify</code>, <code>plant</code>, <code>planted_on</code>, <code>plug</code>, <code>power</code>, <code>price</code>, <code>resow_days</code>, <code>start</code>, <code>water_days</code>, <code>water_minutes</code>, <code>water_switch</code>, <code>watts</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>event</li><li>sensor</li><li>switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/main/docs/features/automations/grow-light.md</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/grow_light</code></dd></dl></section><p><a href="../../integrations/grow_light/">Return to the Grow light guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grow light reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:304" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/grow_light/">Grow light guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Grow light</h1><p></p><div class="reader-body"><h2>Grow light</h2>
+<p>A helper that keeps a plug on for a set number of hours each day and switches it off while a door
+is open. It can also follow a crop: pick one of the catalogue's vegetables or legumes and the light
+hours and watering follow the crop's growth stage, counted from the day it was sown.</p>
+<p>Add it from <strong>Settings &gt; Devices &amp; services &gt; Helpers &gt; Create helper &gt; Grow light</strong>. Boards:
+<a><code>design/canvases/43-grow-light</code></a>.</p>
+<h2>Settings</h2>
+<table>
+<thead>
+<tr>
+  <th>Setting</th>
+  <th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Name</td>
+  <td>The name of the grow light and its entities.</td>
+</tr>
+<tr>
+  <td>Plug or switch</td>
+  <td>The <code>switch</code>, <code>light</code> or <code>input_boolean</code> that powers the light.</td>
+</tr>
+<tr>
+  <td>Crop</td>
+  <td>Optional. A searchable list of the crop catalogue, each row with a photo of the plant, its group, day-length type, days to the end and the photo credit. "None, set my own hours" keeps the fixed hours below.</td>
+</tr>
+<tr>
+  <td>Sown or planted on</td>
+  <td>The day the growth stage is counted from. Defaults to today.</td>
+</tr>
+<tr>
+  <td>Start time</td>
+  <td>When the light turns on each day. Watering is due at this time too.</td>
+</tr>
+<tr>
+  <td>Hours per day</td>
+  <td>Used only without a crop. 0.5 to 24 hours in half-hour steps. A window that passes midnight works, for example 20:00 for 8 hours ends at 04:00. 24 means always on.</td>
+</tr>
+<tr>
+  <td>Pause when open</td>
+  <td>Optional door or window sensors (<code>binary_sensor</code>).</td>
+</tr>
+<tr>
+  <td>Water every</td>
+  <td>Days between waterings without a crop; 0 means no watering schedule. With a crop the stage sets it.</td>
+</tr>
+<tr>
+  <td>Watering pump or valve</td>
+  <td>Optional <code>switch</code> or <code>input_boolean</code>. When set, the helper waters by itself when watering is due.</td>
+</tr>
+<tr>
+  <td>Watering run</td>
+  <td>How many minutes the pump or valve runs each time.</td>
+</tr>
+<tr>
+  <td>Soil moisture sensor</td>
+  <td>Optional <code>sensor</code> with the moisture device class. Scheduled watering is skipped while the soil reads wet, and soil going dry starts watering or a reminder.</td>
+</tr>
+<tr>
+  <td>Water when soil is below</td>
+  <td>The dry threshold in percent for the soil moisture sensor. Default 30.</td>
+</tr>
+<tr>
+  <td>Send alerts to</td>
+  <td>Optional notify actions, for example <code>notify.mobile_app_phone</code>. Any notify action can be typed in.</td>
+</tr>
+<tr>
+  <td>Sow a new batch every</td>
+  <td>Optional days between sowings for batch crops such as radish, lettuce or mung beans. 0 means no reminder.</td>
+</tr>
+<tr>
+  <td>Light power</td>
+  <td>Optional rated watts of the light, used to count its energy.</td>
+</tr>
+<tr>
+  <td>Plug power sensor</td>
+  <td>Optional <code>sensor</code> with the power device class. When set, the energy count uses its readings instead of the light power.</td>
+</tr>
+<tr>
+  <td>Electricity price</td>
+  <td>Optional price per kWh in the instance's currency. 0 hides the cost sensor.</td>
+</tr>
+</tbody>
+</table>
+<p>All of them except the name can be changed later from the helper's <strong>Options</strong>; the helper reloads
+with the new settings.</p>
+<h2>How it behaves</h2>
+<ul>
+<li>Inside the on hours, with every door closed, the plug is turned on.</li>
+<li>When the on hours end, the plug is turned off.</li>
+<li>When any listed door opens (its state is <code>on</code>), the plug is turned off at once.</li>
+<li>When the last open door closes, the plug is turned back on <strong>only if it is still inside the on
+hours</strong>. Closing a door outside the on hours leaves the light off.</li>
+<li>With a crop, the on hours each day are the light hours of the stage the crop is in on the day the
+window starts. Germination usually has 0 hours, so the light stays off until the seedlings are
+due; the next window start after a stage change brings the new hours. After the last stage the
+crop stays in it.</li>
+<li>Watering is due at the start time, every so many days after the last watering (the first one on
+the sowing day). With a pump or valve, the helper turns it on for the watering run and records
+the watering. Without one, press <strong>Watered</strong> after watering by hand. Watering ignores the doors
+and stops while the schedule switch is off.</li>
+<li>The helper only switches the plug when something changes: the on hours start or end, a door
+opens or closes, the schedule switch changes, Home Assistant starts, or the plug comes back
+online after being unavailable. Switching the plug by hand is left alone until the next change.</li>
+<li>A door that is <code>unavailable</code> or <code>unknown</code> counts as closed.</li>
+<li>With a soil moisture sensor, a watering that falls due while the soil reads at or above the
+threshold is put off to the same time the next day. When the reading drops below the threshold,
+the pump runs at once (or a "soil dry" reminder is sent). A dry reading within 6 hours of a
+watering is ignored, since the water may still be soaking in.</li>
+<li>Alerts are sent for a new growth stage, the harvest stage, watering due (only without a pump, and
+once per due time), a pump watering run, dry soil and the sowing reminder. Each one fires the
+<code>grow_light_alert</code> event (<code>name</code>, <code>kind</code>, <code>message</code>), updates the <strong>Alerts</strong> event entity and goes
+to every notify action chosen. Stage alerts are only sent for changes after Home Assistant
+started, so a restart does not repeat them.</li>
+<li>Energy is counted while the plug is on, from the plug's power sensor or else the light power, and
+is kept across restarts.</li>
+</ul>
+<h2>Entities</h2>
+<table>
+<thead>
+<tr>
+  <th>Entity</th>
+  <th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Switch <strong>Schedule</strong></td>
+  <td>Turns the helper on or off. Turning it off switches the plug off and stops all automatic switching and watering until it is turned on again. Its state is kept across restarts.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Status</strong></td>
+  <td><code>on</code>, <code>paused</code> (a door is open), <code>off_hours</code> or <code>schedule_off</code>. The <code>open_doors</code> attribute lists the doors open now.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Next change</strong></td>
+  <td>When the on hours next start or end. Empty while the schedule is off or when the light is on all day or not at all.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Growth stage</strong></td>
+  <td>Only with a crop. The stage, with the crop's photo as its picture, and attributes for the day in the stage, days since sowing, today's light hours, watering interval and note, and every stage of the crop.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Next watering</strong></td>
+  <td>When watering is next due; empty without a watering schedule. <code>watering</code> is true while the pump runs.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Last watered</strong></td>
+  <td>The last watering, by hand or by the pump. Kept across restarts.</td>
+</tr>
+<tr>
+  <td>Button <strong>Watered</strong></td>
+  <td>Records a watering done by hand.</td>
+</tr>
+<tr>
+  <td>Button <strong>Sown again</strong></td>
+  <td>Only with a crop. Sets the sowing date to today and reloads, so the stages start over.</td>
+</tr>
+<tr>
+  <td>Event <strong>Alerts</strong></td>
+  <td>The latest alert, with its <code>message</code>. Event types: <code>stage_changed</code>, <code>ready_to_harvest</code>, <code>water_due</code>, <code>watered</code>, <code>soil_dry</code>, <code>sow_next</code>.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Next sowing</strong></td>
+  <td>Only with a crop and a sowing interval. When the next batch is due.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Light energy</strong></td>
+  <td>Only with a light power or power sensor. kWh used so far; can go on the Energy dashboard.</td>
+</tr>
+<tr>
+  <td>Sensor <strong>Light cost</strong></td>
+  <td>Only with energy and a price. The energy times the price.</td>
+</tr>
+</tbody>
+</table>
+<p>The Next watering sensor also carries <code>soil_moisture</code> and <code>dry_below</code> when a soil moisture sensor is
+set.</p>
+<h2>Cards</h2>
+<ul>
+<li><strong>Grow light card</strong> (<code>type: grow-light-card</code>, <code>entity:</code> the grow light's Status sensor): the crop
+photo, stage with a stage bar, light status, light hours, next change, watering, soil moisture,
+energy, cost, next sowing, and the Watered and Sown again buttons where those entities exist.
+Without a crop it shows the light parts only.</li>
+<li><strong>Grow light overview card</strong> (<code>type: grow-light-overview-card</code>, optional <code>title</code>): every grow
+light side by side, one column on a phone.</li>
+</ul>
+<p>Both are in the card picker. Not yet seen in a browser.</p>
+<h2>Crop catalogue</h2>
+<p>The catalogue is <code>core/homeassistant/components/grow_light/plants.json</code>, with one photo per crop in
+<code>photos/</code> and the photo credits in <code>photos/CREDITS.md</code>. The photos are bundled and served by Home
+Assistant itself at <code>/grow_light/photos/&lt;crop&gt;.jpg</code>, so the picker works without internet access.</p>
+<p><strong>Read the numbers as starting points.</strong> Day-length types and total days to harvest come from the
+sources listed for each crop (mostly RHS grow-your-own pages, Wikipedia and Purdue NewCrop; several
+university extension pages could not be read). The split into stages, the light hours for each
+stage and the watering intervals are practical indoor-growing estimates for pots under a grow
+light; the sources give watering only as general advice such as "keep the soil moist". Adjust to
+your pots, soil and room: a crop can be replaced with "None, set my own hours" at any time.</p>
+<p>Known weak spots: celery and parsnip are shown by their wild forms, collard greens by Portuguese
+kale and rutabaga by a field of swede; the pepper entries borrow their stage pattern from aubergine;
+asparagus is modelled on its first year only; onions differ by long-day, intermediate and short-day
+variety, which the note explains.</p>
+<h3>The 68 crops</h3>
+<p>Each stage is shown as its length in days, the grow-light hours and the days between waterings.</p>
+<table>
+<thead>
+<tr>
+  <th>Crop</th>
+  <th>Group</th>
+  <th>Day length</th>
+  <th>Stages: days, light hours, water every</th>
+  <th>Sources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Adzuki bean (<em>Vigna angularis</em>)</td>
+  <td>Legume</td>
+  <td>Short-day</td>
+  <td>germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 4 d; flowering 14 d, 12 h, 2 d; fruiting 35 d, 12 h, 2 d; harvest 15 d, 12 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Arugula (<em>Eruca vesicaria</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 14 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Asparagus (<em>Asparagus officinalis</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 21 d, 0 h, 1 d; seedling 60 d, 16 h, 3 d; vegetative 300 d, 14 h, 7 d; harvest 56 d, 12 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Beetroot (<em>Beta vulgaris subsp. vulgaris</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 12 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 21 d, 14 h, 3 d; fruiting 21 d, 12 h, 4 d; harvest 7 d, 12 h, 7 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Bok choy (<em>Brassica rapa subsp. chinensis</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 2 d; harvest 20 d, 12 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Broad bean (fava) (<em>Vicia faba</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 10 d, 0 h, 3 d; seedling 14 d, 15 h, 3 d; vegetative 40 d, 16 h, 3 d; flowering 14 d, 16 h, 3 d; fruiting 35 d, 16 h, 3 d; harvest 14 d, 14 h, 5 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Broccoli (<em>Brassica oleracea var. italica</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 30 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Brussels sprouts (<em>Brassica oleracea var. gemmifera</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 35 d, 16 h, 2 d; vegetative 90 d, 14 h, 4 d; harvest 60 d, 12 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Bush green bean (<em>Phaseolus vulgaris</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 20 d, 16 h, 3 d; flowering 10 d, 14 h, 2 d; fruiting 15 d, 14 h, 2 d; harvest 14 d, 12 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Butternut squash (<em>Cucurbita moschata</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 60 d, 14 h, 3 d; harvest 21 d, 12 h, 7 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Cabbage (<em>Brassica oleracea var. capitata</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 60 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Cantaloupe (<em>Cucumis melo</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 25 d, 16 h, 2 d; flowering 15 d, 14 h, 2 d; fruiting 35 d, 14 h, 2 d; harvest 14 d, 14 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Carrot (<em>Daucus carota subsp. sativus</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 14 d, 0 h, 1 d; seedling 21 d, 12 h, 2 d; vegetative 28 d, 14 h, 4 d; fruiting 28 d, 12 h, 5 d; harvest 7 d, 12 h, 7 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Cauliflower (<em>Brassica oleracea var. botrytis</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 10 d, 0 h, 1 d; seedling 42 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 30 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Celeriac (<em>Apium graveolens var. rapaceum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 21 d, 12 h, 2 d; seedling 56 d, 14 h, 3 d; vegetative 60 d, 14 h, 3 d; fruiting 60 d, 12 h, 4 d; harvest 14 d, 12 h, 7 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Celery (<em>Apium graveolens var. dulce</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 14 d, 0 h, 1 d; seedling 56 d, 16 h, 1 d; vegetative 75 d, 14 h, 2 d; harvest 30 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Cherry tomato (<em>Solanum lycopersicum var. cerasiforme</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 20 d, 16 h, 2 d; flowering 15 d, 14 h, 2 d; fruiting 35 d, 14 h, 1 d; harvest 45 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Chickpea (<em>Cicer arietinum</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 45 d, 16 h, 4 d; flowering 20 d, 16 h, 3 d; fruiting 40 d, 16 h, 3 d; harvest 15 d, 14 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Chili pepper (<em>Capsicum annuum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 14 d, 0 h, 1 d; seedling 45 d, 16 h, 2 d; vegetative 35 d, 16 h, 3 d; flowering 25 d, 14 h, 3 d; fruiting 55 d, 14 h, 3 d; harvest 45 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Collard greens (<em>Brassica oleracea var. viridis</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 45 d, 14 h, 3 d; harvest 60 d, 14 h, 3 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Cowpea (black-eyed pea) (<em>Vigna unguiculata</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 6 d, 0 h, 3 d; seedling 10 d, 16 h, 3 d; vegetative 25 d, 16 h, 4 d; flowering 12 d, 14 h, 3 d; fruiting 25 d, 14 h, 3 d; harvest 14 d, 12 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Cucumber (<em>Cucumis sativus</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 1 d; vegetative 21 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 30 d, 14 h, 1 d; harvest 30 d, 14 h, 1 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Daikon (<em>Raphanus sativus var. longipinnatus</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 3 d; fruiting 30 d, 11 h, 3 d; harvest 7 d, 11 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Dry common bean (kidney, black, pinto) (<em>Phaseolus vulgaris</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 35 d, 14 h, 2 d; harvest 20 d, 12 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Eggplant (<em>Solanum melongena</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 12 d, 0 h, 1 d; seedling 40 d, 16 h, 2 d; vegetative 30 d, 16 h, 2 d; flowering 25 d, 14 h, 2 d; fruiting 50 d, 14 h, 2 d; harvest 40 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Endive (<em>Cichorium endivia</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 14 h, 2 d; vegetative 35 d, 14 h, 2 d; harvest 35 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Fennel (Florence) (<em>Foeniculum vulgare var. azoricum</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 10 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 35 d, 12 h, 2 d; fruiting 28 d, 12 h, 2 d; harvest 7 d, 12 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Garden pea (<em>Pisum sativum</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 20 d, 16 h, 2 d; harvest 10 d, 14 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Garlic (<em>Allium sativum</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 21 d, 0 h, 7 d; vegetative 120 d, 12 h, 7 d; fruiting 90 d, 14 h, 6 d; harvest 14 d, 14 h, 14 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Globe artichoke (<em>Cynara cardunculus var. scolymus</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 14 d, 0 h, 1 d; seedling 50 d, 16 h, 2 d; vegetative 100 d, 14 h, 4 d; flowering 30 d, 14 h, 4 d; fruiting 30 d, 14 h, 4 d; harvest 60 d, 14 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Green onion (scallion) (<em>Allium fistulosum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 10 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 28 d, 14 h, 3 d; fruiting 7 d, 12 h, 3 d; harvest 7 d, 12 h, 4 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Horseradish (<em>Armoracia rusticana</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 21 d, 0 h, 5 d; seedling 21 d, 12 h, 4 d; vegetative 90 d, 14 h, 5 d; fruiting 90 d, 12 h, 6 d; harvest 14 d, 12 h, 14 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Kale (<em>Brassica oleracea var. sabellica</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 45 d, 16 h, 3 d; harvest 60 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Kohlrabi (<em>Brassica oleracea var. gongylodes</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 30 d, 14 h, 2 d; harvest 30 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Leek (<em>Allium ampeloprasum var. porrum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 14 d, 0 h, 2 d; seedling 56 d, 14 h, 3 d; vegetative 90 d, 14 h, 4 d; fruiting 30 d, 12 h, 4 d; harvest 7 d, 12 h, 7 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Lentil (<em>Lens culinaris</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 35 d, 16 h, 4 d; flowering 18 d, 16 h, 3 d; fruiting 30 d, 16 h, 3 d; harvest 14 d, 14 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Lettuce (<em>Lactuca sativa</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 5 d, 0 h, 1 d; seedling 14 d, 14 h, 2 d; vegetative 21 d, 14 h, 2 d; harvest 14 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Lima bean (<em>Phaseolus lunatus</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 20 d, 14 h, 2 d; harvest 10 d, 12 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Lupin bean (white lupin) (<em>Lupinus albus</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 50 d, 16 h, 4 d; flowering 20 d, 16 h, 3 d; fruiting 45 d, 16 h, 3 d; harvest 15 d, 14 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Mung bean (<em>Vigna radiata</em>)</td>
+  <td>Legume</td>
+  <td>Short-day</td>
+  <td>germination 5 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 20 d, 16 h, 3 d; flowering 12 d, 12 h, 2 d; fruiting 25 d, 12 h, 2 d; harvest 10 d, 12 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Mustard greens (<em>Brassica juncea</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 4 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Napa cabbage (<em>Brassica rapa subsp. pekinensis</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 35 d, 12 h, 2 d; harvest 25 d, 12 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Okra (<em>Abelmoschus esculentus</em>)</td>
+  <td>Vegetable</td>
+  <td>Short-day</td>
+  <td>germination 8 d, 0 h, 1 d; seedling 30 d, 14 h, 2 d; vegetative 30 d, 13 h, 3 d; flowering 20 d, 12 h, 3 d; fruiting 25 d, 12 h, 3 d; harvest 60 d, 12 h, 3 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Onion (<em>Allium cepa</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 14 d, 0 h, 2 d; seedling 28 d, 12 h, 3 d; vegetative 56 d, 14 h, 4 d; fruiting 56 d, 14 h, 5 d; harvest 14 d, 14 h, 14 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Parsnip (<em>Pastinaca sativa</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 21 d, 0 h, 2 d; seedling 21 d, 12 h, 3 d; vegetative 56 d, 14 h, 5 d; fruiting 70 d, 12 h, 6 d; harvest 14 d, 12 h, 10 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Peanut (<em>Arachis hypogaea</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 3 d; seedling 14 d, 16 h, 3 d; vegetative 35 d, 16 h, 4 d; flowering 25 d, 14 h, 3 d; fruiting 60 d, 14 h, 3 d; harvest 15 d, 12 h, 6 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Pigeon pea (<em>Cajanus cajan</em>)</td>
+  <td>Legume</td>
+  <td>Short-day</td>
+  <td>germination 8 d, 0 h, 3 d; seedling 14 d, 16 h, 4 d; vegetative 60 d, 16 h, 5 d; flowering 30 d, 12 h, 3 d; fruiting 60 d, 12 h, 3 d; harvest 20 d, 12 h, 7 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Pole bean (<em>Phaseolus vulgaris</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 18 d, 14 h, 2 d; harvest 30 d, 12 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Potato (<em>Solanum tuberosum</em>)</td>
+  <td>Vegetable</td>
+  <td>Short-day</td>
+  <td>germination 28 d, 0 h, 5 d; seedling 21 d, 14 h, 3 d; vegetative 28 d, 14 h, 3 d; flowering 14 d, 12 h, 2 d; fruiting 35 d, 12 h, 3 d; harvest 7 d, 12 h, 10 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Pumpkin (<em>Cucurbita pepo</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 50 d, 14 h, 3 d; harvest 21 d, 12 h, 7 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Radish (<em>Raphanus sativus</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 4 d, 0 h, 1 d; seedling 7 d, 12 h, 1 d; vegetative 10 d, 12 h, 2 d; fruiting 10 d, 12 h, 2 d; harvest 3 d, 12 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Runner bean (<em>Phaseolus coccineus</em>)</td>
+  <td>Legume</td>
+  <td>Day-neutral</td>
+  <td>germination 10 d, 0 h, 2 d; seedling 14 d, 16 h, 2 d; vegetative 35 d, 16 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 21 d, 14 h, 2 d; harvest 30 d, 12 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Rutabaga (swede) (<em>Brassica napus subsp. rapifera</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 42 d, 13 h, 4 d; fruiting 70 d, 12 h, 4 d; harvest 14 d, 12 h, 7 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Shallot (<em>Allium cepa Aggregatum Group</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 14 d, 0 h, 5 d; seedling 21 d, 12 h, 4 d; vegetative 42 d, 14 h, 5 d; fruiting 42 d, 14 h, 6 d; harvest 14 d, 14 h, 14 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Snow pea (<em>Pisum sativum var. saccharatum</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 12 d, 16 h, 2 d; harvest 14 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Soybean (edamame) (<em>Glycine max</em>)</td>
+  <td>Legume</td>
+  <td>Short-day</td>
+  <td>germination 7 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 14 d, 12 h, 2 d; fruiting 45 d, 12 h, 2 d; harvest 20 d, 12 h, 5 d</td>
+  <td><a>1</a> <a>2</a></td>
+</tr>
+<tr>
+  <td>Spinach (<em>Spinacia oleracea</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 21 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Sugar snap pea (<em>Pisum sativum var. macrocarpon</em>)</td>
+  <td>Legume</td>
+  <td>Long-day</td>
+  <td>germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 28 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 18 d, 16 h, 2 d; harvest 14 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Sweet corn (<em>Zea mays</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 21 d, 14 h, 2 d; harvest 10 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Sweet pepper (<em>Capsicum annuum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 12 d, 0 h, 1 d; seedling 40 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 25 d, 14 h, 3 d; fruiting 50 d, 14 h, 2 d; harvest 40 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Sweet potato (<em>Ipomoea batatas</em>)</td>
+  <td>Vegetable</td>
+  <td>Short-day</td>
+  <td>germination 21 d, 0 h, 3 d; seedling 14 d, 12 h, 2 d; vegetative 42 d, 13 h, 3 d; fruiting 60 d, 12 h, 3 d; harvest 7 d, 12 h, 10 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Swiss chard (<em>Beta vulgaris subsp. vulgaris</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 10 d, 0 h, 1 d; seedling 21 d, 14 h, 2 d; vegetative 35 d, 14 h, 3 d; harvest 60 d, 14 h, 3 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Tomatillo (<em>Physalis philadelphica</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 1 d; seedling 35 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 50 d, 14 h, 3 d; harvest 30 d, 14 h, 4 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Tomato (<em>Solanum lycopersicum</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 8 d, 0 h, 1 d; seedling 30 d, 16 h, 2 d; vegetative 25 d, 16 h, 2 d; flowering 20 d, 14 h, 2 d; fruiting 45 d, 14 h, 1 d; harvest 30 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Turnip (<em>Brassica rapa subsp. rapa</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 18 d, 13 h, 3 d; fruiting 21 d, 12 h, 3 d; harvest 7 d, 12 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Watercress (<em>Nasturtium officinale</em>)</td>
+  <td>Vegetable</td>
+  <td>Long-day</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 14 d, 14 h, 1 d; vegetative 28 d, 14 h, 1 d; harvest 21 d, 14 h, 1 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Watermelon (<em>Citrullus lanatus</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 20 d, 16 h, 3 d; fruiting 45 d, 16 h, 3 d; harvest 14 d, 14 h, 5 d</td>
+  <td><a>1</a></td>
+</tr>
+<tr>
+  <td>Zucchini (<em>Cucurbita pepo</em>)</td>
+  <td>Vegetable</td>
+  <td>Day-neutral</td>
+  <td>germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 21 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 30 d, 14 h, 2 d; harvest 40 d, 14 h, 2 d</td>
+  <td><a>1</a></td>
+</tr>
+</tbody>
+</table>
+<h2>Verification</h2>
+<ul>
+<li><code>tests/components/grow_light/test_schedule.py</code>: the on-hours window, including across midnight.</li>
+<li><code>tests/components/grow_light/test_plants.py</code>: stage counting from the sowing day, every catalogue
+entry valid with a bundled photo, and the crops grown at home present.</li>
+<li><code>tests/components/grow_light/test_init.py</code>, <code>test_crop.py</code>, <code>test_config_flow.py</code>: start-up, door
+pause and resume, door closed outside the hours, end of the window, schedule switch off,
+germination keeping the light off, seedling hours, the stage change turning the light on, the
+pump watering when due and stopping after the run, the Watered button, own watering days, and the
+setup step. Run on Linux; see <code>ROADMAP.md</code> for the latest result.</li>
+<li><code>tests/components/grow_light/test_alerts.py</code>: the stage change alert to a notify action, one
+watering reminder per due time, wet soil putting the pump off and dry soil starting it, the dry
+soil reminder without a pump, energy and cost from the light power, no energy sensor without a
+power source, the sowing reminder, and the Sown again button.</li>
+<li>Not yet seen in a running build with a real plug, door sensor, pump or soil sensor.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/automations/grow-light.md</code></p><details><summary>Original Markdown source</summary><pre># Grow light
+
+A helper that keeps a plug on for a set number of hours each day and switches it off while a door
+is open. It can also follow a crop: pick one of the catalogue&#x27;s vegetables or legumes and the light
+hours and watering follow the crop&#x27;s growth stage, counted from the day it was sown.
+
+Add it from **Settings &gt; Devices &amp; services &gt; Helpers &gt; Create helper &gt; Grow light**. Boards:
+[`design/canvases/43-grow-light`](../../../design/canvases/43-grow-light/README.md).
+
+## Settings
+
+| Setting | What it does |
+| --- | --- |
+| Name | The name of the grow light and its entities. |
+| Plug or switch | The `switch`, `light` or `input_boolean` that powers the light. |
+| Crop | Optional. A searchable list of the crop catalogue, each row with a photo of the plant, its group, day-length type, days to the end and the photo credit. &quot;None, set my own hours&quot; keeps the fixed hours below. |
+| Sown or planted on | The day the growth stage is counted from. Defaults to today. |
+| Start time | When the light turns on each day. Watering is due at this time too. |
+| Hours per day | Used only without a crop. 0.5 to 24 hours in half-hour steps. A window that passes midnight works, for example 20:00 for 8 hours ends at 04:00. 24 means always on. |
+| Pause when open | Optional door or window sensors (`binary_sensor`). |
+| Water every | Days between waterings without a crop; 0 means no watering schedule. With a crop the stage sets it. |
+| Watering pump or valve | Optional `switch` or `input_boolean`. When set, the helper waters by itself when watering is due. |
+| Watering run | How many minutes the pump or valve runs each time. |
+| Soil moisture sensor | Optional `sensor` with the moisture device class. Scheduled watering is skipped while the soil reads wet, and soil going dry starts watering or a reminder. |
+| Water when soil is below | The dry threshold in percent for the soil moisture sensor. Default 30. |
+| Send alerts to | Optional notify actions, for example `notify.mobile_app_phone`. Any notify action can be typed in. |
+| Sow a new batch every | Optional days between sowings for batch crops such as radish, lettuce or mung beans. 0 means no reminder. |
+| Light power | Optional rated watts of the light, used to count its energy. |
+| Plug power sensor | Optional `sensor` with the power device class. When set, the energy count uses its readings instead of the light power. |
+| Electricity price | Optional price per kWh in the instance&#x27;s currency. 0 hides the cost sensor. |
+
+All of them except the name can be changed later from the helper&#x27;s **Options**; the helper reloads
+with the new settings.
+
+## How it behaves
+
+- Inside the on hours, with every door closed, the plug is turned on.
+- When the on hours end, the plug is turned off.
+- When any listed door opens (its state is `on`), the plug is turned off at once.
+- When the last open door closes, the plug is turned back on **only if it is still inside the on
+  hours**. Closing a door outside the on hours leaves the light off.
+- With a crop, the on hours each day are the light hours of the stage the crop is in on the day the
+  window starts. Germination usually has 0 hours, so the light stays off until the seedlings are
+  due; the next window start after a stage change brings the new hours. After the last stage the
+  crop stays in it.
+- Watering is due at the start time, every so many days after the last watering (the first one on
+  the sowing day). With a pump or valve, the helper turns it on for the watering run and records
+  the watering. Without one, press **Watered** after watering by hand. Watering ignores the doors
+  and stops while the schedule switch is off.
+- The helper only switches the plug when something changes: the on hours start or end, a door
+  opens or closes, the schedule switch changes, Home Assistant starts, or the plug comes back
+  online after being unavailable. Switching the plug by hand is left alone until the next change.
+- A door that is `unavailable` or `unknown` counts as closed.
+- With a soil moisture sensor, a watering that falls due while the soil reads at or above the
+  threshold is put off to the same time the next day. When the reading drops below the threshold,
+  the pump runs at once (or a &quot;soil dry&quot; reminder is sent). A dry reading within 6 hours of a
+  watering is ignored, since the water may still be soaking in.
+- Alerts are sent for a new growth stage, the harvest stage, watering due (only without a pump, and
+  once per due time), a pump watering run, dry soil and the sowing reminder. Each one fires the
+  `grow_light_alert` event (`name`, `kind`, `message`), updates the **Alerts** event entity and goes
+  to every notify action chosen. Stage alerts are only sent for changes after Home Assistant
+  started, so a restart does not repeat them.
+- Energy is counted while the plug is on, from the plug&#x27;s power sensor or else the light power, and
+  is kept across restarts.
+
+## Entities
+
+| Entity | What it shows |
+| --- | --- |
+| Switch **Schedule** | Turns the helper on or off. Turning it off switches the plug off and stops all automatic switching and watering until it is turned on again. Its state is kept across restarts. |
+| Sensor **Status** | `on`, `paused` (a door is open), `off_hours` or `schedule_off`. The `open_doors` attribute lists the doors open now. |
+| Sensor **Next change** | When the on hours next start or end. Empty while the schedule is off or when the light is on all day or not at all. |
+| Sensor **Growth stage** | Only with a crop. The stage, with the crop&#x27;s photo as its picture, and attributes for the day in the stage, days since sowing, today&#x27;s light hours, watering interval and note, and every stage of the crop. |
+| Sensor **Next watering** | When watering is next due; empty without a watering schedule. `watering` is true while the pump runs. |
+| Sensor **Last watered** | The last watering, by hand or by the pump. Kept across restarts. |
+| Button **Watered** | Records a watering done by hand. |
+| Button **Sown again** | Only with a crop. Sets the sowing date to today and reloads, so the stages start over. |
+| Event **Alerts** | The latest alert, with its `message`. Event types: `stage_changed`, `ready_to_harvest`, `water_due`, `watered`, `soil_dry`, `sow_next`. |
+| Sensor **Next sowing** | Only with a crop and a sowing interval. When the next batch is due. |
+| Sensor **Light energy** | Only with a light power or power sensor. kWh used so far; can go on the Energy dashboard. |
+| Sensor **Light cost** | Only with energy and a price. The energy times the price. |
+
+The Next watering sensor also carries `soil_moisture` and `dry_below` when a soil moisture sensor is
+set.
+
+## Cards
+
+- **Grow light card** (`type: grow-light-card`, `entity:` the grow light&#x27;s Status sensor): the crop
+  photo, stage with a stage bar, light status, light hours, next change, watering, soil moisture,
+  energy, cost, next sowing, and the Watered and Sown again buttons where those entities exist.
+  Without a crop it shows the light parts only.
+- **Grow light overview card** (`type: grow-light-overview-card`, optional `title`): every grow
+  light side by side, one column on a phone.
+
+Both are in the card picker. Not yet seen in a browser.
+
+## Crop catalogue
+
+The catalogue is `core/homeassistant/components/grow_light/plants.json`, with one photo per crop in
+`photos/` and the photo credits in `photos/CREDITS.md`. The photos are bundled and served by Home
+Assistant itself at `/grow_light/photos/&lt;crop&gt;.jpg`, so the picker works without internet access.
+
+**Read the numbers as starting points.** Day-length types and total days to harvest come from the
+sources listed for each crop (mostly RHS grow-your-own pages, Wikipedia and Purdue NewCrop; several
+university extension pages could not be read). The split into stages, the light hours for each
+stage and the watering intervals are practical indoor-growing estimates for pots under a grow
+light; the sources give watering only as general advice such as &quot;keep the soil moist&quot;. Adjust to
+your pots, soil and room: a crop can be replaced with &quot;None, set my own hours&quot; at any time.
+
+Known weak spots: celery and parsnip are shown by their wild forms, collard greens by Portuguese
+kale and rutabaga by a field of swede; the pepper entries borrow their stage pattern from aubergine;
+asparagus is modelled on its first year only; onions differ by long-day, intermediate and short-day
+variety, which the note explains.
+
+### The 68 crops
+
+Each stage is shown as its length in days, the grow-light hours and the days between waterings.
+
+| Crop | Group | Day length | Stages: days, light hours, water every | Sources |
+| --- | --- | --- | --- | --- |
+| Adzuki bean (*Vigna angularis*) | Legume | Short-day | germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 4 d; flowering 14 d, 12 h, 2 d; fruiting 35 d, 12 h, 2 d; harvest 15 d, 12 h, 5 d | [1](https://en.wikipedia.org/wiki/Adzuki_bean) |
+| Arugula (*Eruca vesicaria*) | Vegetable | Long-day | germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 14 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d | [1](https://www.rhs.org.uk/vegetables/rocket/grow-your-own) |
+| Asparagus (*Asparagus officinalis*) | Vegetable | Day-neutral | germination 21 d, 0 h, 1 d; seedling 60 d, 16 h, 3 d; vegetative 300 d, 14 h, 7 d; harvest 56 d, 12 h, 5 d | [1](https://www.rhs.org.uk/vegetables/asparagus/grow-your-own) |
+| Beetroot (*Beta vulgaris subsp. vulgaris*) | Vegetable | Day-neutral | germination 12 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 21 d, 14 h, 3 d; fruiting 21 d, 12 h, 4 d; harvest 7 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/beetroot) [2](https://extension.umd.edu/resource/growing-beets-home-garden) |
+| Bok choy (*Brassica rapa subsp. chinensis*) | Vegetable | Long-day | germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 2 d; harvest 20 d, 12 h, 2 d | [1](https://www.rhs.org.uk/vegetables/pak-choi/grow-your-own) |
+| Broad bean (fava) (*Vicia faba*) | Legume | Long-day | germination 10 d, 0 h, 3 d; seedling 14 d, 15 h, 3 d; vegetative 40 d, 16 h, 3 d; flowering 14 d, 16 h, 3 d; fruiting 35 d, 16 h, 3 d; harvest 14 d, 14 h, 5 d | [1](https://www.rhs.org.uk/vegetables/broad-beans/grow-your-own) [2](https://hort.purdue.edu/newcrop/duke_energy/Vicia_faba.html) |
+| Broccoli (*Brassica oleracea var. italica*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 30 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/broccoli/grow-your-own) |
+| Brussels sprouts (*Brassica oleracea var. gemmifera*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 35 d, 16 h, 2 d; vegetative 90 d, 14 h, 4 d; harvest 60 d, 12 h, 4 d | [1](https://www.rhs.org.uk/vegetables/brussels-sprouts/grow-your-own) |
+| Bush green bean (*Phaseolus vulgaris*) | Legume | Day-neutral | germination 7 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 20 d, 16 h, 3 d; flowering 10 d, 14 h, 2 d; fruiting 15 d, 14 h, 2 d; harvest 14 d, 12 h, 4 d | [1](https://hort.purdue.edu/newcrop/duke_energy/Phaseolus_vulgaris.html) |
+| Butternut squash (*Cucurbita moschata*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 60 d, 14 h, 3 d; harvest 21 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/pumpkins/grow-your-own) |
+| Cabbage (*Brassica oleracea var. capitata*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 60 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/cabbages/grow-your-own) |
+| Cantaloupe (*Cucumis melo*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 25 d, 16 h, 2 d; flowering 15 d, 14 h, 2 d; fruiting 35 d, 14 h, 2 d; harvest 14 d, 14 h, 4 d | [1](https://www.rhs.org.uk/fruit/melons/grow-your-own) |
+| Carrot (*Daucus carota subsp. sativus*) | Vegetable | Day-neutral | germination 14 d, 0 h, 1 d; seedling 21 d, 12 h, 2 d; vegetative 28 d, 14 h, 4 d; fruiting 28 d, 12 h, 5 d; harvest 7 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/carrots/grow-your-own) [2](https://extension.umd.edu/resource/growing-carrots-home-garden) |
+| Cauliflower (*Brassica oleracea var. botrytis*) | Vegetable | Day-neutral | germination 10 d, 0 h, 1 d; seedling 42 d, 16 h, 2 d; vegetative 60 d, 14 h, 3 d; harvest 30 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/cauliflower/grow-your-own) |
+| Celeriac (*Apium graveolens var. rapaceum*) | Vegetable | Day-neutral | germination 21 d, 12 h, 2 d; seedling 56 d, 14 h, 3 d; vegetative 60 d, 14 h, 3 d; fruiting 60 d, 12 h, 4 d; harvest 14 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/celeriac/grow-your-own) |
+| Celery (*Apium graveolens var. dulce*) | Vegetable | Day-neutral | germination 14 d, 0 h, 1 d; seedling 56 d, 16 h, 1 d; vegetative 75 d, 14 h, 2 d; harvest 30 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/celery/grow-your-own) |
+| Cherry tomato (*Solanum lycopersicum var. cerasiforme*) | Vegetable | Day-neutral | germination 8 d, 0 h, 1 d; seedling 28 d, 16 h, 2 d; vegetative 20 d, 16 h, 2 d; flowering 15 d, 14 h, 2 d; fruiting 35 d, 14 h, 1 d; harvest 45 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own) |
+| Chickpea (*Cicer arietinum*) | Legume | Long-day | germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 45 d, 16 h, 4 d; flowering 20 d, 16 h, 3 d; fruiting 40 d, 16 h, 3 d; harvest 15 d, 14 h, 6 d | [1](https://en.wikipedia.org/wiki/Chickpea) |
+| Chili pepper (*Capsicum annuum*) | Vegetable | Day-neutral | germination 14 d, 0 h, 1 d; seedling 45 d, 16 h, 2 d; vegetative 35 d, 16 h, 3 d; flowering 25 d, 14 h, 3 d; fruiting 55 d, 14 h, 3 d; harvest 45 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/aubergines/grow-your-own) |
+| Collard greens (*Brassica oleracea var. viridis*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 45 d, 14 h, 3 d; harvest 60 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/kale/grow-your-own) [2](https://www.rhs.org.uk/vegetables/cabbages/grow-your-own) |
+| Cowpea (black-eyed pea) (*Vigna unguiculata*) | Legume | Day-neutral | germination 6 d, 0 h, 3 d; seedling 10 d, 16 h, 3 d; vegetative 25 d, 16 h, 4 d; flowering 12 d, 14 h, 3 d; fruiting 25 d, 14 h, 3 d; harvest 14 d, 12 h, 6 d | [1](https://en.wikipedia.org/wiki/Cowpea) |
+| Cucumber (*Cucumis sativus*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 1 d; vegetative 21 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 30 d, 14 h, 1 d; harvest 30 d, 14 h, 1 d | [1](https://www.rhs.org.uk/vegetables/cucumbers/grow-your-own) |
+| Daikon (*Raphanus sativus var. longipinnatus*) | Vegetable | Long-day | germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 3 d; fruiting 30 d, 11 h, 3 d; harvest 7 d, 11 h, 4 d | [1](https://extension.umd.edu/resource/growing-radishes-home-garden) |
+| Dry common bean (kidney, black, pinto) (*Phaseolus vulgaris*) | Legume | Day-neutral | germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 35 d, 14 h, 2 d; harvest 20 d, 12 h, 6 d | [1](https://hort.purdue.edu/newcrop/duke_energy/Phaseolus_vulgaris.html) |
+| Eggplant (*Solanum melongena*) | Vegetable | Day-neutral | germination 12 d, 0 h, 1 d; seedling 40 d, 16 h, 2 d; vegetative 30 d, 16 h, 2 d; flowering 25 d, 14 h, 2 d; fruiting 50 d, 14 h, 2 d; harvest 40 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/aubergines/grow-your-own) |
+| Endive (*Cichorium endivia*) | Vegetable | Long-day | germination 7 d, 0 h, 1 d; seedling 21 d, 14 h, 2 d; vegetative 35 d, 14 h, 2 d; harvest 35 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/endive/grow-your-own) |
+| Fennel (Florence) (*Foeniculum vulgare var. azoricum*) | Vegetable | Long-day | germination 10 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 35 d, 12 h, 2 d; fruiting 28 d, 12 h, 2 d; harvest 7 d, 12 h, 3 d | [1](https://www.rhs.org.uk/vegetables/florence-fennel/grow-your-own) |
+| Garden pea (*Pisum sativum*) | Legume | Long-day | germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 20 d, 16 h, 2 d; harvest 10 d, 14 h, 4 d | [1](https://en.wikipedia.org/wiki/Photoperiodism) |
+| Garlic (*Allium sativum*) | Vegetable | Long-day | germination 21 d, 0 h, 7 d; vegetative 120 d, 12 h, 7 d; fruiting 90 d, 14 h, 6 d; harvest 14 d, 14 h, 14 d | [1](https://www.rhs.org.uk/vegetables/garlic/grow-your-own) [2](https://extension.umd.edu/resource/growing-garlic-home-garden) |
+| Globe artichoke (*Cynara cardunculus var. scolymus*) | Vegetable | Day-neutral | germination 14 d, 0 h, 1 d; seedling 50 d, 16 h, 2 d; vegetative 100 d, 14 h, 4 d; flowering 30 d, 14 h, 4 d; fruiting 30 d, 14 h, 4 d; harvest 60 d, 14 h, 5 d | [1](https://www.rhs.org.uk/vegetables/globe-artichokes/grow-your-own) |
+| Green onion (scallion) (*Allium fistulosum*) | Vegetable | Day-neutral | germination 10 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 28 d, 14 h, 3 d; fruiting 7 d, 12 h, 3 d; harvest 7 d, 12 h, 4 d | [1](https://extension.umd.edu/resource/growing-onions-home-garden) [2](https://www.rhs.org.uk/vegetables/onions/grow-your-own) |
+| Horseradish (*Armoracia rusticana*) | Vegetable | Day-neutral | germination 21 d, 0 h, 5 d; seedling 21 d, 12 h, 4 d; vegetative 90 d, 14 h, 5 d; fruiting 90 d, 12 h, 6 d; harvest 14 d, 12 h, 14 d | [1](https://www.rhs.org.uk/vegetables/horseradish/grow-your-own) |
+| Kale (*Brassica oleracea var. sabellica*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 45 d, 16 h, 3 d; harvest 60 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/kale/grow-your-own) |
+| Kohlrabi (*Brassica oleracea var. gongylodes*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 30 d, 14 h, 2 d; harvest 30 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/kohl-rabi/grow-your-own) |
+| Leek (*Allium ampeloprasum var. porrum*) | Vegetable | Day-neutral | germination 14 d, 0 h, 2 d; seedling 56 d, 14 h, 3 d; vegetative 90 d, 14 h, 4 d; fruiting 30 d, 12 h, 4 d; harvest 7 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/leeks/grow-your-own) [2](https://extension.umd.edu/resource/growing-leeks-home-garden) |
+| Lentil (*Lens culinaris*) | Legume | Long-day | germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 35 d, 16 h, 4 d; flowering 18 d, 16 h, 3 d; fruiting 30 d, 16 h, 3 d; harvest 14 d, 14 h, 6 d | [1](https://en.wikipedia.org/wiki/Lentil) |
+| Lettuce (*Lactuca sativa*) | Vegetable | Long-day | germination 5 d, 0 h, 1 d; seedling 14 d, 14 h, 2 d; vegetative 21 d, 14 h, 2 d; harvest 14 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/lettuce/grow-your-own) |
+| Lima bean (*Phaseolus lunatus*) | Legume | Day-neutral | germination 8 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 20 d, 14 h, 2 d; harvest 10 d, 12 h, 5 d | [1](https://en.wikipedia.org/wiki/Lima_bean) |
+| Lupin bean (white lupin) (*Lupinus albus*) | Legume | Long-day | germination 8 d, 0 h, 3 d; seedling 14 d, 15 h, 4 d; vegetative 50 d, 16 h, 4 d; flowering 20 d, 16 h, 3 d; fruiting 45 d, 16 h, 3 d; harvest 15 d, 14 h, 6 d | [1](https://en.wikipedia.org/wiki/Lupinus_albus) |
+| Mung bean (*Vigna radiata*) | Legume | Short-day | germination 5 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 20 d, 16 h, 3 d; flowering 12 d, 12 h, 2 d; fruiting 25 d, 12 h, 2 d; harvest 10 d, 12 h, 5 d | [1](https://en.wikipedia.org/wiki/Photoperiodism) |
+| Mustard greens (*Brassica juncea*) | Vegetable | Long-day | germination 4 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 20 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d | [1](https://www.rhs.org.uk/vegetables/pak-choi/grow-your-own) |
+| Napa cabbage (*Brassica rapa subsp. pekinensis*) | Vegetable | Long-day | germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 35 d, 12 h, 2 d; harvest 25 d, 12 h, 2 d | [1](https://www.rhs.org.uk/vegetables/pak-choi/grow-your-own) |
+| Okra (*Abelmoschus esculentus*) | Vegetable | Short-day | germination 8 d, 0 h, 1 d; seedling 30 d, 14 h, 2 d; vegetative 30 d, 13 h, 3 d; flowering 20 d, 12 h, 3 d; fruiting 25 d, 12 h, 3 d; harvest 60 d, 12 h, 3 d | [1](https://www.rhs.org.uk/vegetables/okra/grow-your-own) [2](https://en.wikipedia.org/wiki/Okra) |
+| Onion (*Allium cepa*) | Vegetable | Long-day | germination 14 d, 0 h, 2 d; seedling 28 d, 12 h, 3 d; vegetative 56 d, 14 h, 4 d; fruiting 56 d, 14 h, 5 d; harvest 14 d, 14 h, 14 d | [1](https://extension.umd.edu/resource/growing-onions-home-garden) [2](https://www.rhs.org.uk/vegetables/onions/grow-your-own) |
+| Parsnip (*Pastinaca sativa*) | Vegetable | Day-neutral | germination 21 d, 0 h, 2 d; seedling 21 d, 12 h, 3 d; vegetative 56 d, 14 h, 5 d; fruiting 70 d, 12 h, 6 d; harvest 14 d, 12 h, 10 d | [1](https://www.rhs.org.uk/vegetables/parsnips) |
+| Peanut (*Arachis hypogaea*) | Legume | Day-neutral | germination 8 d, 0 h, 3 d; seedling 14 d, 16 h, 3 d; vegetative 35 d, 16 h, 4 d; flowering 25 d, 14 h, 3 d; fruiting 60 d, 14 h, 3 d; harvest 15 d, 12 h, 6 d | [1](https://en.wikipedia.org/wiki/Peanut) |
+| Pigeon pea (*Cajanus cajan*) | Legume | Short-day | germination 8 d, 0 h, 3 d; seedling 14 d, 16 h, 4 d; vegetative 60 d, 16 h, 5 d; flowering 30 d, 12 h, 3 d; fruiting 60 d, 12 h, 3 d; harvest 20 d, 12 h, 7 d | [1](https://en.wikipedia.org/wiki/Pigeon_pea) |
+| Pole bean (*Phaseolus vulgaris*) | Legume | Day-neutral | germination 7 d, 0 h, 2 d; seedling 12 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 12 d, 14 h, 2 d; fruiting 18 d, 14 h, 2 d; harvest 30 d, 12 h, 4 d | [1](https://hort.purdue.edu/newcrop/duke_energy/Phaseolus_vulgaris.html) |
+| Potato (*Solanum tuberosum*) | Vegetable | Short-day | germination 28 d, 0 h, 5 d; seedling 21 d, 14 h, 3 d; vegetative 28 d, 14 h, 3 d; flowering 14 d, 12 h, 2 d; fruiting 35 d, 12 h, 3 d; harvest 7 d, 12 h, 10 d | [1](https://extension.umd.edu/resource/growing-potatoes-home-garden) [2](https://www.rhs.org.uk/vegetables/potatoes/grow-your-own) |
+| Pumpkin (*Cucurbita pepo*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 50 d, 14 h, 3 d; harvest 21 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/pumpkins/grow-your-own) |
+| Radish (*Raphanus sativus*) | Vegetable | Long-day | germination 4 d, 0 h, 1 d; seedling 7 d, 12 h, 1 d; vegetative 10 d, 12 h, 2 d; fruiting 10 d, 12 h, 2 d; harvest 3 d, 12 h, 3 d | [1](https://extension.umd.edu/resource/growing-radishes-home-garden) |
+| Runner bean (*Phaseolus coccineus*) | Legume | Day-neutral | germination 10 d, 0 h, 2 d; seedling 14 d, 16 h, 2 d; vegetative 35 d, 16 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 21 d, 14 h, 2 d; harvest 30 d, 12 h, 3 d | [1](https://www.rhs.org.uk/vegetables/runner-beans/grow-your-own) |
+| Rutabaga (swede) (*Brassica napus subsp. rapifera*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 42 d, 13 h, 4 d; fruiting 70 d, 12 h, 4 d; harvest 14 d, 12 h, 7 d | [1](https://www.rhs.org.uk/vegetables/swede/grow-your-own) |
+| Shallot (*Allium cepa Aggregatum Group*) | Vegetable | Long-day | germination 14 d, 0 h, 5 d; seedling 21 d, 12 h, 4 d; vegetative 42 d, 14 h, 5 d; fruiting 42 d, 14 h, 6 d; harvest 14 d, 14 h, 14 d | [1](https://www.rhs.org.uk/vegetables/shallots/grow-your-own) |
+| Snow pea (*Pisum sativum var. saccharatum*) | Legume | Long-day | germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 25 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 12 d, 16 h, 2 d; harvest 14 d, 14 h, 3 d | [1](https://en.wikipedia.org/wiki/Photoperiodism) |
+| Soybean (edamame) (*Glycine max*) | Legume | Short-day | germination 7 d, 0 h, 2 d; seedling 10 d, 16 h, 3 d; vegetative 30 d, 16 h, 3 d; flowering 14 d, 12 h, 2 d; fruiting 45 d, 12 h, 2 d; harvest 20 d, 12 h, 5 d | [1](https://en.wikipedia.org/wiki/Soybean) [2](https://en.wikipedia.org/wiki/Photoperiodism) |
+| Spinach (*Spinacia oleracea*) | Vegetable | Long-day | germination 7 d, 0 h, 1 d; seedling 14 d, 12 h, 2 d; vegetative 21 d, 12 h, 2 d; harvest 21 d, 12 h, 2 d | [1](https://www.rhs.org.uk/vegetables/spinach/grow-your-own) |
+| Sugar snap pea (*Pisum sativum var. macrocarpon*) | Legume | Long-day | germination 8 d, 0 h, 2 d; seedling 12 d, 15 h, 3 d; vegetative 28 d, 16 h, 3 d; flowering 10 d, 16 h, 2 d; fruiting 18 d, 16 h, 2 d; harvest 14 d, 14 h, 3 d | [1](https://en.wikipedia.org/wiki/Photoperiodism) |
+| Sweet corn (*Zea mays*) | Vegetable | Day-neutral | germination 8 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 35 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 21 d, 14 h, 2 d; harvest 10 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/sweetcorn/grow-your-own) |
+| Sweet pepper (*Capsicum annuum*) | Vegetable | Day-neutral | germination 12 d, 0 h, 1 d; seedling 40 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 25 d, 14 h, 3 d; fruiting 50 d, 14 h, 2 d; harvest 40 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/aubergines/grow-your-own) |
+| Sweet potato (*Ipomoea batatas*) | Vegetable | Short-day | germination 21 d, 0 h, 3 d; seedling 14 d, 12 h, 2 d; vegetative 42 d, 13 h, 3 d; fruiting 60 d, 12 h, 3 d; harvest 7 d, 12 h, 10 d | [1](https://www.rhs.org.uk/vegetables/sweet-potatoes/grow-your-own) |
+| Swiss chard (*Beta vulgaris subsp. vulgaris*) | Vegetable | Day-neutral | germination 10 d, 0 h, 1 d; seedling 21 d, 14 h, 2 d; vegetative 35 d, 14 h, 3 d; harvest 60 d, 14 h, 3 d | [1](https://www.rhs.org.uk/vegetables/chard/grow-your-own) |
+| Tomatillo (*Physalis philadelphica*) | Vegetable | Day-neutral | germination 8 d, 0 h, 1 d; seedling 35 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 20 d, 14 h, 3 d; fruiting 50 d, 14 h, 3 d; harvest 30 d, 14 h, 4 d | [1](https://en.wikipedia.org/wiki/Tomatillo) |
+| Tomato (*Solanum lycopersicum*) | Vegetable | Day-neutral | germination 8 d, 0 h, 1 d; seedling 30 d, 16 h, 2 d; vegetative 25 d, 16 h, 2 d; flowering 20 d, 14 h, 2 d; fruiting 45 d, 14 h, 1 d; harvest 30 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/tomatoes/grow-your-own) |
+| Turnip (*Brassica rapa subsp. rapa*) | Vegetable | Day-neutral | germination 5 d, 0 h, 1 d; seedling 10 d, 12 h, 2 d; vegetative 18 d, 13 h, 3 d; fruiting 21 d, 12 h, 3 d; harvest 7 d, 12 h, 5 d | [1](https://www.rhs.org.uk/vegetables/turnips/grow-your-own) |
+| Watercress (*Nasturtium officinale*) | Vegetable | Long-day | germination 7 d, 0 h, 1 d; seedling 14 d, 14 h, 1 d; vegetative 28 d, 14 h, 1 d; harvest 21 d, 14 h, 1 d | [1](https://en.wikipedia.org/wiki/Watercress) |
+| Watermelon (*Citrullus lanatus*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 30 d, 16 h, 3 d; flowering 20 d, 16 h, 3 d; fruiting 45 d, 16 h, 3 d; harvest 14 d, 14 h, 5 d | [1](https://en.wikipedia.org/wiki/Watermelon) |
+| Zucchini (*Cucurbita pepo*) | Vegetable | Day-neutral | germination 7 d, 0 h, 1 d; seedling 21 d, 16 h, 2 d; vegetative 21 d, 14 h, 2 d; flowering 14 d, 14 h, 2 d; fruiting 30 d, 14 h, 2 d; harvest 40 d, 14 h, 2 d | [1](https://www.rhs.org.uk/vegetables/courgettes/grow-your-own) |
+
+## Verification
+
+- `tests/components/grow_light/test_schedule.py`: the on-hours window, including across midnight.
+- `tests/components/grow_light/test_plants.py`: stage counting from the sowing day, every catalogue
+  entry valid with a bundled photo, and the crops grown at home present.
+- `tests/components/grow_light/test_init.py`, `test_crop.py`, `test_config_flow.py`: start-up, door
+  pause and resume, door closed outside the hours, end of the window, schedule switch off,
+  germination keeping the light off, seedling hours, the stage change turning the light on, the
+  pump watering when due and stopping after the run, the Watered button, own watering days, and the
+  setup step. Run on Linux; see `ROADMAP.md` for the latest result.
+- `tests/components/grow_light/test_alerts.py`: the stage change alert to a notify action, one
+  watering reminder per due time, wet soil putting the pump off and dry soil starting it, the dry
+  soil reminder without a pump, energy and cost from the light power, no energy sensor without a
+  power source, the sowing reminder, and the Sown again button.
+- Not yet seen in a running build with a real plug, door sensor, pump or soil sensor.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Grow light.</p><p>The <strong>user</strong> configuration step lists <code>doors</code>, <code>dry_below</code>, <code>hours</code>, <code>moisture</code>, <code>name</code>, <code>notify</code>, <code>plant</code>, <code>planted_on</code>, <code>plug</code>, <code>power</code>, <code>price</code>, <code>resow_days</code>, <code>start</code>, <code>water_days</code>, <code>water_minutes</code>, <code>water_switch</code>, <code>watts</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>event</li><li>sensor</li><li>switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/main/docs/features/automations/grow-light.md</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/grow_light</code></dd></dl></section><p><a href="../../integrations/grow_light/">Return to the Grow light guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

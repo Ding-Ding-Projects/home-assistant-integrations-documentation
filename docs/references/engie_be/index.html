@@ -1,1 +1,453 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENGIE Belgium reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:85" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/engie_be/">ENGIE Belgium guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>ENGIE Belgium</h1><p>Instructions on how to integrate ENGIE Belgium energy prices into Home Assistant.</p><section><h2>Overview</h2><p>The ENGIE Belgium integration integrates the ENGIE Belgium API with Home Assistant.</p></section><section><h2>Prerequisites</h2><p>Use a dedicated ENGIE user for Home Assistant rather than your everyday login. Signing in to the same account from engie.be or the ENGIE Smart App revokes the integration&#x27;s session and stops its sensors from updating. You can create a separate user on the ENGIE user management page.</p></section><section><h2>Supported functionality</h2><p>The ENGIE Belgium integration provides the following entities.</p></section><section><h2>Sensors</h2><p>The integration looks at the contract on each meter and creates the price sensors that fit it.</p></section><section><h2>Fixed and variable tariff prices</h2><p>All prices are in EUR/kWh, shown with six decimals.</p></section><section><h2>Dynamic tariff (EPEX) prices</h2><p>A dynamic tariff has no fixed or variable electricity prices: the EPEX day-ahead auction sets the price of every hour and quarter hour of the coming day. A dynamic address gets the sensors below instead of the prices above. Meters on a fixed or variable rate, like gas, keep their price sensors.</p></section><section><h2>Binary sensors</h2><p>Addresses on a dynamic tariff get the EPEX tomorrow prices available binary sensor. It turns on once the hourly and the quarter-hourly prices for tomorrow are both published.</p></section><section><h2>Multiple households</h2><p>A single ENGIE login can cover more than one address or meter. The integration adds every active business agreement on the account as its own device, named after the address, and groups that address&#x27;s price sensors under it. An address that has an agreement but no priced meters still shows up as a device, so you can tell it was found.</p></section><section><h2>Data updates</h2><p>The integration polls the ENGIE API once an hour. Contracted prices only change when your tariff is revised, so there is nothing to gain from polling more often. The sign-in tokens it uses are refreshed on their own, so it keeps working without you signing in again.</p></section><section><h2>Sensors stopped updating</h2><p>This almost always means the ENGIE account is shared between the integration and engie.be or the ENGIE Smart App. Every sign-in somewhere else revokes the integration&#x27;s session, so its sensors become unavailable. Set up a dedicated ENGIE user (see Prerequisites) to avoid this, then sign in again when prompted.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for ENGIE Belgium.</p><p>The <strong>mfa</strong> configuration step lists <code>code</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>email</code>, <code>mfa_method</code>, <code>password</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Multiple households</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/engie_be/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/engie_be</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/engie_be</code></dd></dl></section><p><a href="../../integrations/engie_be/">Return to the ENGIE Belgium guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENGIE Belgium reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:85" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/engie_be/">ENGIE Belgium guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>ENGIE Belgium</h1><p>Instructions on how to integrate ENGIE Belgium energy prices into Home Assistant.</p><div class="reader-body"><p>The <strong>ENGIE Belgium</strong> integration integrates the <a>ENGIE Belgium</a> API with Home Assistant.</p>
+<p>The integration makes it possible to retrieve the electricity and gas prices from your ENGIE Belgium contracts, to gain insight into your rate and to adjust your consumption accordingly. It creates one set of price sensors per address (business agreement) on your account. An address on a dynamic tariff gets sensors for the Belgian EPEX day-ahead wholesale prices.</p>
+<p>Use case: Follow the current electricity and gas prices for each meter on a dashboard and see them change whenever your tariff is revised. Use the price sensors in automations that estimate the cost of running appliances. On a dynamic tariff, run flexible appliances, such as a dishwasher or a tumble dryer, during the cheap hours of the EPEX day-ahead prices. Compare the offtake and injection prices to decide when it pays to use your solar production yourself instead of sending it back to the grid.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>An ENGIE Belgium account (engie.be). New accounts have two-factor authentication enabled by default.</li>
+<li>Access to the phone number or email address that receives the code, since signing in asks for a one-time verification code.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>Use a dedicated ENGIE user for Home Assistant rather than your everyday login. Signing in to the same account from engie.be or the ENGIE Smart App revokes the integration's session and stops its sensors from updating. You can create a separate user on the <a>ENGIE user management page</a>.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>ENGIE Belgium</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>ENGIE Belgium</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Email address:
+  description: The email address of your dedicated ENGIE Belgium account.
+Password:
+  description: The password of your ENGIE Belgium account. It is only used to sign in, and is never stored.
+Two-factor authentication method:
+  description: How you want to receive the one-time verification code, by SMS or email.
+Verification code:
+  description: The six-digit code ENGIE sends you while signing in.
+
+</code></pre>
+<p>Once you are signed in, the integration finds every active business agreement (address) on the account. Each address becomes a device, and the meters (EANs) on that address get their price sensors.</p>
+<h2>Supported functionality</h2>
+<p>The <strong>ENGIE Belgium</strong> integration provides the following entities.</p>
+<h3>Sensors</h3>
+<p>The integration looks at the contract on each meter and creates the price sensors that fit it.</p>
+<h4>Fixed and variable tariff prices</h4>
+<p>All prices are in EUR/kWh, shown with six decimals.</p>
+<p>These sensors show the supplier energy price only. They do not include network and distribution costs, energy taxes and levies, green energy contributions, or other charges on your bill, so your total cost per kWh is higher than the value shown. The default sensors include VAT, and each one has an excluding-VAT version that is turned off by default. You can turn it on from the entity settings if you need the price before VAT.</p>
+<p>Entity IDs are derived from the device name, which is the full address, so a meter at an address like Main Street 1, 1000 Brussels ends up with IDs like <code>sensor.main_street_1_1000_brussels_electricity_offtake_price</code>. When an address has two meters of the same energy type, the last four digits of the meter's EAN are added so the two stay apart.</p>
+<p>Gas is always billed at a single rate:</p>
+<ul>
+<li><strong>Gas offtake price</strong>: energy price per kWh of gas</li>
+</ul>
+<p>A meter on a single electricity rate gets an offtake price, and an injection price when the contract supports it:</p>
+<ul>
+<li><strong>Electricity offtake price</strong>: energy price per kWh you consume</li>
+<li><strong>Electricity injection price</strong>: compensation per kWh you inject</li>
+</ul>
+<p>On a dual-rate contract, a peak and an off-peak sensor take the place of the single-rate ones for that meter:</p>
+<ul>
+<li><strong>Electricity peak offtake price</strong>: offtake price during peak hours</li>
+<li><strong>Electricity off-peak offtake price</strong>: offtake price during off-peak hours</li>
+<li><strong>Electricity peak injection price</strong>: injection price during peak hours</li>
+<li><strong>Electricity off-peak injection price</strong>: injection price during off-peak hours</li>
+</ul>
+<p>A tri-rate contract adds a super off-peak sensor on top of the peak and off-peak ones:</p>
+<ul>
+<li><strong>Electricity super off-peak offtake price</strong>: offtake price during super off-peak hours</li>
+<li><strong>Electricity super off-peak injection price</strong>: injection price during super off-peak hours</li>
+</ul>
+<p>Injection sensors only appear when your contract includes injection, for example when you have solar panels.</p>
+<h4>Dynamic tariff (EPEX) prices</h4>
+<p>A dynamic tariff has no fixed or variable electricity prices: the EPEX day-ahead auction sets the price of every hour and quarter hour of the coming day. A dynamic address gets the sensors below instead of the prices above. Meters on a fixed or variable rate, like gas, keep their price sensors.</p>
+<p>The integration always creates both the hourly and the quarter-hourly sensors, regardless of the interval your contract bills you in. They sit on the same address device and follow the same entity ID pattern.</p>
+<ul>
+<li><strong>EPEX current hour price</strong>: price of the hour you are in</li>
+<li><strong>EPEX next hour price</strong>: price of the next hour</li>
+<li><strong>EPEX lowest hour price today</strong>: today's cheapest hour</li>
+<li><strong>EPEX highest hour price today</strong>: today's most expensive hour</li>
+<li><strong>EPEX current quarter-hourly price</strong>: price of the quarter hour you are in</li>
+<li><strong>EPEX next quarter-hourly price</strong>: price of the next quarter hour</li>
+<li><strong>EPEX lowest quarter-hourly price today</strong>: today's cheapest quarter hour</li>
+<li><strong>EPEX highest quarter-hourly price today</strong>: today's most expensive quarter hour</li>
+</ul>
+<p>All EPEX prices are in EUR/kWh, shown with four decimals. They are the raw wholesale market prices, without VAT, taxes and levies, or network costs, so the price you pay per kWh is higher. Wholesale prices can be negative: when supply exceeds demand, the raw price drops below zero.</p>
+<p>Tomorrow's prices are published in the early afternoon, Brussels time. Until they are in, the next price sensors have no value whenever the next hour or quarter hour falls on the unpublished day.</p>
+<p>To follow the cost of your consumption, go to <strong>Settings</strong> &gt; <strong>Dashboards</strong> &gt; <strong>Energy</strong> and set up grid consumption with the <strong>Use an entity with current price</strong> option. Select <strong>EPEX current hour price</strong> when your contract bills you per hour, or <strong>EPEX current quarter-hourly price</strong> when it bills you per quarter hour. The Energy dashboard then shows a wholesale-only estimate, which is lower than your actual ENGIE bill.</p>
+<h3>Binary sensors</h3>
+<p>Addresses on a dynamic tariff get the <strong>EPEX tomorrow prices available</strong> binary sensor. It turns on once the hourly and the quarter-hourly prices for tomorrow are both published.</p>
+<h2>Multiple households</h2>
+<p>A single ENGIE login can cover more than one address or meter. The integration adds every active business agreement on the account as its own device, named after the address, and groups that address's price sensors under it. An address that has an agreement but no priced meters still shows up as a device, so you can tell it was found.</p>
+<h2>Data updates</h2>
+<p>The integration polls the ENGIE API once an hour. Contracted prices only change when your tariff is revised, so there is nothing to gain from polling more often. The sign-in tokens it uses are refreshed on their own, so it keeps working without you signing in again.</p>
+<p>For an address on a dynamic tariff, the integration also fetches the EPEX day-ahead prices once an hour. The EPEX sensors refresh on every quarter-hour boundary, so the current and next prices switch on time. If the prices cannot be fetched during startup, the sensors stay unavailable and come back once a retry succeeds.</p>
+<p>If the session is revoked, the integration can no longer reach the API and its sensors become unavailable. The usual cause is signing in to the same ENGIE account somewhere else, so a dedicated user (see <a>Prerequisites</a>) avoids it. Home Assistant will ask you to sign in again.</p>
+<p>Your password is only used to sign in, and it is never stored. The integration keeps only the tokens ENGIE hands back, and refreshes them when needed.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Price sensors appear only while a price period covers the current day. During a gap between contract periods, they become unavailable until a new price period starts.</li>
+<li>If Home Assistant restarts at the exact moment the sign-in tokens are being renewed, the integration can lose the session and its sensors stay unavailable until you sign in again.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Sensors stopped updating</h3>
+<p>This almost always means the ENGIE account is shared between the integration and engie.be or the ENGIE Smart App. Every sign-in somewhere else revokes the integration's session, so its sensors become unavailable. Set up a dedicated ENGIE user (see <a>Prerequisites</a>) to avoid this, then sign in again when prompted.</p>
+<h3>The EPEX price sensors are unavailable</h3>
+<p>The integration could not fetch the EPEX day-ahead prices, for example because the ENGIE API was unreachable during startup. It retries on its own, so the sensors come back once a fetch succeeds. To try again right away, call the <a>Update entity</a> action on one of the EPEX sensors.</p>
+<h3>The EPEX price sensors did not appear</h3>
+<p>The integration could not look up your tariff while it was starting, for example because the ENGIE API was unreachable. It retries the lookup in the background, so the sensors of a dynamic address appear once it succeeds.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal steps.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>If you no longer need the dedicated user, you can remove it from the ENGIE user management page.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/engie_be.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate ENGIE Belgium energy prices into Home Assistant.
+ha_release: 2026.11
+ha_domain: engie_be
+---
+
+The **ENGIE Belgium** {% term integration %} integrates the [ENGIE Belgium](https://www.engie.be) API with Home Assistant.
+
+The integration makes it possible to retrieve the electricity and gas prices from your ENGIE Belgium contracts, to gain insight into your rate and to adjust your consumption accordingly. It creates one set of price sensors per address (business agreement) on your account. An address on a dynamic tariff gets sensors for the Belgian EPEX day-ahead wholesale prices.
+
+Use case: Follow the current electricity and gas prices for each meter on a dashboard and see them change whenever your tariff is revised. Use the price sensors in automations that estimate the cost of running appliances. On a dynamic tariff, run flexible appliances, such as a dishwasher or a tumble dryer, during the cheap hours of the EPEX day-ahead prices. Compare the offtake and injection prices to decide when it pays to use your solar production yourself instead of sending it back to the grid.
+
+## Prerequisites
+
+- An ENGIE Belgium account (engie.be). New accounts have two-factor authentication enabled by default.
+- Access to the phone number or email address that receives the code, since signing in asks for a one-time verification code.
+
+{% important %}
+Use a dedicated ENGIE user for Home Assistant rather than your everyday login. Signing in to the same account from engie.be or the ENGIE Smart App revokes the integration&#x27;s session and stops its sensors from updating. You can create a separate user on the [ENGIE user management page](https://www.engie.be/nl/energiedesk/usermanagement/manage-access/).
+{% endimportant %}
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Email address:
+  description: The email address of your dedicated ENGIE Belgium account.
+Password:
+  description: The password of your ENGIE Belgium account. It is only used to sign in, and is never stored.
+Two-factor authentication method:
+  description: How you want to receive the one-time verification code, by SMS or email.
+Verification code:
+  description: The six-digit code ENGIE sends you while signing in.
+{% endconfiguration_basic %}
+
+Once you are signed in, the integration finds every active business agreement (address) on the account. Each address becomes a device, and the meters (EANs) on that address get their price sensors.
+
+## Supported functionality
+
+The **ENGIE Belgium** integration provides the following entities.
+
+### Sensors
+
+The integration looks at the contract on each meter and creates the price sensors that fit it.
+
+#### Fixed and variable tariff prices
+
+All prices are in EUR/kWh, shown with six decimals.
+
+These sensors show the supplier energy price only. They do not include network and distribution costs, energy taxes and levies, green energy contributions, or other charges on your bill, so your total cost per kWh is higher than the value shown. The default sensors include VAT, and each one has an excluding-VAT version that is turned off by default. You can turn it on from the entity settings if you need the price before VAT.
+
+Entity IDs are derived from the device name, which is the full address, so a meter at an address like Main Street 1, 1000 Brussels ends up with IDs like `sensor.main_street_1_1000_brussels_electricity_offtake_price`. When an address has two meters of the same energy type, the last four digits of the meter&#x27;s EAN are added so the two stay apart.
+
+Gas is always billed at a single rate:
+
+- **Gas offtake price**: energy price per kWh of gas
+
+A meter on a single electricity rate gets an offtake price, and an injection price when the contract supports it:
+
+- **Electricity offtake price**: energy price per kWh you consume
+- **Electricity injection price**: compensation per kWh you inject
+
+On a dual-rate contract, a peak and an off-peak sensor take the place of the single-rate ones for that meter:
+
+- **Electricity peak offtake price**: offtake price during peak hours
+- **Electricity off-peak offtake price**: offtake price during off-peak hours
+- **Electricity peak injection price**: injection price during peak hours
+- **Electricity off-peak injection price**: injection price during off-peak hours
+
+A tri-rate contract adds a super off-peak sensor on top of the peak and off-peak ones:
+
+- **Electricity super off-peak offtake price**: offtake price during super off-peak hours
+- **Electricity super off-peak injection price**: injection price during super off-peak hours
+
+Injection sensors only appear when your contract includes injection, for example when you have solar panels.
+
+#### Dynamic tariff (EPEX) prices
+
+A dynamic tariff has no fixed or variable electricity prices: the EPEX day-ahead auction sets the price of every hour and quarter hour of the coming day. A dynamic address gets the sensors below instead of the prices above. Meters on a fixed or variable rate, like gas, keep their price sensors.
+
+The integration always creates both the hourly and the quarter-hourly sensors, regardless of the interval your contract bills you in. They sit on the same address device and follow the same entity ID pattern.
+
+- **EPEX current hour price**: price of the hour you are in
+- **EPEX next hour price**: price of the next hour
+- **EPEX lowest hour price today**: today&#x27;s cheapest hour
+- **EPEX highest hour price today**: today&#x27;s most expensive hour
+- **EPEX current quarter-hourly price**: price of the quarter hour you are in
+- **EPEX next quarter-hourly price**: price of the next quarter hour
+- **EPEX lowest quarter-hourly price today**: today&#x27;s cheapest quarter hour
+- **EPEX highest quarter-hourly price today**: today&#x27;s most expensive quarter hour
+
+All EPEX prices are in EUR/kWh, shown with four decimals. They are the raw wholesale market prices, without VAT, taxes and levies, or network costs, so the price you pay per kWh is higher. Wholesale prices can be negative: when supply exceeds demand, the raw price drops below zero.
+
+Tomorrow&#x27;s prices are published in the early afternoon, Brussels time. Until they are in, the next price sensors have no value whenever the next hour or quarter hour falls on the unpublished day.
+
+To follow the cost of your consumption, go to {% my config_energy title=&quot;**Settings** &gt; **Dashboards** &gt; **Energy**&quot; %} and set up grid consumption with the **Use an entity with current price** option. Select **EPEX current hour price** when your contract bills you per hour, or **EPEX current quarter-hourly price** when it bills you per quarter hour. The Energy dashboard then shows a wholesale-only estimate, which is lower than your actual ENGIE bill.
+
+### Binary sensors
+
+Addresses on a dynamic tariff get the **EPEX tomorrow prices available** binary sensor. It turns on once the hourly and the quarter-hourly prices for tomorrow are both published.
+
+## Multiple households
+
+A single ENGIE login can cover more than one address or meter. The integration adds every active business agreement on the account as its own device, named after the address, and groups that address&#x27;s price sensors under it. An address that has an agreement but no priced meters still shows up as a device, so you can tell it was found.
+
+## Data updates
+
+The integration polls the ENGIE API once an hour. Contracted prices only change when your tariff is revised, so there is nothing to gain from polling more often. The sign-in tokens it uses are refreshed on their own, so it keeps working without you signing in again.
+
+For an address on a dynamic tariff, the integration also fetches the EPEX day-ahead prices once an hour. The EPEX sensors refresh on every quarter-hour boundary, so the current and next prices switch on time. If the prices cannot be fetched during startup, the sensors stay unavailable and come back once a retry succeeds.
+
+If the session is revoked, the integration can no longer reach the API and its sensors become unavailable. The usual cause is signing in to the same ENGIE account somewhere else, so a dedicated user (see [Prerequisites](#prerequisites)) avoids it. Home Assistant will ask you to sign in again.
+
+Your password is only used to sign in, and it is never stored. The integration keeps only the tokens ENGIE hands back, and refreshes them when needed.
+
+## Known limitations
+
+- Price sensors appear only while a price period covers the current day. During a gap between contract periods, they become unavailable until a new price period starts.
+- If Home Assistant restarts at the exact moment the sign-in tokens are being renewed, the integration can lose the session and its sensors stay unavailable until you sign in again.
+
+## Troubleshooting
+
+### Sensors stopped updating
+
+This almost always means the ENGIE account is shared between the integration and engie.be or the ENGIE Smart App. Every sign-in somewhere else revokes the integration&#x27;s session, so its sensors become unavailable. Set up a dedicated ENGIE user (see [Prerequisites](#prerequisites)) to avoid this, then sign in again when prompted.
+
+### The EPEX price sensors are unavailable
+
+The integration could not fetch the EPEX day-ahead prices, for example because the ENGIE API was unreachable during startup. It retries on its own, so the sensors come back once a fetch succeeds. To try again right away, call the [Update entity](/actions/homeassistant.update_entity/) action on one of the EPEX sensors.
+
+### The EPEX price sensors did not appear
+
+The integration could not look up your tariff while it was starting, for example because the ENGIE API was unreachable. It retries the lookup in the background, so the sensors of a dynamic address appear once it succeeds.
+
+## Removing the integration
+
+This integration follows standard integration removal steps.
+
+{% include integrations/remove_device_service.md %}
+
+If you no longer need the dedicated user, you can remove it from the ENGIE user management page.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for ENGIE Belgium.</p><p>The <strong>mfa</strong> configuration step lists <code>code</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>email</code>, <code>mfa_method</code>, <code>password</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Multiple households</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/engie_be/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/engie_be</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/engie_be</code></dd></dl></section><p><a href="../../integrations/engie_be/">Return to the ENGIE Belgium guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

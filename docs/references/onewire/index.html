@@ -1,1 +1,965 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>1-Wire reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:191" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/onewire/">1-Wire guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>1-Wire</h1><p>Instructions on how to integrate 1-Wire sensors and switches into Home Assistant using owserver.</p><section><h2>Overview</h2><p>The 1-Wire integration brings devices on a 1-Wire bus into Home Assistant. 1-Wire is a low-cost bus that is popular for DIY projects. A single pair of wires can connect many temperature sensors, counters, and input/output chips.</p></section><section><h2>Supported devices</h2><p>The following device families are supported:</p></section><section><h2>Multisensors based on DS2438 and DS2760</h2><p>The DS2438 and DS2760 are often used as general-purpose measurement chips. By adding standard components, they can measure humidity, pressure, light, or thermocouple temperatures. owserver provides ready-made conversions for these setups, and the integration reads them:</p></section><section><h2>Unsupported devices</h2><p>The following devices are not supported:</p></section><section><h2>Prerequisites</h2><p>Home Assistant can discover owserver automatically, either when it announces itself on your network or when it runs as an app. In that case, confirm the setup when Home Assistant asks for it.</p></section><section><h2>Configuration options</h2><p>You can change the precision that the integration uses to read DS18B20 temperature sensors (family 28). Lower precision makes the sensor respond faster, but less accurately. The selected precision is visible in the device_file attribute of the Temperature entity, for example /28.FF5C68521604/temperature11.</p></section><section><h2>Supported functionality</h2><p>The integration creates one device for each 1-Wire device it finds on the bus. Devices connected to a DS2409 coupler are linked to that coupler. Each entity has a device_file attribute with the path of the value in owserver, for example /28.FF5C68521604/temperature.</p></section><section><h2>Binary sensors</h2><p>All binary sensors are disabled by default.</p></section><section><h2>1-Wire automation examples</h2><p>1-Wire sensors and switches are often used to monitor and control things around the house. Here are some ideas to get you started.</p></section><section><h2>Automation: Get notified when the freezer gets too warm</h2><p>Use a DS18B20 temperature sensor in your freezer to send a notification to your phone when the temperature rises above -10°C for 10 minutes. Replace the entity IDs in the example with the entity IDs of your sensor and phone.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for 1-Wire.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>port</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>onewire</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>1-Wire automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/onewire/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/onewire</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/onewire</code></dd></dl></section><p><a href="../../integrations/onewire/">Return to the 1-Wire guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>1-Wire reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:191" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/onewire/">1-Wire guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>1-Wire</h1><p>Instructions on how to integrate 1-Wire sensors and switches into Home Assistant using owserver.</p><div class="reader-body"><p>The <strong>1-Wire</strong> integration brings devices on a 1-Wire bus into Home Assistant. 1-Wire is a low-cost bus that is popular for DIY projects. A single pair of wires can connect many temperature sensors, counters, and input/output chips.</p>
+<p>The integration connects to an <a>owserver</a> instance, which talks to your 1-Wire adapter. For example, you can:</p>
+<ul>
+<li>Monitor the temperature of rooms, freezers, aquariums, or heating pipes with DS18B20 sensors.</li>
+<li>Count pulses from water, gas, or electricity meters with a DS2423 counter.</li>
+<li>Switch relays and read contacts with DS2408 or DS2413 input/output chips.</li>
+<li>Measure humidity, pressure, or light with multisensors.</li>
+</ul>
+<p>Every 1-Wire device has a globally unique ID. The first two characters are the device family, which tells the integration what kind of device it is. For example, <code>28.FF5C68521604</code> is a DS18B20 temperature sensor (family <code>28</code>).</p>
+<h2>Supported devices</h2>
+<p>The following device families are supported:</p>
+<ul>
+<li><strong><code>05</code></strong>: <a>DS2405</a> addressable switch</li>
+<li><strong><code>10</code></strong>: <a>DS18S20</a> temperature sensor</li>
+<li><strong><code>12</code></strong>: <a>DS2406</a> dual addressable switch, also used in the TAI-8570 pressure sensor</li>
+<li><strong><code>1D</code></strong>: <a>DS2423</a> dual counter</li>
+<li><strong><code>1F</code></strong>: <a>DS2409</a> coupler for bus branching, which creates a device without entities</li>
+<li><strong><code>20</code></strong>: <a>DS2450</a> quad analog-to-digital converter</li>
+<li><strong><code>22</code></strong>: <a>DS1822</a> temperature sensor</li>
+<li><strong><code>26</code></strong> and <strong><code>A6</code></strong>: <a>DS2438</a> smart battery monitor, often used as a multisensor</li>
+<li><strong><code>28</code></strong>: <a>DS18B20</a> temperature sensor</li>
+<li><strong><code>29</code></strong>: <a>DS2408</a> 8-channel addressable switch</li>
+<li><strong><code>30</code></strong>: <a>DS2760</a> battery monitor, often used with a type K thermocouple</li>
+<li><strong><code>3A</code></strong>: <a>DS2413</a> dual-channel addressable switch</li>
+<li><strong><code>3B</code></strong>: <a>DS1825</a> temperature sensor</li>
+<li><strong><code>42</code></strong>: <a>DS28EA00</a> temperature sensor</li>
+<li><strong><code>7E</code></strong>: <a>Embedded Data Systems</a> multisensors: EDS0065 (temperature and humidity), EDS0066 (temperature and pressure), and EDS0068 (temperature, humidity, pressure, and light)</li>
+<li><strong><code>EF</code></strong>: Hobby Boards temperature and humidity sensor, moisture meter, and hub</li>
+</ul>
+<p>Devices with family <code>01</code> (ID chips) and <code>81</code> (adapter ID chips) are recognized, but they do not provide any entities.</p>
+<h3>Multisensors based on DS2438 and DS2760</h3>
+<p>The DS2438 and DS2760 are often used as general-purpose measurement chips. By adding standard components, they can measure humidity, pressure, light, or thermocouple temperatures. owserver provides ready-made conversions for these setups, and the integration reads them:</p>
+<ul>
+<li><strong>Humidity</strong>: with a compatible Honeywell (HIH3600, HIH4000, HIH5030) or Humirel (HTM1735) sensor on a DS2438</li>
+<li><strong>Pressure</strong>: with a B1-R1-A barometer on a DS2438</li>
+<li><strong>Illuminance</strong>: with an S3-R1-A light sensor on a DS2438</li>
+<li><strong>Thermocouple temperature</strong>: with a type K thermocouple on a DS2760</li>
+</ul>
+<p>The raw measurements of these chips are also available as separate entities. For more details, refer to the owfs documentation for the <a>DS2438</a> and the <a>DS2760</a>.</p>
+<p>The TAI-8570 from AAG Electronica combines a DS2406 with a barometer and a temperature sensor. The integration can read its pressure and temperature.</p>
+<p>Hobby Boards sold DIY 1-Wire boards. The company is no longer active, but the integration still supports its temperature and humidity sensor, moisture meter, and hub.</p>
+<h2>Unsupported devices</h2>
+<p>The following devices are not supported:</p>
+<ul>
+<li>Device families and types that are not listed under <a>Supported devices</a>. The integration ignores them and writes a warning to the log.</li>
+<li>1-Wire devices that are not available through owserver, such as sensors connected directly to the GPIO pins of a Raspberry Pi without owserver.</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>A 1-Wire adapter, such as a USB, serial, or I2C adapter, with your devices connected to it.</li>
+<li>An owserver instance that can access the adapter. owserver is part of the <a>owfs 1-Wire file system</a>. You can run it on the same machine as Home Assistant or on another machine on your network. If you use Home Assistant Operating System, you can install owserver as a community app.</li>
+<li>The hostname or IP address and the port of owserver. The default port is <code>4304</code>.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>1-Wire</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>1-Wire</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Home Assistant can discover owserver automatically, either when it announces itself on your network or when it runs as an app. In that case, confirm the setup when Home Assistant asks for it.</p>
+<pre><code>
+Host:
+  description: "The hostname or IP address of your owserver instance. The default is `localhost`."
+Port:
+  description: "The port of your owserver instance. The default is `4304`."
+
+</code></pre>
+<h2>Configuration options</h2>
+<p>You can change the precision that the integration uses to read DS18B20 temperature sensors (family <code>28</code>). Lower precision makes the sensor respond faster, but less accurately. The selected precision is visible in the <code>device_file</code> attribute of the <strong>Temperature</strong> entity, for example <code>/28.FF5C68521604/temperature11</code>.</p>
+<p>This option only changes how Home Assistant reads the sensor. To change the resolution stored in the sensor itself, use the <strong>Temperature resolution</strong> select entity instead.</p>
+<p>To change the options, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>1-Wire</strong>, and then select the cogwheel  on the entry. Home Assistant reloads the integration after you save the options.</p>
+<pre><code>
+Reset all device customizations:
+  description: "Resets the options of all devices to their default values."
+Customize specific devices:
+  description: "Select the DS18B20 sensors you want to configure. Home Assistant then asks for the **Sensor precision** of each selected sensor. If no DS18B20 sensors are connected, Home Assistant shows that no configurable devices were found."
+Sensor precision:
+  description: "The precision of the temperature reading: **Default**, **9 Bits**, **10 Bits**, **11 Bits**, or **12 Bits**. The default is **Default**, which uses the precision stored in the sensor."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<p>The integration creates one device for each 1-Wire device it finds on the bus. Devices connected to a DS2409 coupler are linked to that coupler. Each entity has a <code>device_file</code> attribute with the path of the value in owserver, for example <code>/28.FF5C68521604/temperature</code>.</p>
+<p>Many entities are <a>disabled by default</a>, so that the integration does not read unnecessary data from the bus. You can turn them on from the device page.</p>
+<h3>Binary sensors</h3>
+<p>All binary sensors are disabled by default.</p>
+<ul>
+<li><strong>Sensed</strong>, <strong>Sensed A</strong>/<strong>B</strong>, and <strong>Sensed 0</strong>–<strong>7</strong><ul>
+<li><strong>Description</strong>: The state of an input channel</li>
+<li><strong>Available for</strong>: DS2405 (<code>05</code>), DS2406 (<code>12</code>), DS2408 (<code>29</code>), and DS2413 (<code>3A</code>)</li>
+</ul>
+</li>
+<li><strong>Hub short on branch 0</strong>–<strong>3</strong><ul>
+<li><strong>Description</strong>: Whether a short circuit is detected on a hub branch</li>
+<li><strong>Available for</strong>: Hobby Boards hub (<code>EF</code>)</li>
+</ul>
+</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><strong>Temperature resolution</strong><ul>
+<li><strong>Description</strong>: The resolution stored in the temperature sensor</li>
+<li><strong>Options</strong>: 9 bits (0.5°C, fastest, up to 93.75ms), 10 bits (0.25°C, up to 187.5ms), 11 bits (0.125°C, up to 375ms), 12 bits (0.0625°C, slowest, up to 750ms)</li>
+<li><strong>Available for</strong>: DS18B20 (<code>28</code>)</li>
+<li><strong>Remarks</strong>: This entity is disabled by default</li>
+</ul>
+</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li><strong>Temperature</strong><ul>
+<li><strong>Description</strong>: The measured temperature</li>
+<li><strong>Available for</strong>: Temperature sensors (<code>10</code>, <code>22</code>, <code>28</code>, <code>3B</code>, <code>42</code>), DS2406 with TAI-8570 (<code>12</code>), DS2438 (<code>26</code>, <code>A6</code>), DS2760 (<code>30</code>), Embedded Data Systems (<code>7E</code>), and Hobby Boards temperature and humidity sensor (<code>EF</code>)</li>
+<li><strong>Remarks</strong>: Disabled by default for the TAI-8570</li>
+</ul>
+</li>
+<li><strong>Humidity</strong><ul>
+<li><strong>Description</strong>: The measured relative humidity</li>
+<li><strong>Available for</strong>: DS2438 (<code>26</code>, <code>A6</code>), Embedded Data Systems EDS0065 and EDS0068 (<code>7E</code>), and Hobby Boards temperature and humidity sensor (<code>EF</code>)</li>
+<li><strong>Remarks</strong>: Disabled by default for the DS2438</li>
+</ul>
+</li>
+<li><strong>HIH3600 humidity</strong>, <strong>HIH4000 humidity</strong>, <strong>HIH5030 humidity</strong>, and <strong>HTM1735 humidity</strong><ul>
+<li><strong>Description</strong>: The relative humidity, converted for the humidity sensor connected to the DS2438</li>
+<li><strong>Available for</strong>: DS2438 (<code>26</code>, <code>A6</code>)</li>
+<li><strong>Remarks</strong>: These entities are disabled by default</li>
+</ul>
+</li>
+<li><strong>Raw humidity</strong><ul>
+<li><strong>Description</strong>: The relative humidity before correction</li>
+<li><strong>Available for</strong>: Hobby Boards temperature and humidity sensor (<code>EF</code>)</li>
+</ul>
+</li>
+<li><strong>Pressure</strong><ul>
+<li><strong>Description</strong>: The measured air pressure, in mbar</li>
+<li><strong>Available for</strong>: DS2406 with TAI-8570 (<code>12</code>), DS2438 with B1-R1-A (<code>26</code>, <code>A6</code>), and Embedded Data Systems EDS0066 and EDS0068 (<code>7E</code>)</li>
+<li><strong>Remarks</strong>: Disabled by default for the DS2406 and the DS2438</li>
+</ul>
+</li>
+<li><strong>Illuminance</strong><ul>
+<li><strong>Description</strong>: The measured light level, in lx</li>
+<li><strong>Available for</strong>: DS2438 with S3-R1-A (<code>26</code>, <code>A6</code>) and Embedded Data Systems EDS0068 (<code>7E</code>)</li>
+<li><strong>Remarks</strong>: Disabled by default for the DS2438</li>
+</ul>
+</li>
+<li><strong>Counter A</strong>/<strong>B</strong><ul>
+<li><strong>Description</strong>: The pulse count of each counter input</li>
+<li><strong>Available for</strong>: DS2423 (<code>1D</code>)</li>
+</ul>
+</li>
+<li><strong>Voltage A</strong>–<strong>D</strong> and <strong>Latest voltage A</strong>–<strong>D</strong><ul>
+<li><strong>Description</strong>: The voltage of each input</li>
+<li><strong>Available for</strong>: DS2450 (<code>20</code>)</li>
+<li><strong>Remarks</strong>: <strong>Voltage</strong> starts a new conversion, while <strong>Latest voltage</strong> reads the last converted value. The <strong>Latest voltage</strong> entities are disabled by default</li>
+</ul>
+</li>
+<li><strong>VAD voltage</strong>, <strong>VDD voltage</strong>, and <strong>VIS voltage difference</strong><ul>
+<li><strong>Description</strong>: The raw voltages measured by the DS2438</li>
+<li><strong>Available for</strong>: DS2438 (<code>26</code>, <code>A6</code>)</li>
+<li><strong>Remarks</strong>: These entities are disabled by default</li>
+</ul>
+</li>
+<li><strong>Voltage</strong>, <strong>VIS voltage gradient</strong>, and <strong>Thermocouple K temperature</strong><ul>
+<li><strong>Description</strong>: The raw voltages measured by the DS2760, and the temperature of a connected type K thermocouple</li>
+<li><strong>Available for</strong>: DS2760 (<code>30</code>)</li>
+<li><strong>Remarks</strong>: These entities are disabled by default</li>
+</ul>
+</li>
+<li><strong>Moisture 0</strong>–<strong>3</strong> or <strong>Wetness 0</strong>–<strong>3</strong><ul>
+<li><strong>Description</strong>: The soil moisture, in cbar, or the leaf wetness, in %, of each channel, depending on the sensor type configured for the channel</li>
+<li><strong>Available for</strong>: Hobby Boards moisture meter (<code>EF</code>)</li>
+<li><strong>Remarks</strong>: After you change the sensor type of a channel with the <strong>Leaf sensor</strong> or <strong>Moisture sensor</strong> switch, reload the integration to get the matching entity</li>
+</ul>
+</li>
+</ul>
+<h3>Switches</h3>
+<p>All switches are disabled by default.</p>
+<ul>
+<li><strong>Programmed input-output</strong>, <strong>Programmed input-output A</strong>/<strong>B</strong>, and <strong>Programmed input-output 0</strong>–<strong>7</strong><ul>
+<li><strong>Description</strong>: Turns an output channel on or off</li>
+<li><strong>Available for</strong>: DS2405 (<code>05</code>), DS2406 (<code>12</code>), DS2408 (<code>29</code>), and DS2413 (<code>3A</code>)</li>
+</ul>
+</li>
+<li><strong>Latch A</strong>/<strong>B</strong> and <strong>Latch 0</strong>–<strong>7</strong><ul>
+<li><strong>Description</strong>: The activity latch of an input channel, which records whether the input changed</li>
+<li><strong>Available for</strong>: DS2406 (<code>12</code>) and DS2408 (<code>29</code>)</li>
+</ul>
+</li>
+<li><strong>Current A/D control</strong><ul>
+<li><strong>Description</strong>: Turns the current measurement of the DS2438 on or off</li>
+<li><strong>Available for</strong>: DS2438 (<code>26</code>, <code>A6</code>)</li>
+</ul>
+</li>
+<li><strong>Hub branch 0</strong>–<strong>3</strong><ul>
+<li><strong>Description</strong>: Turns a hub branch on or off</li>
+<li><strong>Available for</strong>: Hobby Boards hub (<code>EF</code>)</li>
+</ul>
+</li>
+<li><strong>Leaf sensor 0</strong>–<strong>3</strong> and <strong>Moisture sensor 0</strong>–<strong>3</strong><ul>
+<li><strong>Description</strong>: Sets the sensor type of each channel to leaf wetness or soil moisture</li>
+<li><strong>Available for</strong>: Hobby Boards moisture meter (<code>EF</code>)</li>
+</ul>
+</li>
+</ul>
+<h2>1-Wire automation examples</h2>
+<p>1-Wire sensors and switches are often used to monitor and control things around the house.
+Here are some ideas to get you started.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: Get notified when the freezer gets too warm</h3>
+<p>Use a DS18B20 temperature sensor in your freezer to send a notification to your phone when the temperature rises above -10°C for 10 minutes. Replace the entity IDs in the example with the entity IDs of your sensor and phone.</p>
+<ul>
+<li><strong>Trigger</strong>: Numeric state crossed threshold<ul>
+<li><strong>Entity</strong>: Your freezer's <strong>Temperature</strong> sensor</li>
+<li><strong>Above</strong>: <code>-10</code></li>
+<li><strong>For at least</strong>: 10 minutes</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for notifying when the freezer gets too warm</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when the freezer gets too warm"
+triggers:
+- trigger: numeric_state
+entity_id: sensor.28_ff5c68521604_temperature
+above: -10
+for:
+minutes: 10
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "The freezer temperature is above -10°C."</p>
+<h3>Automation: Turn on a heater relay when the greenhouse gets cold</h3>
+<p>Use a temperature sensor and a relay connected to an output of a DS2413 to protect plants from frost. This example turns on the relay when the temperature drops below 5°C. The <strong>Programmed input-output</strong> switches are disabled by default, so enable the one you use first. Replace the entity IDs in the example with the entity IDs of your sensor and switch.</p>
+<ul>
+<li><strong>Trigger</strong>: Numeric state crossed threshold<ul>
+<li><strong>Entity</strong>: Your greenhouse <strong>Temperature</strong> sensor</li>
+<li><strong>Below</strong>: <code>5</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Turn on switch<ul>
+<li><strong>Target</strong>: Your relay's <strong>Programmed input-output A</strong> switch</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for turning on a heater relay when the greenhouse gets cold</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Turn on the greenhouse heater when it gets cold"
+triggers:
+- trigger: numeric_state
+entity_id: sensor.28_a05966040000_temperature
+below: 5
+actions:
+- action: switch.turn_on
+target:
+entity_id: switch.3a_0b2c4e000000_programmed_input_output_a</p>
+<h2>Data updates</h2>
+<p>The <strong>1-Wire</strong> integration polling polls each entity every 30 seconds.</p>
+<p>The integration also scans the bus for new devices every 5 minutes. New devices and their entities are added automatically, so you do not need to reload the integration after you connect a new sensor. On DS2409 couplers, the integration searches both the <code>main</code> and the <code>aux</code> branches.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration only connects to owserver. It cannot read 1-Wire devices directly from an adapter or from the GPIO pins of a Raspberry Pi.</li>
+<li>Bus branching is only supported with DS2409 couplers.</li>
+<li>Only DS18B20 temperature sensors have configuration options.</li>
+<li>Devices that you disconnect from the bus are not removed automatically, because a device that is temporarily unreachable looks the same as a removed one. To remove a device you no longer use, see <a>Removing a device you no longer use</a>.</li>
+<li>When you connect a new device, it can take up to 5 minutes before it appears in Home Assistant.</li>
+<li>On the Hobby Boards moisture meter, a change of sensor type only takes effect after you reload the integration.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Home Assistant cannot connect to owserver</h4>
+<h3>Symptom: Setup fails with a connection error</h3>
+<p>When you set up the integration, you get an error that Home Assistant failed to connect. Or, after setup, the integration shows <strong>Error communicating with the 1-Wire server</strong> followed by the host and port.</p>
+<h4>Description</h4>
+<p>Home Assistant cannot reach owserver at the host and port you entered.</p>
+<h4>Resolution</h4>
+<p>If owserver is not reachable when Home Assistant starts, the integration retries automatically.</p>
+<ol>
+<li>Check that owserver is running and that it can access your 1-Wire adapter.</li>
+<li>Check the host and port. The default port is <code>4304</code>.</li>
+<li>If owserver runs on another machine, check that it accepts connections from your network and not only from <code>localhost</code>.</li>
+<li>If owserver moved to another address, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>1-Wire</strong>, then the three dots  menu next to the entry, and select <strong>Reconfigure</strong>. Enter the new host and port.</li>
+</ol>
+<h4>A device on the bus does not appear</h4>
+<h3>Symptom: A connected device is missing in Home Assistant</h3>
+<p>A device is connected to the bus, but Home Assistant does not show it.</p>
+<h4>Description</h4>
+<p>The integration only adds devices from the <a>supported device families</a>, and it scans for new devices every 5 minutes. The device might also not be visible to owserver.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Wait 5 minutes for the next scan.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong> and look for a message that the integration ignores an unknown device family or type.</li>
+<li>Check that the device appears in owserver, for example with the <code>owdir</code> command or in the owhttpd web interface.</li>
+<li>Check the wiring of the device.</li>
+</ol>
+<h4>Some entities are missing</h4>
+<h3>Symptom: A device has fewer entities than listed on this page</h3>
+<p>A device appears in Home Assistant, but some of its entities are missing.</p>
+<h4>Description</h4>
+<p>Many entities are disabled by default, including all binary sensors and switches. Some entities only exist when the matching hardware is connected, such as the TAI-8570 sensors.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>1-Wire</strong>.</li>
+<li>Select the device.</li>
+<li>Select <strong>+N disabled entities</strong>, where N is the number of disabled entities.</li>
+<li>Select the entity, then select the cogwheel .</li>
+<li>Turn on <strong>Enabled</strong>, and select <strong>Update</strong>.</li>
+</ol>
+<h4>An entity is unavailable</h4>
+<h3>Symptom: An entity shows as unavailable</h3>
+<p>An entity shows as <strong>Unavailable</strong>, and <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong> contains a message about an error fetching data.</p>
+<h4>Description</h4>
+<p>Home Assistant could not read the value from owserver. This usually happens when the device lost its connection to the bus.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check the wiring and the power of the device.</li>
+<li>Check that the device still appears in owserver.</li>
+</ol>
+<p>The entity recovers automatically on the next successful reading.</p>
+<h4>A DS18B20 reports 85°C</h4>
+<h3>Symptom: A DS18B20 temperature sensor reports 85°C</h3>
+<p>A DS18B20 temperature sensor suddenly reports 85°C, even though the real temperature is different.</p>
+<h4>Description</h4>
+<p>85°C is the power-on value of the DS18B20. The sensor reports it when it loses power during a measurement, for example because of a wiring problem or when it uses parasitic power. There is no way to distinguish a real 85°C reading from an incorrect one.</p>
+<h4>Resolution</h4>
+<ol>
+<li><p>Check the wiring of the sensor.</p>
+</li>
+<li><p>If possible, power the sensor with a separate supply wire instead of parasitic power.</p>
+</li>
+<li><p>If the problem remains, you can create a template sensor helper that filters out the value. Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>, create a <a href="../template/">template sensor</a>, and use a state template such as:</p>
+<pre><code>{% if states('sensor.28_a05966040000_temperature') | float(0) != 85 %}
+  {{ states('sensor.28_a05966040000_temperature') }}
+{% else %}
+  None
+{% endif %}
+</code></pre>
+</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h3>Removing a device you no longer use</h3>
+<p>The integration does not remove devices that you disconnect from the bus. To remove one:</p>
+<ol>
+<li>Disconnect the device from the bus.</li>
+<li>Wait up to 5 minutes, until the next scan of the bus.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>1-Wire</strong>.</li>
+<li>Select the device, then select the three dots  menu and select <strong>Delete</strong>.</li>
+</ol>
+<p>You can only delete a device that the integration no longer finds on the bus. If you connect the device again later, it is added again on the next scan.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/onewire.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate 1-Wire sensors and switches into Home Assistant using owserver.
+ha_release: 0.12
+ha_domain: onewire
+---
+
+The **1-Wire** {% term integration %} brings devices on a 1-Wire bus into Home Assistant. 1-Wire is a low-cost bus that is popular for DIY projects. A single pair of wires can connect many temperature sensors, counters, and input/output chips.
+
+The integration connects to an [owserver](https://owfs.org/) instance, which talks to your 1-Wire adapter. For example, you can:
+
+- Monitor the temperature of rooms, freezers, aquariums, or heating pipes with DS18B20 sensors.
+- Count pulses from water, gas, or electricity meters with a DS2423 counter.
+- Switch relays and read contacts with DS2408 or DS2413 input/output chips.
+- Measure humidity, pressure, or light with multisensors.
+
+Every 1-Wire device has a globally unique ID. The first two characters are the device family, which tells the integration what kind of device it is. For example, `28.FF5C68521604` is a DS18B20 temperature sensor (family `28`).
+
+## Supported devices
+
+The following device families are supported:
+
+- **`05`**: [DS2405](https://datasheets.maximintegrated.com/en/ds/DS2405.pdf) addressable switch
+- **`10`**: [DS18S20](https://www.maximintegrated.com/en/products/sensors/DS18S20.html) temperature sensor
+- **`12`**: [DS2406](https://datasheets.maximintegrated.com/en/ds/DS2406.pdf) dual addressable switch, also used in the TAI-8570 pressure sensor
+- **`1D`**: [DS2423](https://datasheets.maximintegrated.com/en/ds/DS2423.pdf) dual counter
+- **`1F`**: [DS2409](https://datasheets.maximintegrated.com/en/ds/DS2409.pdf) coupler for bus branching, which creates a device without entities
+- **`20`**: [DS2450](https://datasheets.maximintegrated.com/en/ds/DS2450.pdf) quad analog-to-digital converter
+- **`22`**: [DS1822](https://datasheets.maximintegrated.com/en/ds/DS1822.pdf) temperature sensor
+- **`26`** and **`A6`**: [DS2438](https://datasheets.maximintegrated.com/en/ds/DS2438.pdf) smart battery monitor, often used as a multisensor
+- **`28`**: [DS18B20](https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf) temperature sensor
+- **`29`**: [DS2408](https://datasheets.maximintegrated.com/en/ds/DS2408.pdf) 8-channel addressable switch
+- **`30`**: [DS2760](https://pdfserv.maximintegrated.com/en/ds/DS2760.pdf) battery monitor, often used with a type K thermocouple
+- **`3A`**: [DS2413](https://datasheets.maximintegrated.com/en/ds/DS2413.pdf) dual-channel addressable switch
+- **`3B`**: [DS1825](https://datasheets.maximintegrated.com/en/ds/DS1825.pdf) temperature sensor
+- **`42`**: [DS28EA00](https://datasheets.maximintegrated.com/en/ds/DS28EA00.pdf) temperature sensor
+- **`7E`**: [Embedded Data Systems](https://www.embeddeddatasystems.com/assets/images/supportFiles/manuals/EN-UserMan%20%20OW-ENV%20Sensor%20v13.pdf) multisensors: EDS0065 (temperature and humidity), EDS0066 (temperature and pressure), and EDS0068 (temperature, humidity, pressure, and light)
+- **`EF`**: Hobby Boards temperature and humidity sensor, moisture meter, and hub
+
+Devices with family `01` (ID chips) and `81` (adapter ID chips) are recognized, but they do not provide any entities.
+
+### Multisensors based on DS2438 and DS2760
+
+The DS2438 and DS2760 are often used as general-purpose measurement chips. By adding standard components, they can measure humidity, pressure, light, or thermocouple temperatures. owserver provides ready-made conversions for these setups, and the integration reads them:
+
+- **Humidity**: with a compatible Honeywell (HIH3600, HIH4000, HIH5030) or Humirel (HTM1735) sensor on a DS2438
+- **Pressure**: with a B1-R1-A barometer on a DS2438
+- **Illuminance**: with an S3-R1-A light sensor on a DS2438
+- **Thermocouple temperature**: with a type K thermocouple on a DS2760
+
+The raw measurements of these chips are also available as separate entities. For more details, refer to the owfs documentation for the [DS2438](https://owfs.org/index_php_page_ds2438.html) and the [DS2760](https://owfs.org/index_php_page_ds2760.html).
+
+The TAI-8570 from AAG Electronica combines a DS2406 with a barometer and a temperature sensor. The integration can read its pressure and temperature.
+
+Hobby Boards sold DIY 1-Wire boards. The company is no longer active, but the integration still supports its temperature and humidity sensor, moisture meter, and hub.
+
+## Unsupported devices
+
+The following devices are not supported:
+
+- Device families and types that are not listed under [Supported devices](#supported-devices). The integration ignores them and writes a warning to the log.
+- 1-Wire devices that are not available through owserver, such as sensors connected directly to the GPIO pins of a Raspberry Pi without owserver.
+
+## Prerequisites
+
+- A 1-Wire adapter, such as a USB, serial, or I2C adapter, with your devices connected to it.
+- An owserver instance that can access the adapter. owserver is part of the [owfs 1-Wire file system](https://owfs.org/). You can run it on the same machine as Home Assistant or on another machine on your network. If you use {% term &quot;Home Assistant Operating System&quot; %}, you can install owserver as a community {% term app %}.
+- The hostname or IP address and the port of owserver. The default port is `4304`.
+
+{% include integrations/config_flow.md %}
+
+Home Assistant can discover owserver automatically, either when it announces itself on your network or when it runs as an {% term app %}. In that case, confirm the setup when Home Assistant asks for it.
+
+{% configuration_basic %}
+Host:
+  description: &quot;The hostname or IP address of your owserver instance. The default is `localhost`.&quot;
+Port:
+  description: &quot;The port of your owserver instance. The default is `4304`.&quot;
+{% endconfiguration_basic %}
+
+## Configuration options
+
+You can change the precision that the integration uses to read DS18B20 temperature sensors (family `28`). Lower precision makes the sensor respond faster, but less accurately. The selected precision is visible in the `device_file` attribute of the **Temperature** entity, for example `/28.FF5C68521604/temperature11`.
+
+This option only changes how Home Assistant reads the sensor. To change the resolution stored in the sensor itself, use the **Temperature resolution** select entity instead.
+
+To change the options, go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **1-Wire**, and then select the cogwheel {% icon &quot;mdi:cog-outline&quot; %} on the entry. Home Assistant reloads the integration after you save the options.
+
+{% configuration_basic %}
+Reset all device customizations:
+  description: &quot;Resets the options of all devices to their default values.&quot;
+Customize specific devices:
+  description: &quot;Select the DS18B20 sensors you want to configure. Home Assistant then asks for the **Sensor precision** of each selected sensor. If no DS18B20 sensors are connected, Home Assistant shows that no configurable devices were found.&quot;
+Sensor precision:
+  description: &quot;The precision of the temperature reading: **Default**, **9 Bits**, **10 Bits**, **11 Bits**, or **12 Bits**. The default is **Default**, which uses the precision stored in the sensor.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+The integration creates one device for each 1-Wire device it finds on the bus. Devices connected to a DS2409 coupler are linked to that coupler. Each entity has a `device_file` attribute with the path of the value in owserver, for example `/28.FF5C68521604/temperature`.
+
+Many entities are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity), so that the integration does not read unnecessary data from the bus. You can turn them on from the device page.
+
+### Binary sensors
+
+All binary sensors are disabled by default.
+
+- **Sensed**, **Sensed A**/**B**, and **Sensed 0**–**7**
+  - **Description**: The state of an input channel
+  - **Available for**: DS2405 (`05`), DS2406 (`12`), DS2408 (`29`), and DS2413 (`3A`)
+- **Hub short on branch 0**–**3**
+  - **Description**: Whether a short circuit is detected on a hub branch
+  - **Available for**: Hobby Boards hub (`EF`)
+
+### Selects
+
+- **Temperature resolution**
+  - **Description**: The resolution stored in the temperature sensor
+  - **Options**: 9 bits (0.5°C, fastest, up to 93.75ms), 10 bits (0.25°C, up to 187.5ms), 11 bits (0.125°C, up to 375ms), 12 bits (0.0625°C, slowest, up to 750ms)
+  - **Available for**: DS18B20 (`28`)
+  - **Remarks**: This entity is disabled by default
+
+### Sensors
+
+- **Temperature**
+  - **Description**: The measured temperature
+  - **Available for**: Temperature sensors (`10`, `22`, `28`, `3B`, `42`), DS2406 with TAI-8570 (`12`), DS2438 (`26`, `A6`), DS2760 (`30`), Embedded Data Systems (`7E`), and Hobby Boards temperature and humidity sensor (`EF`)
+  - **Remarks**: Disabled by default for the TAI-8570
+- **Humidity**
+  - **Description**: The measured relative humidity
+  - **Available for**: DS2438 (`26`, `A6`), Embedded Data Systems EDS0065 and EDS0068 (`7E`), and Hobby Boards temperature and humidity sensor (`EF`)
+  - **Remarks**: Disabled by default for the DS2438
+- **HIH3600 humidity**, **HIH4000 humidity**, **HIH5030 humidity**, and **HTM1735 humidity**
+  - **Description**: The relative humidity, converted for the humidity sensor connected to the DS2438
+  - **Available for**: DS2438 (`26`, `A6`)
+  - **Remarks**: These entities are disabled by default
+- **Raw humidity**
+  - **Description**: The relative humidity before correction
+  - **Available for**: Hobby Boards temperature and humidity sensor (`EF`)
+- **Pressure**
+  - **Description**: The measured air pressure, in mbar
+  - **Available for**: DS2406 with TAI-8570 (`12`), DS2438 with B1-R1-A (`26`, `A6`), and Embedded Data Systems EDS0066 and EDS0068 (`7E`)
+  - **Remarks**: Disabled by default for the DS2406 and the DS2438
+- **Illuminance**
+  - **Description**: The measured light level, in lx
+  - **Available for**: DS2438 with S3-R1-A (`26`, `A6`) and Embedded Data Systems EDS0068 (`7E`)
+  - **Remarks**: Disabled by default for the DS2438
+- **Counter A**/**B**
+  - **Description**: The pulse count of each counter input
+  - **Available for**: DS2423 (`1D`)
+- **Voltage A**–**D** and **Latest voltage A**–**D**
+  - **Description**: The voltage of each input
+  - **Available for**: DS2450 (`20`)
+  - **Remarks**: **Voltage** starts a new conversion, while **Latest voltage** reads the last converted value. The **Latest voltage** entities are disabled by default
+- **VAD voltage**, **VDD voltage**, and **VIS voltage difference**
+  - **Description**: The raw voltages measured by the DS2438
+  - **Available for**: DS2438 (`26`, `A6`)
+  - **Remarks**: These entities are disabled by default
+- **Voltage**, **VIS voltage gradient**, and **Thermocouple K temperature**
+  - **Description**: The raw voltages measured by the DS2760, and the temperature of a connected type K thermocouple
+  - **Available for**: DS2760 (`30`)
+  - **Remarks**: These entities are disabled by default
+- **Moisture 0**–**3** or **Wetness 0**–**3**
+  - **Description**: The soil moisture, in cbar, or the leaf wetness, in %, of each channel, depending on the sensor type configured for the channel
+  - **Available for**: Hobby Boards moisture meter (`EF`)
+  - **Remarks**: After you change the sensor type of a channel with the **Leaf sensor** or **Moisture sensor** switch, reload the integration to get the matching entity
+
+### Switches
+
+All switches are disabled by default.
+
+- **Programmed input-output**, **Programmed input-output A**/**B**, and **Programmed input-output 0**–**7**
+  - **Description**: Turns an output channel on or off
+  - **Available for**: DS2405 (`05`), DS2406 (`12`), DS2408 (`29`), and DS2413 (`3A`)
+- **Latch A**/**B** and **Latch 0**–**7**
+  - **Description**: The activity latch of an input channel, which records whether the input changed
+  - **Available for**: DS2406 (`12`) and DS2408 (`29`)
+- **Current A/D control**
+  - **Description**: Turns the current measurement of the DS2438 on or off
+  - **Available for**: DS2438 (`26`, `A6`)
+- **Hub branch 0**–**3**
+  - **Description**: Turns a hub branch on or off
+  - **Available for**: Hobby Boards hub (`EF`)
+- **Leaf sensor 0**–**3** and **Moisture sensor 0**–**3**
+  - **Description**: Sets the sensor type of each channel to leaf wetness or soil moisture
+  - **Available for**: Hobby Boards moisture meter (`EF`)
+
+## 1-Wire automation examples
+
+1-Wire sensors and switches are often used to monitor and control things around the house.
+Here are some ideas to get you started.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: Get notified when the freezer gets too warm
+
+Use a DS18B20 temperature sensor in your freezer to send a notification to your phone when the temperature rises above -10°C for 10 minutes. Replace the entity IDs in the example with the entity IDs of your sensor and phone.
+
+- **Trigger**: Numeric state crossed threshold
+  - **Entity**: Your freezer&#x27;s **Temperature** sensor
+  - **Above**: `-10`
+  - **For at least**: 10 minutes
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for notifying when the freezer gets too warm&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when the freezer gets too warm&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.28_ff5c68521604_temperature
+      above: -10
+      for:
+        minutes: 10
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;The freezer temperature is above -10°C.&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Turn on a heater relay when the greenhouse gets cold
+
+Use a temperature sensor and a relay connected to an output of a DS2413 to protect plants from frost. This example turns on the relay when the temperature drops below 5°C. The **Programmed input-output** switches are disabled by default, so enable the one you use first. Replace the entity IDs in the example with the entity IDs of your sensor and switch.
+
+- **Trigger**: Numeric state crossed threshold
+  - **Entity**: Your greenhouse **Temperature** sensor
+  - **Below**: `5`
+- **Action**: Turn on switch
+  - **Target**: Your relay&#x27;s **Programmed input-output A** switch
+
+{% details &quot;YAML example for turning on a heater relay when the greenhouse gets cold&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Turn on the greenhouse heater when it gets cold&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.28_a05966040000_temperature
+      below: 5
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.3a_0b2c4e000000_programmed_input_output_a
+{% endexample %}
+
+{% enddetails %}
+
+## Data updates
+
+The **1-Wire** integration {% term polling polls %} each entity every 30 seconds.
+
+The integration also scans the bus for new devices every 5 minutes. New devices and their entities are added automatically, so you do not need to reload the integration after you connect a new sensor. On DS2409 couplers, the integration searches both the `main` and the `aux` branches.
+
+## Known limitations
+
+- The integration only connects to owserver. It cannot read 1-Wire devices directly from an adapter or from the GPIO pins of a Raspberry Pi.
+- Bus branching is only supported with DS2409 couplers.
+- Only DS18B20 temperature sensors have configuration options.
+- Devices that you disconnect from the bus are not removed automatically, because a device that is temporarily unreachable looks the same as a removed one. To remove a device you no longer use, see [Removing a device you no longer use](#removing-a-device-you-no-longer-use).
+- When you connect a new device, it can take up to 5 minutes before it appears in Home Assistant.
+- On the Hobby Boards moisture meter, a change of sensor type only takes effect after you reload the integration.
+
+## Troubleshooting
+
+{% details &quot;Home Assistant cannot connect to owserver&quot; %}
+
+### Symptom: Setup fails with a connection error
+
+When you set up the integration, you get an error that Home Assistant failed to connect. Or, after setup, the integration shows **Error communicating with the 1-Wire server** followed by the host and port.
+
+#### Description
+
+Home Assistant cannot reach owserver at the host and port you entered.
+
+#### Resolution
+
+If owserver is not reachable when Home Assistant starts, the integration retries automatically.
+
+1. Check that owserver is running and that it can access your 1-Wire adapter.
+2. Check the host and port. The default port is `4304`.
+3. If owserver runs on another machine, check that it accepts connections from your network and not only from `localhost`.
+4. If owserver moved to another address, go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **1-Wire**, then the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu next to the entry, and select **Reconfigure**. Enter the new host and port.
+
+{% enddetails %}
+
+{% details &quot;A device on the bus does not appear&quot; %}
+
+### Symptom: A connected device is missing in Home Assistant
+
+A device is connected to the bus, but Home Assistant does not show it.
+
+#### Description
+
+The integration only adds devices from the [supported device families](#supported-devices), and it scans for new devices every 5 minutes. The device might also not be visible to owserver.
+
+#### Resolution
+
+1. Wait 5 minutes for the next scan.
+2. Go to {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %} and look for a message that the integration ignores an unknown device family or type.
+3. Check that the device appears in owserver, for example with the `owdir` command or in the owhttpd web interface.
+4. Check the wiring of the device.
+
+{% enddetails %}
+
+{% details &quot;Some entities are missing&quot; %}
+
+### Symptom: A device has fewer entities than listed on this page
+
+A device appears in Home Assistant, but some of its entities are missing.
+
+#### Description
+
+Many entities are disabled by default, including all binary sensors and switches. Some entities only exist when the matching hardware is connected, such as the TAI-8570 sensors.
+
+#### Resolution
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **1-Wire**.
+2. Select the device.
+3. Select **+N disabled entities**, where N is the number of disabled entities.
+4. Select the entity, then select the cogwheel {% icon &quot;mdi:cog-outline&quot; %}.
+5. Turn on **Enabled**, and select **Update**.
+
+{% enddetails %}
+
+{% details &quot;An entity is unavailable&quot; %}
+
+### Symptom: An entity shows as unavailable
+
+An entity shows as **Unavailable**, and {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %} contains a message about an error fetching data.
+
+#### Description
+
+Home Assistant could not read the value from owserver. This usually happens when the device lost its connection to the bus.
+
+#### Resolution
+
+1. Check the wiring and the power of the device.
+2. Check that the device still appears in owserver.
+
+The entity recovers automatically on the next successful reading.
+
+{% enddetails %}
+
+{% details &quot;A DS18B20 reports 85°C&quot; %}
+
+### Symptom: A DS18B20 temperature sensor reports 85°C
+
+A DS18B20 temperature sensor suddenly reports 85°C, even though the real temperature is different.
+
+#### Description
+
+85°C is the power-on value of the DS18B20. The sensor reports it when it loses power during a measurement, for example because of a wiring problem or when it uses parasitic power. There is no way to distinguish a real 85°C reading from an incorrect one.
+
+#### Resolution
+
+1. Check the wiring of the sensor.
+2. If possible, power the sensor with a separate supply wire instead of parasitic power.
+3. If the problem remains, you can create a template sensor {% term helper %} that filters out the value. Go to {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}, create a [template sensor](/integrations/template/), and use a state template such as:
+
+   {% raw %}
+
+   ```jinja
+   {% if states(&#x27;sensor.28_a05966040000_temperature&#x27;) | float(0) != 85 %}
+     {{ states(&#x27;sensor.28_a05966040000_temperature&#x27;) }}
+   {% else %}
+     None
+   {% endif %}
+   ```
+
+   {% endraw %}
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+### Removing a device you no longer use
+
+The integration does not remove devices that you disconnect from the bus. To remove one:
+
+1. Disconnect the device from the bus.
+2. Wait up to 5 minutes, until the next scan of the bus.
+3. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **1-Wire**.
+4. Select the device, then select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu and select **Delete**.
+
+You can only delete a device that the integration no longer finds on the bus. If you connect the device again later, it is added again on the next scan.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for 1-Wire.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>port</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>onewire</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>1-Wire automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/onewire/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/onewire</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/onewire</code></dd></dl></section><p><a href="../../integrations/onewire/">Return to the 1-Wire guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

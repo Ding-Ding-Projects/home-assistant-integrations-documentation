@@ -1,1 +1,821 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VIZIO SmartCast reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:291" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vizio/">VIZIO SmartCast guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>VIZIO SmartCast</h1><p>Instructions on how to integrate VIZIO SmartCast TVs and sound bars into Home Assistant.</p><section><h2>Overview</h2><p>The VIZIO SmartCast integration allows you to control SmartCast-compatible TVs and sound bars (2016+ models) locally from Home Assistant.</p></section><section><h2>Prerequisites</h2><p>Your device must be connected to the same network as Home Assistant. If Zeroconf discovery is enabled, your device is discovered automatically and setup can be started from the discovered card.</p></section><section><h2>Finding your device&#x27;s address</h2><p>If your device is not automatically discovered, you can find its address using the vizaio command line tool on any machine on the same network:</p></section><section><h2>Pairing manually using `vizaio`</h2><p>Pairing through the Home Assistant frontend is recommended, but you can also obtain an access token manually. Make sure that your TV is on, then run the interactive pairing command by replacing DEVICE_IP:DEVICE_PORT with the address obtained in the previous section:</p></section><section><h2>Media player</h2><p>The integration creates a media player entity for each configured device. Depending on the device type, it supports:</p></section><section><h2>Obtaining an app configuration</h2><p>If there is an app you want to be able to launch from Home Assistant that isn&#x27;t detected by default, you can read the app&#x27;s configuration from the app_id attribute of the media player entity while the (unknown) app is running on your device.</p></section><section><h2>Remote</h2><p>The integration creates a remote entity for each configured device (TVs and speakers). You can use it to send remote control commands via the remote.send_command action. Commands are case-insensitive. You can use either the native key name (for example, vol_up) or a human-friendly alias (for example, volume_up).</p></section><section><h2>Speaker commands</h2><p>Speakers support a subset of the commands above:</p></section><section><h2>Remote command examples</h2><p>Repeat a command with a delay between each repeat:</p></section><section><h2>Crave portable speakers</h2><p>Battery-powered VIZIO Crave portable speakers (Crave Go, Crave 360, and Crave Pro) are supported as speakers. When a speaker is set up, the integration automatically detects whether it is a Crave model — no extra configuration is needed. Speakers that were set up before this detection existed are re-checked the next time the integration loads.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for VIZIO SmartCast.</p><p>The <strong>pair tv</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>access_token</code>, <code>host</code>, <code>name</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>media player</li><li>remote</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>send text</li><li>update setting</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Prerequisites</li><li>Supported functionality</li><li>VIZIO SmartCast automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vizio/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vizio</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vizio</code></dd></dl></section><p><a href="../../integrations/vizio/">Return to the VIZIO SmartCast guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VIZIO SmartCast reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:291" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vizio/">VIZIO SmartCast guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>VIZIO SmartCast</h1><p>Instructions on how to integrate VIZIO SmartCast TVs and sound bars into Home Assistant.</p><div class="reader-body"><p>The <strong>VIZIO SmartCast</strong> integration allows you to control <a>SmartCast</a>-compatible TVs and sound bars (2016+ models) locally from Home Assistant.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Control your TV or sound bar (power, volume, inputs, and apps) from dashboards and automations.</li>
+<li>Turn on the TV and launch a specific app when a movie night scene is activated.</li>
+<li>Automatically lower the volume at night or when a doorbell rings.</li>
+<li>Send remote control key presses (navigation, playback, channel control) from automations or scripts.</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>Your device must be connected to the same network as Home Assistant. If <a href="../zeroconf/">Zeroconf</a> discovery is enabled, your device is discovered automatically and setup can be started from the discovered card.</p>
+<p>TVs require an access token to communicate with Home Assistant. You do not need one up front: leave the access token field empty during setup, and the integration will guide you through a pairing process in which a PIN is displayed on the TV screen. Sound bars do not require an access token.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>VIZIO SmartCast</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>VIZIO SmartCast</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Name:
+  description: "The name used for the device and its entities in Home Assistant."
+Host:
+  description: "`IP address:port` of your device (for example, `192.168.1.10:7345`). See [finding your device's address](#finding-your-devices-address) if you don't know it."
+Device type:
+  description: "Whether the device is a `tv` or a `speaker` (sound bar)."
+Access token:
+  description: "The access token used to authenticate with your TV. Leave empty to start a pairing process that will provide one. Not needed for speakers."
+
+</code></pre>
+<h3>Finding your device's address</h3>
+<p>If your device is not automatically discovered, you can find its address using the <a><code>vizaio</code></a> command line tool on any machine on the same network:</p>
+<pre><code>pip3 install 'vizaio[cli]'
+vizaio discover
+</code></pre>
+<p>If the <code>pip3</code> command is not found, replace it with <code>pip</code>.</p>
+<p>Write down the IP address and port number of the device you want to add. If you have trouble finding a device you were expecting to see, you can try increasing the discovery timeout period by adding the <code>--timeout</code> option (for example, <code>vizaio discover --timeout 10</code>).</p>
+<h3>Pairing manually using <code>vizaio</code></h3>
+<p>Pairing through the Home Assistant frontend is recommended, but you can also obtain an access token manually. Make sure that your TV is on, then run the interactive pairing command by replacing <code>DEVICE_IP:DEVICE_PORT</code> with the address obtained in the previous section:</p>
+<pre><code>vizaio pair interactive DEVICE_IP:DEVICE_PORT
+</code></pre>
+<p>A PIN code will be displayed at the top of your TV. Enter it when prompted. For scripted use, <code>vizaio pair begin DEVICE_IP:DEVICE_PORT</code> starts pairing and prints the matching <code>vizaio pair complete</code> command with everything filled in except the PIN. Provide the returned authentication token in the access token field during setup.</p>
+<h2>Options</h2>
+<p>To define options for VIZIO SmartCast, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of VIZIO SmartCast are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+Volume step size:
+  description: "The number of volume levels the volume changes by with each volume up or volume down command. Defaults to 1."
+Include or exclude apps?:
+  description: "For TVs, whether the selected apps should be included in or excluded from the source list."
+Apps to include or exclude:
+  description: "The apps that should be included in or excluded from the source list."
+
+</code></pre>
+<h3>Obtaining a list of valid apps to include or exclude</h3>
+<p>The list of apps is fetched daily from VIZIO's app catalog (with a copy bundled in the <a>vizaio</a> library as a fallback). To see the names you can include or exclude, check the <code>source_list</code> attribute of your TV's media player entity under <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>States</strong>.</p>
+<h2>Supported functionality</h2>
+<h3>Media player</h3>
+<p>The integration creates a media player entity for each configured device. Depending on the device type, it supports:</p>
+<ul>
+<li>Power on/off and power state.</li>
+<li>Volume up/down by the configured volume step, setting an absolute volume level, and muting.</li>
+<li>Source selection: for TVs, the source list combines the device's physical inputs with the available SmartCast apps, and selecting an app launches it. For speakers, the source list contains the physical inputs.</li>
+<li>Sound mode selection (when the device reports equalizer sound modes).</li>
+<li>Play/pause and next/previous track (next/previous change the channel on TVs).</li>
+</ul>
+<p>When an app is running on a TV, the media player shows the app name.</p>
+<h4>Obtaining an app configuration</h4>
+<p>If there is an app you want to be able to launch from Home Assistant that isn't detected by default, you can read the app's configuration from the <code>app_id</code> attribute of the media player entity while the (unknown) app is running on your device.</p>
+<h3>Remote</h3>
+<p>The integration creates a remote entity for each configured device (TVs and speakers). You can use it to send remote control commands via the <code>remote.send_command</code> action. Commands are case-insensitive. You can use either the native key name (for example, <code>vol_up</code>) or a human-friendly alias (for example, <code>volume_up</code>).</p>
+<h4>TV commands</h4>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Additional aliases</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>back</code></td>
+  <td></td>
+  <td>Go back to the previous screen</td>
+</tr>
+<tr>
+  <td><code>ch_down</code></td>
+  <td><code>channel_down</code></td>
+  <td>Channel down</td>
+</tr>
+<tr>
+  <td><code>ch_prev</code></td>
+  <td><code>previous_channel</code></td>
+  <td>Jump to the previously watched channel</td>
+</tr>
+<tr>
+  <td><code>ch_up</code></td>
+  <td><code>channel_up</code></td>
+  <td>Channel up</td>
+</tr>
+<tr>
+  <td><code>down</code></td>
+  <td></td>
+  <td>Navigate down</td>
+</tr>
+<tr>
+  <td><code>exit</code></td>
+  <td></td>
+  <td>Exit the current menu</td>
+</tr>
+<tr>
+  <td><code>guide</code></td>
+  <td></td>
+  <td>Open the channel guide</td>
+</tr>
+<tr>
+  <td><code>info</code></td>
+  <td></td>
+  <td>Show information about the current channel or input</td>
+</tr>
+<tr>
+  <td><code>input_next</code></td>
+  <td><code>next_input</code></td>
+  <td>Cycle to the next input</td>
+</tr>
+<tr>
+  <td><code>left</code></td>
+  <td></td>
+  <td>Navigate left</td>
+</tr>
+<tr>
+  <td><code>menu</code></td>
+  <td></td>
+  <td>Open the on-screen menu</td>
+</tr>
+<tr>
+  <td><code>mute_off</code></td>
+  <td></td>
+  <td>Unmute the audio</td>
+</tr>
+<tr>
+  <td><code>mute_on</code></td>
+  <td></td>
+  <td>Mute the audio</td>
+</tr>
+<tr>
+  <td><code>mute_toggle</code></td>
+  <td><code>mute</code>, <code>toggle_mute</code></td>
+  <td>Toggle mute</td>
+</tr>
+<tr>
+  <td><code>num_0</code> through <code>num_9</code></td>
+  <td></td>
+  <td>Enter a channel digit (models without a tuner reject these)</td>
+</tr>
+<tr>
+  <td><code>ok</code></td>
+  <td><code>enter</code>, <code>select</code></td>
+  <td>Confirm the current selection</td>
+</tr>
+<tr>
+  <td><code>pause</code></td>
+  <td></td>
+  <td>Pause playback</td>
+</tr>
+<tr>
+  <td><code>play</code></td>
+  <td></td>
+  <td>Resume playback</td>
+</tr>
+<tr>
+  <td><code>pow_off</code></td>
+  <td><code>off</code>, <code>power_off</code></td>
+  <td>Turn the device off</td>
+</tr>
+<tr>
+  <td><code>pow_on</code></td>
+  <td><code>on</code>, <code>power_on</code></td>
+  <td>Turn the device on</td>
+</tr>
+<tr>
+  <td><code>pow_toggle</code></td>
+  <td><code>power</code>, <code>power_toggle</code>, <code>toggle_power</code></td>
+  <td>Toggle the power state</td>
+</tr>
+<tr>
+  <td><code>right</code></td>
+  <td></td>
+  <td>Navigate right</td>
+</tr>
+<tr>
+  <td><code>seek_back</code></td>
+  <td><code>reverse</code>, <code>rewind</code></td>
+  <td>Rewind playback</td>
+</tr>
+<tr>
+  <td><code>seek_fwd</code></td>
+  <td><code>forward</code>, <code>fast_forward</code>, <code>ff</code></td>
+  <td>Fast-forward playback</td>
+</tr>
+<tr>
+  <td><code>smartcast</code></td>
+  <td></td>
+  <td>Open the SmartCast Home screen</td>
+</tr>
+<tr>
+  <td><code>up</code></td>
+  <td></td>
+  <td>Navigate up</td>
+</tr>
+<tr>
+  <td><code>vol_down</code></td>
+  <td><code>volume_down</code></td>
+  <td>Volume down</td>
+</tr>
+<tr>
+  <td><code>vol_up</code></td>
+  <td><code>volume_up</code></td>
+  <td>Volume up</td>
+</tr>
+</tbody>
+</table>
+<h4>Speaker commands</h4>
+<p>Speakers support a subset of the commands above:</p>
+<p><code>input_next</code>, <code>mute_off</code>, <code>mute_on</code>, <code>mute_toggle</code>, <code>pause</code>, <code>play</code>, <code>pow_off</code>, <code>pow_on</code>, <code>pow_toggle</code>, <code>vol_down</code>, <code>vol_up</code></p>
+<p>Aliases that map to these commands (for example, <code>mute</code>, <code>volume_up</code>, <code>on</code>, <code>off</code>) also work on speakers.</p>
+<h4>Remote command examples</h4>
+<p>Send a single command:</p>
+<pre><code>action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - enter
+</code></pre>
+<p>Send multiple commands:</p>
+<pre><code>action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - down
+    - down
+    - enter
+</code></pre>
+<p>Repeat a command with a delay between each repeat:</p>
+<pre><code>action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - volume_up
+  num_repeats: 5
+  delay_secs: 0.4
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h3>Crave portable speakers</h3>
+<p>Battery-powered VIZIO Crave portable speakers (Crave Go, Crave 360, and Crave Pro) are supported as speakers. When a speaker is set up, the integration automatically detects whether it is a Crave model — no extra configuration is needed. Speakers that were set up before this detection existed are re-checked the next time the integration loads.</p>
+<p>Crave speakers additionally provide two diagnostic entities:</p>
+<ul>
+<li><strong>Battery</strong>: the current battery level as a percentage.</li>
+<li><strong>Charging</strong>: on while the battery is charging. A fully charged speaker is no longer drawing charge and reports off, so use the battery level to tell when it is full.</li>
+</ul>
+<p>Both show as <code>unknown</code> while the speaker is turned off.</p>
+<h2>VIZIO SmartCast automation examples</h2>
+<p>Here is an idea to get you started.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: start movie night</h3>
+<p>This automation turns the TV on and launches an app when you start movie night. It is triggered by a toggle helper named <strong>Movie night</strong>, which you need to create separately under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>.</p>
+<ul>
+<li><strong>Trigger</strong>: State changed<ul>
+<li><strong>Entity</strong>: Movie night (<code>input_boolean.movie_night</code>)</li>
+<li><strong>To</strong>: On</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Turn on media player<ul>
+<li><strong>Target</strong>: VIZIO SmartCast (<code>media_player.vizio_smartcast</code>)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Select media player source<ul>
+<li><strong>Target</strong>: VIZIO SmartCast (<code>media_player.vizio_smartcast</code>)</li>
+<li><strong>Source</strong>: Netflix</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for starting movie night</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Movie night"
+triggers:
+- trigger: state
+entity_id: input_boolean.movie_night
+to: "on"
+actions:
+- action: media_player.turn_on
+target:
+entity_id: media_player.vizio_smartcast
+- action: media_player.select_source
+target:
+entity_id: media_player.vizio_smartcast
+data:
+source: Netflix</p>
+<h2>Data updates</h2>
+<p>This integration uses local polling: the device is polled every 30 seconds for power state, volume, current input, and the running app.</p>
+<p>The SmartCast app catalog, used to build the source list for TVs, is fetched from VIZIO's servers once a day. If the catalog cannot be fetched, a copy bundled with the <a>vizaio</a> library is used as a fallback.</p>
+<h2>Known limitations</h2>
+<h3>Changing tracks</h3>
+<p>Changing tracks works like switching channels. If the current input is anything other than regular TV, this command might not do anything.</p>
+<h2>Troubleshooting</h2>
+<h3>The device cannot be reached during setup</h3>
+<ul>
+<li>Make sure the device is powered on and connected to the same network as Home Assistant.</li>
+<li>Verify the address and port. Running <code>vizaio discover</code> shows the correct address and port for each device on your network.</li>
+<li>Some devices only respond over the network while they are on. Turn the device on before setting it up.</li>
+</ul>
+<h3>Turning on the device doesn't work</h3>
+<p>If the <code>Power Mode</code> of your device is set to <code>Eco Mode</code>, the device does not listen for network traffic while off, and turning it on from Home Assistant won't work. Set the power mode to <code>Quick Start</code> to be able to turn the device on.</p>
+<h3>The device became unavailable after its IP address changed</h3>
+<p>If Zeroconf discovery is enabled, the integration updates the device's address automatically when it is rediscovered. Otherwise, assigning the device a static IP address (via a DHCP reservation in your router) prevents the address from changing.</p>
+<h3>Pairing fails</h3>
+<ul>
+<li>Ensure the PIN is entered exactly as displayed on the TV, and that the TV stays powered on during the pairing process.</li>
+<li>If the PIN screen never appears, power cycle the TV and restart the setup.</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/vizio.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate VIZIO SmartCast TVs and sound bars into Home Assistant.
+ha_release: 0.49
+ha_domain: vizio
+---
+
+The **VIZIO SmartCast** {% term integration %} allows you to control [SmartCast](https://www.vizio.com/smartcast-app)-compatible TVs and sound bars (2016+ models) locally from Home Assistant.
+
+## Use cases
+
+- Control your TV or sound bar (power, volume, inputs, and apps) from dashboards and automations.
+- Turn on the TV and launch a specific app when a movie night scene is activated.
+- Automatically lower the volume at night or when a doorbell rings.
+- Send remote control key presses (navigation, playback, channel control) from automations or scripts.
+
+## Prerequisites
+
+Your device must be connected to the same network as Home Assistant. If [Zeroconf](/integrations/zeroconf/) discovery is enabled, your device is discovered automatically and setup can be started from the discovered card.
+
+TVs require an access token to communicate with Home Assistant. You do not need one up front: leave the access token field empty during setup, and the integration will guide you through a pairing process in which a PIN is displayed on the TV screen. Sound bars do not require an access token.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Name:
+  description: &quot;The name used for the device and its entities in Home Assistant.&quot;
+Host:
+  description: &quot;`IP address:port` of your device (for example, `192.168.1.10:7345`). See [finding your device&#x27;s address](#finding-your-devices-address) if you don&#x27;t know it.&quot;
+Device type:
+  description: &quot;Whether the device is a `tv` or a `speaker` (sound bar).&quot;
+Access token:
+  description: &quot;The access token used to authenticate with your TV. Leave empty to start a pairing process that will provide one. Not needed for speakers.&quot;
+{% endconfiguration_basic %}
+
+### Finding your device&#x27;s address
+
+If your device is not automatically discovered, you can find its address using the [`vizaio`](https://github.com/raman325/vizaio) command line tool on any machine on the same network:
+
+```bash
+pip3 install &#x27;vizaio[cli]&#x27;
+vizaio discover
+```
+
+If the `pip3` command is not found, replace it with `pip`.
+
+Write down the IP address and port number of the device you want to add. If you have trouble finding a device you were expecting to see, you can try increasing the discovery timeout period by adding the `--timeout` option (for example, `vizaio discover --timeout 10`).
+
+### Pairing manually using `vizaio`
+
+Pairing through the Home Assistant frontend is recommended, but you can also obtain an access token manually. Make sure that your TV is on, then run the interactive pairing command by replacing `DEVICE_IP:DEVICE_PORT` with the address obtained in the previous section:
+
+```bash
+vizaio pair interactive DEVICE_IP:DEVICE_PORT
+```
+
+A PIN code will be displayed at the top of your TV. Enter it when prompted. For scripted use, `vizaio pair begin DEVICE_IP:DEVICE_PORT` starts pairing and prints the matching `vizaio pair complete` command with everything filled in except the PIN. Provide the returned authentication token in the access token field during setup.
+
+{% include integrations/option_flow.md %}
+
+{% configuration_basic %}
+Volume step size:
+  description: &quot;The number of volume levels the volume changes by with each volume up or volume down command. Defaults to 1.&quot;
+Include or exclude apps?:
+  description: &quot;For TVs, whether the selected apps should be included in or excluded from the source list.&quot;
+Apps to include or exclude:
+  description: &quot;The apps that should be included in or excluded from the source list.&quot;
+{% endconfiguration_basic %}
+
+### Obtaining a list of valid apps to include or exclude
+
+The list of apps is fetched daily from VIZIO&#x27;s app catalog (with a copy bundled in the [vizaio](https://github.com/raman325/vizaio) library as a fallback). To see the names you can include or exclude, check the `source_list` attribute of your TV&#x27;s media player entity under {% my tools_states title=&quot;**Settings** &gt; **Tools** &gt; **States**&quot; %}.
+
+## Supported functionality
+
+### Media player
+
+The integration creates a media player entity for each configured device. Depending on the device type, it supports:
+
+- Power on/off and power state.
+- Volume up/down by the configured volume step, setting an absolute volume level, and muting.
+- Source selection: for TVs, the source list combines the device&#x27;s physical inputs with the available SmartCast apps, and selecting an app launches it. For speakers, the source list contains the physical inputs.
+- Sound mode selection (when the device reports equalizer sound modes).
+- Play/pause and next/previous track (next/previous change the channel on TVs).
+
+When an app is running on a TV, the media player shows the app name.
+
+#### Obtaining an app configuration
+
+If there is an app you want to be able to launch from Home Assistant that isn&#x27;t detected by default, you can read the app&#x27;s configuration from the `app_id` attribute of the media player entity while the (unknown) app is running on your device.
+
+### Remote
+
+The integration creates a remote entity for each configured device (TVs and speakers). You can use it to send remote control commands via the `remote.send_command` action. Commands are case-insensitive. You can use either the native key name (for example, `vol_up`) or a human-friendly alias (for example, `volume_up`).
+
+#### TV commands
+
+| Command | Additional aliases | Description |
+| :------ | :------ | :------ |
+| `back` | | Go back to the previous screen |
+| `ch_down` | `channel_down` | Channel down |
+| `ch_prev` | `previous_channel` | Jump to the previously watched channel |
+| `ch_up` | `channel_up` | Channel up |
+| `down` | | Navigate down |
+| `exit` | | Exit the current menu |
+| `guide` | | Open the channel guide |
+| `info` | | Show information about the current channel or input |
+| `input_next` | `next_input` | Cycle to the next input |
+| `left` | | Navigate left |
+| `menu` | | Open the on-screen menu |
+| `mute_off` | | Unmute the audio |
+| `mute_on` | | Mute the audio |
+| `mute_toggle` | `mute`, `toggle_mute` | Toggle mute |
+| `num_0` through `num_9` | | Enter a channel digit (models without a tuner reject these) |
+| `ok` | `enter`, `select` | Confirm the current selection |
+| `pause` | | Pause playback |
+| `play` | | Resume playback |
+| `pow_off` | `off`, `power_off` | Turn the device off |
+| `pow_on` | `on`, `power_on` | Turn the device on |
+| `pow_toggle` | `power`, `power_toggle`, `toggle_power` | Toggle the power state |
+| `right` | | Navigate right |
+| `seek_back` | `reverse`, `rewind` | Rewind playback |
+| `seek_fwd` | `forward`, `fast_forward`, `ff` | Fast-forward playback |
+| `smartcast` | | Open the SmartCast Home screen |
+| `up` | | Navigate up |
+| `vol_down` | `volume_down` | Volume down |
+| `vol_up` | `volume_up` | Volume up |
+
+#### Speaker commands
+
+Speakers support a subset of the commands above:
+
+`input_next`, `mute_off`, `mute_on`, `mute_toggle`, `pause`, `play`, `pow_off`, `pow_on`, `pow_toggle`, `vol_down`, `vol_up`
+
+Aliases that map to these commands (for example, `mute`, `volume_up`, `on`, `off`) also work on speakers.
+
+#### Remote command examples
+
+Send a single command:
+
+```yaml
+action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - enter
+```
+
+Send multiple commands:
+
+```yaml
+action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - down
+    - down
+    - enter
+```
+
+Repeat a command with a delay between each repeat:
+
+```yaml
+action: remote.send_command
+target:
+  entity_id: remote.vizio_smartcast
+data:
+  command:
+    - volume_up
+  num_repeats: 5
+  delay_secs: 0.4
+```
+
+{% include integrations/actions.md %}
+
+### Crave portable speakers
+
+Battery-powered VIZIO Crave portable speakers (Crave Go, Crave 360, and Crave Pro) are supported as speakers. When a speaker is set up, the integration automatically detects whether it is a Crave model — no extra configuration is needed. Speakers that were set up before this detection existed are re-checked the next time the integration loads.
+
+Crave speakers additionally provide two diagnostic entities:
+
+- **Battery**: the current battery level as a percentage.
+- **Charging**: on while the battery is charging. A fully charged speaker is no longer drawing charge and reports off, so use the battery level to tell when it is full.
+
+Both show as `unknown` while the speaker is turned off.
+
+## VIZIO SmartCast automation examples
+
+Here is an idea to get you started.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: start movie night
+
+This automation turns the TV on and launches an app when you start movie night. It is triggered by a toggle {% term helper %} named **Movie night**, which you need to create separately under {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}.
+
+- **Trigger**: State changed
+  - **Entity**: Movie night (`input_boolean.movie_night`)
+  - **To**: On
+- **Action**: Turn on media player
+  - **Target**: VIZIO SmartCast (`media_player.vizio_smartcast`)
+- **Action**: Select media player source
+  - **Target**: VIZIO SmartCast (`media_player.vizio_smartcast`)
+  - **Source**: Netflix
+
+{% details &quot;YAML example for starting movie night&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Movie night&quot;
+  triggers:
+    - trigger: state
+      entity_id: input_boolean.movie_night
+      to: &quot;on&quot;
+  actions:
+    - action: media_player.turn_on
+      target:
+        entity_id: media_player.vizio_smartcast
+    - action: media_player.select_source
+      target:
+        entity_id: media_player.vizio_smartcast
+      data:
+        source: Netflix
+{% endexample %}
+
+{% enddetails %}
+
+## Data updates
+
+This integration uses local {% term polling %}: the device is polled every 30 seconds for power state, volume, current input, and the running app.
+
+The SmartCast app catalog, used to build the source list for TVs, is fetched from VIZIO&#x27;s servers once a day. If the catalog cannot be fetched, a copy bundled with the [vizaio](https://github.com/raman325/vizaio) library is used as a fallback.
+
+## Known limitations
+
+### Changing tracks
+
+Changing tracks works like switching channels. If the current input is anything other than regular TV, this command might not do anything.
+
+## Troubleshooting
+
+### The device cannot be reached during setup
+
+- Make sure the device is powered on and connected to the same network as Home Assistant.
+- Verify the address and port. Running `vizaio discover` shows the correct address and port for each device on your network.
+- Some devices only respond over the network while they are on. Turn the device on before setting it up.
+
+### Turning on the device doesn&#x27;t work
+
+If the `Power Mode` of your device is set to `Eco Mode`, the device does not listen for network traffic while off, and turning it on from Home Assistant won&#x27;t work. Set the power mode to `Quick Start` to be able to turn the device on.
+
+### The device became unavailable after its IP address changed
+
+If Zeroconf discovery is enabled, the integration updates the device&#x27;s address automatically when it is rediscovered. Otherwise, assigning the device a static IP address (via a DHCP reservation in your router) prevents the address from changing.
+
+### Pairing fails
+
+- Ensure the PIN is entered exactly as displayed on the TV, and that the TV stays powered on during the pairing process.
+- If the PIN screen never appears, power cycle the TV and restart the setup.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for VIZIO SmartCast.</p><p>The <strong>pair tv</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>access_token</code>, <code>host</code>, <code>name</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>media player</li><li>remote</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>send text</li><li>update setting</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Prerequisites</li><li>Supported functionality</li><li>VIZIO SmartCast automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vizio/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vizio</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vizio</code></dd></dl></section><p><a href="../../integrations/vizio/">Return to the VIZIO SmartCast guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

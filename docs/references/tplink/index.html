@@ -1,1 +1,626 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TP-Link Smart Home reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:163" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tplink/">TP-Link Smart Home guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>TP-Link Smart Home</h1><p>Instructions on integrating TP-Link Smart Home Devices to Home Assistant.</p><section><h2>Overview</h2><p>The TP-Link Smart Home integration allows you to control your TP-Link Kasa Smart Home Devices and TP-Link Tapo Devices such as cameras, doorbells, chimes, lights, plugs, wall switches, robot vacuums, hubs, and hub-attached devices.</p></section><section><h2>How you can use this integration</h2><p>The TP-Link integration lets you do many things, such as switching devices on and off based on schedules or events, monitoring energy usage in the Home Assistant dashboards, viewing live camera feeds, and controlling device configurations manually or via automations.</p></section><section><h2>Prerequisites</h2><p>You need to provision your newly purchased device to connect to your network before it can be added via the integration. This can be done either by using kasa command-line tool or by adding it to the official Kasa or Tapo app before trying to add them to Home Assistant. Some apps for TP-Link&#x27;s other products, such as the Deco app, also allow you to add Kasa and Tapo devices. Since these devices use the same TP-Link Cloud Account for authorization, they work with this integration as well.</p></section><section><h2>Supported Devices</h2><p>See Supported Devices in python-kasa for an up to date list that includes hardware and firmware versions.</p></section><section><h2>Cameras, doorbells and chimes</h2><p>Depending on the supported features of the camera, you can control various settings such as privacy mode, pan/tilt, and motion detection alerts.</p></section><section><h2>Lights</h2><p>Light entities are added for bulbs, light strips, and dimmer switches. Depending on the supported features of the device, the integration will allow changing brightness, color, color temperature, and light effects.</p></section><section><h2>Plugs and switches</h2><p>Switch entities are added for plugs, simple wall switches and power strips. In addition to turning devices on and off, you can control the various configuration options that the device supports, such as auto-on/off and automatic firmware updates.</p></section><section><h2>Robot vacuums</h2><p>Vacuum entities are added for robot vacuums. In addition to starting and pausing devices, you can call them home, locate them, and control the various configuration options such as fan speed.</p></section><section><h2>Energy monitoring</h2><p>If a device supports energy monitoring sensors will be created for consumption metrics which can be fed into the Home Assistant energy dashboard.</p></section><section><h2>Hub-attached devices</h2><p>Various hub attached devices are supported such as those providing climate control, motion detection, humidity monitoring and water leak detection.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for TP-Link Smart Home.</p><p>The <strong>camera auth confirm</strong> configuration step lists <code>live_view</code>, <code>password</code>, <code>username</code>.</p><p>The <strong>discovery auth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>pick device</strong> configuration step lists <code>device</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><p>The <strong>user auth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>camera</li><li>climate</li><li>fan</li><li>light</li><li>number</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>random effect</li><li>sequence effect</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use this integration</li><li>Prerequisites</li><li>Supported Devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Examples</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tplink/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tplink</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tplink</code></dd></dl></section><p><a href="../../integrations/tplink/">Return to the TP-Link Smart Home guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TP-Link Smart Home reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:163" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tplink/">TP-Link Smart Home guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>TP-Link Smart Home</h1><p>Instructions on integrating TP-Link Smart Home Devices to Home Assistant.</p><div class="reader-body"><p>The <strong>TP-Link Smart Home</strong> integration allows you to control your <a>TP-Link Kasa Smart Home Devices</a> and <a>TP-Link Tapo Devices</a> such as cameras, doorbells, chimes, lights, plugs, wall switches, robot vacuums, hubs, and hub-attached devices.</p>
+<h2>How you can use this integration</h2>
+<p>The TP-Link integration lets you do many things, such as switching devices on and off based on schedules or events, monitoring energy usage in the Home Assistant dashboards, viewing live camera feeds, and controlling device configurations manually or via automations.</p>
+<h2>Prerequisites</h2>
+<p>You need to provision your newly purchased device to connect to your network before it can be added via the integration. This can be done either by using <a>kasa command-line tool</a> or by adding it to the official Kasa or Tapo app before trying to add them to Home Assistant. Some apps for TP-Link's other products, such as the Deco app, also allow you to add Kasa and Tapo devices. Since these devices use the same TP-Link Cloud Account for authorization, they work with this integration as well.</p>
+<p>If your device is a newer Kasa or Tapo device it will require your TP-Link cloud username and password to authenticate for local access.
+If you have an older device that does not currently require authentication, you may consider disabling automatic firmware updates to keep it that way.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>TP-Link Smart Home</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>TP-Link Smart Home</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+
+Host:
+  description: |
+    Hostname or IP address of your TP-Link device.
+Username:
+  description: |
+    Your TP-Link cloud username which is your *case-sensitive* email address. Required for Tapo and newer Kasa devices.
+Password:
+  description: |
+    Your TP-Link cloud password. Required for Tapo and newer Kasa devices.
+Live view:
+  description: |
+    Checkbox to enable live view will create the live view camera entity for Tapo cameras. Requires your camera account credentials which you set up from the Tapo app under **Device Settings** &gt; **Advanced Settings** &gt; **Camera Account**.
+Camera account username:
+  description: |
+    Your camera account username as configured in the Tapo app.
+Camera account password:
+  description: |
+    Your camera account password configured for the device in the Tapo app.
+
+
+</code></pre>
+<h2>Supported Devices</h2>
+<p>See <a>Supported Devices in python-kasa</a> for an up to date list that includes hardware and firmware versions.</p>
+<p>Devices not listed below may work but if you encounter issues submit a bug report to <a>python-kasa</a>.</p>
+<p><strong>Note</strong></p>
+<p>The hub attached Tapo buttons S200B and S200D, which do not currently support alerting when the button is pressed.</p>
+<p><strong>Note</strong></p>
+<p>Some firmware versions require explicit activation of third-party integrations before they allow access from Home Assistant. See <a>Third-party compatibility</a>.</p>
+<h3>Supported Kasa devices</h3>
+<ul>
+<li><strong>Plugs</strong>: EP10, EP25[^2], HS100[^2], HS103, HS105, HS110, KP100, KP105, KP115, KP125, KP125M[^1], KP401</li>
+<li><strong>Power Strips</strong>: EP40, EP40M[^1], HS107, HS300, KP200, KP303, KP400</li>
+<li><strong>Wall Switches</strong>: ES20M, HS200[^2], HS210, HS220[^2], KP405, KS200, KS200M, KS205[^1], KS220, KS220M, KS225[^1], KS230, KS240[^1]</li>
+<li><strong>Bulbs</strong>: KL110, KL110B, KL120, KL125, KL130, KL135, KL50, KL60, LB100, LB110, LB130</li>
+<li><strong>Light Strips</strong>: KL400L10, KL400L5, KL420L5, KL430</li>
+<li><strong>Hubs</strong>: KH100[^1]</li>
+<li><strong>Hub-Connected Devices[^3]</strong>: KE100[^1], KE110[^1]</li>
+</ul>
+<h3>Supported Tapo devices</h3>
+<p>Tapo devices require authentication.</p>
+<ul>
+<li><strong>Plugs</strong>: P100, P105, P110, P110M, P115, P116M, P125M, P135, TP10, TP15</li>
+<li><strong>Power Strips</strong>: P210M, P300, P304M, P306, P316M, TP25</li>
+<li><strong>Wall Switches</strong>: S210, S220, S500, S500D, S505, S505D, S515D, TS15</li>
+<li><strong>Bulbs</strong>: L430C, L430P, L510B, L510E, L530B, L530E, L530EA, L535E, L630</li>
+<li><strong>Light Strips</strong>: L900-10, L900-5, L920-5, L930-5</li>
+<li><strong>Cameras</strong>: C100, C101, C110, C120, C200, C210, C220, C225, C325WB, C460, C520WS, C720, TC40, TC65, TC70</li>
+<li><strong>Doorbells and chimes</strong>: D100C, D130, D230, TD21</li>
+<li><strong>Vacuums</strong>: RV20 Max Plus, RV30 Max</li>
+<li><strong>Hubs</strong>: H100, H200</li>
+<li><strong>Hub-Connected Devices[^3]</strong>: S200B, S200D, T100, T110, T300, T310, T315</li>
+</ul>
+<p>[^1]: Model requires authentication
+[^2]: Newer versions require authentication
+[^3]: Devices may work across TAPO/KASA branded hubs</p>
+<h2>Supported functionality</h2>
+<h3>Cameras, doorbells and chimes</h3>
+<p>Only Tapo cameras, doorbells, and chimes are currently supported.
+In order for live view to work on devices that support it, you will need to enable your camera account in the Tapo App under <strong>Device Settings</strong> &gt; <strong>Advanced Settings</strong> &gt; <strong>Camera Account</strong>.
+If you do not want to do this, keep <strong>Live view</strong> unchecked when adding the device. This can be changed at a later date using the <code>reconfigure</code> option on the integration entry.</p>
+<p>Depending on the supported features of the camera, you can control various settings such as privacy mode, pan/tilt, and motion detection alerts.</p>
+<h3>Lights</h3>
+<p>Light entities are added for bulbs, light strips, and dimmer switches.
+Depending on the supported features of the device, the integration will allow changing brightness, color, color temperature, and light effects.</p>
+<p>If light effects are supported by a device, they can be selected from the bottom of the light card.
+Light presets are also supported and can be set via the config preset drop down on the device page.</p>
+<p>Depending on the supported features of the device you can control various other configuration settings such as on/off transitions and auto-on/off.</p>
+<h3>Plugs and switches</h3>
+<p>Switch entities are added for plugs, simple wall switches and power strips. In addition to turning devices on and off, you can control the various configuration options that the device supports, such as auto-on/off and automatic firmware updates.</p>
+<h3>Robot vacuums</h3>
+<p>Vacuum entities are added for robot vacuums. In addition to starting and pausing devices, you can call them home, locate them, and control the various configuration options such as fan speed.</p>
+<h3>Energy monitoring</h3>
+<p>If a device supports energy monitoring sensors will be created for consumption metrics which can be fed into the Home Assistant energy dashboard.</p>
+<h3>Hub-attached devices</h3>
+<p>Various hub attached devices are supported such as those providing climate control, motion detection, humidity monitoring and water leak detection.</p>
+<h2>Data updates</h2>
+<p>Devices are polled for data updates every 5 seconds. When you make changes through Home Assistant (e.g., switching a device on), the device's state is updated immediately rather than waiting for the next poll.
+The integration connects locally to the devices without going via the TP-Link cloud. This is different from the native Tapo and Kasa apps which will connect to the devices via the TP-Link cloud if the device has access to the internet.</p>
+<h2>Known limitations</h2>
+<h3>Third-party compatibility</h3>
+<p>Some firmware versions require explicit activation of third-party integrations before they allow access from Home Assistant. This can affect devices across the Tapo and Kasa product lines, including some cameras, hubs, and plugs.</p>
+<p>If you encounter authentication or communication issues, ensure that <strong>Third-Party Compatibility</strong> is enabled in the official vendor app. The option can be found under <strong>Tapo Lab</strong> &gt; <strong>Third-Party Compatibility</strong> in the native Tapo app or <strong>Settings</strong> &gt; <strong>Third-Party Compatibility</strong> in the Kasa app, depending on the device you are integrating.</p>
+<p>Alternatively, you can factory reset and then prevent the device from accessing the internet.</p>
+<h3>Subnets and discovery</h3>
+<p>If devices are on a different subnet to Home Assistant, automatic discovery will not work.
+In this instance it is recommended to add devices by IP address and configure them with static IP addresses to prevent issues when IP addresses change.</p>
+<h3>Buttons</h3>
+<p>The hub-attached Tapo buttons S200B and S200D, do not currently support alerting when the button is pressed.</p>
+<h3>Hub-attached cameras</h3>
+<p>Hub attached cameras will be supported in the future. Due to battery considerations they do not support live view.</p>
+<h3>No light effects on kasa bulbs</h3>
+<p>Light effects are currently not supported on Kasa bulbs.</p>
+<h3>Kasa power strips</h3>
+<p>Due to limitations of the devices, the energy monitoring state of Kasa power strip child plugs is only updated every 60 seconds.</p>
+<p>If required, you can manually trigger an update via <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Actions</strong> &gt; <strong>Home Assistant Core Integration: Update entity</strong> passing a list of the child entities.</p>
+<h2>Troubleshooting</h2>
+<h3>Device connections</h3>
+<ul>
+<li>Take note of the known limitation for subnets above.</li>
+<li>Ensure that your username is your TP-Link cloud username, which is your <em>case-sensitive</em> email address.</li>
+<li>If you encounter authentication or communication errors, check the <a>Third-party compatibility</a> limitation above.</li>
+<li>Disable or remove any custom integrations that interact with TPLink devices supported by this integration.</li>
+<li>Ensure stable network connectivity between Home Assistant and the device.</li>
+<li>Unplug existing TP-Link/Tapo devices on your network before onboarding a new device. The TP-Link Simple Setup (TSS) protocol, which shares credentials from existing devices, can break authentication. If issues persist, factory reset the new device and re-add it without other TP-Link devices active.</li>
+<li>Check the <a>reported connection solutions</a> section below.</li>
+<li>Check the <a>supported device list</a> to see if the device is tested to work with the integration.</li>
+<li>Try running the <a>kasa tool</a> to connect to the device. An easy way to do this is to <a>install uv</a> and run <code>uvx --from python-kasa kasa --username &lt;tplink cloud username&gt; --password &lt;tplink cloud password&gt;</code></li>
+<li>Raise a support issue. See the <a>section below</a> for guidelines.</li>
+</ul>
+<h4>Reported connection solutions</h4>
+<p>These are some of the solutions that Home Assistant users have reported as solving their device connection issues:</p>
+<ul>
+<li>Make the first letter of your TP-Link cloud username email upper-case. This could be because it was automatically capitalized when first entered into the Tapo app.</li>
+<li>Remove the device from the Tapo app and re-add by searching for the correct model (that is, do not use auto-discovery)</li>
+<li>Log out of the Tapo and Kasa apps, factory reset the device, log back in to the Tapo app, then re-add the device to the Tapo app.</li>
+<li>Specifically for cameras, disable and re-enable the <strong>Settings</strong> &gt; <strong>Advanced Settings</strong> &gt; <strong>Camera account</strong> options in the Tapo app.</li>
+<li>Specifically for cameras, reset the <strong>Settings</strong> &gt; <strong>Advanced Settings</strong> &gt; <strong>Camera account</strong> credentials in the Tapo app.</li>
+</ul>
+<h3>Unavailable entities</h3>
+<p>Some entities might be showing as Unavailable if they have been removed from the integration.</p>
+<h4>Total consumption sensor</h4>
+<p>This entity is only reported by older kasa devices.
+Currently, Tapo devices and newer Kasa devices do not report total consumption, although briefly during 2024.6, they incorrectly reported today's consumption as "total consumption." You can safely delete this entity if it is reported as unavailable on a newer Kasa or Tapo device.</p>
+<h4>Update available sensor</h4>
+<p>This entity has been removed from the integration due to stability issues, calling the TPLink cloud API to check for updates. It will be replaced in a future release with a new Update entity, but if you have an Unavailable entity ID starting with <code>binary_sensor.</code> and ending with <code>update</code>, you can safely delete it.</p>
+<h3>Raising support issues</h3>
+<p>For the maintainers of the TP-Link integration to be able to properly assist with a support issue, please follow these guidelines:</p>
+<ul>
+<li>Raise an issue with <a>Home Assistant Core</a>.</li>
+<li>Fill in as many of the fields in the issue template as you can.</li>
+<li>If applicable, list all steps taken from the <a>Troubleshooting device connections</a> section above.</li>
+<li>Upload <a>debug logs</a> that run from Home Assistant first starting up, until the error is encountered.</li>
+</ul>
+<h3>Enable debug logging</h3>
+<p>To capture debug logs from Home Assistant first starting up, update <a><code>configuration.yaml</code></a> to look like this:</p>
+<pre><code>logger:
+  default: warning  # This will already be present. Add the lines below.
+  logs:
+    homeassistant.components.tplink: debug
+    kasa: debug
+</code></pre>
+<p>Then restart Home Assistant, trigger the error, and download the logs from <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong> &gt; <strong>Download logs</strong></p>
+<p><strong>Note</strong></p>
+<p>Remember to disable debug logging after troubleshooting to prevent excessive log growth and performance impact.</p>
+<h2>Examples</h2>
+<h3>Automation ideas</h3>
+<ul>
+<li>Turn on lights when it gets dark and turn them off again with a voice command.</li>
+<li>Turn off privacy mode and turn on motion detection for internal cameras when you leave home (with geofencing) and toggle back when you get home.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/tplink.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on integrating TP-Link Smart Home Devices to Home Assistant.
+ha_release: 0.89
+ha_domain: tplink
+---
+
+The **TP-Link Smart Home** {% term integration %} allows you to control your [TP-Link Kasa Smart Home Devices](https://www.kasasmart.com/) and [TP-Link Tapo Devices](https://www.tapo.com/) such as cameras, doorbells, chimes, lights, plugs, wall switches, robot vacuums, hubs, and hub-attached devices.
+
+## How you can use this integration
+
+The TP-Link integration lets you do many things, such as switching devices on and off based on schedules or events, monitoring energy usage in the Home Assistant dashboards, viewing live camera feeds, and controlling device configurations manually or via automations.
+
+## Prerequisites
+
+You need to provision your newly purchased device to connect to your network before it can be added via the integration. This can be done either by using [kasa command-line tool](https://python-kasa.readthedocs.io/en/latest/cli.html#provisioning) or by adding it to the official Kasa or Tapo app before trying to add them to Home Assistant. Some apps for TP-Link&#x27;s other products, such as the Deco app, also allow you to add Kasa and Tapo devices. Since these devices use the same TP-Link Cloud Account for authorization, they work with this integration as well.
+
+If your device is a newer Kasa or Tapo device it will require your TP-Link cloud username and password to authenticate for local access.
+If you have an older device that does not currently require authentication, you may consider disabling automatic firmware updates to keep it that way.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+
+Host:
+  description: |
+    Hostname or IP address of your TP-Link device.
+Username:
+  description: |
+    Your TP-Link cloud username which is your *case-sensitive* email address. Required for Tapo and newer Kasa devices.
+Password:
+  description: |
+    Your TP-Link cloud password. Required for Tapo and newer Kasa devices.
+Live view:
+  description: |
+    Checkbox to enable live view will create the live view camera entity for Tapo cameras. Requires your camera account credentials which you set up from the Tapo app under **Device Settings** &gt; **Advanced Settings** &gt; **Camera Account**.
+Camera account username:
+  description: |
+    Your camera account username as configured in the Tapo app.
+Camera account password:
+  description: |
+    Your camera account password configured for the device in the Tapo app.
+
+{% endconfiguration_basic %}
+
+## Supported Devices
+
+See [Supported Devices in python-kasa](https://python-kasa.readthedocs.io/en/stable/SUPPORTED.html) for an up to date list that includes hardware and firmware versions.
+
+Devices not listed below may work but if you encounter issues submit a bug report to [python-kasa](https://github.com/python-kasa/python-kasa).
+
+{% note %}
+The hub attached Tapo buttons S200B and S200D, which do not currently support alerting when the button is pressed.
+{% endnote %}
+
+{% note %}
+Some firmware versions require explicit activation of third-party integrations before they allow access from Home Assistant. See [Third-party compatibility](#third-party-compatibility).
+{% endnote %}
+
+### Supported Kasa devices
+
+- **Plugs**: EP10, EP25[^2], HS100[^2], HS103, HS105, HS110, KP100, KP105, KP115, KP125, KP125M[^1], KP401
+- **Power Strips**: EP40, EP40M[^1], HS107, HS300, KP200, KP303, KP400
+- **Wall Switches**: ES20M, HS200[^2], HS210, HS220[^2], KP405, KS200, KS200M, KS205[^1], KS220, KS220M, KS225[^1], KS230, KS240[^1]
+- **Bulbs**: KL110, KL110B, KL120, KL125, KL130, KL135, KL50, KL60, LB100, LB110, LB130
+- **Light Strips**: KL400L10, KL400L5, KL420L5, KL430
+- **Hubs**: KH100[^1]
+- **Hub-Connected Devices[^3]**: KE100[^1], KE110[^1]
+
+### Supported Tapo devices
+
+Tapo devices require authentication.
+
+- **Plugs**: P100, P105, P110, P110M, P115, P116M, P125M, P135, TP10, TP15
+- **Power Strips**: P210M, P300, P304M, P306, P316M, TP25
+- **Wall Switches**: S210, S220, S500, S500D, S505, S505D, S515D, TS15
+- **Bulbs**: L430C, L430P, L510B, L510E, L530B, L530E, L530EA, L535E, L630
+- **Light Strips**: L900-10, L900-5, L920-5, L930-5
+- **Cameras**: C100, C101, C110, C120, C200, C210, C220, C225, C325WB, C460, C520WS, C720, TC40, TC65, TC70
+- **Doorbells and chimes**: D100C, D130, D230, TD21
+- **Vacuums**: RV20 Max Plus, RV30 Max
+- **Hubs**: H100, H200
+- **Hub-Connected Devices[^3]**: S200B, S200D, T100, T110, T300, T310, T315
+
+[^1]: Model requires authentication
+[^2]: Newer versions require authentication
+[^3]: Devices may work across TAPO/KASA branded hubs
+
+
+## Supported functionality
+
+### Cameras, doorbells and chimes
+
+Only Tapo cameras, doorbells, and chimes are currently supported.
+In order for live view to work on devices that support it, you will need to enable your camera account in the Tapo App under **Device Settings** &gt; **Advanced Settings** &gt; **Camera Account**.
+If you do not want to do this, keep **Live view** unchecked when adding the device. This can be changed at a later date using the `reconfigure` option on the integration entry.
+
+Depending on the supported features of the camera, you can control various settings such as privacy mode, pan/tilt, and motion detection alerts.
+
+### Lights
+
+Light entities are added for bulbs, light strips, and dimmer switches.&#32;
+Depending on the supported features of the device, the integration will allow changing brightness, color, color temperature, and light effects.
+
+If light effects are supported by a device, they can be selected from the bottom of the light card.
+Light presets are also supported and can be set via the config preset drop down on the device page.
+
+Depending on the supported features of the device you can control various other configuration settings such as on/off transitions and auto-on/off.
+
+### Plugs and switches
+
+Switch entities are added for plugs, simple wall switches and power strips. In addition to turning devices on and off, you can control the various configuration options that the device supports, such as auto-on/off and automatic firmware updates.
+
+### Robot vacuums
+
+Vacuum entities are added for robot vacuums. In addition to starting and pausing devices, you can call them home, locate them, and control the various configuration options such as fan speed.
+
+### Energy monitoring
+
+If a device supports energy monitoring sensors will be created for consumption metrics which can be fed into the Home Assistant energy dashboard.
+
+### Hub-attached devices
+
+Various hub attached devices are supported such as those providing climate control, motion detection, humidity monitoring and water leak detection.
+
+
+## Data updates
+
+Devices are polled for data updates every 5 seconds. When you make changes through Home Assistant (e.g., switching a device on), the device&#x27;s state is updated immediately rather than waiting for the next poll.
+The integration connects locally to the devices without going via the TP-Link cloud. This is different from the native Tapo and Kasa apps which will connect to the devices via the TP-Link cloud if the device has access to the internet.
+
+## Known limitations
+
+### Third-party compatibility
+
+Some firmware versions require explicit activation of third-party integrations before they allow access from Home Assistant. This can affect devices across the Tapo and Kasa product lines, including some cameras, hubs, and plugs.
+
+If you encounter authentication or communication issues, ensure that **Third-Party Compatibility** is enabled in the official vendor app. The option can be found under **Tapo Lab** &gt; **Third-Party Compatibility** in the native Tapo app or **Settings** &gt; **Third-Party Compatibility** in the Kasa app, depending on the device you are integrating.
+
+Alternatively, you can factory reset and then prevent the device from accessing the internet.
+
+### Subnets and discovery
+
+If devices are on a different subnet to Home Assistant, automatic discovery will not work.
+In this instance it is recommended to add devices by IP address and configure them with static IP addresses to prevent issues when IP addresses change.
+
+### Buttons
+
+The hub-attached Tapo buttons S200B and S200D, do not currently support alerting when the button is pressed.
+
+### Hub-attached cameras
+
+Hub attached cameras will be supported in the future. Due to battery considerations they do not support live view.
+
+### No light effects on kasa bulbs
+
+Light effects are currently not supported on Kasa bulbs.
+
+### Kasa power strips
+
+Due to limitations of the devices, the energy monitoring state of Kasa power strip child plugs is only updated every 60 seconds.
+
+If required, you can manually trigger an update via **Settings** &gt; **Tools** &gt; **Actions** &gt; **Home Assistant Core Integration: Update entity** passing a list of the child entities.
+
+## Troubleshooting
+
+### Device connections
+
+- Take note of the known limitation for subnets above.
+- Ensure that your username is your TP-Link cloud username, which is your *case-sensitive* email address.
+- If you encounter authentication or communication errors, check the [Third-party compatibility](#third-party-compatibility) limitation above.
+- Disable or remove any custom integrations that interact with TPLink devices supported by this integration.
+- Ensure stable network connectivity between Home Assistant and the device.
+- Unplug existing TP-Link/Tapo devices on your network before onboarding a new device. The TP-Link Simple Setup (TSS) protocol, which shares credentials from existing devices, can break authentication. If issues persist, factory reset the new device and re-add it without other TP-Link devices active.
+- Check the [reported connection solutions](#reported-connection-solutions) section below.
+- Check the [supported device list](#supported-devices) to see if the device is tested to work with the integration.&#32;
+- Try running the [kasa tool](https://github.com/python-kasa/python-kasa) to connect to the device. An easy way to do this is to [install uv](https://docs.astral.sh/uv/getting-started/installation/) and run `uvx --from python-kasa kasa --username &lt;tplink cloud username&gt; --password &lt;tplink cloud password&gt;`
+- Raise a support issue. See the [section below](#raising-support-issues) for guidelines.
+
+#### Reported connection solutions
+
+These are some of the solutions that Home Assistant users have reported as solving their device connection issues:
+
+- Make the first letter of your TP-Link cloud username email upper-case. This could be because it was automatically capitalized when first entered into the Tapo app.
+- Remove the device from the Tapo app and re-add by searching for the correct model (that is, do not use auto-discovery)
+- Log out of the Tapo and Kasa apps, factory reset the device, log back in to the Tapo app, then re-add the device to the Tapo app.
+- Specifically for cameras, disable and re-enable the **Settings** &gt; **Advanced Settings** &gt; **Camera account** options in the Tapo app.
+- Specifically for cameras, reset the **Settings** &gt; **Advanced Settings** &gt; **Camera account** credentials in the Tapo app.
+
+### Unavailable entities
+
+Some entities might be showing as Unavailable if they have been removed from the integration.
+
+#### Total consumption sensor
+
+This entity is only reported by older kasa devices.
+Currently, Tapo devices and newer Kasa devices do not report total consumption, although briefly during 2024.6, they incorrectly reported today&#x27;s consumption as &quot;total consumption.&quot; You can safely delete this entity if it is reported as unavailable on a newer Kasa or Tapo device.
+
+#### Update available sensor
+
+This entity has been removed from the integration due to stability issues, calling the TPLink cloud API to check for updates. It will be replaced in a future release with a new Update entity, but if you have an Unavailable entity ID starting with `binary_sensor.` and ending with `update`, you can safely delete it.
+
+### Raising support issues
+
+For the maintainers of the TP-Link integration to be able to properly assist with a support issue, please follow these guidelines:
+
+- Raise an issue with [Home Assistant Core](https://github.com/home-assistant/core/issues).
+- Fill in as many of the fields in the issue template as you can.
+- If applicable, list all steps taken from the [Troubleshooting device connections](#device-connections) section above.
+- Upload [debug logs](#enable-debug-logging) that run from Home Assistant first starting up, until the error is encountered.
+
+### Enable debug logging
+
+To capture debug logs from Home Assistant first starting up, update [`configuration.yaml`](/docs/configuration/) to look like this:
+
+```yaml
+logger:
+  default: warning  # This will already be present. Add the lines below.
+  logs:
+    homeassistant.components.tplink: debug
+    kasa: debug
+```
+
+Then restart Home Assistant, trigger the error, and download the logs from **Settings** &gt; **System** &gt; **Logs** &gt; **Download logs**
+
+{% note %}
+Remember to disable debug logging after troubleshooting to prevent excessive log growth and performance impact.
+{% endnote %}
+
+## Examples
+
+### Automation ideas&#32;
+
+- Turn on lights when it gets dark and turn them off again with a voice command.
+- Turn off privacy mode and turn on motion detection for internal cameras when you leave home (with geofencing) and toggle back when you get home.
+
+{% include integrations/actions.md %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for TP-Link Smart Home.</p><p>The <strong>camera auth confirm</strong> configuration step lists <code>live_view</code>, <code>password</code>, <code>username</code>.</p><p>The <strong>discovery auth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>pick device</strong> configuration step lists <code>device</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><p>The <strong>user auth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>camera</li><li>climate</li><li>fan</li><li>light</li><li>number</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>random effect</li><li>sequence effect</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use this integration</li><li>Prerequisites</li><li>Supported Devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Examples</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tplink/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tplink</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tplink</code></dd></dl></section><p><a href="../../integrations/tplink/">Return to the TP-Link Smart Home guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

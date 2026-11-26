@@ -1,1 +1,825 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sofar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:225" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/sofar/">Sofar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Sofar</h1><p>Instructions on how to integrate a Sofar solar inverter with Home Assistant over Modbus TCP or a serial RS485 connection.</p><section><h2>Overview</h2><p>The Sofar integration connects Home Assistant to a Sofar Solar inverter over Modbus. You can reach the inverter over the network (Modbus TCP), either directly or through a Modbus TCP bridge, or over a serial port wired to its RS485 terminals (Modbus RTU).</p></section><section><h2>Use cases</h2><p>The Sofar integration brings your inverter&#x27;s own measurements into Home Assistant, so the solar system becomes something you can build automations on rather than something you check in a vendor app:</p></section><section><h2>Supported devices</h2><p>The integration supports Sofar inverters that use the current-generation Modbus register map, including HYD hybrid inverters and KTL-X and KTLM PV inverters. During setup, the integration reads the inverter&#x27;s serial number to detect its type and the registers that apply to it.</p></section><section><h2>Unsupported devices</h2><p>Older Sofar inverters that use the legacy Modbus register map aren&#x27;t supported. These devices use different register ranges from the current-generation inverters, even when their serial-number prefix is similar or identical.</p></section><section><h2>Prerequisites</h2><p>Depending on how you connect the inverter, you need one of the following:</p></section><section><h2>Reconfiguration</h2><p>You can update the connection settings without removing and adding the integration again. For example, in the following situations:</p></section><section><h2>Supported functionality</h2><p>The Sofar integration provides the following entities.</p></section><section><h2>Sensors</h2><p>The Sofar integration reads a large number of sensors from the inverter. Only the sensors relevant to your inverter&#x27;s type and configuration are added.</p></section><section><h2>Switches</h2><p>The integration adds one switch, named after the inverter itself, that stops and resumes its operation remotely. Turning it off puts the inverter into its waiting state rather than cutting power to it.</p></section><section><h2>Sofar automation examples</h2><p>Your inverter measures far more about your solar production than any monthly report shows. Here are a few ideas to get you started.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Sofar.</p><p>The <strong>reconfigure serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>unit_id</code>.</p><p>The <strong>reconfigure tcp</strong> configuration step lists <code>host</code>, <code>port</code>, <code>unit_id</code>.</p><p>The <strong>serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>unit_id</code>.</p><p>The <strong>tcp</strong> configuration step lists <code>host</code>, <code>port</code>, <code>unit_id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>event</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set active power limit</li><li>set feed in limit</li><li>set passive mode power</li><li>set passive mode timeout</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Reconfiguration</li><li>Supported functionality</li><li>Sofar automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/sofar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/sofar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/sofar</code></dd></dl></section><p><a href="../../integrations/sofar/">Return to the Sofar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sofar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:225" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/sofar/">Sofar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Sofar</h1><p>Instructions on how to integrate a Sofar solar inverter with Home Assistant over Modbus TCP or a serial RS485 connection.</p><div class="reader-body"><p>The <strong>Sofar</strong> integration connects Home Assistant to a Sofar Solar inverter over Modbus. You can reach the inverter over the network (Modbus TCP), either directly or through a Modbus TCP bridge, or over a serial port wired to its RS485 terminals (Modbus RTU).</p>
+<h2>Use cases</h2>
+<p>The <strong>Sofar</strong> integration brings your inverter's own measurements into Home Assistant, so the solar system becomes something you can build automations on rather than something you check in a vendor app:</p>
+<ul>
+<li>Putting your solar production on the <a>Energy dashboard</a>. Feed the inverter's own production, import, export, and battery energy totals into Home Assistant's Energy dashboard, measured at the inverter rather than estimated.</li>
+<li>Running appliances on surplus solar. Start the dishwasher or washing machine once the inverter reports more production than the house is using, and raise or lower a car charger's rate as production rises and falls.</li>
+<li>Automating around the battery. Use the battery's state of charge to decide when to run heavy loads, when to hold charge back for the evening, and when to warn that the reserve is nearly gone.</li>
+<li>Noticing problems the same day they happen. The fault binary sensors, the fault event, and the system state sensor turn a silent underperforming string or a tripped inverter into a notification, instead of something you find weeks later in the monthly yield.</li>
+<li>Keeping an eye on the hardware. Inverter, heatsink, and module temperatures, plus battery state of health and charge cycles, show how the installation is aging.</li>
+<li>Stopping and resuming the inverter remotely. Put the inverter into its waiting state for grid work or an export ban, then bring it back, without going to the unit.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The integration supports Sofar inverters that use the current-generation Modbus register map, including HYD hybrid inverters and KTL-X and KTLM PV inverters. During setup, the integration reads the inverter's serial number to detect its type and the registers that apply to it.</p>
+<p>The integration recognizes these serial-number prefixes directly:</p>
+<ul>
+<li><code>SP1</code>, <code>SP2</code>, <code>ZP1</code>, and <code>ZP2</code> for three-phase HYD hybrid models.</li>
+<li><code>SM2E</code> and <code>ZM2E</code> for single-phase HYD hybrid models.</li>
+<li><code>SH1</code> for HYD5-8KTL-3P hybrid models.</li>
+<li><code>SH3E</code>, <code>SS2E</code>, <code>ZS2E</code>, <code>SQ1ES1</code>, and <code>SS1</code> for KTL-X, KTLM, and related PV models.</li>
+<li><code>SA1</code>, <code>SB1</code>, <code>SC1</code>, <code>SD1</code>, <code>SF4</code>, <code>SL1</code>, and <code>SJ2</code> for additional current-generation PV models.</li>
+</ul>
+<p>If the serial number starts with another prefix, the integration asks the inverter which registers it serves instead. From that answer, it works out whether the inverter is single-phase or three-phase, whether it's a hybrid or PV-only model, and how many PV strings it has. This means you can usually set up current-generation models that aren't on the list above, too.</p>
+<p>Some serial-number prefixes are also used by older Sofar models, so the marketed model name or serial prefix alone does not always identify the register generation. If the inverter answers but neither its serial number nor the registers it serves identify a supported model, setup fails.</p>
+<h2>Unsupported devices</h2>
+<p>Older Sofar inverters that use the legacy Modbus register map aren't supported. These devices use different register ranges from the current-generation inverters, even when their serial-number prefix is similar or identical.</p>
+<h2>Prerequisites</h2>
+<p>Depending on how you connect the inverter, you need one of the following:</p>
+<ul>
+<li><strong>Modbus TCP</strong>: The inverter has its own Modbus TCP port, or its RS485 port is wired to a Modbus TCP bridge or a data logger stick that speaks Modbus TCP.</li>
+<li><strong>Serial port (Modbus RTU)</strong>: The inverter's RS485 terminals are wired to a USB-to-RS485 adapter on your Home Assistant host. Alternatively, an ESPHome serial proxy with an RS485 interface can share the port with Home Assistant over the network.</li>
+</ul>
+<p>Modbus also needs to be enabled on the inverter, if it has a setting for this.</p>
+<p>For help with each way to connect, such as setting up an ESPHome serial proxy, a Modbus gateway, or a serial device server, refer to <a>Setting up a device integration that uses Modbus</a>.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Sofar</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Sofar</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>When you add the integration, choose how the inverter is reached: <strong>Modbus TCP</strong> or <strong>Serial port (Modbus RTU)</strong>. The settings that follow depend on your choice.</p>
+<pre><code>
+Host:
+  description: "The hostname or IP address of the inverter, or of the Modbus TCP bridge it's connected through. Only shown for a network connection."
+Port:
+  description: "The Modbus TCP port to connect to. The default is `502`. Only shown for a network connection."
+Serial port:
+  description: "The serial port the inverter's RS485 bus is wired to. Ports shared over the network by an ESPHome serial proxy are listed alongside the local ones. Only shown for a serial connection."
+Baud rate:
+  description: "The speed of the RS485 bus, as set on the inverter. The default is `9600`, which matches the Sofar default. Only shown for a serial connection."
+Modbus unit ID:
+  description: "The inverter's Modbus unit ID, also called its Modbus device address. The default is `1`."
+
+</code></pre>
+<p><strong>Note</strong></p>
+<p>Home Assistant can share a Modbus connection between integrations when their connection settings are compatible. If another integration already uses the same serial port or bridge with different settings, such as another baud rate, setup fails with a connection error.</p>
+<p>During setup, the integration also detects whether the inverter has EPS (Emergency Power Supply) wiring for an off-grid backup output, and polls its registers only if it does.</p>
+<h2>Reconfiguration</h2>
+<p>You can update the connection settings without removing and adding the integration again. For example, in the following situations:</p>
+<ul>
+<li>The inverter gets a new IP address after a DHCP lease change.</li>
+<li>You replace the Modbus TCP bridge it's connected through.</li>
+<li>You rewire it to another serial port.</li>
+<li>You move it between a network and a serial connection.</li>
+</ul>
+<p>To update the connection settings:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and find the <strong>Sofar</strong> integration.</li>
+<li>Select the three-dot menu  and choose <strong>Reconfigure</strong>.</li>
+<li>Choose how the inverter is reached from now on: <strong>Modbus TCP</strong> or <strong>Serial port (Modbus RTU)</strong>.</li>
+<li>Enter the connection settings. For a network connection, these are the <strong>Host</strong>, <strong>Port</strong>, and <strong>Modbus unit ID</strong>. For a serial connection, these are the <strong>Serial port</strong>, <strong>Baud rate</strong>, and <strong>Modbus unit ID</strong>.<ul>
+<li>If you keep the same connection type, the current settings are filled in for you.</li>
+<li>If you switch, only the <strong>Modbus unit ID</strong> carries over.</li>
+</ul>
+</li>
+<li>Select <strong>Submit</strong> to save the new settings.</li>
+</ol>
+<p>The integration reads the serial number again and only accepts the new settings if they lead to the same inverter, so reconfiguring can't accidentally point an entry at a different device and take its history with it.</p>
+<h2>Supported functionality</h2>
+<p>The <strong>Sofar</strong> integration provides the following entities.</p>
+<p>The inverter's power limits and its passive-mode setpoints each span several registers that it only accepts written together, so they are actions rather than entities. All of them require an administrator.</p>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Active power limit enabled</strong>: Whether the inverter is currently applying the active power limit, rather than generating unrestricted. Set by the <a>Set active power limit</a> action, which still writes the limit while this is off, but the inverter ignores it until it's enabled again. Disabled by default.</li>
+<li><strong>Faults</strong>: One diagnostic binary sensor per fault category, such as grid, battery, thermal, or communication. Each one turns on if any underlying fault bits in that category are currently active. Faults are grouped by category rather than by vendor register, since a single register can hold faults from more than one category at once. Combiner box, string fuse, input fuse, and AFCI (Arc-Fault Circuit Interrupter) faults are <a>disabled by default</a>, since PV and hybrid inverters don't have that hardware. The integration's diagnostics download includes the complete, decoded list of every currently active fault.</li>
+</ul>
+<h3>Buttons</h3>
+<ul>
+<li><strong>RTC sync</strong>: Writes the current date and time to the inverter's clock.</li>
+<li><strong>IV curve scan</strong>: Starts a scan of the PV strings' I-V curves. Only shown for inverters with battery storage.</li>
+</ul>
+<h3>Events</h3>
+<ul>
+<li><strong>Fault</strong>: Reports each fault the inverter records in its own fault log, by name, such as <strong>Grid overvoltage</strong> or <strong>AC output hardware overcurrent</strong>. You can use it to start an automation. Each fault shows its <strong>Category</strong>, its <strong>Fault ID</strong>, which is the fault code listed in your inverter's manual, and <strong>Occurred at</strong>, the time the inverter recorded it. It doesn't report when a fault clears. Only shown for inverters that keep a fault log.<ul>
+<li>The fault log is more detailed than the alarm history in the Sofar app. It also records brief faults that the inverter clears by itself, so you may see faults here that the app doesn't show.</li>
+<li>Recent faults the inverter recorded while Home Assistant couldn't reach it are reported once the connection is back. Faults that were already in the log when you added the integration aren't reported.</li>
+<li><strong>Occurred at</strong> uses the inverter's own clock. If the time looks wrong, select the <strong>RTC sync</strong> button to correct the clock.</li>
+</ul>
+</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><strong>Charger use mode</strong>: The battery charger's operating mode, such as self use, time of use, or feed-in priority. Only shown for inverters with battery storage.</li>
+<li><strong>EPS mode</strong>: Turns the EPS/backup output off and on, and whether it's allowed to cold-start from battery power alone. Only shown for inverters wired for EPS/backup power.</li>
+</ul>
+<h3>Sensors</h3>
+<p>The <strong>Sofar</strong> integration reads a large number of sensors from the inverter. Only the sensors relevant to your inverter's type and configuration are added.</p>
+<ul>
+<li><strong>System state</strong>: The inverter's operating state, including fault conditions.</li>
+<li><strong>Temperatures</strong>: Inverter, heatsink, and module temperatures.</li>
+<li><strong>Device information</strong>: The status of the last real-time clock sync.</li>
+<li><strong>Grid and output measurements</strong>: Frequency, and active, reactive, and apparent power, both at the inverter's output and at the point of common coupling (PCC). Total household load and external solar production, as reported by the inverter, are also included. Per-phase voltage, current, power, and power factor are available for inverters with multiple phases.</li>
+<li><strong>Off-grid (EPS/backup) measurements</strong>: The same kind of readings for the EPS/backup output. Only shown for inverters wired for EPS/backup power.</li>
+<li><strong>PV strings</strong>: Power for each solar panel string, plus voltage and current if you need more detail. Each string the inverter supports gets its own device, connected via the inverter. Only shown for PV-capable inverters.</li>
+<li><strong>Battery</strong>: Voltage, current, power, temperature, state of charge, state of health, and charge cycles for each battery pack, plus combined power, state of charge, and state of health totals. Each pack gets its own device, connected via the inverter, and only packs that respond are added. A pack added later appears on its own, without reloading the integration. Only shown for inverters with battery storage.</li>
+<li><strong>Battery configuration</strong>: The battery parameters configured on the inverter, such as capacity, protocol, cell type, and voltage and current limits. This includes the state of charge at which the battery stops charging, the levels at which it stops discharging on-grid and off-grid, and the level at which off-grid discharging resumes. Only shown for inverters with battery storage.</li>
+<li><strong>Energy totals</strong>: Import, export, load consumption, solar generation, and battery charge/discharge energy, both for today and all-time.</li>
+<li><strong>Current settings</strong>: The feed-in limit, the active power limit, and the passive-mode setpoints as they're currently stored on the inverter, so you can read back what the actions below have set.</li>
+</ul>
+<p>The readings most people need are enabled by default. Per-phase detail, the reactive power totals, daily energy counters, the battery configuration, and the current settings are disabled. To use one of them, enable it from the entity's settings.</p>
+<h3>Switches</h3>
+<p>The integration adds one switch, named after the inverter itself, that stops and resumes its operation remotely. Turning it off puts the inverter into its waiting state rather than cutting power to it.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Sofar automation examples</h2>
+<p>Your inverter measures far more about your solar production than any monthly report shows. Here are a few ideas to get you started.</p>
+<p>The entity IDs below are named after the inverter, so replace <code>sofar</code> with your own inverter's name.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: get a notification when the inverter reports a fault</h3>
+<p>An installation on the roof is easy to forget about, and an inverter that has stopped producing costs you money every sunny hour. This automation sends a notification as soon as the inverter raises a fault or drops out of normal grid-connected operation, so you find out the same day instead of weeks later in the monthly yield.</p>
+<ul>
+<li><strong>Trigger</strong>: State changed<ul>
+<li><strong>Entity</strong>: Sofar grid fault sensor, Sofar pv fault sensor, Sofar battery fault sensor, Sofar thermal fault sensor</li>
+<li><strong>From</strong>: Off</li>
+<li><strong>To</strong>: On</li>
+</ul>
+</li>
+<li><strong>Trigger</strong>: State changed<ul>
+<li><strong>Entity</strong>: Sofar system state sensor</li>
+<li><strong>To</strong>: Recoverable fault, Permanent fault</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a fault notification</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Sofar inverter fault"
+triggers:
+- trigger: state
+entity_id:
+- binary_sensor.sofar_grid_fault
+- binary_sensor.sofar_pv_fault
+- binary_sensor.sofar_battery_fault
+- binary_sensor.sofar_thermal_fault
+from: "off"
+to: "on"
+- trigger: state
+entity_id: sensor.sofar_system_state
+to:
+- "recoverable_fault"
+- "permanent_fault"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+title: "Sofar inverter fault"
+message: &gt;
+The inverter reported a fault. Check the Fault entity's
+history, or download the integration's diagnostics, to see
+which fault it was.</p>
+<h3>Automation: run an appliance on surplus solar</h3>
+<p>Appliances that don't care when they run are the cheapest way to use your own production instead of selling it. This automation starts the dishwasher once the inverter has been producing more than the house is using for 10 minutes, which is long enough to know it isn't a passing gap in the clouds.</p>
+<ul>
+<li><strong>Trigger</strong>: Template, true while <strong>PV power total</strong> stays more than 1.5 kW above <strong>Active power load system</strong> for 10 minutes</li>
+<li><strong>Action</strong>: Turn on switch<ul>
+<li><strong>Target</strong>: Dishwasher</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for running an appliance on surplus solar</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Dishwasher on surplus solar"
+triggers:
+- trigger: template
+value_template: &gt;
+{{ states('sensor.sofar_pv_power_total') | float(0)
+- states('sensor.sofar_active_power_load_system') | float(0)
+&gt; 1.5 }}
+for:
+minutes: 10
+actions:
+- action: switch.turn_on
+target:
+entity_id: switch.dishwasher</p>
+<h3>Automation: warn when the battery reserve runs low</h3>
+<p>The battery is worth the most in the evening, when the panels have stopped and the grid is expensive. This automation notifies you when the battery drops below a fifth of its capacity, so you can decide whether to hold the rest back or let heavy loads keep running.</p>
+<ul>
+<li><strong>Trigger</strong>: Numeric state crossed threshold<ul>
+<li><strong>Entity</strong>: Sofar battery state of charge total</li>
+<li><strong>Below</strong>: <code>20</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a low battery warning</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Sofar battery reserve low"
+triggers:
+- trigger: numeric_state
+entity_id: sensor.sofar_battery_state_of_charge_total
+below: 20
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+title: "Home battery is low"
+message: &gt;
+The battery is below 20%. Heavy loads will start drawing
+from the grid.</p>
+<h2>Data updates</h2>
+<p>The <strong>Sofar</strong> integration polling polls the inverter's live readings every 5 seconds. Values that rarely change, such as the device information and the battery configuration, are polled every 60 seconds instead, so each poll stays short.</p>
+<p>A PV inverter switches off when there's no sunlight, so its entities are unavailable at night. If Home Assistant starts while the inverter is off, the integration still loads as long as the Modbus TCP bridge or serial port is reachable. Its entities stay unavailable until the inverter answers again.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Serial connections use 8 data bits, no parity, and 1 stop bit (8N1), which is what Sofar inverters use on their RS485 port. Only the baud rate can be changed.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<p>If these steps don't help, <a>open an issue on GitHub</a> and include the details listed for your symptom.</p>
+<h3>Cannot connect to the inverter</h3>
+<ol>
+<li>Make sure the inverter is powered on. If it's connected through a Modbus TCP bridge or an ESPHome serial proxy, make sure that device is also powered on and reachable on your network.</li>
+<li>For a network connection, confirm the host and port are correct, and that nothing else is holding open the same Modbus connection.</li>
+<li>For a serial connection, confirm the serial port is correct.</li>
+<li>Check that Modbus is enabled on the inverter, if it has a setting for this.</li>
+<li>If it still fails, include the connection type, the connection settings, and the Modbus unit ID in the issue report. If the integration is already added, also enable <a>debug logging</a>, reproduce the failure, and include the log.</li>
+</ol>
+<h3>Inverter isn't answering</h3>
+<h4>Description</h4>
+<p>If setup reports that the adapter is reachable but the inverter behind it didn't answer, Home Assistant reached the Modbus TCP bridge or serial port, but the inverter didn't reply.</p>
+<h4>Resolution</h4>
+<ol>
+<li>A PV inverter switches off when there's no sunlight. If you're setting it up after dark, try again in daylight.</li>
+<li>Confirm the <strong>Modbus unit ID</strong> matches the one set on the inverter. The default is <code>1</code>.</li>
+<li>For a serial connection, or a Modbus TCP bridge wired to the inverter's RS485 port, confirm the baud rate matches the one set on the inverter. Check the RS485 wiring: if A and B are swapped, the inverter doesn't answer.</li>
+<li>Check that Modbus is enabled on the inverter, if it has a setting for this.</li>
+<li>If it still doesn't answer, include the connection type, the connection settings, and the Modbus unit ID in the issue report.</li>
+</ol>
+<h3>Inverter isn't recognized</h3>
+<h4>Description</h4>
+<p>The integration identifies the inverter by its serial number or by the registers it reports it serves. If setup fails with an unrecognized inverter error, neither matches a supported model. The inverter might use the older register map, or your model may not be supported yet.</p>
+<h4>Resolution</h4>
+<p>Because setup didn't finish, the integration isn't added yet, so the <strong>Download diagnostics</strong> option isn't shown. Include the first 10 characters of your inverter's serial number and the model name from its label in the issue report instead. Together, those identify which register map the inverter uses. The rest of the serial number isn't needed.</p>
+<h3>Entities are missing for your inverter</h3>
+<h4>Description</h4>
+<p>If the integration set up successfully but entities you expect aren't there, such as battery or EPS/backup sensors on a hybrid inverter, the inverter is reporting that it doesn't serve those registers.</p>
+<h4>Resolution</h4>
+<p>Download the diagnostics data and include it in the issue report. It lists which register blocks the inverter reports it supports, which shows whether the model genuinely lacks that hardware or the integration is reading it wrongly.</p>
+<p>To download it, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and find the <strong>Sofar</strong> integration. Select the three-dot menu  and choose <strong>Download diagnostics</strong>.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h3>To remove a battery pack</h3>
+<p>Battery packs appear as separate devices under the inverter. A pack you physically remove stays listed until you delete its device. Packs the inverter still reports can't be deleted, and a pack you reconnect is added back on the next update. The inverter and its PV strings can't be deleted individually, since PV strings come from the inverter model rather than from a reading.</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the <strong>Sofar</strong> integration card.</li>
+<li>From the list of devices, find the battery pack you want to remove.</li>
+<li>Next to the battery pack, select the three dots  menu. Then, select <strong>Delete</strong>.</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/sofar.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate a Sofar solar inverter with Home Assistant over Modbus TCP or a serial RS485 connection.
+ha_release: 2026.9
+ha_domain: sofar
+---
+
+The **Sofar** {% term integration %} connects Home Assistant to a Sofar Solar inverter over Modbus. You can reach the inverter over the network (Modbus TCP), either directly or through a Modbus TCP bridge, or over a serial port wired to its RS485 terminals (Modbus RTU).
+
+## Use cases
+
+The **Sofar** integration brings your inverter&#x27;s own measurements into Home Assistant, so the solar system becomes something you can build automations on rather than something you check in a vendor app:
+
+- Putting your solar production on the [Energy dashboard](/docs/energy/). Feed the inverter&#x27;s own production, import, export, and battery energy totals into Home Assistant&#x27;s Energy dashboard, measured at the inverter rather than estimated.
+- Running appliances on surplus solar. Start the dishwasher or washing machine once the inverter reports more production than the house is using, and raise or lower a car charger&#x27;s rate as production rises and falls.
+- Automating around the battery. Use the battery&#x27;s state of charge to decide when to run heavy loads, when to hold charge back for the evening, and when to warn that the reserve is nearly gone.
+- Noticing problems the same day they happen. The fault binary sensors, the fault event, and the system state sensor turn a silent underperforming string or a tripped inverter into a notification, instead of something you find weeks later in the monthly yield.
+- Keeping an eye on the hardware. Inverter, heatsink, and module temperatures, plus battery state of health and charge cycles, show how the installation is aging.
+- Stopping and resuming the inverter remotely. Put the inverter into its waiting state for grid work or an export ban, then bring it back, without going to the unit.
+
+## Supported devices
+
+The integration supports Sofar inverters that use the current-generation Modbus register map, including HYD hybrid inverters and KTL-X and KTLM PV inverters. During setup, the integration reads the inverter&#x27;s serial number to detect its type and the registers that apply to it.
+
+The integration recognizes these serial-number prefixes directly:
+
+- `SP1`, `SP2`, `ZP1`, and `ZP2` for three-phase HYD hybrid models.
+- `SM2E` and `ZM2E` for single-phase HYD hybrid models.
+- `SH1` for HYD5-8KTL-3P hybrid models.
+- `SH3E`, `SS2E`, `ZS2E`, `SQ1ES1`, and `SS1` for KTL-X, KTLM, and related PV models.
+- `SA1`, `SB1`, `SC1`, `SD1`, `SF4`, `SL1`, and `SJ2` for additional current-generation PV models.
+
+If the serial number starts with another prefix, the integration asks the inverter which registers it serves instead. From that answer, it works out whether the inverter is single-phase or three-phase, whether it&#x27;s a hybrid or PV-only model, and how many PV strings it has. This means you can usually set up current-generation models that aren&#x27;t on the list above, too.
+
+Some serial-number prefixes are also used by older Sofar models, so the marketed model name or serial prefix alone does not always identify the register generation. If the inverter answers but neither its serial number nor the registers it serves identify a supported model, setup fails.
+
+## Unsupported devices
+
+Older Sofar inverters that use the legacy Modbus register map aren&#x27;t supported. These devices use different register ranges from the current-generation inverters, even when their serial-number prefix is similar or identical.
+
+## Prerequisites
+
+Depending on how you connect the inverter, you need one of the following:
+
+- **Modbus TCP**: The inverter has its own Modbus TCP port, or its RS485 port is wired to a Modbus TCP bridge or a data logger stick that speaks Modbus TCP.
+- **Serial port (Modbus RTU)**: The inverter&#x27;s RS485 terminals are wired to a USB-to-RS485 adapter on your Home Assistant host. Alternatively, an ESPHome serial proxy with an RS485 interface can share the port with Home Assistant over the network.
+
+Modbus also needs to be enabled on the inverter, if it has a setting for this.
+
+For help with each way to connect, such as setting up an ESPHome serial proxy, a Modbus gateway, or a serial device server, refer to [Setting up a device integration that uses Modbus](/connectivity/modbus/#setting-up-a-device-integration-that-uses-modbus).
+
+{% include integrations/config_flow.md %}
+
+When you add the integration, choose how the inverter is reached: **Modbus TCP** or **Serial port (Modbus RTU)**. The settings that follow depend on your choice.
+
+{% configuration_basic %}
+Host:
+  description: &quot;The hostname or IP address of the inverter, or of the Modbus TCP bridge it&#x27;s connected through. Only shown for a network connection.&quot;
+Port:
+  description: &quot;The Modbus TCP port to connect to. The default is `502`. Only shown for a network connection.&quot;
+Serial port:
+  description: &quot;The serial port the inverter&#x27;s RS485 bus is wired to. Ports shared over the network by an ESPHome serial proxy are listed alongside the local ones. Only shown for a serial connection.&quot;
+Baud rate:
+  description: &quot;The speed of the RS485 bus, as set on the inverter. The default is `9600`, which matches the Sofar default. Only shown for a serial connection.&quot;
+Modbus unit ID:
+  description: &quot;The inverter&#x27;s Modbus unit ID, also called its Modbus device address. The default is `1`.&quot;
+{% endconfiguration_basic %}
+
+{% note %}
+Home Assistant can share a Modbus connection between integrations when their connection settings are compatible. If another integration already uses the same serial port or bridge with different settings, such as another baud rate, setup fails with a connection error.
+{% endnote %}
+
+During setup, the integration also detects whether the inverter has EPS (Emergency Power Supply) wiring for an off-grid backup output, and polls its registers only if it does.
+
+## Reconfiguration
+
+You can update the connection settings without removing and adding the integration again. For example, in the following situations:
+
+- The inverter gets a new IP address after a DHCP lease change.
+- You replace the Modbus TCP bridge it&#x27;s connected through.
+- You rewire it to another serial port.
+- You move it between a network and a serial connection.
+
+To update the connection settings:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and find the **Sofar** integration.
+2. Select the three-dot menu {% icon &quot;mdi:dots-vertical&quot; %} and choose **Reconfigure**.
+3. Choose how the inverter is reached from now on: **Modbus TCP** or **Serial port (Modbus RTU)**.
+4. Enter the connection settings. For a network connection, these are the **Host**, **Port**, and **Modbus unit ID**. For a serial connection, these are the **Serial port**, **Baud rate**, and **Modbus unit ID**.&#32;
+   - If you keep the same connection type, the current settings are filled in for you.&#32;
+   - If you switch, only the **Modbus unit ID** carries over.
+5. Select **Submit** to save the new settings.
+
+The integration reads the serial number again and only accepts the new settings if they lead to the same inverter, so reconfiguring can&#x27;t accidentally point an entry at a different device and take its history with it.
+
+## Supported functionality
+
+The **Sofar** integration provides the following entities.
+
+The inverter&#x27;s power limits and its passive-mode setpoints each span several registers that it only accepts written together, so they are actions rather than entities. All of them require an administrator.
+
+### Binary sensors
+
+- **Active power limit enabled**: Whether the inverter is currently applying the active power limit, rather than generating unrestricted. Set by the [Set active power limit](/actions/sofar.set_active_power_limit/) action, which still writes the limit while this is off, but the inverter ignores it until it&#x27;s enabled again. Disabled by default.
+- **Faults**: One diagnostic binary sensor per fault category, such as grid, battery, thermal, or communication. Each one turns on if any underlying fault bits in that category are currently active. Faults are grouped by category rather than by vendor register, since a single register can hold faults from more than one category at once. Combiner box, string fuse, input fuse, and AFCI (Arc-Fault Circuit Interrupter) faults are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity), since PV and hybrid inverters don&#x27;t have that hardware. The integration&#x27;s diagnostics download includes the complete, decoded list of every currently active fault.
+
+### Buttons
+
+- **RTC sync**: Writes the current date and time to the inverter&#x27;s clock.
+- **IV curve scan**: Starts a scan of the PV strings&#x27; I-V curves. Only shown for inverters with battery storage.
+
+### Events
+
+- **Fault**: Reports each fault the inverter records in its own fault log, by name, such as **Grid overvoltage** or **AC output hardware overcurrent**. You can use it to start an automation. Each fault shows its **Category**, its **Fault ID**, which is the fault code listed in your inverter&#x27;s manual, and **Occurred at**, the time the inverter recorded it. It doesn&#x27;t report when a fault clears. Only shown for inverters that keep a fault log.
+  - The fault log is more detailed than the alarm history in the Sofar app. It also records brief faults that the inverter clears by itself, so you may see faults here that the app doesn&#x27;t show.
+  - Recent faults the inverter recorded while Home Assistant couldn&#x27;t reach it are reported once the connection is back. Faults that were already in the log when you added the integration aren&#x27;t reported.
+  - **Occurred at** uses the inverter&#x27;s own clock. If the time looks wrong, select the **RTC sync** button to correct the clock.
+
+### Selects
+
+- **Charger use mode**: The battery charger&#x27;s operating mode, such as self use, time of use, or feed-in priority. Only shown for inverters with battery storage.
+- **EPS mode**: Turns the EPS/backup output off and on, and whether it&#x27;s allowed to cold-start from battery power alone. Only shown for inverters wired for EPS/backup power.
+
+### Sensors
+
+The **Sofar** integration reads a large number of sensors from the inverter. Only the sensors relevant to your inverter&#x27;s type and configuration are added.
+
+- **System state**: The inverter&#x27;s operating state, including fault conditions.
+- **Temperatures**: Inverter, heatsink, and module temperatures.
+- **Device information**: The status of the last real-time clock sync.
+- **Grid and output measurements**: Frequency, and active, reactive, and apparent power, both at the inverter&#x27;s output and at the point of common coupling (PCC). Total household load and external solar production, as reported by the inverter, are also included. Per-phase voltage, current, power, and power factor are available for inverters with multiple phases.
+- **Off-grid (EPS/backup) measurements**: The same kind of readings for the EPS/backup output. Only shown for inverters wired for EPS/backup power.
+- **PV strings**: Power for each solar panel string, plus voltage and current if you need more detail. Each string the inverter supports gets its own device, connected via the inverter. Only shown for PV-capable inverters.
+- **Battery**: Voltage, current, power, temperature, state of charge, state of health, and charge cycles for each battery pack, plus combined power, state of charge, and state of health totals. Each pack gets its own device, connected via the inverter, and only packs that respond are added. A pack added later appears on its own, without reloading the integration. Only shown for inverters with battery storage.
+- **Battery configuration**: The battery parameters configured on the inverter, such as capacity, protocol, cell type, and voltage and current limits. This includes the state of charge at which the battery stops charging, the levels at which it stops discharging on-grid and off-grid, and the level at which off-grid discharging resumes. Only shown for inverters with battery storage.
+- **Energy totals**: Import, export, load consumption, solar generation, and battery charge/discharge energy, both for today and all-time.
+- **Current settings**: The feed-in limit, the active power limit, and the passive-mode setpoints as they&#x27;re currently stored on the inverter, so you can read back what the actions below have set.
+
+The readings most people need are enabled by default. Per-phase detail, the reactive power totals, daily energy counters, the battery configuration, and the current settings are disabled. To use one of them, enable it from the entity&#x27;s settings.
+
+### Switches
+
+The integration adds one switch, named after the inverter itself, that stops and resumes its operation remotely. Turning it off puts the inverter into its waiting state rather than cutting power to it.
+
+{% include integrations/actions.md %}
+
+## Sofar automation examples
+
+Your inverter measures far more about your solar production than any monthly report shows. Here are a few ideas to get you started.
+
+The entity IDs below are named after the inverter, so replace `sofar` with your own inverter&#x27;s name.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: get a notification when the inverter reports a fault
+
+An installation on the roof is easy to forget about, and an inverter that has stopped producing costs you money every sunny hour. This automation sends a notification as soon as the inverter raises a fault or drops out of normal grid-connected operation, so you find out the same day instead of weeks later in the monthly yield.
+
+- **Trigger**: State changed
+  - **Entity**: Sofar grid fault sensor, Sofar pv fault sensor, Sofar battery fault sensor, Sofar thermal fault sensor
+  - **From**: Off
+  - **To**: On
+- **Trigger**: State changed
+  - **Entity**: Sofar system state sensor
+  - **To**: Recoverable fault, Permanent fault
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for a fault notification&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Sofar inverter fault&quot;
+  triggers:
+    - trigger: state
+      entity_id:
+        - binary_sensor.sofar_grid_fault
+        - binary_sensor.sofar_pv_fault
+        - binary_sensor.sofar_battery_fault
+        - binary_sensor.sofar_thermal_fault
+      from: &quot;off&quot;
+      to: &quot;on&quot;
+    - trigger: state
+      entity_id: sensor.sofar_system_state
+      to:
+        - &quot;recoverable_fault&quot;
+        - &quot;permanent_fault&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        title: &quot;Sofar inverter fault&quot;
+        message: &gt;
+          The inverter reported a fault. Check the Fault entity&#x27;s
+          history, or download the integration&#x27;s diagnostics, to see
+          which fault it was.
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: run an appliance on surplus solar
+
+Appliances that don&#x27;t care when they run are the cheapest way to use your own production instead of selling it. This automation starts the dishwasher once the inverter has been producing more than the house is using for 10 minutes, which is long enough to know it isn&#x27;t a passing gap in the clouds.
+
+- **Trigger**: Template, true while **PV power total** stays more than 1.5 kW above **Active power load system** for 10 minutes
+- **Action**: Turn on switch
+  - **Target**: Dishwasher
+
+{% details &quot;YAML example for running an appliance on surplus solar&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Dishwasher on surplus solar&quot;
+  triggers:
+    - trigger: template
+      value_template: &gt;
+        {{ states(&#x27;sensor.sofar_pv_power_total&#x27;) | float(0)
+           - states(&#x27;sensor.sofar_active_power_load_system&#x27;) | float(0)
+           &gt; 1.5 }}
+      for:
+        minutes: 10
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.dishwasher
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: warn when the battery reserve runs low
+
+The battery is worth the most in the evening, when the panels have stopped and the grid is expensive. This automation notifies you when the battery drops below a fifth of its capacity, so you can decide whether to hold the rest back or let heavy loads keep running.
+
+- **Trigger**: Numeric state crossed threshold
+  - **Entity**: Sofar battery state of charge total
+  - **Below**: `20`
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for a low battery warning&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Sofar battery reserve low&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.sofar_battery_state_of_charge_total
+      below: 20
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        title: &quot;Home battery is low&quot;
+        message: &gt;
+          The battery is below 20%. Heavy loads will start drawing
+          from the grid.
+{% endexample %}
+
+{% enddetails %}
+
+## Data updates
+
+The **Sofar** {% term integration %} {% term polling polls %} the inverter&#x27;s live readings every 5 seconds. Values that rarely change, such as the device information and the battery configuration, are polled every 60 seconds instead, so each poll stays short.
+
+A PV inverter switches off when there&#x27;s no sunlight, so its entities are unavailable at night. If Home Assistant starts while the inverter is off, the integration still loads as long as the Modbus TCP bridge or serial port is reachable. Its entities stay unavailable until the inverter answers again.
+
+## Known limitations
+
+- Serial connections use 8 data bits, no parity, and 1 stop bit (8N1), which is what Sofar inverters use on their RS485 port. Only the baud rate can be changed.
+
+## Troubleshooting
+
+If these steps don&#x27;t help, [open an issue on GitHub](https://github.com/home-assistant/core/issues/new?template=bug_report.yml&amp;integration_name=Sofar&amp;integration_link=https%3A%2F%2Fwww.home-assistant.io%2Fintegrations%2Fsofar) and include the details listed for your symptom.
+
+### Cannot connect to the inverter
+
+1. Make sure the inverter is powered on. If it&#x27;s connected through a Modbus TCP bridge or an ESPHome serial proxy, make sure that device is also powered on and reachable on your network.
+2. For a network connection, confirm the host and port are correct, and that nothing else is holding open the same Modbus connection.
+3. For a serial connection, confirm the serial port is correct.
+4. Check that Modbus is enabled on the inverter, if it has a setting for this.
+5. If it still fails, include the connection type, the connection settings, and the Modbus unit ID in the issue report. If the integration is already added, also enable [debug logging](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics), reproduce the failure, and include the log.
+
+### Inverter isn&#x27;t answering
+
+#### Description
+
+If setup reports that the adapter is reachable but the inverter behind it didn&#x27;t answer, Home Assistant reached the Modbus TCP bridge or serial port, but the inverter didn&#x27;t reply.
+
+#### Resolution
+
+1. A PV inverter switches off when there&#x27;s no sunlight. If you&#x27;re setting it up after dark, try again in daylight.
+2. Confirm the **Modbus unit ID** matches the one set on the inverter. The default is `1`.
+3. For a serial connection, or a Modbus TCP bridge wired to the inverter&#x27;s RS485 port, confirm the baud rate matches the one set on the inverter. Check the RS485 wiring: if A and B are swapped, the inverter doesn&#x27;t answer.
+4. Check that Modbus is enabled on the inverter, if it has a setting for this.
+5. If it still doesn&#x27;t answer, include the connection type, the connection settings, and the Modbus unit ID in the issue report.
+
+### Inverter isn&#x27;t recognized
+
+#### Description
+
+The integration identifies the inverter by its serial number or by the registers it reports it serves. If setup fails with an unrecognized inverter error, neither matches a supported model. The inverter might use the older register map, or your model may not be supported yet.
+
+#### Resolution
+
+Because setup didn&#x27;t finish, the integration isn&#x27;t added yet, so the **Download diagnostics** option isn&#x27;t shown. Include the first 10 characters of your inverter&#x27;s serial number and the model name from its label in the issue report instead. Together, those identify which register map the inverter uses. The rest of the serial number isn&#x27;t needed.
+
+### Entities are missing for your inverter
+
+#### Description
+
+If the integration set up successfully but entities you expect aren&#x27;t there, such as battery or EPS/backup sensors on a hybrid inverter, the inverter is reporting that it doesn&#x27;t serve those registers.
+
+#### Resolution
+
+Download the {% term diagnostics %} data and include it in the issue report. It lists which register blocks the inverter reports it supports, which shows whether the model genuinely lacks that hardware or the integration is reading it wrongly.
+
+To download it, go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and find the **Sofar** integration. Select the three-dot menu {% icon &quot;mdi:dots-vertical&quot; %} and choose **Download diagnostics**.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+
+### To remove a battery pack
+
+Battery packs appear as separate devices under the inverter. A pack you physically remove stays listed until you delete its device. Packs the inverter still reports can&#x27;t be deleted, and a pack you reconnect is added back on the next update. The inverter and its PV strings can&#x27;t be deleted individually, since PV strings come from the inverter model rather than from a reading.
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select the **Sofar** integration card.
+2. From the list of devices, find the battery pack you want to remove.
+3. Next to the battery pack, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu. Then, select **Delete**.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Sofar.</p><p>The <strong>reconfigure serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>unit_id</code>.</p><p>The <strong>reconfigure tcp</strong> configuration step lists <code>host</code>, <code>port</code>, <code>unit_id</code>.</p><p>The <strong>serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>unit_id</code>.</p><p>The <strong>tcp</strong> configuration step lists <code>host</code>, <code>port</code>, <code>unit_id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>event</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set active power limit</li><li>set feed in limit</li><li>set passive mode power</li><li>set passive mode timeout</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Reconfiguration</li><li>Supported functionality</li><li>Sofar automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/sofar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/sofar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/sofar</code></dd></dl></section><p><a href="../../integrations/sofar/">Return to the Sofar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

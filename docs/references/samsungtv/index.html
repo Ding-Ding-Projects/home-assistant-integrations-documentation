@@ -1,1 +1,2091 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Samsung Smart TV reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:135" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/samsungtv/">Samsung Smart TV guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Samsung Smart TV</h1><p>Instructions on how to integrate a Samsung Smart TV into Home Assistant.</p><section><h2>Overview</h2><p>The Samsung Smart TV integration allows you to control a Samsung Smart TV.</p></section><section><h2>Supported devices</h2><p>The following Samsung TV models are known to be supported by the integration:</p></section><section><h2>Supported functionality</h2><p>The Samsung Smart TV integration provides the following entities and functionality:</p></section><section><h2>Data updates</h2><p>The integration polls every TV every 10 seconds to check if it is on. Depending on the model, it uses the local REST API, the WebSocket connection, or the legacy remote connection. If the TV supports UPnP, volume level and mute state are pushed to Home Assistant through UPnP events.</p></section><section><h2>Turn on action</h2><p>If the integration knows the MAC address of the TV from discovery, it will attempt to wake it using wake on LAN when calling turn on. Wake on LAN must be enabled on the TV for this to work. If the TV is connected to a smart strip or requires a more complex turn-on process, a turn_on action can be provided that will take precedence over the built-in wake on LAN functionality.</p></section><section><h2>Changing channels</h2><p>Changing channels can be done by calling the media_player.play_media action with the following payload:</p></section><section><h2>Selecting a source</h2><p>It&#x27;s possible to switch between the 2 sources TV and HDMI. Some older models also expose the installed applications through the WebSocket, in which case the source list is adjusted accordingly.</p></section><section><h2>Remote</h2><p>The integration supports the remote platform. The remote allows you to send key commands to your TV with the remote.send_command action. The supported keys vary between TV models.</p></section><section><h2>Power Keys</h2><p>KEY_POWEROFF|PowerOFF KEY_POWERON|PowerOn KEY_POWER|PowerToggle</p></section><section><h2>Input Keys</h2><p>KEY_SOURCE|Source KEY_COMPONENT1|Component1 KEY_COMPONENT2|Component2 KEY_AV1|AV1 KEY_AV2|AV2 KEY_AV3|AV3 KEY_SVIDEO1|SVideo1 KEY_SVIDEO2|SVideo2 KEY_SVIDEO3|SVideo3 KEY_HDMI|HDMI KEY_FM_RADIO|FMRadio KEY_DVI|DVI KEY_DVR|DVR KEY_TV|TV KEY_ANTENA|AnalogTV KEY_DTV|DigitalTV KEY_AMBIENT|AmbientMode</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Samsung Smart TV.</p><p>The <strong>encrypted pairing</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reauth confirm encrypted</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>name</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>media player</li><li>remote</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/samsungtv/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/samsungtv</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/samsungtv</code></dd></dl></section><p><a href="../../integrations/samsungtv/">Return to the Samsung Smart TV guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Samsung Smart TV reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:135" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/samsungtv/">Samsung Smart TV guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Samsung Smart TV</h1><p>Instructions on how to integrate a Samsung Smart TV into Home Assistant.</p><div class="reader-body"><p>The <strong>Samsung Smart TV</strong> integration allows you to control a <a>Samsung Smart TV</a>.</p>
+<p>Use cases: turn the TV off when everyone leaves home, pause playback when the doorbell rings, switch to a streaming app or HDMI input from a dashboard, or send remote key sequences from an automation.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Samsung Smart TV</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Samsung Smart TV</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: The hostname or IP address of the TV.
+PIN:
+  description: "The PIN displayed on your TV. Only asked for TVs that use the encrypted protocol (some H and J series models). On other models, accept the authorization popup on the TV instead."
+
+</code></pre>
+<h2>Supported devices</h2>
+<p>The following Samsung TV models are known to be supported by the integration:</p>
+<ul>
+<li>Samsung Smart TVs with Tizen operating system (2016 and later)</li>
+<li>Samsung TVs with WebSocket API support</li>
+<li>Samsung TV models with both REST API and WebSocket capabilities</li>
+</ul>
+<p>For specific model compatibility, check your TV's specifications to ensure it has a smart platform and network connectivity.</p>
+<h2>Supported functionality</h2>
+<p>The Samsung Smart TV integration provides the following entities and functionality:</p>
+<h3>Media player</h3>
+<ul>
+<li><strong>Power control</strong>: Turn the TV on and off</li>
+<li><strong>Volume control</strong>: Adjust volume and mute/unmute</li>
+<li><strong>Channel selection</strong>: Change channels directly by number</li>
+<li><strong>Source selection</strong>: Switch between TV, HDMI inputs, and applications</li>
+<li><strong>Playback control</strong>: Play and pause media</li>
+<li><strong>Next and previous track</strong>: Sent to the TV as channel up and channel down</li>
+</ul>
+<h3>Remote</h3>
+<ul>
+<li><strong>Key commands</strong>: Send remote control commands to your TV using standard key codes</li>
+<li><strong>Command sequences</strong>: Execute multiple commands in sequence</li>
+<li><strong>Extended key support</strong>: Navigation, menu control, and specialized functions</li>
+</ul>
+<h3>Diagnostics</h3>
+<ul>
+<li><strong>Device diagnostics</strong>: Troubleshooting information for device connectivity and status</li>
+</ul>
+<h2>List of triggers</h2>
+<p>This integration does not provide any documented triggers yet. See the <a>triggers reference</a> for triggers from other integrations.</p>
+<h2>Data updates</h2>
+<p>The integration polls every TV every 10 seconds to check if it is on. Depending on the model, it uses the local REST API, the WebSocket connection, or the legacy remote connection.
+If the TV supports UPnP, volume level and mute state are pushed to Home Assistant through UPnP events.</p>
+<h3>Turn on action</h3>
+<p>If the integration knows the MAC address of the TV from discovery, it will attempt to wake it using wake on LAN when calling turn on. Wake on LAN must be enabled on the TV for this to work. If the TV is connected to a smart strip or requires a more complex turn-on process, a <code>turn_on</code> action can be provided that will take precedence over the built-in wake on LAN functionality.</p>
+<p>You can create an automation from the user interface, from the device create a new automation and select the  <strong>Device is requested to turn on</strong> automation.
+Automations can also be created using an automation action:</p>
+<pre><code># Example configuration.yaml entry
+wake_on_lan: # enables `wake_on_lan` integration
+
+automation:
+  - alias: "Turn On Living Room TV with WakeOnLan"
+    triggers:
+      - trigger: samsungtv.turn_on
+        entity_id: media_player.samsung_smart_tv
+    actions:
+      - action: wake_on_lan.send_magic_packet
+        data:
+          mac: aa:bb:cc:dd:ee:ff
+</code></pre>
+<p>Any other <a>actions</a> to power on the device can be configured.</p>
+<h3>Usage</h3>
+<h4>Changing channels</h4>
+<p>Changing channels can be done by calling the <code>media_player.play_media</code> action
+with the following payload:</p>
+<pre><code>entity_id: media_player.samsung_tv
+media_content_id: 590
+media_content_type: channel
+</code></pre>
+<h4>Selecting a source</h4>
+<p>It's possible to switch between the 2 sources <code>TV</code> and <code>HDMI</code>.
+Some older models also expose the installed applications through the WebSocket, in which case the source list is adjusted accordingly.</p>
+<h3>Remote</h3>
+<p>The integration supports the <code>remote</code> platform. The remote allows you to send key commands to your TV with the <code>remote.send_command</code> action. The supported keys vary between TV models.</p>
+<h4>Full keycodes list</h4>
+<h4>Power Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_POWEROFF</td>
+  <td>PowerOFF</td>
+</tr>
+<tr>
+  <td>KEY_POWERON</td>
+  <td>PowerOn</td>
+</tr>
+<tr>
+  <td>KEY_POWER</td>
+  <td>PowerToggle</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Input Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_SOURCE</td>
+  <td>Source</td>
+</tr>
+<tr>
+  <td>KEY_COMPONENT1</td>
+  <td>Component1</td>
+</tr>
+<tr>
+  <td>KEY_COMPONENT2</td>
+  <td>Component2</td>
+</tr>
+<tr>
+  <td>KEY_AV1</td>
+  <td>AV1</td>
+</tr>
+<tr>
+  <td>KEY_AV2</td>
+  <td>AV2</td>
+</tr>
+<tr>
+  <td>KEY_AV3</td>
+  <td>AV3</td>
+</tr>
+<tr>
+  <td>KEY_SVIDEO1</td>
+  <td>SVideo1</td>
+</tr>
+<tr>
+  <td>KEY_SVIDEO2</td>
+  <td>SVideo2</td>
+</tr>
+<tr>
+  <td>KEY_SVIDEO3</td>
+  <td>SVideo3</td>
+</tr>
+<tr>
+  <td>KEY_HDMI</td>
+  <td>HDMI</td>
+</tr>
+<tr>
+  <td>KEY_FM_RADIO</td>
+  <td>FMRadio</td>
+</tr>
+<tr>
+  <td>KEY_DVI</td>
+  <td>DVI</td>
+</tr>
+<tr>
+  <td>KEY_DVR</td>
+  <td>DVR</td>
+</tr>
+<tr>
+  <td>KEY_TV</td>
+  <td>TV</td>
+</tr>
+<tr>
+  <td>KEY_ANTENA</td>
+  <td>AnalogTV</td>
+</tr>
+<tr>
+  <td>KEY_DTV</td>
+  <td>DigitalTV</td>
+</tr>
+<tr>
+  <td>KEY_AMBIENT</td>
+  <td>AmbientMode</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Number Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_1</td>
+  <td>Key1</td>
+</tr>
+<tr>
+  <td>KEY_2</td>
+  <td>Key2</td>
+</tr>
+<tr>
+  <td>KEY_3</td>
+  <td>Key3</td>
+</tr>
+<tr>
+  <td>KEY_4</td>
+  <td>Key4</td>
+</tr>
+<tr>
+  <td>KEY_5</td>
+  <td>Key5</td>
+</tr>
+<tr>
+  <td>KEY_6</td>
+  <td>Key6</td>
+</tr>
+<tr>
+  <td>KEY_7</td>
+  <td>Key7</td>
+</tr>
+<tr>
+  <td>KEY_8</td>
+  <td>Key8</td>
+</tr>
+<tr>
+  <td>KEY_9</td>
+  <td>Key9</td>
+</tr>
+<tr>
+  <td>KEY_0</td>
+  <td>Key0</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Misc Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_PANNEL_CHDOWN</td>
+  <td>3D</td>
+</tr>
+<tr>
+  <td>KEY_ANYNET</td>
+  <td>AnyNet+</td>
+</tr>
+<tr>
+  <td>KEY_ESAVING</td>
+  <td>EnergySaving</td>
+</tr>
+<tr>
+  <td>KEY_SLEEP</td>
+  <td>SleepTimer</td>
+</tr>
+<tr>
+  <td>KEY_DTV_SIGNAL</td>
+  <td>DTVSignal</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Channel Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_CHUP</td>
+  <td>ChannelUp</td>
+</tr>
+<tr>
+  <td>KEY_CHDOWN</td>
+  <td>ChannelDown</td>
+</tr>
+<tr>
+  <td>KEY_PRECH</td>
+  <td>PreviousChannel</td>
+</tr>
+<tr>
+  <td>KEY_FAVCH</td>
+  <td>FavoriteChannels</td>
+</tr>
+<tr>
+  <td>KEY_CH_LIST</td>
+  <td>ChannelList</td>
+</tr>
+<tr>
+  <td>KEY_AUTO_PROGRAM</td>
+  <td>AutoProgram</td>
+</tr>
+<tr>
+  <td>KEY_MAGIC_CHANNEL</td>
+  <td>MagicChannel</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Volume Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_VOLUP</td>
+  <td>VolumeUp</td>
+</tr>
+<tr>
+  <td>KEY_VOLDOWN</td>
+  <td>VolumeDown</td>
+</tr>
+<tr>
+  <td>KEY_MUTE</td>
+  <td>Mute</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Direction Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_UP</td>
+  <td>NavigationUp</td>
+</tr>
+<tr>
+  <td>KEY_DOWN</td>
+  <td>NavigationDown</td>
+</tr>
+<tr>
+  <td>KEY_LEFT</td>
+  <td>NavigationLeft</td>
+</tr>
+<tr>
+  <td>KEY_RIGHT</td>
+  <td>NavigationRight</td>
+</tr>
+<tr>
+  <td>KEY_RETURN</td>
+  <td>NavigationReturn/Back</td>
+</tr>
+<tr>
+  <td>KEY_ENTER</td>
+  <td>NavigationEnter</td>
+</tr>
+<tr>
+  <td>KEY_EXIT</td>
+  <td>NavigationExit</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Media Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_REWIND</td>
+  <td>Rewind</td>
+</tr>
+<tr>
+  <td>KEY_STOP</td>
+  <td>Stop</td>
+</tr>
+<tr>
+  <td>KEY_PLAY</td>
+  <td>Play</td>
+</tr>
+<tr>
+  <td>KEY_FF</td>
+  <td>FastForward</td>
+</tr>
+<tr>
+  <td>KEY_REC</td>
+  <td>Record</td>
+</tr>
+<tr>
+  <td>KEY_PAUSE</td>
+  <td>Pause</td>
+</tr>
+<tr>
+  <td>KEY_LIVE</td>
+  <td>Live</td>
+</tr>
+<tr>
+  <td>KEY_QUICK_REPLAY</td>
+  <td>fnKEY_QUICK_REPLAY</td>
+</tr>
+<tr>
+  <td>KEY_STILL_PICTURE</td>
+  <td>fnKEY_STILL_PICTURE</td>
+</tr>
+<tr>
+  <td>KEY_INSTANT_REPLAY</td>
+  <td>fnKEY_INSTANT_REPLAY</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Picture in Picture</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_PIP_ONOFF</td>
+  <td>PIPOn/Off</td>
+</tr>
+<tr>
+  <td>KEY_PIP_SWAP</td>
+  <td>PIPSwap</td>
+</tr>
+<tr>
+  <td>KEY_PIP_SIZE</td>
+  <td>PIPSize</td>
+</tr>
+<tr>
+  <td>KEY_PIP_CHUP</td>
+  <td>PIPChannelUp</td>
+</tr>
+<tr>
+  <td>KEY_PIP_CHDOWN</td>
+  <td>PIPChannelDown</td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_SMALL</td>
+  <td>PIPSmall</td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_WIDE</td>
+  <td>PIPWide</td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_RIGHT_BOTTOM</td>
+  <td>PIPBottomRight</td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_SOURCE_CHANGE</td>
+  <td>PIPSourceChange</td>
+</tr>
+<tr>
+  <td>KEY_PIP_SCAN</td>
+  <td>PIPScan</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Modes</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_VCR_MODE</td>
+  <td>VCRMode</td>
+</tr>
+<tr>
+  <td>KEY_CATV_MODE</td>
+  <td>CATVMode</td>
+</tr>
+<tr>
+  <td>KEY_DSS_MODE</td>
+  <td>DSSMode</td>
+</tr>
+<tr>
+  <td>KEY_TV_MODE</td>
+  <td>TVMode</td>
+</tr>
+<tr>
+  <td>KEY_DVD_MODE</td>
+  <td>DVDMode</td>
+</tr>
+<tr>
+  <td>KEY_STB_MODE</td>
+  <td>STBMode</td>
+</tr>
+<tr>
+  <td>KEY_PCMODE</td>
+  <td>PCMode</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Color Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_GREEN</td>
+  <td>Green</td>
+</tr>
+<tr>
+  <td>KEY_YELLOW</td>
+  <td>Yellow</td>
+</tr>
+<tr>
+  <td>KEY_CYAN</td>
+  <td>Cyan</td>
+</tr>
+<tr>
+  <td>KEY_RED</td>
+  <td>Red</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Teletext</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_TTX_MIX</td>
+  <td>TeletextMix</td>
+</tr>
+<tr>
+  <td>KEY_TTX_SUBFACE</td>
+  <td>TeletextSubface</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>AspectRatio</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_ASPECT</td>
+  <td>AspectRatio</td>
+</tr>
+<tr>
+  <td>KEY_PICTURE_SIZE</td>
+  <td>PictureSize</td>
+</tr>
+<tr>
+  <td>KEY_4_3</td>
+  <td>AspectRatio4:3</td>
+</tr>
+<tr>
+  <td>KEY_16_9</td>
+  <td>AspectRatio16:9</td>
+</tr>
+<tr>
+  <td>KEY_EXT14</td>
+  <td>AspectRatio3:4(Alt)</td>
+</tr>
+<tr>
+  <td>KEY_EXT15</td>
+  <td>AspectRatio16:9(Alt)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Picture Mode</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_PMODE</td>
+  <td>PictureMode</td>
+</tr>
+<tr>
+  <td>KEY_PANORAMA</td>
+  <td>PictureModePanorama</td>
+</tr>
+<tr>
+  <td>KEY_DYNAMIC</td>
+  <td>PictureModeDynamic</td>
+</tr>
+<tr>
+  <td>KEY_STANDARD</td>
+  <td>PictureModeStandard</td>
+</tr>
+<tr>
+  <td>KEY_MOVIE1</td>
+  <td>PictureModeMovie</td>
+</tr>
+<tr>
+  <td>KEY_GAME</td>
+  <td>PictureModeGame</td>
+</tr>
+<tr>
+  <td>KEY_CUSTOM</td>
+  <td>PictureModeCustom</td>
+</tr>
+<tr>
+  <td>KEY_EXT9</td>
+  <td>PictureModeMovie(Alt)</td>
+</tr>
+<tr>
+  <td>KEY_EXT10</td>
+  <td>PictureModeStandard(Alt)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Menus</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_MENU</td>
+  <td>Menu</td>
+</tr>
+<tr>
+  <td>KEY_TOPMENU</td>
+  <td>TopMenu</td>
+</tr>
+<tr>
+  <td>KEY_TOOLS</td>
+  <td>Tools</td>
+</tr>
+<tr>
+  <td>KEY_HOME</td>
+  <td>Home</td>
+</tr>
+<tr>
+  <td>KEY_CONTENTS</td>
+  <td>Contents</td>
+</tr>
+<tr>
+  <td>KEY_GUIDE</td>
+  <td>Guide</td>
+</tr>
+<tr>
+  <td>KEY_DISC_MENU</td>
+  <td>DiscMenu</td>
+</tr>
+<tr>
+  <td>KEY_DVR_MENU</td>
+  <td>DVRMenu</td>
+</tr>
+<tr>
+  <td>KEY_HELP</td>
+  <td>Help</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>OSD</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_INFO</td>
+  <td>Info</td>
+</tr>
+<tr>
+  <td>KEY_CAPTION</td>
+  <td>Caption</td>
+</tr>
+<tr>
+  <td>KEY_CLOCK_DISPLAY</td>
+  <td>ClockDisplay</td>
+</tr>
+<tr>
+  <td>KEY_SETUP_CLOCK_TIMER</td>
+  <td>SetupClock</td>
+</tr>
+<tr>
+  <td>KEY_SUB_TITLE</td>
+  <td>Subtitle</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Zoom</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_ZOOM_MOVE</td>
+  <td>ZoomMove</td>
+</tr>
+<tr>
+  <td>KEY_ZOOM_IN</td>
+  <td>ZoomIn</td>
+</tr>
+<tr>
+  <td>KEY_ZOOM_OUT</td>
+  <td>ZoomOut</td>
+</tr>
+<tr>
+  <td>KEY_ZOOM1</td>
+  <td>Zoom1</td>
+</tr>
+<tr>
+  <td>KEY_ZOOM2</td>
+  <td>Zoom2</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Other Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_WHEEL_LEFT</td>
+  <td>WheelLeft</td>
+</tr>
+<tr>
+  <td>KEY_WHEEL_RIGHT</td>
+  <td>WheelRight</td>
+</tr>
+<tr>
+  <td>KEY_ADDDEL</td>
+  <td>Add/Del</td>
+</tr>
+<tr>
+  <td>KEY_PLUS100</td>
+  <td>Plus100</td>
+</tr>
+<tr>
+  <td>KEY_AD</td>
+  <td>AD</td>
+</tr>
+<tr>
+  <td>KEY_LINK</td>
+  <td>Link</td>
+</tr>
+<tr>
+  <td>KEY_TURBO</td>
+  <td>Turbo</td>
+</tr>
+<tr>
+  <td>KEY_CONVERGENCE</td>
+  <td>Convergence</td>
+</tr>
+<tr>
+  <td>KEY_DEVICE_CONNECT</td>
+  <td>DeviceConnect</td>
+</tr>
+<tr>
+  <td>KEY_11</td>
+  <td>Key11</td>
+</tr>
+<tr>
+  <td>KEY_12</td>
+  <td>Key12</td>
+</tr>
+<tr>
+  <td>KEY_FACTORY</td>
+  <td>KeyFactory</td>
+</tr>
+<tr>
+  <td>KEY_3SPEED</td>
+  <td>Key3SPEED</td>
+</tr>
+<tr>
+  <td>KEY_RSURF</td>
+  <td>KeyRSURF</td>
+</tr>
+<tr>
+  <td>KEY_FF_</td>
+  <td>FF_</td>
+</tr>
+<tr>
+  <td>KEY_REWIND_</td>
+  <td>REWIND_</td>
+</tr>
+<tr>
+  <td>KEY_ANGLE</td>
+  <td>Angle</td>
+</tr>
+<tr>
+  <td>KEY_RESERVED1</td>
+  <td>Reserved1</td>
+</tr>
+<tr>
+  <td>KEY_PROGRAM</td>
+  <td>Program</td>
+</tr>
+<tr>
+  <td>KEY_BOOKMARK</td>
+  <td>Bookmark</td>
+</tr>
+<tr>
+  <td>KEY_PRINT</td>
+  <td>Print</td>
+</tr>
+<tr>
+  <td>KEY_CLEAR</td>
+  <td>Clear</td>
+</tr>
+<tr>
+  <td>KEY_VCHIP</td>
+  <td>VChip</td>
+</tr>
+<tr>
+  <td>KEY_REPEAT</td>
+  <td>Repeat</td>
+</tr>
+<tr>
+  <td>KEY_DOOR</td>
+  <td>Door</td>
+</tr>
+<tr>
+  <td>KEY_OPEN</td>
+  <td>Open</td>
+</tr>
+<tr>
+  <td>KEY_DMA</td>
+  <td>DMA</td>
+</tr>
+<tr>
+  <td>KEY_MTS</td>
+  <td>MTS</td>
+</tr>
+<tr>
+  <td>KEY_DNIe</td>
+  <td>DNIe</td>
+</tr>
+<tr>
+  <td>KEY_SRS</td>
+  <td>SRS</td>
+</tr>
+<tr>
+  <td>KEY_CONVERT_AUDIO_MAINSUB</td>
+  <td>ConvertAudioMain/Sub</td>
+</tr>
+<tr>
+  <td>KEY_MDC</td>
+  <td>MDC</td>
+</tr>
+<tr>
+  <td>KEY_SEFFECT</td>
+  <td>SoundEffect</td>
+</tr>
+<tr>
+  <td>KEY_PERPECT_FOCUS</td>
+  <td>PERPECTFocus</td>
+</tr>
+<tr>
+  <td>KEY_CALLER_ID</td>
+  <td>CallerID</td>
+</tr>
+<tr>
+  <td>KEY_SCALE</td>
+  <td>Scale</td>
+</tr>
+<tr>
+  <td>KEY_MAGIC_BRIGHT</td>
+  <td>MagicBright</td>
+</tr>
+<tr>
+  <td>KEY_W_LINK</td>
+  <td>WLink</td>
+</tr>
+<tr>
+  <td>KEY_DTV_LINK</td>
+  <td>DTVLink</td>
+</tr>
+<tr>
+  <td>KEY_APP_LIST</td>
+  <td>ApplicationList</td>
+</tr>
+<tr>
+  <td>KEY_BACK_MHP</td>
+  <td>BackMHP</td>
+</tr>
+<tr>
+  <td>KEY_ALT_MHP</td>
+  <td>AlternateMHP</td>
+</tr>
+<tr>
+  <td>KEY_DNSe</td>
+  <td>DNSe</td>
+</tr>
+<tr>
+  <td>KEY_RSS</td>
+  <td>RSS</td>
+</tr>
+<tr>
+  <td>KEY_ENTERTAINMENT</td>
+  <td>Entertainment</td>
+</tr>
+<tr>
+  <td>KEY_ID_INPUT</td>
+  <td>IDInput</td>
+</tr>
+<tr>
+  <td>KEY_ID_SETUP</td>
+  <td>IDSetup</td>
+</tr>
+<tr>
+  <td>KEY_ANYVIEW</td>
+  <td>AnyView</td>
+</tr>
+<tr>
+  <td>KEY_MS</td>
+  <td>MS</td>
+</tr>
+<tr>
+  <td>KEY_MORE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_MIC</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_NINE_SEPERATE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_FORMAT</td>
+  <td>AutoFormat</td>
+</tr>
+<tr>
+  <td>KEY_DNET</td>
+  <td>DNET</td>
+</tr>
+<tr>
+  <td>KEY_MINUS</td>
+  <td>Minus</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Auto Arc Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_AUTO_ARC_C_FORCE_AGING</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_CAPTION_ENG</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_USBJACK_INSPECT</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_RESET</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_LNA_ON</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_LNA_OFF</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_ANYNET_MODE_OK</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_ANYNET_AUTO_START</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_CAPTION_ON</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_CAPTION_OFF</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_DOUBLE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_LARGE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_LEFT_TOP</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_RIGHT_TOP</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_LEFT_BOTTOM</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_PIP_CH_CHANGE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_AUTOCOLOR_SUCCESS</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_AUTOCOLOR_FAIL</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_JACK_IDENT</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_CAPTION_KOR</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_ANTENNA_AIR</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_ANTENNA_CABLE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_AUTO_ARC_ANTENNA_SATELLITE</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Panel Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_PANNEL_POWER</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_CHUP</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_VOLUP</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_VOLDOW</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_ENTER</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_MENU</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_SOURCE</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_PANNEL_ENTER</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4>Extended Keys</h4>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>KEY_EXT1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT4</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT6</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT7</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT8</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT11</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT12</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT13</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT16</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT17</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT18</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT19</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT20</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT21</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT22</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT23</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT24</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT25</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT26</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT27</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT28</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT29</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT30</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT31</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT32</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT33</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT34</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT35</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT36</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT37</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT38</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT39</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT40</td>
+  <td></td>
+</tr>
+<tr>
+  <td>KEY_EXT41</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>Some codes are different on the 2016+ TVs. For example, <code>KEY_POWEROFF</code> is <code>KEY_POWER</code> on the newer TVs.</p>
+<p>The code list has been extracted from: <a>https://github.com/kdschlosser/samsungctl</a> and <a>https://github.com/jaruba/ha-samsungtv-tizen/blob/master/Key_codes.md</a></p>
+<p><strong>Example to send sequence of commands:</strong></p>
+<pre><code>action: remote.send_command
+target:
+  device_id: 72953f9b4c9863e28ddd52c87dcebe05
+data:
+  command:
+    - KEY_MENU
+    - KEY_RIGHT
+    - KEY_UP
+    - KEY_UP
+    - KEY_ENTER
+
+</code></pre>
+<h2>Known limitations</h2>
+<h3>Subnet/VLAN restrictions</h3>
+<p>Samsung Smart TVs do not allow WebSocket connections across different subnets or VLANs. If your TV is not on the same subnet as Home Assistant, the integration will fail to establish a connection. It may be possible to bypass this issue by using IP masquerading or a proxy.</p>
+<h3>H and J models</h3>
+<p>Some televisions from the H and J series use an encrypted protocol and require manual pairing with the TV. This is automatically detected when attempting to send commands using the WebSocket connection, and will trigger the corresponding authentication flow.</p>
+<h2>Troubleshooting</h2>
+<h3>Samsung TV keeps asking for permission</h3>
+<p>The default setting on newer televisions is to ask for permission on every connection attempt.</p>
+<h4>Resolution</h4>
+<ol>
+<li>On your TV, navigate to <strong>Device connection manager</strong> &gt; <strong>Access notification</strong>.</li>
+<li>Change the setting to <strong>First time only</strong>.</li>
+<li>In <strong>Device connection manager</strong> &gt; <strong>Device list</strong>, clean up any previous connection attempts from Home Assistant.</li>
+</ol>
+<p>After making these changes, the TV should no longer ask for permission on each connection.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/samsungtv.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate a Samsung Smart TV into Home Assistant.
+ha_release: 0.13
+ha_domain: samsungtv
+---
+
+The **Samsung Smart TV** {% term integration %} allows you to control a [Samsung Smart TV](https://www.samsung.com/uk/tvs/all-tvs/).
+
+Use cases: turn the TV off when everyone leaves home, pause playback when the doorbell rings, switch to a streaming app or HDMI input from a dashboard, or send remote key sequences from an automation.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: The hostname or IP address of the TV.
+PIN:
+  description: &quot;The PIN displayed on your TV. Only asked for TVs that use the encrypted protocol (some H and J series models). On other models, accept the authorization popup on the TV instead.&quot;
+{% endconfiguration_basic %}
+
+## Supported devices
+
+The following Samsung TV models are known to be supported by the integration:
+
+- Samsung Smart TVs with Tizen operating system (2016 and later)
+- Samsung TVs with WebSocket API support
+- Samsung TV models with both REST API and WebSocket capabilities
+
+For specific model compatibility, check your TV&#x27;s specifications to ensure it has a smart platform and network connectivity.
+
+## Supported functionality
+
+The Samsung Smart TV integration provides the following entities and functionality:
+
+### Media player
+
+- **Power control**: Turn the TV on and off
+- **Volume control**: Adjust volume and mute/unmute
+- **Channel selection**: Change channels directly by number
+- **Source selection**: Switch between TV, HDMI inputs, and applications
+- **Playback control**: Play and pause media
+- **Next and previous track**: Sent to the TV as channel up and channel down
+
+### Remote
+
+- **Key commands**: Send remote control commands to your TV using standard key codes
+- **Command sequences**: Execute multiple commands in sequence
+- **Extended key support**: Navigation, menu control, and specialized functions
+
+### Diagnostics
+
+- **Device diagnostics**: Troubleshooting information for device connectivity and status
+
+{% include integrations/triggers.md %}
+
+## Data updates
+
+The integration polls every TV every 10 seconds to check if it is on. Depending on the model, it uses the local REST API, the WebSocket connection, or the legacy remote connection.
+If the TV supports UPnP, volume level and mute state are pushed to Home Assistant through UPnP events.
+
+### Turn on action
+
+If the integration knows the MAC address of the TV from discovery, it will attempt to wake it using wake on LAN when calling turn on. Wake on LAN must be enabled on the TV for this to work. If the TV is connected to a smart strip or requires a more complex turn-on process, a `turn_on` action can be provided that will take precedence over the built-in wake on LAN functionality.
+
+You can create an automation from the user interface, from the device create a new automation and select the  **Device is requested to turn on** automation.
+Automations can also be created using an automation action:
+
+```yaml
+# Example configuration.yaml entry
+wake_on_lan: # enables `wake_on_lan` integration
+
+automation:
+  - alias: &quot;Turn On Living Room TV with WakeOnLan&quot;
+    triggers:
+      - trigger: samsungtv.turn_on
+        entity_id: media_player.samsung_smart_tv
+    actions:
+      - action: wake_on_lan.send_magic_packet
+        data:
+          mac: aa:bb:cc:dd:ee:ff
+```
+
+Any other [actions](/docs/automation/action/) to power on the device can be configured.
+
+### Usage
+
+#### Changing channels
+
+Changing channels can be done by calling the `media_player.play_media` action
+with the following payload:
+
+```yaml
+entity_id: media_player.samsung_tv
+media_content_id: 590
+media_content_type: channel
+```
+
+#### Selecting a source
+
+It&#x27;s possible to switch between the 2 sources `TV` and `HDMI`.
+Some older models also expose the installed applications through the WebSocket, in which case the source list is adjusted accordingly.
+
+### Remote
+
+The integration supports the `remote` platform. The remote allows you to send key commands to your TV with the `remote.send_command` action. The supported keys vary between TV models.
+
+{% details &quot;Full keycodes list&quot; %}
+
+#### Power Keys
+
+Key|Description
+---|-----------
+KEY_POWEROFF|PowerOFF
+KEY_POWERON|PowerOn
+KEY_POWER|PowerToggle
+
+____________
+
+#### Input Keys
+
+Key|Description
+---|-----------
+KEY_SOURCE|Source
+KEY_COMPONENT1|Component1
+KEY_COMPONENT2|Component2
+KEY_AV1|AV1
+KEY_AV2|AV2
+KEY_AV3|AV3
+KEY_SVIDEO1|SVideo1
+KEY_SVIDEO2|SVideo2
+KEY_SVIDEO3|SVideo3
+KEY_HDMI|HDMI
+KEY_FM_RADIO|FMRadio
+KEY_DVI|DVI
+KEY_DVR|DVR
+KEY_TV|TV
+KEY_ANTENA|AnalogTV
+KEY_DTV|DigitalTV
+KEY_AMBIENT|AmbientMode
+
+____________
+
+#### Number Keys
+
+Key|Description
+---|-----------
+KEY_1|Key1
+KEY_2|Key2
+KEY_3|Key3
+KEY_4|Key4
+KEY_5|Key5
+KEY_6|Key6
+KEY_7|Key7
+KEY_8|Key8
+KEY_9|Key9
+KEY_0|Key0
+
+____________
+
+#### Misc Keys
+
+Key|Description
+---|-----------
+KEY_PANNEL_CHDOWN|3D
+KEY_ANYNET|AnyNet+
+KEY_ESAVING|EnergySaving
+KEY_SLEEP|SleepTimer
+KEY_DTV_SIGNAL|DTVSignal
+
+____________
+
+#### Channel Keys
+
+Key|Description
+---|-----------
+KEY_CHUP|ChannelUp
+KEY_CHDOWN|ChannelDown
+KEY_PRECH|PreviousChannel
+KEY_FAVCH|FavoriteChannels
+KEY_CH_LIST|ChannelList
+KEY_AUTO_PROGRAM|AutoProgram
+KEY_MAGIC_CHANNEL|MagicChannel
+
+____________
+
+#### Volume Keys
+
+Key|Description
+---|-----------
+KEY_VOLUP|VolumeUp
+KEY_VOLDOWN|VolumeDown
+KEY_MUTE|Mute
+
+____________
+
+#### Direction Keys
+
+Key|Description
+---|-----------
+KEY_UP|NavigationUp
+KEY_DOWN|NavigationDown
+KEY_LEFT|NavigationLeft
+KEY_RIGHT|NavigationRight
+KEY_RETURN|NavigationReturn/Back
+KEY_ENTER|NavigationEnter
+KEY_EXIT|NavigationExit
+
+____________
+
+#### Media Keys
+
+Key|Description
+---|-----------
+KEY_REWIND|Rewind
+KEY_STOP|Stop
+KEY_PLAY|Play
+KEY_FF|FastForward
+KEY_REC|Record
+KEY_PAUSE|Pause
+KEY_LIVE|Live
+KEY_QUICK_REPLAY|fnKEY_QUICK_REPLAY
+KEY_STILL_PICTURE|fnKEY_STILL_PICTURE
+KEY_INSTANT_REPLAY|fnKEY_INSTANT_REPLAY
+
+____________
+
+#### Picture in Picture
+
+Key|Description
+---|-----------
+KEY_PIP_ONOFF|PIPOn/Off
+KEY_PIP_SWAP|PIPSwap
+KEY_PIP_SIZE|PIPSize
+KEY_PIP_CHUP|PIPChannelUp
+KEY_PIP_CHDOWN|PIPChannelDown
+KEY_AUTO_ARC_PIP_SMALL|PIPSmall
+KEY_AUTO_ARC_PIP_WIDE|PIPWide
+KEY_AUTO_ARC_PIP_RIGHT_BOTTOM|PIPBottomRight
+KEY_AUTO_ARC_PIP_SOURCE_CHANGE|PIPSourceChange
+KEY_PIP_SCAN|PIPScan
+
+____________
+
+#### Modes
+
+Key|Description
+---|-----------
+KEY_VCR_MODE|VCRMode
+KEY_CATV_MODE|CATVMode
+KEY_DSS_MODE|DSSMode
+KEY_TV_MODE|TVMode
+KEY_DVD_MODE|DVDMode
+KEY_STB_MODE|STBMode
+KEY_PCMODE|PCMode
+
+____________
+
+#### Color Keys
+
+Key|Description
+---|-----------
+KEY_GREEN|Green
+KEY_YELLOW|Yellow
+KEY_CYAN|Cyan
+KEY_RED|Red
+
+____________
+
+#### Teletext
+
+Key|Description
+---|-----------
+KEY_TTX_MIX|TeletextMix
+KEY_TTX_SUBFACE|TeletextSubface
+
+____________
+
+#### AspectRatio
+
+Key|Description
+---|-----------
+KEY_ASPECT|AspectRatio
+KEY_PICTURE_SIZE|PictureSize
+KEY_4_3|AspectRatio4:3
+KEY_16_9|AspectRatio16:9
+KEY_EXT14|AspectRatio3:4(Alt)
+KEY_EXT15|AspectRatio16:9(Alt)
+
+____________
+
+#### Picture Mode
+
+Key|Description
+---|-----------
+KEY_PMODE|PictureMode
+KEY_PANORAMA|PictureModePanorama
+KEY_DYNAMIC|PictureModeDynamic
+KEY_STANDARD|PictureModeStandard
+KEY_MOVIE1|PictureModeMovie
+KEY_GAME|PictureModeGame
+KEY_CUSTOM|PictureModeCustom
+KEY_EXT9|PictureModeMovie(Alt)
+KEY_EXT10|PictureModeStandard(Alt)
+
+____________
+
+#### Menus
+
+Key|Description
+---|-----------
+KEY_MENU|Menu
+KEY_TOPMENU|TopMenu
+KEY_TOOLS|Tools
+KEY_HOME|Home
+KEY_CONTENTS|Contents
+KEY_GUIDE|Guide
+KEY_DISC_MENU|DiscMenu
+KEY_DVR_MENU|DVRMenu
+KEY_HELP|Help
+
+____________
+
+#### OSD
+
+Key|Description
+---|-----------
+KEY_INFO|Info
+KEY_CAPTION|Caption
+KEY_CLOCK_DISPLAY|ClockDisplay
+KEY_SETUP_CLOCK_TIMER|SetupClock
+KEY_SUB_TITLE|Subtitle
+
+____________
+
+#### Zoom
+
+Key|Description
+---|-----------
+KEY_ZOOM_MOVE|ZoomMove
+KEY_ZOOM_IN|ZoomIn
+KEY_ZOOM_OUT|ZoomOut
+KEY_ZOOM1|Zoom1
+KEY_ZOOM2|Zoom2
+
+____________
+
+#### Other Keys
+
+Key|Description
+---|-----------
+KEY_WHEEL_LEFT|WheelLeft
+KEY_WHEEL_RIGHT|WheelRight
+KEY_ADDDEL|Add/Del
+KEY_PLUS100|Plus100
+KEY_AD|AD
+KEY_LINK|Link
+KEY_TURBO|Turbo
+KEY_CONVERGENCE|Convergence
+KEY_DEVICE_CONNECT|DeviceConnect
+KEY_11|Key11
+KEY_12|Key12
+KEY_FACTORY|KeyFactory
+KEY_3SPEED|Key3SPEED
+KEY_RSURF|KeyRSURF
+KEY_FF_|FF_
+KEY_REWIND_|REWIND_
+KEY_ANGLE|Angle
+KEY_RESERVED1|Reserved1
+KEY_PROGRAM|Program
+KEY_BOOKMARK|Bookmark
+KEY_PRINT|Print
+KEY_CLEAR|Clear
+KEY_VCHIP|VChip
+KEY_REPEAT|Repeat
+KEY_DOOR|Door
+KEY_OPEN|Open
+KEY_DMA|DMA
+KEY_MTS|MTS
+KEY_DNIe|DNIe
+KEY_SRS|SRS
+KEY_CONVERT_AUDIO_MAINSUB|ConvertAudioMain/Sub
+KEY_MDC|MDC
+KEY_SEFFECT|SoundEffect
+KEY_PERPECT_FOCUS|PERPECTFocus
+KEY_CALLER_ID|CallerID
+KEY_SCALE|Scale
+KEY_MAGIC_BRIGHT|MagicBright
+KEY_W_LINK|WLink
+KEY_DTV_LINK|DTVLink
+KEY_APP_LIST|ApplicationList
+KEY_BACK_MHP|BackMHP
+KEY_ALT_MHP|AlternateMHP
+KEY_DNSe|DNSe
+KEY_RSS|RSS
+KEY_ENTERTAINMENT|Entertainment
+KEY_ID_INPUT|IDInput
+KEY_ID_SETUP|IDSetup
+KEY_ANYVIEW|AnyView
+KEY_MS|MS
+KEY_MORE|
+KEY_MIC|
+KEY_NINE_SEPERATE|
+KEY_AUTO_FORMAT|AutoFormat
+KEY_DNET|DNET
+KEY_MINUS|Minus
+
+____________
+
+#### Auto Arc Keys
+
+Key|Description
+---|-----------
+KEY_AUTO_ARC_C_FORCE_AGING|
+KEY_AUTO_ARC_CAPTION_ENG|
+KEY_AUTO_ARC_USBJACK_INSPECT|
+KEY_AUTO_ARC_RESET|
+KEY_AUTO_ARC_LNA_ON|
+KEY_AUTO_ARC_LNA_OFF|
+KEY_AUTO_ARC_ANYNET_MODE_OK|
+KEY_AUTO_ARC_ANYNET_AUTO_START|
+KEY_AUTO_ARC_CAPTION_ON|
+KEY_AUTO_ARC_CAPTION_OFF|
+KEY_AUTO_ARC_PIP_DOUBLE|
+KEY_AUTO_ARC_PIP_LARGE|
+KEY_AUTO_ARC_PIP_LEFT_TOP|
+KEY_AUTO_ARC_PIP_RIGHT_TOP|
+KEY_AUTO_ARC_PIP_LEFT_BOTTOM|
+KEY_AUTO_ARC_PIP_CH_CHANGE|
+KEY_AUTO_ARC_AUTOCOLOR_SUCCESS|
+KEY_AUTO_ARC_AUTOCOLOR_FAIL|
+KEY_AUTO_ARC_JACK_IDENT|
+KEY_AUTO_ARC_CAPTION_KOR|
+KEY_AUTO_ARC_ANTENNA_AIR|
+KEY_AUTO_ARC_ANTENNA_CABLE|
+KEY_AUTO_ARC_ANTENNA_SATELLITE|
+
+____________
+
+#### Panel Keys
+
+Key|Description
+---|-----------
+KEY_PANNEL_POWER|
+KEY_PANNEL_CHUP|
+KEY_PANNEL_VOLUP|
+KEY_PANNEL_VOLDOW|
+KEY_PANNEL_ENTER|
+KEY_PANNEL_MENU|
+KEY_PANNEL_SOURCE|
+KEY_PANNEL_ENTER|
+
+____________
+
+#### Extended Keys
+
+Key|Description
+---|-----------
+KEY_EXT1|
+KEY_EXT2|
+KEY_EXT3|
+KEY_EXT4|
+KEY_EXT5|
+KEY_EXT6|
+KEY_EXT7|
+KEY_EXT8|
+KEY_EXT11|
+KEY_EXT12|
+KEY_EXT13|
+KEY_EXT16|
+KEY_EXT17|
+KEY_EXT18|
+KEY_EXT19|
+KEY_EXT20|
+KEY_EXT21|
+KEY_EXT22|
+KEY_EXT23|
+KEY_EXT24|
+KEY_EXT25|
+KEY_EXT26|
+KEY_EXT27|
+KEY_EXT28|
+KEY_EXT29|
+KEY_EXT30|
+KEY_EXT31|
+KEY_EXT32|
+KEY_EXT33|
+KEY_EXT34|
+KEY_EXT35|
+KEY_EXT36|
+KEY_EXT37|
+KEY_EXT38|
+KEY_EXT39|
+KEY_EXT40|
+KEY_EXT41|
+
+Some codes are different on the 2016+ TVs. For example, `KEY_POWEROFF` is `KEY_POWER` on the newer TVs.
+
+The code list has been extracted from: &lt;https://github.com/kdschlosser/samsungctl&gt; and &lt;https://github.com/jaruba/ha-samsungtv-tizen/blob/master/Key_codes.md&gt;
+{% enddetails %}
+
+**Example to send sequence of commands:**
+
+```yaml
+action: remote.send_command
+target:
+  device_id: 72953f9b4c9863e28ddd52c87dcebe05
+data:
+  command:
+    - KEY_MENU
+    - KEY_RIGHT
+    - KEY_UP
+    - KEY_UP
+    - KEY_ENTER
+
+```
+
+## Known limitations
+
+### Subnet/VLAN restrictions
+
+Samsung Smart TVs do not allow WebSocket connections across different subnets or VLANs. If your TV is not on the same subnet as Home Assistant, the integration will fail to establish a connection. It may be possible to bypass this issue by using IP masquerading or a proxy.
+
+### H and J models
+
+Some televisions from the H and J series use an encrypted protocol and require manual pairing with the TV. This is automatically detected when attempting to send commands using the WebSocket connection, and will trigger the corresponding authentication flow.
+
+## Troubleshooting
+
+### Samsung TV keeps asking for permission
+
+The default setting on newer televisions is to ask for permission on every connection attempt.
+
+#### Resolution
+
+1. On your TV, navigate to **Device connection manager** &gt; **Access notification**.
+2. Change the setting to **First time only**.
+3. In **Device connection manager** &gt; **Device list**, clean up any previous connection attempts from Home Assistant.
+
+After making these changes, the TV should no longer ask for permission on each connection.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Samsung Smart TV.</p><p>The <strong>encrypted pairing</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reauth confirm encrypted</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>name</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>media player</li><li>remote</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/samsungtv/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/samsungtv</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/samsungtv</code></dd></dl></section><p><a href="../../integrations/samsungtv/">Return to the Samsung Smart TV guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

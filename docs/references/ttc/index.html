@@ -1,1 +1,642 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TTC transit reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:138" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ttc/">TTC transit guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>TTC transit</h1><p></p><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for TTC transit.</p><p>The <strong>routes</strong> configuration step lists <code>routes</code>, <code>stations</code>.</p><p>The <strong>stops</strong> configuration step lists <code>stops</code>.</p><p>The <strong>user</strong> configuration step lists <code>watch_alerts</code>, <code>watch_departures</code>, <code>watch_lifts</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get departures</li><li>refresh</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/integrations/ttc</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ttc</code></dd></dl></section><p><a href="../../integrations/ttc/">Return to the TTC transit guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TTC transit reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:138" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ttc/">TTC transit guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>TTC transit</h1><p></p><div class="reader-body"><h2>TTC transit</h2>
+<p>Reads the Toronto Transit Commission's public information and shows current delays, next
+departures, elevators and escalators out of service, and vehicles near a stop. It adds entities,
+automation triggers and conditions, a page, eight dashboard cards and a Transit dashboard.</p>
+<blockquote>
+<p><strong>State.</strong> The integration is written and its tests pass against saved public answers. The
+page, the cards, the dashboard and the automation editors are written and type-checked, but
+<strong>nothing has been seen in a browser or in a real build yet</strong>, and nothing has run against the
+live feeds beyond a handful of requests made to learn their shape.</p>
+</blockquote>
+<p>Contains information licensed under the Open Government Licence - Toronto. Every entity carries
+this attribution, and the page and cards show it.</p>
+<h2>What it reads</h2>
+<table>
+<thead>
+<tr>
+  <th>Feed</th>
+  <th>Address</th>
+  <th>Used for</th>
+  <th>How often</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Live service alerts, the feed behind the agency's own alerts page</td>
+  <td><code>https://alerts.ttc.ca/api/alerts/live-alerts</code></td>
+  <td>Route alerts, elevator and escalator outages, general alerts</td>
+  <td>Once a minute for alerts. Every 3 minutes for elevators and escalators, reusing a recent alerts answer so the feed is asked once</td>
+</tr>
+<tr>
+  <td>Next vehicle arrival predictions</td>
+  <td><code>https://retro.umoiq.com/service/publicJSONFeed</code> with <code>command=predictions&amp;a=ttc&amp;stopId=&lt;stop&gt;</code></td>
+  <td>Next departures at the chosen stops</td>
+  <td>Every 45 seconds, one request per chosen stop</td>
+</tr>
+<tr>
+  <td>The same service, <code>command=vehicleLocations&amp;a=ttc&amp;r=&lt;route&gt;</code></td>
+  <td></td>
+  <td>Vehicles near a stop</td>
+  <td>Every 25 seconds, <strong>only while a card or the page is showing them</strong>. Never when nobody is looking</td>
+</tr>
+<tr>
+  <td>The same service, <code>command=routeList</code> and <code>command=routeConfig</code></td>
+  <td></td>
+  <td>Route names, the stops of a route, and stop positions</td>
+  <td>Route names once a day. Stops while choosing them. Stop positions once per route while vehicles are shown</td>
+</tr>
+</tbody>
+</table>
+<p>No key and no account are needed.</p>
+<h2>What is sent</h2>
+<p>Only the chosen stop numbers and route numbers, and the agency code <code>ttc</code>. Nothing about the home
+is sent: no location, no address, no identifier. The requests name the project in their user agent
+and carry no contact details. No request is made at all when nothing is being watched.</p>
+<h2>Polite polling</h2>
+<ul>
+<li>Each request has a 20 second timeout.</li>
+<li>After an error the wait doubles each time, up to 15 minutes. A refusal (403, 429 or 503) waits
+at least as long as the feed asks.</li>
+<li>The next attempt time and the last error are shown on the "information is fresh" entities and on
+the page.</li>
+</ul>
+<h2>Old information</h2>
+<p>Every figure carries the time it was read (<code>read_at</code>). When the information is older than its
+limit, the entities become unavailable rather than showing old figures as current. The limits are
+10 minutes for alerts, 20 minutes for elevators and escalators, 3 minutes for departures and 2
+minutes for vehicle positions. The page and cards dim old figures and say since when the TTC has
+not answered.</p>
+<h2>Setting it up</h2>
+<p>Three steps:</p>
+<ol>
+<li><strong>What to watch.</strong> Choose any of service alerts, elevators and escalators, and next departures.</li>
+<li><strong>Routes and stations.</strong> Subway lines, buses and streetcars are chosen from the real route list
+by search. If the list cannot be read, the subway lines are still offered. Stations are chosen
+from a list of rapid transit stations; a station that is not listed can be typed.</li>
+<li><strong>Stops for next departures.</strong> Choose from the stops of the chosen bus and streetcar routes, or
+type the number from the stop sign. Each stop is checked against the predictions service before
+it is accepted.</li>
+</ol>
+<p>Options change routes, stations and stops. Reconfigure changes what is watched. Only one entry can
+exist.</p>
+<h2>What the agency does not offer</h2>
+<ul>
+<li><strong>Next train times for the subway.</strong> The predictions service covers buses and streetcars only.
+Asking it for a subway route returns an error, and no public feed without a key for subway next
+train times was found on the agency's developer and open data pages. Typing a subway station as a
+stop explains this rather than failing silently.</li>
+<li><strong>How many elevators a station has.</strong> The alerts feed lists only the elevators that are out, so
+the step-free card shows the elevators that are out and the place each one cuts off, not "3 of 4
+working".</li>
+<li><strong>When an outage ends.</strong> The alerts feed has no estimate for elevators and escalators, so none is
+shown.</li>
+</ul>
+<h2>Entities</h2>
+<table>
+<thead>
+<tr>
+  <th>Entity</th>
+  <th>Kind</th>
+  <th>One per</th>
+  <th>State and attributes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Status</td>
+  <td>Sensor, enum</td>
+  <td>Route</td>
+  <td><code>regular</code>, <code>slow</code>, <code>delay</code>, <code>detour</code>, <code>reduced_service</code>, <code>no_service</code>. The alerts in effect, with the agency's own text, are in <code>alerts</code></td>
+</tr>
+<tr>
+  <td>Problem</td>
+  <td>Binary sensor, problem</td>
+  <td>Route</td>
+  <td>On when the status is not regular</td>
+</tr>
+<tr>
+  <td>Next departure, Second departure, Third departure</td>
+  <td>Sensor, timestamp</td>
+  <td>Stop</td>
+  <td>The predicted time; route, direction, vehicle and <code>predicted: true</code> in the attributes</td>
+</tr>
+<tr>
+  <td>Minutes to next departure</td>
+  <td>Sensor, duration</td>
+  <td>Stop</td>
+  <td>Whole minutes until the next predicted departure</td>
+</tr>
+<tr>
+  <td>Elevators out, Escalators out</td>
+  <td>Sensor</td>
+  <td>Station</td>
+  <td>A count; the outages with the agency's text in <code>outages</code></td>
+</tr>
+<tr>
+  <td>Step-free</td>
+  <td>Binary sensor</td>
+  <td>Station</td>
+  <td>On when no elevator is reported out. The feed cannot say whether a station is accessible at all</td>
+</tr>
+<tr>
+  <td>Alerts</td>
+  <td>Sensor</td>
+  <td>Network</td>
+  <td>The number of alerts in effect, with counts by kind</td>
+</tr>
+<tr>
+  <td>New alert</td>
+  <td>Event</td>
+  <td>Network</td>
+  <td>Fires once for each alert that was not there before. Event types: <code>route</code>, <code>elevator</code>, <code>escalator</code>, <code>general</code></td>
+</tr>
+<tr>
+  <td>Service alerts are fresh, Elevator information is fresh, Departures are fresh</td>
+  <td>Binary sensor, diagnostic</td>
+  <td>Network</td>
+  <td>On while that feed's information is recent enough. Last error, failures and next attempt are in the attributes</td>
+</tr>
+</tbody>
+</table>
+<p>There is one device per route, per stop, per station and for the network. Each device links to the
+TTC transit page.</p>
+<h2>Automation triggers</h2>
+<p>Each trigger compares an answer with the previous one, so it fires <strong>once for each thing that
+happened</strong>, not on every refresh. What is already true when the automation starts does not fire.</p>
+<table>
+<thead>
+<tr>
+  <th>Trigger</th>
+  <th>Fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Route gets a delay (<code>ttc.route_delayed</code>)</td>
+  <td>When a route in regular service gets any problem. For one route, or for every chosen route</td>
+</tr>
+<tr>
+  <td>Route is back to regular service (<code>ttc.route_resumed</code>)</td>
+  <td>When a route with a problem is back to regular</td>
+</tr>
+<tr>
+  <td>Next departure is within (<code>ttc.departure_within</code>)</td>
+  <td>Once for each departure, when its predicted time first drops to the chosen number of minutes or less</td>
+</tr>
+<tr>
+  <td>Time to leave (<code>ttc.time_to_leave</code>)</td>
+  <td>Once for each departure, when it is time to walk to the stop; <code>leave_by</code> is in the trigger data</td>
+</tr>
+<tr>
+  <td>Elevator or escalator goes out or comes back (<code>ttc.lift_changed</code>)</td>
+  <td>Once for each outage that starts, ends, or both, at one station or any</td>
+</tr>
+<tr>
+  <td>New alert is posted (<code>ttc.new_alert</code>)</td>
+  <td>Once for each new alert, optionally of one kind</td>
+</tr>
+</tbody>
+</table>
+<p>Conditions: <strong>Route has a problem</strong> (<code>ttc.route_has_problem</code>) and <strong>Station is step-free</strong>
+(<code>ttc.station_is_step_free</code>). Old or missing information does not pass either condition.</p>
+<p>The automation editor has tailored controls for each trigger, condition and action.</p>
+<h2>Actions</h2>
+<ul>
+<li><code>ttc.refresh</code> reads the feeds again now.</li>
+<li><code>ttc.get_departures</code> returns the predicted departures at any stop number, read now. It accepts an
+optional route and limit.</li>
+</ul>
+<h2>The page</h2>
+<p>Settings, TTC transit. It has four sections: Now, Alerts, Lifts and Stops, with search in the top
+bar. All times use the 24-hour clock. The "Add the transit dashboard" button creates a dashboard
+that uses the Transit dashboard strategy.</p>
+<h2>Dashboard cards</h2>
+<table>
+<thead>
+<tr>
+  <th>Card</th>
+  <th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ttc-alert-banner</code></td>
+  <td>The most serious alert on your routes, as a banner</td>
+</tr>
+<tr>
+  <td><code>ttc-subway</code></td>
+  <td>The status of each chosen subway line</td>
+</tr>
+<tr>
+  <td><code>ttc-departures</code></td>
+  <td>Predicted departures at a stop, by route and direction</td>
+</tr>
+<tr>
+  <td><code>ttc-leave-by</code></td>
+  <td>When to leave to catch the next departure, with a walking time</td>
+</tr>
+<tr>
+  <td><code>ttc-route-alerts</code></td>
+  <td>Alerts on your routes, in the agency's own words</td>
+</tr>
+<tr>
+  <td><code>ttc-step-free</code></td>
+  <td>Elevators and escalators out at your stations, and "Not step-free to ..." when the agency's text names the place an elevator cuts off</td>
+</tr>
+<tr>
+  <td><code>ttc-vehicles</code></td>
+  <td>Vehicles of the stop's routes within 2.5 km, on a schematic strip, with "Positions as reported N seconds ago". Tapping opens the app's own map with the stop and the vehicles. The card asks for positions only while it is showing</td>
+</tr>
+<tr>
+  <td><code>ttc-line-history</code></td>
+  <td>A route's last 24 hours, drawn from the recorded status sensor, with the time spent in each status</td>
+</tr>
+</tbody>
+</table>
+<p>Each card has a visual editor. The <strong>Transit</strong> dashboard, offered in the new dashboard dialog,
+builds these cards each time it opens from the routes, stops and stations the integration watches,
+so it follows changes made in the integration's options.</p>
+<h2>Verification</h2>
+<ul>
+<li>Core tests in <code>core/tests/components/ttc/</code>. They use saved public answers and never contact the
+network. They cover the setup flow, the coordinators (timeouts, server errors, refusals,
+malformed answers, going stale and recovering), every entity kind, triggers firing once,
+conditions, actions, page data, vehicle positions only while subscribed, and diagnostics.</li>
+<li>Not yet verified: anything in a browser, the cards, the dashboard, the device page link, and
+behaviour against the live feeds over time.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/transit/ttc.md</code></p><details><summary>Original Markdown source</summary><pre># TTC transit
+
+Reads the Toronto Transit Commission&#x27;s public information and shows current delays, next
+departures, elevators and escalators out of service, and vehicles near a stop. It adds entities,
+automation triggers and conditions, a page, eight dashboard cards and a Transit dashboard.
+
+&gt; **State.** The integration is written and its tests pass against saved public answers. The
+&gt; page, the cards, the dashboard and the automation editors are written and type-checked, but
+&gt; **nothing has been seen in a browser or in a real build yet**, and nothing has run against the
+&gt; live feeds beyond a handful of requests made to learn their shape.
+
+Contains information licensed under the Open Government Licence - Toronto. Every entity carries
+this attribution, and the page and cards show it.
+
+## What it reads
+
+| Feed | Address | Used for | How often |
+| --- | --- | --- | --- |
+| Live service alerts, the feed behind the agency&#x27;s own alerts page | `https://alerts.ttc.ca/api/alerts/live-alerts` | Route alerts, elevator and escalator outages, general alerts | Once a minute for alerts. Every 3 minutes for elevators and escalators, reusing a recent alerts answer so the feed is asked once |
+| Next vehicle arrival predictions | `https://retro.umoiq.com/service/publicJSONFeed` with `command=predictions&amp;a=ttc&amp;stopId=&lt;stop&gt;` | Next departures at the chosen stops | Every 45 seconds, one request per chosen stop |
+| The same service, `command=vehicleLocations&amp;a=ttc&amp;r=&lt;route&gt;` | | Vehicles near a stop | Every 25 seconds, **only while a card or the page is showing them**. Never when nobody is looking |
+| The same service, `command=routeList` and `command=routeConfig` | | Route names, the stops of a route, and stop positions | Route names once a day. Stops while choosing them. Stop positions once per route while vehicles are shown |
+
+No key and no account are needed.
+
+## What is sent
+
+Only the chosen stop numbers and route numbers, and the agency code `ttc`. Nothing about the home
+is sent: no location, no address, no identifier. The requests name the project in their user agent
+and carry no contact details. No request is made at all when nothing is being watched.
+
+## Polite polling
+
+- Each request has a 20 second timeout.
+- After an error the wait doubles each time, up to 15 minutes. A refusal (403, 429 or 503) waits
+  at least as long as the feed asks.
+- The next attempt time and the last error are shown on the &quot;information is fresh&quot; entities and on
+  the page.
+
+## Old information
+
+Every figure carries the time it was read (`read_at`). When the information is older than its
+limit, the entities become unavailable rather than showing old figures as current. The limits are
+10 minutes for alerts, 20 minutes for elevators and escalators, 3 minutes for departures and 2
+minutes for vehicle positions. The page and cards dim old figures and say since when the TTC has
+not answered.
+
+## Setting it up
+
+Three steps:
+
+1. **What to watch.** Choose any of service alerts, elevators and escalators, and next departures.
+2. **Routes and stations.** Subway lines, buses and streetcars are chosen from the real route list
+   by search. If the list cannot be read, the subway lines are still offered. Stations are chosen
+   from a list of rapid transit stations; a station that is not listed can be typed.
+3. **Stops for next departures.** Choose from the stops of the chosen bus and streetcar routes, or
+   type the number from the stop sign. Each stop is checked against the predictions service before
+   it is accepted.
+
+Options change routes, stations and stops. Reconfigure changes what is watched. Only one entry can
+exist.
+
+## What the agency does not offer
+
+- **Next train times for the subway.** The predictions service covers buses and streetcars only.
+  Asking it for a subway route returns an error, and no public feed without a key for subway next
+  train times was found on the agency&#x27;s developer and open data pages. Typing a subway station as a
+  stop explains this rather than failing silently.
+- **How many elevators a station has.** The alerts feed lists only the elevators that are out, so
+  the step-free card shows the elevators that are out and the place each one cuts off, not &quot;3 of 4
+  working&quot;.
+- **When an outage ends.** The alerts feed has no estimate for elevators and escalators, so none is
+  shown.
+
+## Entities
+
+| Entity | Kind | One per | State and attributes |
+| --- | --- | --- | --- |
+| Status | Sensor, enum | Route | `regular`, `slow`, `delay`, `detour`, `reduced_service`, `no_service`. The alerts in effect, with the agency&#x27;s own text, are in `alerts` |
+| Problem | Binary sensor, problem | Route | On when the status is not regular |
+| Next departure, Second departure, Third departure | Sensor, timestamp | Stop | The predicted time; route, direction, vehicle and `predicted: true` in the attributes |
+| Minutes to next departure | Sensor, duration | Stop | Whole minutes until the next predicted departure |
+| Elevators out, Escalators out | Sensor | Station | A count; the outages with the agency&#x27;s text in `outages` |
+| Step-free | Binary sensor | Station | On when no elevator is reported out. The feed cannot say whether a station is accessible at all |
+| Alerts | Sensor | Network | The number of alerts in effect, with counts by kind |
+| New alert | Event | Network | Fires once for each alert that was not there before. Event types: `route`, `elevator`, `escalator`, `general` |
+| Service alerts are fresh, Elevator information is fresh, Departures are fresh | Binary sensor, diagnostic | Network | On while that feed&#x27;s information is recent enough. Last error, failures and next attempt are in the attributes |
+
+There is one device per route, per stop, per station and for the network. Each device links to the
+TTC transit page.
+
+## Automation triggers
+
+Each trigger compares an answer with the previous one, so it fires **once for each thing that
+happened**, not on every refresh. What is already true when the automation starts does not fire.
+
+| Trigger | Fires |
+| --- | --- |
+| Route gets a delay (`ttc.route_delayed`) | When a route in regular service gets any problem. For one route, or for every chosen route |
+| Route is back to regular service (`ttc.route_resumed`) | When a route with a problem is back to regular |
+| Next departure is within (`ttc.departure_within`) | Once for each departure, when its predicted time first drops to the chosen number of minutes or less |
+| Time to leave (`ttc.time_to_leave`) | Once for each departure, when it is time to walk to the stop; `leave_by` is in the trigger data |
+| Elevator or escalator goes out or comes back (`ttc.lift_changed`) | Once for each outage that starts, ends, or both, at one station or any |
+| New alert is posted (`ttc.new_alert`) | Once for each new alert, optionally of one kind |
+
+Conditions: **Route has a problem** (`ttc.route_has_problem`) and **Station is step-free**
+(`ttc.station_is_step_free`). Old or missing information does not pass either condition.
+
+The automation editor has tailored controls for each trigger, condition and action.
+
+## Actions
+
+- `ttc.refresh` reads the feeds again now.
+- `ttc.get_departures` returns the predicted departures at any stop number, read now. It accepts an
+  optional route and limit.
+
+## The page
+
+Settings, TTC transit. It has four sections: Now, Alerts, Lifts and Stops, with search in the top
+bar. All times use the 24-hour clock. The &quot;Add the transit dashboard&quot; button creates a dashboard
+that uses the Transit dashboard strategy.
+
+## Dashboard cards
+
+| Card | Shows |
+| --- | --- |
+| `ttc-alert-banner` | The most serious alert on your routes, as a banner |
+| `ttc-subway` | The status of each chosen subway line |
+| `ttc-departures` | Predicted departures at a stop, by route and direction |
+| `ttc-leave-by` | When to leave to catch the next departure, with a walking time |
+| `ttc-route-alerts` | Alerts on your routes, in the agency&#x27;s own words |
+| `ttc-step-free` | Elevators and escalators out at your stations, and &quot;Not step-free to ...&quot; when the agency&#x27;s text names the place an elevator cuts off |
+| `ttc-vehicles` | Vehicles of the stop&#x27;s routes within 2.5 km, on a schematic strip, with &quot;Positions as reported N seconds ago&quot;. Tapping opens the app&#x27;s own map with the stop and the vehicles. The card asks for positions only while it is showing |
+| `ttc-line-history` | A route&#x27;s last 24 hours, drawn from the recorded status sensor, with the time spent in each status |
+
+Each card has a visual editor. The **Transit** dashboard, offered in the new dashboard dialog,
+builds these cards each time it opens from the routes, stops and stations the integration watches,
+so it follows changes made in the integration&#x27;s options.
+
+## Verification
+
+- Core tests in `core/tests/components/ttc/`. They use saved public answers and never contact the
+  network. They cover the setup flow, the coordinators (timeouts, server errors, refusals,
+  malformed answers, going stale and recovering), every entity kind, triggers firing once,
+  conditions, actions, page data, vehicle positions only while subscribed, and diagnostics.
+- Not yet verified: anything in a browser, the cards, the dashboard, the device page link, and
+  behaviour against the live feeds over time.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for TTC transit.</p><p>The <strong>routes</strong> configuration step lists <code>routes</code>, <code>stations</code>.</p><p>The <strong>stops</strong> configuration step lists <code>stops</code>.</p><p>The <strong>user</strong> configuration step lists <code>watch_alerts</code>, <code>watch_departures</code>, <code>watch_lifts</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get departures</li><li>refresh</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/integrations/ttc</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ttc</code></dd></dl></section><p><a href="../../integrations/ttc/">Return to the TTC transit guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,1034 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Duco reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:304" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/duco/">Duco guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Duco</h1><p>Instructions on how to integrate Duco ventilation with Home Assistant.</p><section><h2>Overview</h2><p>The Duco integration allows you to monitor and control Duco demand-controlled ventilation (DCV) systems from Home Assistant. Duco produces ventilation boxes for residential buildings that regulate air quality based on CO₂ and humidity sensors. This integration communicates locally with the Duco box over your home network, requiring no cloud connection.</p></section><section><h2>Supported devices</h2><p>This integration communicates with the DUCO Connectivity Board (article 0000-4810) via its local REST API over Wi-Fi or Ethernet.</p></section><section><h2>Unsupported node types</h2><p>The following node types can be discovered but are not currently surfaced as entities:</p></section><section><h2>Supported functionality</h2><p>Each supported node appears as a separate device in Home Assistant, connected to the main ventilation box. The sections below describe which entities Home Assistant creates for those supported node types.</p></section><section><h2>Fan</h2><p>The fan entity on the main ventilation box lets you control the ventilation speed. You can set the speed as a percentage or switch back to automatic mode.</p></section><section><h2>Select</h2><p>The ventilation state select is available for the main ventilation box (BOX) and for supported valve or extract nodes when that node advertises selectable ventilation states. It lets you choose the Duco ventilation state codes exposed by your system, such as AUTO, CNT1, CNT2, CNT3, MAN1, MAN2, MAN3, or EMPT.</p></section><section><h2>Bypass supply target temperatures</h2><p>Some Duco systems expose bypass supply target temperatures. When available, Home Assistant creates a number entity for each zone reported by your Duco system. You can use these entities to view and set the target temperature in your configured temperature unit. The available range and increment come from your Duco system.</p></section><section><h2>Switch</h2><p>The Identify switch lets you activate or deactivate identification for a specific Duco node. Home Assistant creates this switch only for nodes that advertise an on/off identification action through the Duco API.</p></section><section><h2>Sensors</h2><p>The following sensor entities are created per node, depending on the node type:</p></section><section><h2>Air temperatures</h2><p>Available for the main ventilation box (BOX) when the Duco system exposes the values. These sensors show the following temperatures in degrees Celsius:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Duco.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Use cases</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Reconfiguring the integration</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/duco/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/duco</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/duco</code></dd></dl></section><p><a href="../../integrations/duco/">Return to the Duco guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Duco reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:304" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/duco/">Duco guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Duco</h1><p>Instructions on how to integrate Duco ventilation with Home Assistant.</p><div class="reader-body"><p>The <strong>Duco</strong> integration allows you to monitor and control <a>Duco</a> demand-controlled ventilation (DCV) systems from Home Assistant. Duco produces ventilation boxes for residential buildings that regulate air quality based on CO₂ and humidity sensors. This integration communicates locally with the Duco box over your home network, requiring no cloud connection.</p>
+<h2>Supported devices</h2>
+<p>This integration communicates with the <strong>DUCO Connectivity Board</strong> (article 0000-4810) via its local REST API over Wi-Fi or Ethernet.</p>
+<p>To set up the integration, your Duco system must expose the DUCO Connectivity Board API with public API version 2.1 or newer.</p>
+<p>Hardware revisions:</p>
+<ul>
+<li><strong>DUCO Connectivity Board 1.0</strong>: Supported</li>
+<li><strong>DUCO Connectivity Board 2.0</strong>: Supported</li>
+</ul>
+<p>Validated DucoBox models:</p>
+<ul>
+<li>DucoBox Silent</li>
+<li>DucoBox Focus</li>
+<li>DucoBox Energy</li>
+</ul>
+<p>Older Duco systems using the Communication Board V1 are not supported because they do not expose the required API surface.</p>
+<p>Other Duco systems that expose public API version 2.1 or newer can also be set up. The current integration has been validated on the models above for the base functionality, but some model-specific sensors are still not exposed in Home Assistant, especially on DucoBox Energy systems.</p>
+<h3>Supported node types</h3>
+<p>The following node types are supported:</p>
+<ul>
+<li><strong>BOX</strong>: The main ventilation box; provides fan control, ventilation state select, ventilation state, target flow level, state end time, air temperatures, and Wi-Fi signal strength. Models that expose a filter timer also provide a filter remaining sensor. Models that expose bypass supply targets provide temperature controls for each zone reported by the system.</li>
+<li><strong>BSCO2</strong>: CO₂ sensor module wired directly to the DucoBox PCB; provides CO₂ concentration and CO₂ air quality index.</li>
+<li><strong>UCCO2</strong>: Wall-mounted CO₂ sensor unit; provides CO₂ concentration and CO₂ air quality index.</li>
+<li><strong>BSRH</strong>: Humidity sensor module installed in the duct inlet of the DucoBox, wired directly to the PCB via cable; provides relative humidity and humidity air quality index.</li>
+<li><strong>UCRH</strong>: Wireless humidity sensor module; provides relative humidity and humidity air quality index.</li>
+<li><strong>VLV</strong>, <strong>VLVRH</strong>, <strong>VLVVOC</strong>, <strong>VLVCO2</strong>, and <strong>VLVCO2RH</strong>: Valve actuator families. These nodes expose ventilation state, target flow level, state end time, and, when the firmware advertises it for that node, a ventilation state select. The RH and CO₂ variants also expose their supported sensor entities.</li>
+<li><strong>EAV</strong>, <strong>EAVRH</strong>, <strong>EAVVOC</strong>, and <strong>EAVCO2</strong>: Extract air valve families. These nodes expose the same ventilation-related entities as the supported valve actuator families. The RH and CO₂ variants also expose their supported sensor entities.</li>
+</ul>
+<h3>Unsupported node types</h3>
+<p>The following node types can be discovered but are not currently surfaced as entities:</p>
+<ul>
+<li><strong>UC</strong>: Universal control unit (no sensor data exposed)</li>
+<li><strong>UCBAT</strong>: Battery-powered sensor module</li>
+</ul>
+<p>Home Assistant ignores unsupported node types until support is added. All supported nodes continue to work normally.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Duco ventilation box with a DUCO Connectivity Board connected to your local network.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Duco</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Duco</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: "The IP address or hostname of your DUCO Connectivity Board on the local network, for example `192.168.1.10`. Only needed when setting up the integration manually."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<p>Each supported node appears as a separate device in Home Assistant, connected to the main ventilation box. The sections below describe which entities Home Assistant creates for those supported node types.</p>
+<h3>Fan</h3>
+<p>The fan entity on the main ventilation box lets you control the ventilation speed. You can set the speed as a percentage or switch back to automatic mode.</p>
+<p>Use the fan when you want to work with Home Assistant's percentage-based fan controls. If you want to choose a specific Duco ventilation state code instead, use the ventilation state select on the node that exposes it.</p>
+<p>The fan is always on. Turning off the fan is not supported.</p>
+<p>Setting a speed percentage to 33%, 66%, or 100% activates a continuous override with no time limit. Setting it to 0% clears the override and hands control back to Duco:</p>
+<ul>
+<li><strong>Speed 0%</strong>: Clears the override and returns to automatic mode.</li>
+<li><strong>Speed 33%</strong>: Continuous low speed override.</li>
+<li><strong>Speed 66%</strong>: Continuous medium speed override.</li>
+<li><strong>Speed 100%</strong>: Continuous high speed override.</li>
+<li><strong>Auto preset</strong>: Same as speed 0%. Clears the override and returns to automatic mode.</li>
+</ul>
+<p>When a connected wall unit (such as a UCCO2) triggers a timed speed override on the Duco box, Home Assistant reflects the current ventilation level as a percentage. These timed states cannot be set from Home Assistant; writing a speed always uses the permanent manual mode (a continuous override with no time limit).</p>
+<p><strong>Note</strong></p>
+<p>The percentages 33%, 66%, and 100% are abstract speed levels used in the Home Assistant fan UI and do not match the actual airflow percentages configured in the Duco firmware. To see the real airflow target, use the <strong>Target flow level</strong> sensor.</p>
+<h3>Select</h3>
+<p>The ventilation state select is available for the main ventilation box (BOX) and for supported valve or extract nodes when that node advertises selectable ventilation states. It lets you choose the Duco ventilation state codes exposed by your system, such as <code>AUTO</code>, <code>CNT1</code>, <code>CNT2</code>, <code>CNT3</code>, <code>MAN1</code>, <code>MAN2</code>, <code>MAN3</code>, or <code>EMPT</code>.</p>
+<p>Home Assistant only shows the options advertised by your Duco system for that specific node, so the available choices can vary by model, node type, or firmware. After you change the option, Home Assistant refreshes the state from the box and shows the state the box reports back.</p>
+<h3>Number</h3>
+<h4>Bypass supply target temperatures</h4>
+<p>Some Duco systems expose bypass supply target temperatures. When available, Home Assistant creates a number entity for each zone reported by your Duco system. You can use these entities to view and set the target temperature in your configured temperature unit. The available range and increment come from your Duco system.</p>
+<p>If your Duco system does not expose a target for a zone, Home Assistant does not create the related number entity.</p>
+<h3>Switch</h3>
+<p>The <strong>Identify</strong> switch lets you activate or deactivate identification for a specific Duco node. Home Assistant creates this switch only for nodes that advertise an on/off identification action through the Duco API.</p>
+<h3>Sensors</h3>
+<p>The following sensor entities are created per node, depending on the node type:</p>
+<h4>Air temperatures</h4>
+<p>Available for the main ventilation box (BOX) when the Duco system exposes the values. These sensors show the following temperatures in degrees Celsius:</p>
+<ul>
+<li><strong>Outdoor air temperature</strong>: Air entering the ventilation box from outdoors.</li>
+<li><strong>Supply air temperature</strong>: Air supplied from the ventilation box to your home.</li>
+<li><strong>Extract air temperature</strong>: Air extracted from your home into the ventilation box.</li>
+<li><strong>Exhaust air temperature</strong>: Air leaving the ventilation box to outdoors.</li>
+</ul>
+<h4>Target flow level</h4>
+<p>Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the actual airflow target as reported by the Duco box, as a percentage (0–100%). This value reflects the real airflow configured in the Duco firmware. On the main ventilation box, it can differ from the abstract speed levels (33%, 66%, or 100%) shown in the fan entity. For example, if your Duco system is configured with manual speed levels of 15%, 30%, and 100%, this sensor shows those values.</p>
+<h4>Ventilation state</h4>
+<p>Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the ventilation state using the Duco state codes shown by the device and app, instead of friendly labels with fixed meanings.</p>
+<p>This sensor is read-only. To choose a specific Duco state code from Home Assistant, use the ventilation state select.</p>
+<p>Common values include:</p>
+<ul>
+<li><code>AUTO</code>: Automatic mode.</li>
+<li><code>AUT1</code>, <code>AUT2</code>, <code>AUT3</code>: Automatic mode currently running at low, medium, or high airflow.</li>
+<li><code>CNT1</code>, <code>CNT2</code>, <code>CNT3</code>: Continuous low, medium, or high speed override.</li>
+<li><code>MAN1</code>, <code>MAN2</code>, <code>MAN3</code>: Timed manual low, medium, or high speed override.</li>
+<li><code>EMPT</code>: Empty house mode.</li>
+</ul>
+<p><code>CNT</code> states are continuous overrides.</p>
+<p><code>MAN</code> states are timed overrides, but the timer duration is configured on the Duco system and is not encoded in the raw state value itself. Some systems may also report compatibility values like <code>MAN1x2</code> or <code>MAN1x3</code> for timed manual modes.</p>
+<p>To see when a timed state ends, use the <a>State end time</a> sensor.</p>
+<h4>State end time</h4>
+<p>Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the time at which the current timed ventilation state ends. When no timer is active, this sensor is unavailable.</p>
+<h4>Filter remaining</h4>
+<p>Available for Duco box models that expose a filter timer via the local API. Shows the remaining filter lifetime in days.</p>
+<p>On models that do not expose a filter timer, this sensor is not created.</p>
+<h4>CO₂ concentration</h4>
+<p>Available for CO₂ sensor modules and valve actuators with a built-in CO₂ sensor. Shows the current CO₂ concentration in parts per million (ppm).</p>
+<h4>Humidity</h4>
+<p>Available for the supported node types with a built-in humidity sensor listed in <a>Supported node types</a>. Shows the current relative humidity in percent.</p>
+<h4>CO₂ air quality index</h4>
+<p>Available for CO₂ sensor modules and valve actuators with a built-in CO₂ sensor. Shows the CO₂ air quality score as a percentage (0–100%). This entity is <a>disabled by default</a>.</p>
+<p>Indoor air quality ranges for CO₂:</p>
+<ul>
+<li>90–100%: Very good</li>
+<li>75–85%: Good</li>
+<li>50–70%: Temporarily acceptable</li>
+<li>35–45%: Poor</li>
+</ul>
+<h4>Humidity air quality index</h4>
+<p>Available for the supported node types with a built-in humidity sensor listed in <a>Supported node types</a>. Shows the humidity air quality score as a percentage (0–100%). This entity is disabled by default.</p>
+<p>Indoor air quality ranges for humidity:</p>
+<ul>
+<li>95–100%: Very good</li>
+<li>65–90%: Good</li>
+<li>35–50%: Temporarily acceptable</li>
+<li>5–20%: Poor</li>
+</ul>
+<h4>Diagnostic entities</h4>
+<p>The following diagnostic entities may be available for the main ventilation box (BOX), depending on your model and firmware:</p>
+<ul>
+<li><strong>Ventilation</strong>: Indicates whether the ventilation subsystem reports a problem.</li>
+<li><strong>Filter</strong>: Indicates whether the filter subsystem reports a problem.</li>
+<li><strong>Ventilation cooling</strong>: Indicates whether the ventilation cooling subsystem reports a problem. This entity is disabled by default.</li>
+<li><strong>Sun control</strong>: Indicates whether the sun control subsystem reports a problem. This entity is disabled by default.</li>
+<li><strong>Wi-Fi signal strength</strong>: Shows the Wi-Fi signal strength in dBm. This entity is disabled by default.</li>
+</ul>
+<p>The subsystem problem entities turn on when Duco reports <code>Error</code> or <code>Disable</code> and remain off when Duco reports <code>OK</code>.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Switch to high ventilation automatically when cooking or showering.</li>
+<li>Return to auto mode when everyone leaves home using a presence-based automation.</li>
+<li>Choose a specific Duco ventilation state from an automation or script.</li>
+<li>Monitor ventilation activity over time via the logbook.</li>
+<li>Trigger automations based on CO₂ levels or humidity reported by connected Duco modules.</li>
+</ul>
+<h2>Examples</h2>
+<p>The example entity IDs below use the default naming that Home Assistant assigns on a new Home Assistant installation. Replace them with the entity IDs from your own system.</p>
+<h3>Activate high ventilation while cooking</h3>
+<p>This automation switches the ventilation to high speed when the kitchen hood is turned on, and returns it to automatic mode five minutes after the hood is switched off.</p>
+<pre><code>- alias: "High ventilation while cooking"
+  triggers:
+    - trigger: state
+      entity_id: switch.kitchen_hood
+      to: "on"
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 100
+
+- alias: "Return to auto after cooking"
+  triggers:
+    - trigger: state
+      entity_id: switch.kitchen_hood
+      to: "off"
+      for: "00:05:00"
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 0
+</code></pre>
+<h3>Reduce ventilation when nobody is home</h3>
+<p>When the last person leaves home, the ventilation hands control back to Duco (automatic mode). When someone returns, it switches to medium speed.</p>
+<pre><code>- alias: "Ventilation auto mode on leave"
+  triggers:
+    - trigger: numeric_state
+      entity_id: zone.home
+      below: 1
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 0
+
+- alias: "Ventilation medium speed on arrive"
+  triggers:
+    - trigger: numeric_state
+      entity_id: zone.home
+      above: 0
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 66
+</code></pre>
+<h3>Boost ventilation based on CO₂</h3>
+<p>Boost a Duco fan when CO₂ rises above a chosen threshold and return it to automatic mode when CO₂ drops below a lower threshold.</p>
+<pre><code>blueprint:
+  name: Boost Duco ventilation based on CO2
+  description: Boost a Duco fan when CO2 is high and return it to automatic mode when CO2 drops again.
+  domain: automation
+  input:
+    co2_sensor:
+      name: CO2 sensor
+      selector:
+        entity:
+          filter:
+            - integration: duco
+              domain: sensor
+              device_class: carbon_dioxide
+    fan:
+      name: Duco fan
+      selector:
+        entity:
+          filter:
+            - integration: duco
+              domain: fan
+    high_threshold:
+      name: High CO2 threshold
+      default: 1000
+      selector:
+        number:
+          min: 400
+          max: 5000
+          step: 50
+          unit_of_measurement: ppm
+    low_threshold:
+      name: Low CO2 threshold
+      default: 800
+      selector:
+        number:
+          min: 400
+          max: 5000
+          step: 50
+          unit_of_measurement: ppm
+    boost_percentage:
+      name: Boost fan percentage
+      default: 100
+      selector:
+        number:
+          min: 1
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+triggers:
+  - trigger: numeric_state
+    entity_id: !input co2_sensor
+    above: !input high_threshold
+    id: boost
+  - trigger: numeric_state
+    entity_id: !input co2_sensor
+    below: !input low_threshold
+    id: auto
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: boost
+        sequence:
+          - action: fan.set_percentage
+            target:
+              entity_id: !input fan
+            data:
+              percentage: !input boost_percentage
+      - conditions:
+          - condition: trigger
+            id: auto
+        sequence:
+          - action: fan.set_percentage
+            target:
+              entity_id: !input fan
+            data:
+              percentage: 0
+</code></pre>
+<h3>Boost ventilation based on humidity</h3>
+<p>Boost a Duco fan when humidity rises above a chosen threshold and return it to automatic mode when humidity drops below a lower threshold.</p>
+<pre><code>blueprint:
+  name: Boost Duco ventilation based on humidity
+  description: Boost a Duco fan when humidity is high and return it to automatic mode when humidity drops again.
+  domain: automation
+  input:
+    humidity_sensor:
+      name: Humidity sensor
+      selector:
+        entity:
+          filter:
+            - integration: duco
+              domain: sensor
+              device_class: humidity
+    fan:
+      name: Duco fan
+      selector:
+        entity:
+          filter:
+            - integration: duco
+              domain: fan
+    high_threshold:
+      name: High humidity threshold
+      default: 70
+      selector:
+        number:
+          min: 1
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+    low_threshold:
+      name: Low humidity threshold
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+    boost_percentage:
+      name: Boost fan percentage
+      default: 66
+      selector:
+        number:
+          min: 1
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+triggers:
+  - trigger: numeric_state
+    entity_id: !input humidity_sensor
+    above: !input high_threshold
+    id: boost
+  - trigger: numeric_state
+    entity_id: !input humidity_sensor
+    below: !input low_threshold
+    id: auto
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: boost
+        sequence:
+          - action: fan.set_percentage
+            target:
+              entity_id: !input fan
+            data:
+              percentage: !input boost_percentage
+      - conditions:
+          - condition: trigger
+            id: auto
+        sequence:
+          - action: fan.set_percentage
+            target:
+              entity_id: !input fan
+            data:
+              percentage: 0
+</code></pre>
+<h2>Data updates</h2>
+<p>The integration polling polls the Duco box every 10 seconds. If you add a new sensor module (such as a CO₂ or humidity sensor) to your Duco system after the integration is already set up, it will automatically appear in Home Assistant the next time the integration polls for data. No restart or reconfiguration required.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>New setup requires a DUCO Connectivity Board that exposes public API 2.1 or later. Older systems using the Communication Board V1 are not supported. The integration has been validated on DucoBox Silent, DucoBox Focus, and DucoBox Energy. Other systems on the same API surface can still be set up, but some model-specific functionality may remain limited until it has been validated and implemented.</li>
+<li>The Duco box enforces a rate limit of 200 write requests per day. When the limit is reached, the integration shows a notification and stops sending write requests until the quota resets automatically around midnight.</li>
+<li>Timed speed overrides set by a connected wall unit (such as a UCCO2) cannot be triggered from Home Assistant. They are read-only: the current ventilation level is shown as a percentage, but setting a speed from Home Assistant always uses the permanent manual mode (a continuous override with no time limit).</li>
+<li>Some model-specific sensors are not yet exposed in Home Assistant. This currently affects parts of the DucoBox Energy sensor surface, and VOC-capable node families currently expose only the ventilation-related entities.</li>
+<li>When you deregister a sensor module via the Duco app or firmware, the node disappears from the Duco API and Home Assistant removes it automatically on the next data update. However, a BSRH humidity sensor that is physically disconnected from the box PCB (rather than deregistered via software) is not treated as deregistered by the firmware. Its node remains in the API indefinitely, so its entities will stay in Home Assistant until you deregister it through the Duco app.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Device is not automatically discovered</h3>
+<p>If your Duco ventilation box is not automatically discovered:</p>
+<ul>
+<li>Ensure the device is powered on and connected to the same network as Home Assistant.</li>
+<li>Check that mDNS/Bonjour traffic is not blocked by your router or firewall. If it is, the integration can still discover the device automatically via DHCP the next time the device renews its IP address lease.</li>
+<li>Verify the device name shows as "DUCO [MAC address]" in your router's device list or network scanner.</li>
+<li>Manually add the integration using the device's IP address if discovery continues to fail.</li>
+</ul>
+<h3>Cannot connect to the Duco box</h3>
+<h4>Symptom</h4>
+<p>The integration setup fails with a "Cannot connect" error, or all entities show as unavailable after the integration was working correctly.</p>
+<h4>Description</h4>
+<p>Home Assistant cannot reach the Duco box at the configured address. This can happen during initial setup or later during operation if the box is restarted, loses power, or its IP address changes.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check that the Duco box is powered on and connected to your local network.</li>
+<li>Confirm the IP address or hostname is correct by opening <code>http://&lt;host&gt;</code> in a browser on your local network.</li>
+<li>If the box is reachable but entities are still unavailable, reload the integration via <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Duco</strong> &gt; <strong>Reload</strong>.</li>
+<li>If the Duco box received a new IP address from your router, Home Assistant updates the address automatically the next time the box is discovered via mDNS/Bonjour (zeroconf). If that does not happen, see <a>Reconfiguring the integration</a>.</li>
+</ol>
+<h3>Setup says this Duco system is not supported</h3>
+<h4>Symptom</h4>
+<p>Manual setup stops with this message:</p>
+<blockquote>
+<p>This Duco system is not supported by this integration. The integration requires a Duco Connectivity Board running public API 2.1 or newer.</p>
+</blockquote>
+<h4>Description</h4>
+<p>Home Assistant could reach the Duco device, but the detected system does not expose the required API surface for setup. The integration requires a DUCO Connectivity Board with public API version 2.1 or later.</p>
+<p>This can happen when your system uses an older Communication Board V1, or when the board firmware does not expose public API 2.1 or later.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Confirm that your system uses a DUCO Connectivity Board.</li>
+<li>Check whether the board firmware exposes public API 2.1 or later.</li>
+<li>If your system uses the older Communication Board V1, Home Assistant cannot set up the integration for that system.</li>
+<li>If your system does not meet these requirements, Home Assistant cannot set up a new integration for that system.</li>
+<li>If your system should be supported, collect diagnostics and open an issue in Home Assistant Core with your Duco model, board details, and firmware information.</li>
+</ol>
+<h3>Failed to control a Duco device (rate limit)</h3>
+<h4>Symptom</h4>
+<p>Changing a Duco control, such as the fan speed or an <strong>Identify</strong> switch, fails with a notification in the Home Assistant UI:</p>
+<blockquote>
+<p>The Duco device has reached its daily write limit. Try again tomorrow.</p>
+</blockquote>
+<h4>Description</h4>
+<p>The Duco box enforces a daily API write limit of 200 write requests. When the limit is reached, the box rejects further write requests until the quota resets shortly after midnight.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check if the daily write limit has been reached.<ul>
+<li>Under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong>, open the  menu in the top-right corner.</li>
+<li>Select <strong>System information</strong>.</li>
+<li>In the Duco section, you should see if the daily write limit has been reached.</li>
+</ul>
+</li>
+<li>If the limit has been reached, wait until shortly after midnight for the quota to reset.</li>
+<li>To avoid hitting the limit again, reduce the frequency of automations that send commands to your Duco system.</li>
+</ol>
+<h2>Reconfiguring the integration</h2>
+<p>If your Duco ventilation box gets a new IP address, you can update it without removing and re-adding the integration.</p>
+<p>When zeroconf discovery is available, Home Assistant updates the address automatically. If that does not happen, you can update it manually:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>Find the <strong>Duco</strong> integration and select it.</li>
+<li>Select the three dots menu  next to the integration and choose <strong>Reconfigure</strong>.</li>
+<li>Enter the new IP address or hostname and select <strong>Submit</strong>.</li>
+</ol>
+<p>Home Assistant verifies that the new address belongs to the same Duco box. If you enter the address of a different device, the reconfiguration is aborted.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal, no extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/duco.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Duco ventilation with Home Assistant.
+ha_release: 2026.5
+ha_domain: duco
+---
+
+The **Duco** {% term integration %} allows you to monitor and control [Duco](https://www.duco.eu/) demand-controlled ventilation (DCV) systems from Home Assistant. Duco produces ventilation boxes for residential buildings that regulate air quality based on CO₂ and humidity sensors. This integration communicates locally with the Duco box over your home network, requiring no cloud connection.
+
+## Supported devices
+
+This integration communicates with the **DUCO Connectivity Board** (article 0000-4810) via its local REST API over Wi-Fi or Ethernet.
+
+To set up the integration, your Duco system must expose the DUCO Connectivity Board API with public API version 2.1 or newer.
+
+Hardware revisions:
+
+- **DUCO Connectivity Board 1.0**: Supported
+- **DUCO Connectivity Board 2.0**: Supported
+
+Validated DucoBox models:
+
+- DucoBox Silent
+- DucoBox Focus
+- DucoBox Energy
+
+Older Duco systems using the Communication Board V1 are not supported because they do not expose the required API surface.
+
+Other Duco systems that expose public API version 2.1 or newer can also be set up. The current integration has been validated on the models above for the base functionality, but some model-specific sensors are still not exposed in Home Assistant, especially on DucoBox Energy systems.
+
+### Supported node types
+
+The following node types are supported:
+
+- **BOX**: The main ventilation box; provides fan control, ventilation state select, ventilation state, target flow level, state end time, air temperatures, and Wi-Fi signal strength. Models that expose a filter timer also provide a filter remaining sensor. Models that expose bypass supply targets provide temperature controls for each zone reported by the system.
+- **BSCO2**: CO₂ sensor module wired directly to the DucoBox PCB; provides CO₂ concentration and CO₂ air quality index.
+- **UCCO2**: Wall-mounted CO₂ sensor unit; provides CO₂ concentration and CO₂ air quality index.
+- **BSRH**: Humidity sensor module installed in the duct inlet of the DucoBox, wired directly to the PCB via cable; provides relative humidity and humidity air quality index.
+- **UCRH**: Wireless humidity sensor module; provides relative humidity and humidity air quality index.
+- **VLV**, **VLVRH**, **VLVVOC**, **VLVCO2**, and **VLVCO2RH**: Valve actuator families. These nodes expose ventilation state, target flow level, state end time, and, when the firmware advertises it for that node, a ventilation state select. The RH and CO₂ variants also expose their supported sensor entities.
+- **EAV**, **EAVRH**, **EAVVOC**, and **EAVCO2**: Extract air valve families. These nodes expose the same ventilation-related entities as the supported valve actuator families. The RH and CO₂ variants also expose their supported sensor entities.
+
+### Unsupported node types
+
+The following node types can be discovered but are not currently surfaced as entities:
+
+- **UC**: Universal control unit (no sensor data exposed)
+- **UCBAT**: Battery-powered sensor module
+
+Home Assistant ignores unsupported node types until support is added. All supported nodes continue to work normally.
+
+## Prerequisites
+
+- A Duco ventilation box with a DUCO Connectivity Board connected to your local network.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: &quot;The IP address or hostname of your DUCO Connectivity Board on the local network, for example `192.168.1.10`. Only needed when setting up the integration manually.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+Each supported node appears as a separate device in Home Assistant, connected to the main ventilation box. The sections below describe which entities Home Assistant creates for those supported node types.
+
+### Fan
+
+The fan entity on the main ventilation box lets you control the ventilation speed. You can set the speed as a percentage or switch back to automatic mode.
+
+Use the fan when you want to work with Home Assistant&#x27;s percentage-based fan controls. If you want to choose a specific Duco ventilation state code instead, use the ventilation state select on the node that exposes it.
+
+The fan is always on. Turning off the fan is not supported.
+
+Setting a speed percentage to 33%, 66%, or 100% activates a continuous override with no time limit. Setting it to 0% clears the override and hands control back to Duco:
+
+- **Speed 0%**: Clears the override and returns to automatic mode.
+- **Speed 33%**: Continuous low speed override.
+- **Speed 66%**: Continuous medium speed override.
+- **Speed 100%**: Continuous high speed override.
+- **Auto preset**: Same as speed 0%. Clears the override and returns to automatic mode.
+
+When a connected wall unit (such as a UCCO2) triggers a timed speed override on the Duco box, Home Assistant reflects the current ventilation level as a percentage. These timed states cannot be set from Home Assistant; writing a speed always uses the permanent manual mode (a continuous override with no time limit).
+
+{% note %}
+The percentages 33%, 66%, and 100% are abstract speed levels used in the Home Assistant fan UI and do not match the actual airflow percentages configured in the Duco firmware. To see the real airflow target, use the **Target flow level** sensor.
+{% endnote %}
+
+### Select
+
+The ventilation state select is available for the main ventilation box (BOX) and for supported valve or extract nodes when that node advertises selectable ventilation states. It lets you choose the Duco ventilation state codes exposed by your system, such as `AUTO`, `CNT1`, `CNT2`, `CNT3`, `MAN1`, `MAN2`, `MAN3`, or `EMPT`.
+
+Home Assistant only shows the options advertised by your Duco system for that specific node, so the available choices can vary by model, node type, or firmware. After you change the option, Home Assistant refreshes the state from the box and shows the state the box reports back.
+
+### Number
+
+#### Bypass supply target temperatures
+
+Some Duco systems expose bypass supply target temperatures. When available, Home Assistant creates a number entity for each zone reported by your Duco system. You can use these entities to view and set the target temperature in your configured temperature unit. The available range and increment come from your Duco system.
+
+If your Duco system does not expose a target for a zone, Home Assistant does not create the related number entity.
+
+### Switch
+
+The **Identify** switch lets you activate or deactivate identification for a specific Duco node. Home Assistant creates this switch only for nodes that advertise an on/off identification action through the Duco API.
+
+### Sensors
+
+The following sensor entities are created per node, depending on the node type:
+
+#### Air temperatures
+
+Available for the main ventilation box (BOX) when the Duco system exposes the values. These sensors show the following temperatures in degrees Celsius:
+
+- **Outdoor air temperature**: Air entering the ventilation box from outdoors.
+- **Supply air temperature**: Air supplied from the ventilation box to your home.
+- **Extract air temperature**: Air extracted from your home into the ventilation box.
+- **Exhaust air temperature**: Air leaving the ventilation box to outdoors.
+
+#### Target flow level
+
+Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the actual airflow target as reported by the Duco box, as a percentage (0–100%). This value reflects the real airflow configured in the Duco firmware. On the main ventilation box, it can differ from the abstract speed levels (33%, 66%, or 100%) shown in the fan entity. For example, if your Duco system is configured with manual speed levels of 15%, 30%, and 100%, this sensor shows those values.
+
+#### Ventilation state
+
+Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the ventilation state using the Duco state codes shown by the device and app, instead of friendly labels with fixed meanings.
+
+This sensor is read-only. To choose a specific Duco state code from Home Assistant, use the ventilation state select.
+
+Common values include:
+
+- `AUTO`: Automatic mode.
+- `AUT1`, `AUT2`, `AUT3`: Automatic mode currently running at low, medium, or high airflow.
+- `CNT1`, `CNT2`, `CNT3`: Continuous low, medium, or high speed override.
+- `MAN1`, `MAN2`, `MAN3`: Timed manual low, medium, or high speed override.
+- `EMPT`: Empty house mode.
+
+`CNT` states are continuous overrides.
+
+`MAN` states are timed overrides, but the timer duration is configured on the Duco system and is not encoded in the raw state value itself. Some systems may also report compatibility values like `MAN1x2` or `MAN1x3` for timed manual modes.
+
+To see when a timed state ends, use the [State end time](#state-end-time) sensor.
+
+#### State end time
+
+Available for the main ventilation box (BOX) and supported valve or extract node families with ventilation data. Shows the time at which the current timed ventilation state ends. When no timer is active, this sensor is unavailable.
+
+#### Filter remaining
+
+Available for Duco box models that expose a filter timer via the local API. Shows the remaining filter lifetime in days.
+
+On models that do not expose a filter timer, this sensor is not created.
+
+#### CO₂ concentration
+
+Available for CO₂ sensor modules and valve actuators with a built-in CO₂ sensor. Shows the current CO₂ concentration in parts per million (ppm).
+
+#### Humidity
+
+Available for the supported node types with a built-in humidity sensor listed in [Supported node types](#supported-node-types). Shows the current relative humidity in percent.
+
+#### CO₂ air quality index
+
+Available for CO₂ sensor modules and valve actuators with a built-in CO₂ sensor. Shows the CO₂ air quality score as a percentage (0–100%). This entity is [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+
+Indoor air quality ranges for CO₂:
+
+- 90–100%: Very good
+- 75–85%: Good
+- 50–70%: Temporarily acceptable
+- 35–45%: Poor
+
+#### Humidity air quality index
+
+Available for the supported node types with a built-in humidity sensor listed in [Supported node types](#supported-node-types). Shows the humidity air quality score as a percentage (0–100%). This entity is disabled by default.
+
+Indoor air quality ranges for humidity:
+
+- 95–100%: Very good
+- 65–90%: Good
+- 35–50%: Temporarily acceptable
+- 5–20%: Poor
+
+#### Diagnostic entities
+
+The following diagnostic entities may be available for the main ventilation box (BOX), depending on your model and firmware:
+
+- **Ventilation**: Indicates whether the ventilation subsystem reports a problem.
+- **Filter**: Indicates whether the filter subsystem reports a problem.
+- **Ventilation cooling**: Indicates whether the ventilation cooling subsystem reports a problem. This entity is disabled by default.
+- **Sun control**: Indicates whether the sun control subsystem reports a problem. This entity is disabled by default.
+- **Wi-Fi signal strength**: Shows the Wi-Fi signal strength in dBm. This entity is disabled by default.
+
+The subsystem problem entities turn on when Duco reports `Error` or `Disable` and remain off when Duco reports `OK`.
+
+## Use cases
+
+- Switch to high ventilation automatically when cooking or showering.
+- Return to auto mode when everyone leaves home using a presence-based automation.
+- Choose a specific Duco ventilation state from an automation or script.
+- Monitor ventilation activity over time via the logbook.
+- Trigger automations based on CO₂ levels or humidity reported by connected Duco modules.
+
+## Examples
+
+The example entity IDs below use the default naming that Home Assistant assigns on a new Home Assistant installation. Replace them with the entity IDs from your own system.
+
+### Activate high ventilation while cooking
+
+This automation switches the ventilation to high speed when the kitchen hood is turned on, and returns it to automatic mode five minutes after the hood is switched off.
+
+```yaml
+- alias: &quot;High ventilation while cooking&quot;
+  triggers:
+    - trigger: state
+      entity_id: switch.kitchen_hood
+      to: &quot;on&quot;
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 100
+
+- alias: &quot;Return to auto after cooking&quot;
+  triggers:
+    - trigger: state
+      entity_id: switch.kitchen_hood
+      to: &quot;off&quot;
+      for: &quot;00:05:00&quot;
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 0
+```
+
+### Reduce ventilation when nobody is home
+
+When the last person leaves home, the ventilation hands control back to Duco (automatic mode). When someone returns, it switches to medium speed.
+
+```yaml
+- alias: &quot;Ventilation auto mode on leave&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: zone.home
+      below: 1
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 0
+
+- alias: &quot;Ventilation medium speed on arrive&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: zone.home
+      above: 0
+  actions:
+    - action: fan.set_percentage
+      target:
+        entity_id: fan.node_1
+      data:
+        percentage: 66
+```
+
+### Boost ventilation based on CO₂
+
+Boost a Duco fan when CO₂ rises above a chosen threshold and return it to automatic mode when CO₂ drops below a lower threshold.
+
+{% blueprint_example blueprint=&quot;duco/co2_ventilation.yaml&quot; %}
+
+### Boost ventilation based on humidity
+
+Boost a Duco fan when humidity rises above a chosen threshold and return it to automatic mode when humidity drops below a lower threshold.
+
+{% blueprint_example blueprint=&quot;duco/humidity_ventilation.yaml&quot; %}
+
+## Data updates
+
+The integration {% term polling polls %} the Duco box every 10 seconds. If you add a new sensor module (such as a CO₂ or humidity sensor) to your Duco system after the integration is already set up, it will automatically appear in Home Assistant the next time the integration polls for data. No restart or reconfiguration required.
+
+## Known limitations
+
+- New setup requires a DUCO Connectivity Board that exposes public API 2.1 or later. Older systems using the Communication Board V1 are not supported. The integration has been validated on DucoBox Silent, DucoBox Focus, and DucoBox Energy. Other systems on the same API surface can still be set up, but some model-specific functionality may remain limited until it has been validated and implemented.
+- The Duco box enforces a rate limit of 200 write requests per day. When the limit is reached, the integration shows a notification and stops sending write requests until the quota resets automatically around midnight.
+- Timed speed overrides set by a connected wall unit (such as a UCCO2) cannot be triggered from Home Assistant. They are read-only: the current ventilation level is shown as a percentage, but setting a speed from Home Assistant always uses the permanent manual mode (a continuous override with no time limit).
+- Some model-specific sensors are not yet exposed in Home Assistant. This currently affects parts of the DucoBox Energy sensor surface, and VOC-capable node families currently expose only the ventilation-related entities.
+- When you deregister a sensor module via the Duco app or firmware, the node disappears from the Duco API and Home Assistant removes it automatically on the next data update. However, a BSRH humidity sensor that is physically disconnected from the box PCB (rather than deregistered via software) is not treated as deregistered by the firmware. Its node remains in the API indefinitely, so its entities will stay in Home Assistant until you deregister it through the Duco app.
+
+## Troubleshooting
+
+### Device is not automatically discovered
+
+If your Duco ventilation box is not automatically discovered:
+
+- Ensure the device is powered on and connected to the same network as Home Assistant.
+- Check that mDNS/Bonjour traffic is not blocked by your router or firewall. If it is, the integration can still discover the device automatically via DHCP the next time the device renews its IP address lease.
+- Verify the device name shows as &quot;DUCO [MAC address]&quot; in your router&#x27;s device list or network scanner.
+- Manually add the integration using the device&#x27;s IP address if discovery continues to fail.
+
+### Cannot connect to the Duco box
+
+#### Symptom
+
+The integration setup fails with a &quot;Cannot connect&quot; error, or all entities show as unavailable after the integration was working correctly.
+
+#### Description
+
+Home Assistant cannot reach the Duco box at the configured address. This can happen during initial setup or later during operation if the box is restarted, loses power, or its IP address changes.
+
+#### Resolution
+
+1. Check that the Duco box is powered on and connected to your local network.
+2. Confirm the IP address or hostname is correct by opening `http://&lt;host&gt;` in a browser on your local network.
+3. If the box is reachable but entities are still unavailable, reload the integration via {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} &gt; **Duco** &gt; **Reload**.
+4. If the Duco box received a new IP address from your router, Home Assistant updates the address automatically the next time the box is discovered via mDNS/Bonjour (zeroconf). If that does not happen, see [Reconfiguring the integration](#reconfiguring-the-integration).
+
+### Setup says this Duco system is not supported
+
+#### Symptom
+
+Manual setup stops with this message:
+
+&gt; This Duco system is not supported by this integration. The integration requires a Duco Connectivity Board running public API 2.1 or newer.
+
+#### Description
+
+Home Assistant could reach the Duco device, but the detected system does not expose the required API surface for setup. The integration requires a DUCO Connectivity Board with public API version 2.1 or later.
+
+This can happen when your system uses an older Communication Board V1, or when the board firmware does not expose public API 2.1 or later.
+
+#### Resolution
+
+1. Confirm that your system uses a DUCO Connectivity Board.
+2. Check whether the board firmware exposes public API 2.1 or later.
+3. If your system uses the older Communication Board V1, Home Assistant cannot set up the integration for that system.
+4. If your system does not meet these requirements, Home Assistant cannot set up a new integration for that system.
+5. If your system should be supported, collect diagnostics and open an issue in Home Assistant Core with your Duco model, board details, and firmware information.
+
+### Failed to control a Duco device (rate limit)
+
+#### Symptom
+
+Changing a Duco control, such as the fan speed or an **Identify** switch, fails with a notification in the Home Assistant UI:
+
+&gt; The Duco device has reached its daily write limit. Try again tomorrow.
+
+#### Description
+
+The Duco box enforces a daily API write limit of 200 write requests. When the limit is reached, the box rejects further write requests until the quota resets shortly after midnight.
+
+#### Resolution
+
+1. Check if the daily write limit has been reached.
+   - Under **Settings** &gt; **System** &gt; **Repairs**, open the {% icon &quot;mdi:dots-vertical&quot; %} menu in the top-right corner.
+   - Select **System information**.
+   - In the Duco section, you should see if the daily write limit has been reached.
+2. If the limit has been reached, wait until shortly after midnight for the quota to reset.
+3. To avoid hitting the limit again, reduce the frequency of automations that send commands to your Duco system.
+
+## Reconfiguring the integration
+
+If your Duco ventilation box gets a new IP address, you can update it without removing and re-adding the integration.
+
+When zeroconf discovery is available, Home Assistant updates the address automatically. If that does not happen, you can update it manually:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. Find the **Duco** integration and select it.
+3. Select the three dots menu {% icon &quot;mdi:dots-vertical&quot; %} next to the integration and choose **Reconfigure**.
+4. Enter the new IP address or hostname and select **Submit**.
+
+Home Assistant verifies that the new address belongs to the same Duco box. If you enter the address of a different device, the reconfiguration is aborted.
+
+## Removing the integration
+
+This integration follows standard integration removal, no extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Duco.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Use cases</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Reconfiguring the integration</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/duco/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/duco</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/duco</code></dd></dl></section><p><a href="../../integrations/duco/">Return to the Duco guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

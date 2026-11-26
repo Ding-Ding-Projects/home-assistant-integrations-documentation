@@ -1,1 +1,401 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Things Network reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:201" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/thethingsnetwork_lorawan/">The Things Network guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>The Things Network</h1><p>Connect The Things Network and The Things Stack applications to Home Assistant.</p><section><h2>Overview</h2><p>The The Things Network integration connects The Things Network or your own The Things Stack server to LoRaWAN. Separate device integrations turn readings from your LoRaWAN sensors into entities you can use in dashboards and automations.</p></section><section><h2>Prerequisites</h2><p>4. Create the key and copy it. The console only shows it once.</p></section><section><h2>Data updates</h2><p>Device readings arrive through live event streams. Changes to the device list are detected through server events and a check every 30 seconds. Home Assistant reconnects if the connection is interrupted.</p></section><section><h2>Description</h2><p>The API server address and port may differ from the web console address.</p></section><section><h2>Resolution</h2><p>Check that the selected region matches your application and that Home Assistant can reach the server. The Things Network uses port 8884. For a custom deployment, check the API server address and port with your server administrator.</p></section><section><h2>Removing the integration</h2><p>Removing the connection stops updates from its applications. Your applications, gateways, and devices remain registered on the server. You can delete the API key in the server console if it is no longer used.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for The Things Network.</p><p>The <strong>applications</strong> configuration step lists <code>application_ids</code>.</p><p>The <strong>connection</strong> configuration step lists <code>api_key</code>, <code>endpoint</code>, <code>identity_server</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>region</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/thethingsnetwork_lorawan/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/thethingsnetwork_lorawan</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/thethingsnetwork_lorawan</code></dd></dl></section><p><a href="../../integrations/thethingsnetwork_lorawan/">Return to the The Things Network guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Things Network reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:201" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/thethingsnetwork_lorawan/">The Things Network guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>The Things Network</h1><p>Connect The Things Network and The Things Stack applications to Home Assistant.</p><div class="reader-body"><p>The <strong>The Things Network</strong> integration connects <a>The Things Network</a> or your own The Things Stack server to <a href="../lorawan/">LoRaWAN</a>. Separate device integrations turn readings from your LoRaWAN sensors into entities you can use in dashboards and automations.</p>
+<p>For sensors based on stored, decoded payload fields, use <a href="../thethingsnetwork/">The Things Network (Cloud Storage)</a>.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>An application with registered devices in The Things Network or The Things Stack.</li>
+<li>A gateway within range that forwards your devices' traffic to that network.</li>
+<li>An API key with access to the application.</li>
+</ul>
+<p>To create an application API key:</p>
+<ol>
+<li>Open your application in <a>The Things Network Console</a>, or your server's console.</li>
+<li>Select <strong>API keys</strong> &gt; <strong>Add API key</strong>.</li>
+<li>Enter a name, such as <code>Home Assistant</code>, and grant these individual rights:<ul>
+<li><strong>View devices in application</strong>.</li>
+<li><strong>Read application traffic (uplink and downlink)</strong>.</li>
+<li><strong>Write downlink application traffic</strong>, if you want to send commands through a compatible device integration.</li>
+</ul>
+</li>
+<li>Create the key and copy it. The console only shows it once.</li>
+</ol>
+<p>See <a>The Things Stack API-key instructions</a> for more details. An application API key gives access to that application only.</p>
+<p>Register devices using their device catalog entries so Home Assistant can identify their brand and model. Entity support depends on the corresponding LoRaWAN device integration. A payload formatter and the Storage Integration are not required.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>The Things Network</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>The Things Network</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Select your region, enter the API key, and choose the applications to connect. Home Assistant checks the key before showing the application list.</p>
+<pre><code>
+Region:
+  description: "Select the region in your console URL: **Europe (EU1)**, **North America (NAM1)**, or **Australia (AU1)**. The default is **Europe (EU1)**. Select **Custom server** for another The Things Stack deployment."
+API key:
+  description: "The key created above. It needs device-read and traffic-read permissions for every selected application."
+Application Server:
+  description: "Shown for **Custom server**. Enter the API server address, including the scheme and port, such as `https://thethings.example.com:8884`. The standard region choices fill in the server addresses automatically."
+Identity Server:
+  description: "Shown for **Custom server**. Enter its API server address if it differs from the Application Server. Leave it empty to use the same address."
+Applications:
+  description: "Select one or more applications available to the API key. Only devices in these applications are exposed to Home Assistant."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<p>This integration does not create entities itself. It provides the connection to your applications. When a supported device appears, Home Assistant shows the matching LoRaWAN device integration in the <strong>Discovered</strong> section on <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>. That device integration creates the entities.</p>
+<h2>Data updates</h2>
+<p>Device readings arrive through live event streams. Changes to the device list are detected through server events and a check every 30 seconds. Home Assistant reconnects if the connection is interrupted.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Historical readings are not fetched from storage. After a restart or reconnection, wait for the device's next transmission.</li>
+<li>Each application can belong to only one connection for the same Identity Server.</li>
+<li>Applications must provide decrypted payloads. Applications configured to skip payload decryption are not supported.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Cannot connect to The Things Stack</h4>
+<h3>Symptom: Cannot connect to The Things Stack</h3>
+<h4>Description</h4>
+<p>The API server address and port may differ from the web console address.</p>
+<h4>Resolution</h4>
+<p>Check that the selected region matches your application and that Home Assistant can reach the server. The Things Network uses port <code>8884</code>. For a custom deployment, check the API server address and port with your server administrator.</p>
+<h4>API key rejected or no applications available</h4>
+<h3>Symptom: API key rejected or no applications available</h3>
+<h4>Description</h4>
+<p>API keys are limited by their permissions and scope. An application key only exposes its own application.</p>
+<h4>Resolution</h4>
+<p>Check that the key has not expired or been revoked and has the permissions listed under <a>Prerequisites</a>. If Home Assistant asks you to reauthenticate, enter a replacement key with access to the same applications.</p>
+<h4>A device has no entities or readings</h4>
+<h3>Symptom: A device has no entities or readings</h3>
+<h4>Description</h4>
+<p>Entities require a compatible device integration and new uplinks. Stored readings are not replayed.</p>
+<h4>Resolution</h4>
+<p>Check that the device belongs to a selected application, has a DevEUI, and uses the correct catalog brand and model. Add the compatible LoRaWAN device integration when discovered.</p>
+<p>Check the device's live data in the server console. If no uplinks appear there, check the device's network settings and gateway coverage. If uplinks appear, wait for a new transmission while Home Assistant is connected.</p>
+<h2>Removing the integration</h2>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>Removing the connection stops updates from its applications. Your applications, gateways, and devices remain registered on the server. You can delete the API key in the server console if it is no longer used.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/thethingsnetwork_lorawan.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Connect The Things Network and The Things Stack applications to Home Assistant.
+ha_release: 2026.11
+ha_domain: thethingsnetwork_lorawan
+---
+
+The **The Things Network** {% term integration %} connects [The Things Network](https://www.thethingsnetwork.org/) or your own The Things Stack server to [LoRaWAN](/integrations/lorawan/). Separate device integrations turn readings from your LoRaWAN sensors into entities you can use in dashboards and automations.
+
+For sensors based on stored, decoded payload fields, use [The Things Network (Cloud Storage)](/integrations/thethingsnetwork/).
+
+## Prerequisites
+
+- An application with registered devices in The Things Network or The Things Stack.
+- A gateway within range that forwards your devices&#x27; traffic to that network.
+- An API key with access to the application.
+
+To create an application API key:
+
+1. Open your application in [The Things Network Console](https://console.thethingsnetwork.org/), or your server&#x27;s console.
+2. Select **API keys** &gt; **Add API key**.
+3. Enter a name, such as `Home Assistant`, and grant these individual rights:
+   - **View devices in application**.
+   - **Read application traffic (uplink and downlink)**.
+   - **Write downlink application traffic**, if you want to send commands through a compatible device integration.
+4. Create the key and copy it. The console only shows it once.
+
+See [The Things Stack API-key instructions](https://www.thethingsindustries.com/docs/integrations/adding-applications/#create-application-api-key) for more details. An application API key gives access to that application only.
+
+Register devices using their device catalog entries so Home Assistant can identify their brand and model. Entity support depends on the corresponding LoRaWAN device integration. A payload formatter and the Storage Integration are not required.
+
+{% include integrations/config_flow.md %}
+
+Select your region, enter the API key, and choose the applications to connect. Home Assistant checks the key before showing the application list.
+
+{% configuration_basic %}
+Region:
+  description: &quot;Select the region in your console URL: **Europe (EU1)**, **North America (NAM1)**, or **Australia (AU1)**. The default is **Europe (EU1)**. Select **Custom server** for another The Things Stack deployment.&quot;
+API key:
+  description: &quot;The key created above. It needs device-read and traffic-read permissions for every selected application.&quot;
+Application Server:
+  description: &quot;Shown for **Custom server**. Enter the API server address, including the scheme and port, such as `https://thethings.example.com:8884`. The standard region choices fill in the server addresses automatically.&quot;
+Identity Server:
+  description: &quot;Shown for **Custom server**. Enter its API server address if it differs from the Application Server. Leave it empty to use the same address.&quot;
+Applications:
+  description: &quot;Select one or more applications available to the API key. Only devices in these applications are exposed to Home Assistant.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+This integration does not create entities itself. It provides the connection to your applications. When a supported device appears, Home Assistant shows the matching LoRaWAN device integration in the **Discovered** section on {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}. That device integration creates the entities.
+
+## Data updates
+
+Device readings arrive through live event streams. Changes to the device list are detected through server events and a check every 30 seconds. Home Assistant reconnects if the connection is interrupted.
+
+## Known limitations
+
+- Historical readings are not fetched from storage. After a restart or reconnection, wait for the device&#x27;s next transmission.
+- Each application can belong to only one connection for the same Identity Server.
+- Applications must provide decrypted payloads. Applications configured to skip payload decryption are not supported.
+
+## Troubleshooting
+
+{% details &quot;Cannot connect to The Things Stack&quot; %}
+
+### Symptom: Cannot connect to The Things Stack
+
+#### Description
+
+The API server address and port may differ from the web console address.
+
+#### Resolution
+
+Check that the selected region matches your application and that Home Assistant can reach the server. The Things Network uses port `8884`. For a custom deployment, check the API server address and port with your server administrator.
+
+{% enddetails %}
+
+{% details &quot;API key rejected or no applications available&quot; %}
+
+### Symptom: API key rejected or no applications available
+
+#### Description
+
+API keys are limited by their permissions and scope. An application key only exposes its own application.
+
+#### Resolution
+
+Check that the key has not expired or been revoked and has the permissions listed under [Prerequisites](#prerequisites). If Home Assistant asks you to reauthenticate, enter a replacement key with access to the same applications.
+
+{% enddetails %}
+
+{% details &quot;A device has no entities or readings&quot; %}
+
+### Symptom: A device has no entities or readings
+
+#### Description
+
+Entities require a compatible device integration and new uplinks. Stored readings are not replayed.
+
+#### Resolution
+
+Check that the device belongs to a selected application, has a DevEUI, and uses the correct catalog brand and model. Add the compatible LoRaWAN device integration when discovered.
+
+Check the device&#x27;s live data in the server console. If no uplinks appear there, check the device&#x27;s network settings and gateway coverage. If uplinks appear, wait for a new transmission while Home Assistant is connected.
+
+{% enddetails %}
+
+## Removing the integration
+
+{% include integrations/remove_device_service.md %}
+
+Removing the connection stops updates from its applications. Your applications, gateways, and devices remain registered on the server. You can delete the API key in the server console if it is no longer used.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for The Things Network.</p><p>The <strong>applications</strong> configuration step lists <code>application_ids</code>.</p><p>The <strong>connection</strong> configuration step lists <code>api_key</code>, <code>endpoint</code>, <code>identity_server</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>region</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/thethingsnetwork_lorawan/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/thethingsnetwork_lorawan</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/thethingsnetwork_lorawan</code></dd></dl></section><p><a href="../../integrations/thethingsnetwork_lorawan/">Return to the The Things Network guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

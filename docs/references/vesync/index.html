@@ -1,1 +1,819 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VeSync reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:63" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vesync/">VeSync guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>VeSync</h1><p>Instructions on how to set up VeSync devices with Home Assistant.</p><section><h2>Overview</h2><p>The VeSync integration enables you to control a wide variety of Levoit devices connected to the VeSync App. Currently this integration supports most bulbs, fans, air purifiers, switches, outlets, humidifers and select air fryers.</p></section><section><h2>Supported devices</h2><p>This integration supports devices controllable by the VeSync App. The following devices are supported by this integration. This list may not be exhaustive as devices have multiple model numbers within this.</p></section><section><h2>Prerequisite</h2><p>Before you can use this integration, all devices must be registered with the VeSync App. Once registration is complete, continue with the steps described in the configuration section below.</p></section><section><h2>Data updates</h2><p>The integration polling polls the VeSync cloud every 60 seconds. The weekly, monthly, and yearly energy use of outlets is fetched every 6 hours.</p></section><section><h2>Removing the integration</h2><p>This integration follows standard integration removal. No extra steps are required.</p></section><section><h2>Power &amp; energy sensors</h2><p>Many VeSync outlets support power &amp; energy monitoring. This data is exposed as sensor entities alongside the outlet itself. Note that prior versions of the integration exposed these as state attributes on the outlet switch entity.</p></section><section><h2>Fan &amp; air quality sensors</h2><p>All VeSync air purifiers expose the remaining filter lifetime, and some also expose air quality measurements.</p></section><section><h2>Fan exposed attributes</h2><p>VeSync air purifiers will expose the following details depending on the features supported by the model:</p></section><section><h2>Humidifier</h2><p>Sensors and settings exposed by VeSync humidifiers.</p></section><section><h2>Air Fryers</h2><p>Sensors and settings exposed by VeSync Air Fryers.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for VeSync.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>fan</li><li>humidifier</li><li>light</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>update devices</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisite</li><li>Data updates</li><li>Removing the integration</li><li>Power &amp; energy sensors</li><li>Fan &amp; air quality sensors</li><li>Fan exposed attributes</li><li>Humidifier</li><li>Binary Sensors</li><li>Air Fryers</li><li>Extracting attribute data</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vesync/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vesync</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vesync</code></dd></dl></section><p><a href="../../integrations/vesync/">Return to the VeSync guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VeSync reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:63" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vesync/">VeSync guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>VeSync</h1><p>Instructions on how to set up VeSync devices with Home Assistant.</p><div class="reader-body"><p>The <strong>VeSync</strong> integration enables you to control a wide variety of Levoit devices connected to the VeSync App. Currently this integration supports most bulbs, fans, air purifiers, switches, outlets, humidifers and select air fryers.</p>
+<p>The devices must be added to the VeSync App before this integration can discover them.</p>
+<p>The following platforms are supported:</p>
+<ul>
+<li><strong>binary sensor</strong></li>
+<li><strong>button</strong></li>
+<li><strong>fan</strong></li>
+<li><strong>humidifier</strong></li>
+<li><strong>light</strong></li>
+<li><strong>number</strong></li>
+<li><strong>sensor</strong></li>
+<li><strong>switch</strong></li>
+<li><strong>update</strong></li>
+</ul>
+<h2>Supported devices</h2>
+<p>This integration supports devices controllable by the VeSync App. The following devices are supported by this integration. This list may not be exhaustive as devices have multiple model numbers within this.</p>
+<h3>Bulbs</h3>
+<ul>
+<li>Etekcity WiFi Dimmable LED Bulb (ESL100)</li>
+<li>Etekcity WiFi Dimmable and Tunable White LED Bulb (ESL100CW)</li>
+</ul>
+<h3>Wall switches</h3>
+<ul>
+<li>Etekcity In Wall Smart Switch (EWSL01-USA)</li>
+<li>Etekcity Wifi Dimmer Switch (ESD16)</li>
+<li>Etekcity Wifi Dimmer Switch (ESWD16)</li>
+</ul>
+<h3>Outlet plugs</h3>
+<ul>
+<li>Etekcity 7 Amp US outlet - ESW01-USA (Round)</li>
+<li>Etekcity 10 Amp US outlet - ESW10-USA (Round)</li>
+<li>Etekcity 10 Amp EU outlet - ESW10-EU (Round)</li>
+<li>Etekcity 15 Amp US outlet - ESW15-USA (Rectangular)</li>
+<li>Etekcity 2 Plug Outdoor Outlet - ESO15-TB</li>
+</ul>
+<h3>Fans</h3>
+<ul>
+<li>Core 200S: Smart True HEPA Air Purifier</li>
+<li>Core 300S: Smart True HEPA Air Purifier</li>
+<li>Core 400S: Smart True HEPA Air Purifier</li>
+<li>Core 600S: Smart True HEPA Air Purifier</li>
+<li>EverestAir: Smart Air Purifier</li>
+<li>Vital 100S Smart True HEPA Air Purifier (LAP-V102S-WUS)</li>
+<li>Vital 200S Smart True HEPA Air Purifier (LAP-V201S-WUS)</li>
+<li>LEVOIT Smart Wifi Air Purifier (LV-PUR131S)</li>
+<li>LEVOIT Smart Tower Fan (LTF-F422S-WUS)</li>
+</ul>
+<h3>Humidifiers</h3>
+<ul>
+<li>Classic200S: Classic 200S Smart Ultrasonic Cool Mist Humidifier</li>
+<li>Classic300S: Classic 300S Ultrasonic Smart Humidifier</li>
+<li>OasisMist 1000S Smart Ultrasonic Cool Mist Tower Humidifier (LUH-M101S-WUS)</li>
+<li>Superior6000S: Superior 6000S Smart Evaporative Humidifier</li>
+</ul>
+<h3>Air Fryers</h3>
+<ul>
+<li>Cosori 3.7 and 5.8 Quart Air Fryer</li>
+</ul>
+<h2>Prerequisite</h2>
+<p>Before you can use this integration, all devices must be registered with the
+VeSync App. Once registration is complete, continue with the steps described in
+the configuration section below.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>VeSync</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>VeSync</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Data updates</h2>
+<p>The integration polling polls the VeSync cloud every 60 seconds. The weekly, monthly, and yearly energy use of outlets is fetched every 6 hours.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Power &amp; energy sensors</h2>
+<p>Many VeSync outlets support power &amp; energy monitoring. This data is exposed as sensor entities alongside the outlet
+itself. Note that prior versions of the integration exposed these as state attributes on the outlet switch entity.</p>
+<table>
+<thead>
+<tr>
+  <th>Sensor</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_current_power</code></td>
+  <td>The present power consumption of the switch in watts</td>
+  <td>7.89</td>
+</tr>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_energy_use_today</code></td>
+  <td>The kilowatt hours used by the switch during the previous 24 hours</td>
+  <td>0.12</td>
+</tr>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_voltage</code></td>
+  <td>The present voltage of the switch in Volts as a diagnostic sensor</td>
+  <td>120.32</td>
+</tr>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_energy_use_weekly</code></td>
+  <td>Total energy usage for week starting from Monday 12:01AM in kWh</td>
+  <td>14.74</td>
+</tr>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_energy_use_monthly</code></td>
+  <td>Total energy usage for month starting from 12:01AM on the first in kWh</td>
+  <td>52.30</td>
+</tr>
+<tr>
+  <td><code>sensor.&lt;outlet name&gt;_energy_use_yearly</code></td>
+  <td>Total energy usage for year start from 12:01AM on Jan 1 in kWh</td>
+  <td>105.25</td>
+</tr>
+</tbody>
+</table>
+<h2>Fan &amp; air quality sensors</h2>
+<p>All VeSync air purifiers expose the remaining filter lifetime, and some also expose air quality measurements.</p>
+<table>
+<thead>
+<tr>
+  <th>Sensor</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>filter_life</code></td>
+  <td>Remaining percentage of the filter. (LV-PUR131S, Core200S/300s/400s/600s/EverestAir)</td>
+  <td>142</td>
+</tr>
+<tr>
+  <td><code>air_quality</code></td>
+  <td>The current air quality reading. (LV-PUR131S, Core300s/400s/600s)</td>
+  <td>excellent</td>
+</tr>
+<tr>
+  <td><code>pm2_5</code></td>
+  <td>The current air quality reading. (Core300s/400s/600s/EverestAir)</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td><code>pm1</code></td>
+  <td>The current PM1 reading in µg/m³ (purifiers that measure it).</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td><code>pm10</code></td>
+  <td>The current PM10 reading in µg/m³ (purifiers that measure it).</td>
+  <td>12</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Switch</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>display</code></td>
+  <td>Display On or Off</td>
+  <td>On</td>
+</tr>
+<tr>
+  <td><code>child_lock</code></td>
+  <td>Child lock On or Off</td>
+  <td>Off</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Button</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>reset_filter</code></td>
+  <td>Resets the filter life to 100%. Press it after replacing the filter. (Core 200S)</td>
+</tr>
+</tbody>
+</table>
+<h2>Fan exposed attributes</h2>
+<p>VeSync air purifiers will expose the following details depending on the features supported by the model:</p>
+<table>
+<thead>
+<tr>
+  <th>Attribute</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>mode</code></td>
+  <td>The current mode the device is in. (LV-PUR131S, Core200S/300s/400s)</td>
+  <td>manual</td>
+</tr>
+<tr>
+  <td><code>oscillating</code></td>
+  <td>If the fan is currently oscillating</td>
+  <td>True</td>
+</tr>
+<tr>
+  <td><code>active_time</code></td>
+  <td>The number of seconds since the device has been in a non-off mode. (LV-PUR131S)</td>
+  <td>1598</td>
+</tr>
+<tr>
+  <td><code>display_status</code></td>
+  <td>The current status of the display.</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td><code>night_light</code></td>
+  <td>The current status of the night light (Core200S/Core400s)</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td><code>child_lock</code></td>
+  <td>The current status of the child lock (Core200S/300s/400s)</td>
+  <td>off</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Select</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>night_light_level</code></td>
+  <td>Night light brightness level (Values: off, dim, on).</td>
+  <td>off</td>
+</tr>
+</tbody>
+</table>
+<h2>Humidifier</h2>
+<p>Sensors and settings exposed by VeSync humidifiers.</p>
+<table>
+<thead>
+<tr>
+  <th>Sensor</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>humidity</code></td>
+  <td>Current humidity (in %)</td>
+  <td>35</td>
+</tr>
+<tr>
+  <td><code>temperature</code></td>
+  <td>Current temperature (Superior6000S)</td>
+  <td>68</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Number</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>mist_level</code></td>
+  <td>Mist level intensity (Range: 1-9, Step: 1). Only available in manual mode.</td>
+  <td>1</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Select</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>night_light_level</code></td>
+  <td>Night light brightness level (Values: off, dim, bright).</td>
+  <td>off</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+  <th>Switch</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>display</code></td>
+  <td>Display On or Off</td>
+  <td>On</td>
+</tr>
+<tr>
+  <td><code>auto_off_config</code></td>
+  <td>Auto turn off when humidity target exceeded, resume when below target</td>
+  <td>On</td>
+</tr>
+<tr>
+  <td><code>drying_mode_power_off</code></td>
+  <td>Enable drying mode while power is off (Superior6000S)</td>
+  <td>On</td>
+</tr>
+</tbody>
+</table>
+<h2>Binary Sensors</h2>
+<table>
+<thead>
+<tr>
+  <th>Binary Sensor</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>water_lacks</code></td>
+  <td>Indicates whether the device needs a water refill</td>
+  <td>false</td>
+</tr>
+<tr>
+  <td><code>water_tank_lifted</code></td>
+  <td>Water tank is lifted</td>
+  <td>false</td>
+</tr>
+</tbody>
+</table>
+<h2>Air Fryers</h2>
+<p>Sensors and settings exposed by VeSync Air Fryers.</p>
+<table>
+<thead>
+<tr>
+  <th>Sensor</th>
+  <th>Description</th>
+  <th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>cook_status</code></td>
+  <td>Current status of the fryer</td>
+  <td>cooking</td>
+</tr>
+<tr>
+  <td><code>current_temp</code></td>
+  <td>Current internal temperature of the fryer,  Unknown when off.</td>
+  <td>150C</td>
+</tr>
+<tr>
+  <td><code>cook_set_temp</code></td>
+  <td>The target cooking temperature</td>
+  <td>165C</td>
+</tr>
+<tr>
+  <td><code>cook_set_time</code></td>
+  <td>The number of minutes for cooking</td>
+  <td>15</td>
+</tr>
+<tr>
+  <td><code>remaining_time</code></td>
+  <td>The numbers of minutes left in cooking or preheating</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td><code>preheat_set_time</code></td>
+  <td>The number of minutes for pre heating</td>
+  <td>10</td>
+</tr>
+</tbody>
+</table>
+<h2>Extracting attribute data</h2>
+<p>To get the attributes readings from supported devices, such as voltage from outlets or fan attributes, you'll have to create a <a href="../template/">template sensor</a>.</p>
+<p>In the example below, change all of the <code>vesync_switch</code>'s to match your device's entity ID.</p>
+<p>Adapted from the <a href="../tplink/">TP-Link integration</a>.</p>
+<pre><code>template:
+  - sensor:
+    - name: "Vesync voltage"
+      state: "{{ state_attr('switch.vesync_switch', 'voltage') | float(default=0) }}"
+      unit_of_measurement: "V"
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/vesync.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up VeSync devices with Home Assistant.
+ha_release: 0.66
+ha_domain: vesync
+---
+
+The **VeSync** {% term integration %} enables you to control a wide variety of Levoit devices connected to the VeSync App. Currently this integration supports most bulbs, fans, air purifiers, switches, outlets, humidifers and select air fryers.
+
+The devices must be added to the VeSync App before this {% term integration %} can discover them.
+
+The following platforms are supported:
+
+- **binary sensor**
+- **button**
+- **fan**
+- **humidifier**
+- **light**
+- **number**
+- **sensor**
+- **switch**
+- **update**
+
+## Supported devices
+
+This {% term integration %} supports devices controllable by the VeSync App. The following devices are supported by this {% term integration %}. This list may not be exhaustive as devices have multiple model numbers within this.
+
+### Bulbs
+- Etekcity WiFi Dimmable LED Bulb (ESL100)
+- Etekcity WiFi Dimmable and Tunable White LED Bulb (ESL100CW)
+
+### Wall switches
+
+- Etekcity In Wall Smart Switch (EWSL01-USA)
+- Etekcity Wifi Dimmer Switch (ESD16)
+- Etekcity Wifi Dimmer Switch (ESWD16)
+
+### Outlet plugs
+
+- Etekcity 7 Amp US outlet - ESW01-USA (Round)
+- Etekcity 10 Amp US outlet - ESW10-USA (Round)
+- Etekcity 10 Amp EU outlet - ESW10-EU (Round)
+- Etekcity 15 Amp US outlet - ESW15-USA (Rectangular)
+- Etekcity 2 Plug Outdoor Outlet - ESO15-TB
+
+### Fans
+
+- Core 200S: Smart True HEPA Air Purifier
+- Core 300S: Smart True HEPA Air Purifier
+- Core 400S: Smart True HEPA Air Purifier
+- Core 600S: Smart True HEPA Air Purifier
+- EverestAir: Smart Air Purifier
+- Vital 100S Smart True HEPA Air Purifier (LAP-V102S-WUS)&#32;
+- Vital 200S Smart True HEPA Air Purifier (LAP-V201S-WUS)
+- LEVOIT Smart Wifi Air Purifier (LV-PUR131S)
+- LEVOIT Smart Tower Fan (LTF-F422S-WUS)
+
+### Humidifiers
+
+- Classic200S: Classic 200S Smart Ultrasonic Cool Mist Humidifier
+- Classic300S: Classic 300S Ultrasonic Smart Humidifier
+- OasisMist 1000S Smart Ultrasonic Cool Mist Tower Humidifier (LUH-M101S-WUS)
+- Superior6000S: Superior 6000S Smart Evaporative Humidifier
+
+### Air Fryers
+
+- Cosori 3.7 and 5.8 Quart Air Fryer
+
+## Prerequisite
+
+Before you can use this {% term integration %}, all devices must be registered with the
+VeSync App. Once registration is complete, continue with the steps described in
+the configuration section below.
+
+{% include integrations/config_flow.md %}
+
+## Data updates
+
+The integration {% term polling polls %} the VeSync cloud every 60 seconds. The weekly, monthly, and yearly energy use of outlets is fetched every 6 hours.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+{% include integrations/actions.md %}
+
+## Power &amp; energy sensors
+
+Many VeSync outlets support power &amp; energy monitoring. This data is exposed as sensor entities alongside the outlet
+itself. Note that prior versions of the {% term integration %} exposed these as state attributes on the outlet switch {% term entity %}.
+
+| Sensor                                    | Description                                                             | Example |
+| ------------------------------------------|-------------------------------------------------------------------------|---------|
+| `sensor.&lt;outlet name&gt;_current_power`      | The present power consumption of the switch in watts                    | 7.89    |
+| `sensor.&lt;outlet name&gt;_energy_use_today`   | The kilowatt hours used by the switch during the previous 24 hours      | 0.12    |
+| `sensor.&lt;outlet name&gt;_voltage`            | The present voltage of the switch in Volts as a diagnostic sensor       | 120.32  |
+| `sensor.&lt;outlet name&gt;_energy_use_weekly`  | Total energy usage for week starting from Monday 12:01AM in kWh         | 14.74   |
+| `sensor.&lt;outlet name&gt;_energy_use_monthly` | Total energy usage for month starting from 12:01AM on the first in kWh  | 52.30   |
+| `sensor.&lt;outlet name&gt;_energy_use_yearly`  | Total energy usage for year start from 12:01AM on Jan 1 in kWh          | 105.25  |
+
+## Fan &amp; air quality sensors
+All VeSync air purifiers expose the remaining filter lifetime, and some also expose air quality measurements.
+
+| Sensor                  | Description                                                                            | Example   |
+| ----------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `filter_life`           | Remaining percentage of the filter. (LV-PUR131S, Core200S/300s/400s/600s/EverestAir)   | 142       |
+| `air_quality`           | The current air quality reading. (LV-PUR131S, Core300s/400s/600s)                      | excellent |
+| `pm2_5`                 | The current air quality reading. (Core300s/400s/600s/EverestAir)                       | 8         |
+| `pm1`                   | The current PM1 reading in µg/m³ (purifiers that measure it).                          | 5         |
+| `pm10`                  | The current PM10 reading in µg/m³ (purifiers that measure it).                         | 12        |
+
+| Switch                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `display`               | Display On or Off                                                                  | On        |
+| `child_lock`            | Child lock On or Off                                                               | Off       |
+
+| Button                  | Description                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| `reset_filter`          | Resets the filter life to 100%. Press it after replacing the filter. (Core 200S)   |
+
+## Fan exposed attributes
+
+VeSync air purifiers will expose the following details depending on the features supported by the model:
+
+| Attribute               | Description                                                                       | Example         |
+| ----------------------- | --------------------------------------------------------------------------------- | --------------- |
+| `mode`                  | The current mode the device is in. (LV-PUR131S, Core200S/300s/400s)               | manual          |
+| `oscillating`           | If the fan is currently oscillating                                               | True            |
+| `active_time`           | The number of seconds since the device has been in a non-off mode. (LV-PUR131S)   | 1598            |
+| `display_status`        | The current status of the display.                                                | on              |
+| `night_light`           | The current status of the night light (Core200S/Core400s)                         | off             |
+| `child_lock`            | The current status of the child lock (Core200S/300s/400s)                         | off             |
+
+| Select                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `night_light_level`     | Night light brightness level (Values: off, dim, on).                               | off       |
+
+## Humidifier
+
+Sensors and settings exposed by VeSync humidifiers.
+
+| Sensor                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `humidity`              | Current humidity (in %)                                                            | 35        |
+| `temperature`           | Current temperature (Superior6000S)                                                | 68        |
+
+| Number                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `mist_level`            | Mist level intensity (Range: 1-9, Step: 1). Only available in manual mode.         | 1         |
+
+| Select                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `night_light_level`     | Night light brightness level (Values: off, dim, bright).                           | off       |
+
+| Switch                  | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `display`               | Display On or Off                                                                  | On        |
+| `auto_off_config`       | Auto turn off when humidity target exceeded, resume when below target              | On        |
+| `drying_mode_power_off` | Enable drying mode while power is off (Superior6000S)                              | On        |
+
+
+## Binary Sensors
+
+| Binary Sensor           | Description                                                                        | Example   |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------- |
+| `water_lacks`           | Indicates whether the device needs a water refill                                  | false     |
+| `water_tank_lifted`     | Water tank is lifted                                                               | false     |
+
+## Air Fryers
+
+Sensors and settings exposed by VeSync Air Fryers.
+
+| Sensor                  | Description                                                                            | Example   |
+| ----------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `cook_status`           | Current status of the fryer                                                            | cooking   |
+| `current_temp`          | Current internal temperature of the fryer,  Unknown when off.                          | 150C      |
+| `cook_set_temp`         | The target cooking temperature                                                         | 165C      |
+| `cook_set_time`         | The number of minutes for cooking                                                      | 15        |
+| `remaining_time`        | The numbers of minutes left in cooking or preheating                                   | 8         |
+| `preheat_set_time`      | The number of minutes for pre heating                                                  | 10        |
+
+
+## Extracting attribute data
+
+To get the attributes readings from supported devices, such as voltage from outlets or fan attributes, you&#x27;ll have to create a [template sensor](/integrations/template#state-based-template-sensors/).
+
+In the example below, change all of the `vesync_switch`&#x27;s to match your device&#x27;s entity ID.
+
+Adapted from the [TP-Link integration](/integrations/tplink/#plugs).
+
+```yaml
+template:
+  - sensor:
+    - name: &quot;Vesync voltage&quot;
+      state: &quot;{{ state_attr(&#x27;switch.vesync_switch&#x27;, &#x27;voltage&#x27;) | float(default=0) }}&quot;
+      unit_of_measurement: &quot;V&quot;
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for VeSync.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>fan</li><li>humidifier</li><li>light</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>update devices</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisite</li><li>Data updates</li><li>Removing the integration</li><li>Power &amp; energy sensors</li><li>Fan &amp; air quality sensors</li><li>Fan exposed attributes</li><li>Humidifier</li><li>Binary Sensors</li><li>Air Fryers</li><li>Extracting attribute data</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vesync/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vesync</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vesync</code></dd></dl></section><p><a href="../../integrations/vesync/">Return to the VeSync guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

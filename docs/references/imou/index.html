@@ -1,1 +1,771 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Imou reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:339" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/imou/">Imou guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Imou</h1><p>Integrate Imou smart devices into Home Assistant.</p><section><h2>Overview</h2><p>The Imou integration connects to the Imou Open Platform using your App ID and App secret. Devices linked to your platform account are discovered automatically.</p></section><section><h2>Supported devices</h2><p>The integration supports Imou cameras, gateways, plugs, and sensors that are already on your Imou Open Platform account and reported by the cloud API. It does not add a device that Home Assistant only saw on the local network.</p></section><section><h2>Prerequisites</h2><p>Before using the Imou integration, create an Imou Open Platform application:</p></section><section><h2>Updating credentials and server region</h2><p>After setup, you can change the App secret and Server region without removing the integration:</p></section><section><h2>API usage</h2><p>Imou Open Platform API usage limits apply to your App ID:</p></section><section><h2>Camera</h2><p>Each device channel with a camera feed exposes two camera entities:</p></section><section><h2>Buttons</h2><p>The integration exposes button entities when the cloud API reports that the action is supported for a device:</p></section><section><h2>Switches</h2><p>When the cloud API reports that the toggle is supported for a device, the integration exposes switch entities.</p></section><section><h2>Siren</h2><p>On supported cameras and gateways, the integration exposes a Siren entity when the cloud API reports that the siren can be started or stopped.</p></section><section><h2>Alarm control panel</h2><p>On supported gateways and hubs, the integration exposes an alarm control panel entity named after the device. In the UI, use Arm home, Arm away, and Disarm when the cloud API reports those actions for the device. The entity state shows armed home, armed away, or disarmed accordingly.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Imou.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>app_secret</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_url</code>, <code>app_secret</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_url</code>, <code>app_id</code>, <code>app_secret</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>camera</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>API usage</li><li>Supported functionality</li><li>Data updates</li><li>Examples</li><li>Security and privacy considerations</li><li>Troubleshooting</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/imou/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/imou</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/imou</code></dd></dl></section><p><a href="../../integrations/imou/">Return to the Imou guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Imou reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:339" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/imou/">Imou guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Imou</h1><p>Integrate Imou smart devices into Home Assistant.</p><div class="reader-body"><p>The <strong>Imou</strong> integration connects to the <a>Imou Open Platform</a> using your App ID and App secret. Devices linked to your platform account are discovered automatically.</p>
+<p>Channel devices expose <strong>Live view SD</strong> and <strong>Live view HD</strong> camera entities. Depending on what the cloud API reports for each device, the integration also creates alarm control panel, button, switch, siren, select, binary sensor, and sensor entities. See <a>Supported functionality</a> for the full list.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Watch a live stream or a still image from a camera that is online.</li>
+<li>See whether a camera, gateway, or plug is online, sleeping, or upgrading.</li>
+<li>Arm or disarm a supported gateway.</li>
+<li>Turn a supported plug on or off, and read its power use.</li>
+<li>Get a notification when a supported door or window contact opens.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The integration supports Imou cameras, gateways, plugs, and sensors that are already on your Imou Open Platform account and reported by the cloud API. It does not add a device that Home Assistant only saw on the local network.</p>
+<p>Which entities appear depends on the device. For example, pan and tilt buttons are created only when the device supports them, and a battery sensor appears only when the device reports a battery level.</p>
+<p>Add or remove devices in the Imou Open Platform or the Imou app. Home Assistant picks up the change on the next refresh. See <a>Data updates</a>.</p>
+<h2>Prerequisites</h2>
+<p>Before using the Imou integration, create an Imou Open Platform application:</p>
+<ol>
+<li>Visit <a>Imou Open Platform</a>.</li>
+<li>Register or log in to your Imou account, then open the <strong>Control board</strong>.</li>
+<li>Go to <strong>App Information</strong> to obtain an <strong>App ID</strong> and <strong>App secret</strong>.</li>
+<li>Add your Imou devices in the Imou Open Platform or Imou mobile app so they appear on your account.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Imou</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Imou</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Home Assistant can discover Imou and Lechange devices on the local network from their MAC address. Opening a discovered Imou integration shows the same setup form as adding it manually: enter your Imou Open Platform App ID, App secret, and server region. The discovered device is not added to your account automatically.</p>
+<pre><code>
+App ID:
+  description: The App ID from your Imou Open Platform application.
+App secret:
+  description: The App secret from your Imou Open Platform application.
+Server region:
+  description: The API region for your account. Choose the region closest to where your account was registered.
+
+</code></pre>
+<p>When adding the integration, select <strong>Server region</strong> to match your Open Platform account:</p>
+<ul>
+<li><strong>Singapore (Asia-Pacific)</strong> (<code>sg</code>)</li>
+<li><strong>Europe</strong> (<code>eu</code>)</li>
+<li><strong>North America</strong> (<code>na</code>)</li>
+<li><strong>China</strong> (<code>cn</code>)</li>
+</ul>
+<p>These regions correspond to the API endpoints used by the integration.</p>
+<h3>Updating credentials and server region</h3>
+<p>After setup, you can change the <strong>App secret</strong> and <strong>Server region</strong> without removing the integration:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>Select the <strong>Imou</strong> integration, then <strong>Configure</strong>.</li>
+<li>Enter the updated <strong>App secret</strong> and choose the correct <strong>Server region</strong>.</li>
+</ol>
+<p>Home Assistant validates the credentials against the Imou Open Platform before saving the changes.</p>
+<p>If the platform rejects your App ID or App secret during normal operation, Home Assistant prompts you to <strong>Reauthenticate</strong> instead. Use that flow when only the App secret changed and you are fixing an authentication error.</p>
+<h2>API usage</h2>
+<p>Imou Open Platform API usage limits apply to your App ID:</p>
+<ol>
+<li>Each App ID includes 30,000 free API requests per month. Requests after that are rejected until you add quota, billed at the <a>published unit price</a>, or until the month resets.</li>
+<li>API endpoints are split by region. Select the matching <strong>Server region</strong> during setup. For details, see the <a>development specification</a>.</li>
+<li>For additional API documentation, see the HTTP interface section in the <a>development documentation</a>.</li>
+</ol>
+<h2>Supported functionality</h2>
+<h3>Camera</h3>
+<p>Each device channel with a camera feed exposes two camera entities:</p>
+<ul>
+<li><strong>Live view SD</strong>: Standard-definition cloud live stream (enabled by default).</li>
+<li><strong>Live view HD</strong>: High-definition cloud live stream (disabled by default; enable it in the entity settings if you need HD).</li>
+</ul>
+<p>You can view a still image or start a live stream when the device is online.</p>
+<h3>Buttons</h3>
+<p>The integration exposes button entities when the cloud API reports that the action is supported for a device:</p>
+<ul>
+<li><strong>PTZ up</strong>, <strong>PTZ down</strong>, <strong>PTZ left</strong>, <strong>PTZ right</strong>: Move the camera lens in the corresponding direction. Each press moves the lens for a short interval. The device must support PTZ.</li>
+<li><strong>Mute</strong>: Silence alarm audio on supported gateway devices.</li>
+<li><strong>Restart</strong>: Remotely restart the device (shown with the restart device class when supported).</li>
+</ul>
+<h3>Switches</h3>
+<p>When the cloud API reports that the toggle is supported for a device, the integration exposes switch entities.</p>
+<p>Primary controls:</p>
+<ul>
+<li><strong>Abnormal sound alarm</strong>: Toggle abnormal sound detection alarms.</li>
+<li><strong>Audio recording</strong>: Toggle audio recording on supported cameras.</li>
+<li><strong>Human detection</strong>: Toggle human detection on supported cameras.</li>
+<li><strong>Indicator light</strong>: Toggle the device status indicator LED on supported models.</li>
+<li><strong>Motion detection</strong>: Toggle motion detection on supported cameras.</li>
+<li><strong>Plug switch</strong>: Control the main power relay on supported IoT socket devices.</li>
+<li><strong>Privacy mode</strong>: Enable privacy mode that closes or disables the camera lens on supported models.</li>
+<li><strong>White light</strong>: Manually toggle the camera white LED illuminator on supported models.</li>
+</ul>
+<p>Device settings (<strong>Configuration</strong> category):</p>
+<ul>
+<li><strong>Alarm-linked siren</strong>: Link the device siren to alarm events on supported models.</li>
+<li><strong>Alarm-linked white light</strong>: Link the white light to alarm events on supported models.</li>
+<li><strong>Flip image</strong>: Flip the camera image vertically on supported models.</li>
+<li><strong>Pet detection</strong>: Toggle pet detection on supported cameras.</li>
+<li><strong>Prompt sound</strong>: Toggle prompt sounds on supported models.</li>
+<li><strong>Smart tracking</strong>: Toggle smart tracking on supported cameras.</li>
+<li><strong>Wide dynamic range</strong>: Toggle wide dynamic range on supported cameras.</li>
+</ul>
+<h3>Siren</h3>
+<p>On supported cameras and gateways, the integration exposes a <strong>Siren</strong> entity when the cloud API reports that the siren can be started or stopped.</p>
+<ul>
+<li><strong>Turn on</strong> sounds the siren.</li>
+<li><strong>Turn off</strong> stops the siren.</li>
+</ul>
+<p>The cloud API doesn't report whether the siren is sounding. The state is <strong>Unknown</strong> until you turn the siren on or off. If the device supports both commands, the state then shows the last command you sent. This might not match the device, for example, when the siren stops by itself. Because Home Assistant can't read the real state, the dashboard shows separate on and off buttons instead of a toggle.</p>
+<p><strong>Alarm-linked siren</strong> is a separate switch. It only links the siren to alarm events.</p>
+<h3>Alarm control panel</h3>
+<p>On supported gateways and hubs, the integration exposes an alarm control panel entity named after the device. In the UI, use <strong>Arm home</strong>, <strong>Arm away</strong>, and <strong>Disarm</strong> when the cloud API reports those actions for the device. The entity state shows armed home, armed away, or disarmed accordingly.</p>
+<h3>Selects</h3>
+<p>When the cloud API reports that the option is supported for a device, the integration exposes the following select entities:</p>
+<p>Device settings (<strong>Configuration</strong> category):</p>
+<ul>
+<li><strong>Night vision mode</strong>: Choose the night vision mode on supported cameras.</li>
+<li><strong>Volume</strong>: Choose mute, low, medium, or high volume on supported devices.</li>
+</ul>
+<p>On supported PTZ cameras with saved presets:</p>
+<ul>
+<li><strong>Go to collection point</strong>: Choose a preset to move the camera to that position. After the move, the select returns to its prompt option so you can pick another preset.</li>
+</ul>
+<h3>Binary sensors</h3>
+<p>When the cloud API reports that a contact state is supported for a device, the integration exposes the following binary sensor entity:</p>
+<ul>
+<li><strong>Door</strong>: Open or closed state of a door or window contact on supported devices.</li>
+</ul>
+<h3>Sensors</h3>
+<p>When the cloud API reports that a measurement is supported for a device, the integration exposes sensor entities. Only supported sensor types are created for each device.</p>
+<ul>
+<li><strong>Battery</strong>: Battery level as a percentage on supported battery-powered devices.</li>
+<li><strong>Temperature</strong>: Current ambient temperature in degrees Celsius on supported models.</li>
+<li><strong>Humidity</strong>: Current relative humidity as a percentage on supported models.</li>
+<li><strong>Power</strong>, <strong>Voltage</strong>, <strong>Current</strong>: Real-time electrical measurements on supported IoT socket and power-monitoring devices.</li>
+<li><strong>Energy consumption</strong>: Total energy used in kilowatt-hours on supported socket devices.</li>
+<li><strong>Usage duration</strong>: Total operating time in minutes on supported socket devices.</li>
+<li><strong>Cycles today</strong>: Number of switch cycles for the current day on supported socket devices.</li>
+<li><strong>Storage used</strong>: Storage usage as a percentage. When the storage medium is unavailable or reports an abnormal condition, the entity state is <code>unknown</code>.</li>
+<li><strong>Status</strong>: Device connectivity state (<code>online</code>, <code>offline</code>, <code>sleep</code>, or <code>upgrading</code>). This sensor remains available when the device is offline so you can still see its last reported state.</li>
+</ul>
+<p>Battery, storage used, and status sensors are shown under <strong>Diagnostic</strong> on the device page. Other sensors appear under <strong>Sensors</strong>.</p>
+<h2>Data updates</h2>
+<p>The integration polling polls the Imou cloud every 2 minutes. Each poll refreshes the device list and the status of devices already on the account.</p>
+<ul>
+<li>A device you add in the Imou app or Open Platform is added on the next poll, including its entities.</li>
+<li>A device you remove from the account is removed from Home Assistant, including its entities.</li>
+<li>A command, such as a switch, button, select, siren, or alarm control panel action, is sent immediately. Measurements such as battery, power, and online status update on the next poll.</li>
+</ul>
+<h2>Examples</h2>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<p>Replace <code>notify.my_device</code> with your own notification entity, such as your phone.</p>
+<h3>Automation: Notify when a camera goes offline</h3>
+<ul>
+<li><strong>Trigger</strong>: State<ul>
+<li><strong>Entity</strong>: Living room Status</li>
+<li><strong>To</strong>: Disconnected</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My device (<code>notify.my_device</code>)</li>
+<li><strong>Message</strong>: The living room camera is offline.</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for an offline camera</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when the living room camera is offline"
+triggers:
+- trigger: state
+entity_id: sensor.living_room_status
+to: "offline"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "The living room camera is offline."</p>
+<h3>Automation: Notify when a door opens</h3>
+<ul>
+<li><strong>Trigger</strong>: State<ul>
+<li><strong>Entity</strong>: Front door</li>
+<li><strong>To</strong>: Open</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My device (<code>notify.my_device</code>)</li>
+<li><strong>Message</strong>: The front door opened.</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for an open door</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when the front door opens"
+triggers:
+- trigger: state
+entity_id: binary_sensor.front_door
+to: "on"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "The front door opened."</p>
+<h2>Security and privacy considerations</h2>
+<p>This integration communicates with Imou cloud services. Device control commands are sent through Imou servers. Review Imou's <a>privacy policy</a> and terms of service before proceeding.</p>
+<h2>Troubleshooting</h2>
+<h3>Invalid App ID or App secret</h3>
+<p>Verify that <strong>App ID</strong>, <strong>App secret</strong>, and <strong>Server region</strong> match your Imou Open Platform application and account region.</p>
+<p>If you changed the <strong>App secret</strong>, Home Assistant may ask you to reauthenticate the Imou integration. Enter the new <strong>App secret</strong>; you do not need to remove the integration. You can also update the <strong>App secret</strong> and <strong>Server region</strong> at any time from <strong>Configure</strong> (see <a>Updating credentials and server region</a>).</p>
+<h3>API quota is used quickly</h3>
+<p>The integration polls the platform every 2 minutes. For one device, each poll sends at least two requests: the device list and the device status. Over 30 days that is about 43,000 requests, which is more than the 30,000 free requests. More devices, and extra readings such as sensors, use more. When the quota is used up, the device list, live view, and controls cannot reach the cloud until you add quota or the month resets.</p>
+<p>Open <strong>My Resources</strong> in the Open Platform console to check or add quota, then reload the Imou integration.</p>
+<h3>A device does not appear</h3>
+<p>Confirm the device is on the same Open Platform account as the App ID, and that <strong>Server region</strong> matches that account. A device found only by MAC address on your network is not added automatically. After you add it in the Imou app, wait for the next poll (up to 2 minutes) or reload the integration.</p>
+<h3>Live view does not start</h3>
+<p>Live view needs the device to be online and Home Assistant to reach the Imou cloud. <strong>Live view HD</strong> is disabled by default. Enable that entity if you expect the HD stream. If standard definition also fails, check the device in the Imou app and your monthly quota.</p>
+<h3>A button is unavailable</h3>
+<p>Buttons are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.</p>
+<h3>A switch is unavailable</h3>
+<p>Switches are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.</p>
+<h3>A select is unavailable</h3>
+<p>Selects are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.</p>
+<h3>A binary sensor is unavailable</h3>
+<p>Binary sensors are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.</p>
+<h3>A sensor is unavailable</h3>
+<p>Most sensors are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.</p>
+<p>The <strong>Status</strong> sensor is an exception: it stays available when the device is offline and reports <code>offline</code> instead of becoming unavailable.</p>
+<h3>A siren is unavailable</h3>
+<p>The siren is unavailable when the device is offline or no longer on your account. Ensure the device appears online in the Imou app.</p>
+<h3>An alarm control panel is unavailable</h3>
+<p>The alarm control panel is unavailable when the device is offline or no longer on your account. Ensure the gateway or hub appears online in the Imou app.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration only talks to the Imou cloud. Live view and controls stop when Home Assistant cannot reach the cloud, even if the device is on your local network.</li>
+<li>Each App ID includes 30,000 free API requests per month. The 2-minute poll uses more than that for one device. After the quota is used up, cloud calls fail until you add quota or the month resets. See <a>API usage</a>.</li>
+<li>Status such as online, battery, power, and door contact state can be up to 2 minutes old. The system does not detect a door that opens and closes again between polls.</li>
+<li>An entity is created only when the cloud API reports that the device supports it.</li>
+<li><strong>Live view HD</strong> is disabled by default.</li>
+<li>The cloud API doesn't report whether the siren is sounding. Until you turn it on or off, the state is <strong>Unknown</strong>. If the device supports both commands, the state then shows the last command you sent, which might not match the device if the siren stops by itself. See <a>Siren</a>.</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/imou.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Integrate Imou smart devices into Home Assistant.
+ha_release: 2026.7
+ha_domain: imou
+---
+
+The **Imou** {% term integration %} connects to the [Imou Open Platform](https://open.imoulife.com) using your App ID and App secret. Devices linked to your platform account are discovered automatically.
+
+Channel devices expose **Live view SD** and **Live view HD** camera entities. Depending on what the cloud API reports for each device, the integration also creates alarm control panel, button, switch, siren, select, binary sensor, and sensor entities. See [Supported functionality](#supported-functionality) for the full list.
+
+## Use cases
+
+- Watch a live stream or a still image from a camera that is online.
+- See whether a camera, gateway, or plug is online, sleeping, or upgrading.
+- Arm or disarm a supported gateway.
+- Turn a supported plug on or off, and read its power use.
+- Get a notification when a supported door or window contact opens.
+
+## Supported devices
+
+The integration supports Imou cameras, gateways, plugs, and sensors that are already on your Imou Open Platform account and reported by the cloud API. It does not add a device that Home Assistant only saw on the local network.
+
+Which entities appear depends on the device. For example, pan and tilt buttons are created only when the device supports them, and a battery sensor appears only when the device reports a battery level.
+
+Add or remove devices in the Imou Open Platform or the Imou app. Home Assistant picks up the change on the next refresh. See [Data updates](#data-updates).
+
+## Prerequisites
+
+Before using the Imou integration, create an Imou Open Platform application:
+
+1. Visit [Imou Open Platform](https://open.imoulife.com).
+2. Register or log in to your Imou account, then open the **Control board**.
+3. Go to **App Information** to obtain an **App ID** and **App secret**.
+4. Add your Imou devices in the Imou Open Platform or Imou mobile app so they appear on your account.
+
+{% include integrations/config_flow.md %}
+
+Home Assistant can discover Imou and Lechange devices on the local network from their MAC address. Opening a discovered Imou integration shows the same setup form as adding it manually: enter your Imou Open Platform App ID, App secret, and server region. The discovered device is not added to your account automatically.
+
+{% configuration_basic %}
+App ID:
+  description: The App ID from your Imou Open Platform application.
+App secret:
+  description: The App secret from your Imou Open Platform application.
+Server region:
+  description: The API region for your account. Choose the region closest to where your account was registered.
+{% endconfiguration_basic %}
+
+When adding the integration, select **Server region** to match your Open Platform account:
+
+- **Singapore (Asia-Pacific)** (`sg`)
+- **Europe** (`eu`)
+- **North America** (`na`)
+- **China** (`cn`)
+
+These regions correspond to the API endpoints used by the integration.
+
+### Updating credentials and server region
+
+After setup, you can change the **App secret** and **Server region** without removing the integration:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. Select the **Imou** integration, then **Configure**.
+3. Enter the updated **App secret** and choose the correct **Server region**.
+
+Home Assistant validates the credentials against the Imou Open Platform before saving the changes.
+
+If the platform rejects your App ID or App secret during normal operation, Home Assistant prompts you to **Reauthenticate** instead. Use that flow when only the App secret changed and you are fixing an authentication error.
+
+## API usage
+
+Imou Open Platform API usage limits apply to your App ID:
+
+1. Each App ID includes 30,000 free API requests per month. Requests after that are rejected until you add quota, billed at the [published unit price](https://open.imoulife.com/price), or until the month resets.
+2. API endpoints are split by region. Select the matching **Server region** during setup. For details, see the [development specification](https://open.imoulife.com/book/http/develop.html).
+3. For additional API documentation, see the HTTP interface section in the [development documentation](https://open.imoulife.com/book/en).
+
+## Supported functionality
+
+### Camera
+
+Each device channel with a camera feed exposes two camera entities:
+
+- **Live view SD**: Standard-definition cloud live stream (enabled by default).
+- **Live view HD**: High-definition cloud live stream (disabled by default; enable it in the entity settings if you need HD).
+
+You can view a still image or start a live stream when the device is online.
+
+### Buttons
+
+The integration exposes button entities when the cloud API reports that the action is supported for a device:
+
+
+- **PTZ up**, **PTZ down**, **PTZ left**, **PTZ right**: Move the camera lens in the corresponding direction. Each press moves the lens for a short interval. The device must support PTZ.
+- **Mute**: Silence alarm audio on supported gateway devices.
+- **Restart**: Remotely restart the device (shown with the restart device class when supported).
+
+### Switches
+
+When the cloud API reports that the toggle is supported for a device, the integration exposes switch entities.
+
+Primary controls:
+
+- **Abnormal sound alarm**: Toggle abnormal sound detection alarms.
+- **Audio recording**: Toggle audio recording on supported cameras.
+- **Human detection**: Toggle human detection on supported cameras.
+- **Indicator light**: Toggle the device status indicator LED on supported models.
+- **Motion detection**: Toggle motion detection on supported cameras.
+- **Plug switch**: Control the main power relay on supported IoT socket devices.
+- **Privacy mode**: Enable privacy mode that closes or disables the camera lens on supported models.
+- **White light**: Manually toggle the camera white LED illuminator on supported models.
+
+Device settings (**Configuration** category):
+
+- **Alarm-linked siren**: Link the device siren to alarm events on supported models.
+- **Alarm-linked white light**: Link the white light to alarm events on supported models.
+- **Flip image**: Flip the camera image vertically on supported models.
+- **Pet detection**: Toggle pet detection on supported cameras.
+- **Prompt sound**: Toggle prompt sounds on supported models.
+- **Smart tracking**: Toggle smart tracking on supported cameras.
+- **Wide dynamic range**: Toggle wide dynamic range on supported cameras.
+
+### Siren
+
+On supported cameras and gateways, the integration exposes a **Siren** entity when the cloud API reports that the siren can be started or stopped.
+
+- **Turn on** sounds the siren.
+- **Turn off** stops the siren.
+
+The cloud API doesn&#x27;t report whether the siren is sounding. The state is **Unknown** until you turn the siren on or off. If the device supports both commands, the state then shows the last command you sent. This might not match the device, for example, when the siren stops by itself. Because Home Assistant can&#x27;t read the real state, the dashboard shows separate on and off buttons instead of a toggle.
+
+**Alarm-linked siren** is a separate switch. It only links the siren to alarm events.
+
+### Alarm control panel
+
+On supported gateways and hubs, the integration exposes an alarm control panel entity named after the device. In the UI, use **Arm home**, **Arm away**, and **Disarm** when the cloud API reports those actions for the device. The entity state shows armed home, armed away, or disarmed accordingly.
+
+### Selects
+
+When the cloud API reports that the option is supported for a device, the integration exposes the following select entities:
+
+Device settings (**Configuration** category):
+
+- **Night vision mode**: Choose the night vision mode on supported cameras.
+- **Volume**: Choose mute, low, medium, or high volume on supported devices.
+
+On supported PTZ cameras with saved presets:
+
+- **Go to collection point**: Choose a preset to move the camera to that position. After the move, the select returns to its prompt option so you can pick another preset.
+
+### Binary sensors
+
+When the cloud API reports that a contact state is supported for a device, the integration exposes the following binary sensor entity:
+
+- **Door**: Open or closed state of a door or window contact on supported devices.
+
+### Sensors
+
+When the cloud API reports that a measurement is supported for a device, the integration exposes sensor entities. Only supported sensor types are created for each device.
+
+- **Battery**: Battery level as a percentage on supported battery-powered devices.
+- **Temperature**: Current ambient temperature in degrees Celsius on supported models.
+- **Humidity**: Current relative humidity as a percentage on supported models.
+- **Power**, **Voltage**, **Current**: Real-time electrical measurements on supported IoT socket and power-monitoring devices.
+- **Energy consumption**: Total energy used in kilowatt-hours on supported socket devices.
+- **Usage duration**: Total operating time in minutes on supported socket devices.
+- **Cycles today**: Number of switch cycles for the current day on supported socket devices.
+- **Storage used**: Storage usage as a percentage. When the storage medium is unavailable or reports an abnormal condition, the entity state is `unknown`.
+- **Status**: Device connectivity state (`online`, `offline`, `sleep`, or `upgrading`). This sensor remains available when the device is offline so you can still see its last reported state.
+
+Battery, storage used, and status sensors are shown under **Diagnostic** on the device page. Other sensors appear under **Sensors**.
+
+## Data updates
+
+The integration {% term polling polls %} the Imou cloud every 2 minutes. Each poll refreshes the device list and the status of devices already on the account.
+
+- A device you add in the Imou app or Open Platform is added on the next poll, including its entities.
+- A device you remove from the account is removed from Home Assistant, including its entities.
+- A command, such as a switch, button, select, siren, or alarm control panel action, is sent immediately. Measurements such as battery, power, and online status update on the next poll.
+
+## Examples
+
+{% include docs/paste_yaml_tip.md %}
+
+Replace `notify.my_device` with your own notification entity, such as your phone.
+
+### Automation: Notify when a camera goes offline
+
+- **Trigger**: State
+  - **Entity**: Living room Status
+  - **To**: Disconnected
+- **Action**: Send a notification message
+  - **Target**: My device (`notify.my_device`)
+  - **Message**: The living room camera is offline.
+
+{% details &quot;YAML example for an offline camera&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when the living room camera is offline&quot;
+  triggers:
+    - trigger: state
+      entity_id: sensor.living_room_status
+      to: &quot;offline&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;The living room camera is offline.&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Notify when a door opens
+
+- **Trigger**: State
+  - **Entity**: Front door
+  - **To**: Open
+- **Action**: Send a notification message
+  - **Target**: My device (`notify.my_device`)
+  - **Message**: The front door opened.
+
+{% details &quot;YAML example for an open door&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when the front door opens&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.front_door
+      to: &quot;on&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;The front door opened.&quot;
+{% endexample %}
+
+{% enddetails %}
+
+## Security and privacy considerations
+
+This integration communicates with Imou cloud services. Device control commands are sent through Imou servers. Review Imou&#x27;s [privacy policy](https://open.imoulife.com/book/http/privacy.html) and terms of service before proceeding.
+
+## Troubleshooting
+
+### Invalid App ID or App secret
+
+Verify that **App ID**, **App secret**, and **Server region** match your Imou Open Platform application and account region.
+
+If you changed the **App secret**, Home Assistant may ask you to reauthenticate the Imou integration. Enter the new **App secret**; you do not need to remove the integration. You can also update the **App secret** and **Server region** at any time from **Configure** (see [Updating credentials and server region](#updating-credentials-and-server-region)).
+
+### API quota is used quickly
+
+The integration polls the platform every 2 minutes. For one device, each poll sends at least two requests: the device list and the device status. Over 30 days that is about 43,000 requests, which is more than the 30,000 free requests. More devices, and extra readings such as sensors, use more. When the quota is used up, the device list, live view, and controls cannot reach the cloud until you add quota or the month resets.
+
+Open **My Resources** in the Open Platform console to check or add quota, then reload the Imou integration.
+
+### A device does not appear
+
+Confirm the device is on the same Open Platform account as the App ID, and that **Server region** matches that account. A device found only by MAC address on your network is not added automatically. After you add it in the Imou app, wait for the next poll (up to 2 minutes) or reload the integration.
+
+### Live view does not start
+
+Live view needs the device to be online and Home Assistant to reach the Imou cloud. **Live view HD** is disabled by default. Enable that entity if you expect the HD stream. If standard definition also fails, check the device in the Imou app and your monthly quota.
+
+### A button is unavailable
+
+Buttons are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.
+
+### A switch is unavailable
+
+Switches are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.
+
+### A select is unavailable
+
+Selects are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.
+
+### A binary sensor is unavailable
+
+Binary sensors are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.
+
+### A sensor is unavailable
+
+Most sensors are unavailable when a device is offline or no longer on your account. Ensure the device has power and network connectivity and appears online in the Imou app.
+
+The **Status** sensor is an exception: it stays available when the device is offline and reports `offline` instead of becoming unavailable.
+
+### A siren is unavailable
+
+The siren is unavailable when the device is offline or no longer on your account. Ensure the device appears online in the Imou app.
+
+### An alarm control panel is unavailable
+
+The alarm control panel is unavailable when the device is offline or no longer on your account. Ensure the gateway or hub appears online in the Imou app.
+
+## Known limitations
+
+- The integration only talks to the Imou cloud. Live view and controls stop when Home Assistant cannot reach the cloud, even if the device is on your local network.
+- Each App ID includes 30,000 free API requests per month. The 2-minute poll uses more than that for one device. After the quota is used up, cloud calls fail until you add quota or the month resets. See [API usage](#api-usage).
+- Status such as online, battery, power, and door contact state can be up to 2 minutes old. The system does not detect a door that opens and closes again between polls.
+- An entity is created only when the cloud API reports that the device supports it.
+- **Live view HD** is disabled by default.
+- The cloud API doesn&#x27;t report whether the siren is sounding. Until you turn it on or off, the state is **Unknown**. If the device supports both commands, the state then shows the last command you sent, which might not match the device if the siren stops by itself. See [Siren](#siren).
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Imou.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>app_secret</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_url</code>, <code>app_secret</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_url</code>, <code>app_id</code>, <code>app_secret</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>camera</li><li>select</li><li>sensor</li><li>siren</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Prerequisites</li><li>API usage</li><li>Supported functionality</li><li>Data updates</li><li>Examples</li><li>Security and privacy considerations</li><li>Troubleshooting</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/imou/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/imou</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/imou</code></dd></dl></section><p><a href="../../integrations/imou/">Return to the Imou guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

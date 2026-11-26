@@ -1,1 +1,630 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HomeWizard reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:13" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homewizard/">HomeWizard guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>HomeWizard</h1><p>Instructions on how to integrate HomeWizard into Home Assistant.</p><section><h2>Overview</h2><p>Integration for the HomeWizard platform. It can collect data locally from HomeWizard products and create them as sensors in Home Assistant. Use this integration to monitor your energy, gas, and water usage to optimize your energy consumption. The information collected by this integration can be used by the Energy dashboard.</p></section><section><h2>Other supported devices</h2><p>In addition to the certified devices, the following device is also supported:</p></section><section><h2>Enable the API</h2><p>You have to enable the local API to allow Home Assistant to communicate with your device. Do this in the HomeWizard app:</p></section><section><h2>Supported functionality</h2><p>The HomeWizard integration provides sensors about what your device is measuring or doing. All of them are provided as entities in Home Assistant. Below is an overview of the entities provided by this integration.</p></section><section><h2>P1 Meter</h2><p>_Not all sensors are provided by all Smart Meters, only the available sensors are shown in the integration._</p></section><section><h2>Energy Socket</h2><p>Reactive power and apparent power are not available for all hardware versions, this depends on the internal metering chip.</p></section><section><h2>Plug-In Battery</h2><p>The Plug-In Battery provides some special group-level entities to help you manage your batteries:</p></section><section><h2>Battery group charging strategy</h2><p>The group of connected Plug-In Batteries can be controlled in different modes using the Battery group charging strategy select entity:</p></section><section><h2>Battery group power and battery group target power</h2><p>The Battery group power entity shows the total power consumed or produced by the group of connected Plug-In Batteries. The Battery group target power entity shows the target power for the battery group, as determined by the current battery group charging strategy. These values is expressed in watts (W). A negative value means the battery group is trying to produce power, while a positive value means the battery group is trying to consume power.</p></section><section><h2>Identify</h2><p>The identify button can be pressed to let the status light blink for a few seconds. _This feature is not available for the kWh Meter._</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for HomeWizard.</p><p>The <strong>reconfigure</strong> configuration step lists <code>ip_address</code>.</p><p>The <strong>user</strong> configuration step lists <code>ip_address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Works with Home Assistant certified devices</li><li>Other supported devices</li><li>Enable the API</li><li>Supported functionality</li><li>Identify</li><li>Cloud communication</li><li>Examples</li><li>Data fetching interval</li><li>Known limitations</li><li>Troubleshooting</li><li>I can&#x27;t find entities like voltage, current, or battery group charging strategy</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homewizard/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homewizard</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homewizard</code></dd></dl></section><p><a href="../../integrations/homewizard/">Return to the HomeWizard guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HomeWizard reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:13" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homewizard/">HomeWizard guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>HomeWizard</h1><p>Instructions on how to integrate HomeWizard into Home Assistant.</p><div class="reader-body"><p>Integration for the <a>HomeWizard</a> platform. It can collect data locally from HomeWizard products and create them as sensors in Home Assistant. Use this integration to monitor your energy, gas, and water usage to optimize your energy consumption. The information collected by this integration can be used by the <a>Energy dashboard</a>.</p>
+<h2>Works with Home Assistant certified devices</h2>
+<h2>Other supported devices</h2>
+<p>In addition to the certified devices, the following device is also supported:</p>
+<ul>
+<li><a>kWh Meter 3-Phase</a>: Sensors for power import/export and energy consumption (models: <code>HWE-KWH3</code>, <code>SDM630-wifi</code>).</li>
+</ul>
+<h2>Enable the API</h2>
+<p>You have to enable the local API to allow Home Assistant to communicate with your device. Do this in the HomeWizard app:</p>
+<p><strong>Tip</strong></p>
+<p>You can skip this step if you are configuring one of the following devices:</p>
+<ul>
+<li>P1 Meter</li>
+<li>kWh Meter</li>
+<li>Plug-In Battery</li>
+</ul>
+<p>These products use a different authentication method that doesn't require enabling the local API.</p>
+<ol>
+<li>Go to <strong>Settings</strong> (gear icon in the upper-right).</li>
+<li>Go to <strong>Meters</strong>.</li>
+<li>Select your device.</li>
+<li>Scroll down and turn on <strong>Local API</strong>.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>HomeWizard</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>HomeWizard</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+IP address:
+  description: "The IP address of your device. You can find it in your router."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<p>The HomeWizard integration provides sensors about what your device is measuring or doing. All of them are provided as entities in Home Assistant. Below is an overview of the entities provided by this integration.</p>
+<h3>P1 Meter</h3>
+<p><em>Not all sensors are provided by all Smart Meters, only the available sensors are shown in the integration.</em></p>
+<ul>
+<li><strong>Energy import/export (kWh)</strong>: Total energy imported or exported since installation of your smart meter. Each tariff has its own sensor (e.g., T1, T2) and a sensor for the combined value.</li>
+<li><strong>Power (W)</strong>: Active consumed power measured, each phase has its own sensor. The sensors reading will negative if the power is generated.</li>
+<li><strong>Voltage (V)</strong>: Active voltage measured, each phase has its own sensor.</li>
+<li><strong>Current (A)</strong>: Active current measured, each phase has its own sensor.</li>
+<li><strong>Tariff</strong>: Current tariff that is used. Can be used to keep consumption as low as possible during peak hours.</li>
+<li><strong>Frequency (Hz)</strong>: Grid frequency.</li>
+<li><strong>Voltage sags and swells</strong>: Number of times a voltage sag or swell has been detected.</li>
+<li><strong>Power failures</strong>: Two sensors indicate the number of power failures detected by the smart meter. One for all power failures and another for 'long' power failures.</li>
+<li><strong>Peak demand</strong>: Belgium users are charged for the peak usage per month (see <a>capaciteitstarief</a>). Two sensors are available: one shows the current quarterly average, and another shows the peak measured this month. Both sensors are provided directly from the smart meter and can be used to keep the peak as low as possible.</li>
+<li><strong>Status light brightness</strong>: Controls the brightness of the green status light. Error statuses are always visualized, even when the brightness is set to 0.</li>
+</ul>
+<p>External meters, like a gas or water meter, can be connected to your Smart meter. Each device is exposed as a separate device with its own measurement.</p>
+<h3>kWh Meter</h3>
+<ul>
+<li><strong>Energy import/export (kWh)</strong>: Total energy imported or exported measured by kWh meter.</li>
+<li><strong>Power (W)</strong>: Active consumed power that is measured, each phase has its own sensor. The sensors reading will negative if the power is generated.</li>
+<li><strong>Production power (W)</strong>: Active production power measured. The reading will negative if the power is consumed. This sensor can be used in the energy dashboard as solar production power sensor.</li>
+<li><strong>Voltage (V)</strong>: Active voltage measured, each phase has its own sensor.</li>
+<li><strong>Current (A)</strong>: Active current measured, each phase has its own sensor.</li>
+<li><strong>Frequency (Hz)</strong>: Grid frequency.</li>
+<li><strong>Reactive power (VAR)</strong>: Active reactive power measurement, each phase has its own sensor.</li>
+<li><strong>Apparent power (VA)</strong>: Active apparent power measurement, each phase has its own sensor.</li>
+</ul>
+<h3>Energy Socket</h3>
+<ul>
+<li><strong>Energy import/export (kWh)</strong>: Total energy imported or exported measured by Energy Socket.</li>
+<li><strong>Power (W)</strong>: Active power that is measured. The sensors reading will negative if the power is generated.</li>
+<li><strong>Production power (W)</strong>: Active production power measured. The reading will negative if the power is consumed. This sensor can be used in the energy dashboard as solar production power sensor.</li>
+<li><strong>Voltage (V)</strong>: Active voltage measured.</li>
+<li><strong>Current (A)</strong>: Active current measured.</li>
+<li><strong>Frequency (Hz)</strong>: Grid frequency.</li>
+<li>**Reactive power (VAR)***: Active reactive power measurement.</li>
+<li>**Apparent power (VA)***: Active apparent power measurement.</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Reactive power and apparent power are not available for all hardware versions, this depends on the internal metering chip.</p>
+<p>The Energy Socket also has a switch to control the outlet state and a status light that can be controlled.</p>
+<ul>
+<li><strong>Switch</strong>: Controls the outlet state of the Energy Socket. This switch is permanently on when <em>Switch Lock</em> is turned on. Use this to control the power of simple devices, such as a heater or a charger.</li>
+<li><strong>Switch lock</strong>: Forces the outlet state to the <em>on</em> position and disables the physical button. This option is useful when the socket is used for a device that must not be turned off, such as a refrigerator.</li>
+<li><strong>Status light brightness</strong>: Controls the brightness of the green status light. This light turns on when the switch is on.</li>
+</ul>
+<h3>Watermeter</h3>
+<ul>
+<li><strong>Water usage (L/min)</strong>: Flow of water measured at that time.</li>
+<li><strong>Total water usage (m³)</strong>: Total water usage since the installation of the Watermeter.</li>
+</ul>
+<h3>Plug-In Battery</h3>
+<ul>
+<li><strong>Energy import/export (kWh)</strong>: Total energy imported or exported by the battery.</li>
+<li><strong>Power (W)</strong>: Active power consumed or produced by the battery. The sensors reading will negative if the power is generated.</li>
+<li><strong>Production power (W)</strong>: Active production power measured. The sensors reading will negative if the power is consumed. This sensor is to be used in the energy dashboard as battery power sensor.</li>
+<li><strong>Voltage (V)</strong>: Active voltage measured.</li>
+<li><strong>Current (A)</strong>: Active current consumed or produced by the battery.</li>
+<li><strong>Frequency (Hz)</strong>: Grid frequency.</li>
+<li><strong>Cycles</strong>: Number of charge cycles the battery has gone through.</li>
+<li><strong>State of charge (%)</strong>: The current state of charge of the battery.</li>
+<li><strong>Status light brightness</strong>: Controls the brightness of the LED strip. Error statuses are always visualized, even when the brightness is set to 0.</li>
+</ul>
+<p>The Plug-In Battery provides some special group-level entities to help you manage your batteries:</p>
+<ul>
+<li><strong>Battery group charging strategy</strong>: Lets you control how your group of Plug-In Batteries charges and discharges.</li>
+<li><strong>Battery group power</strong>: Shows the total power consumed or produced by the group of connected Plug-In Batteries.</li>
+<li><strong>Battery group target power</strong>: Shows the target power the group is trying to achieve.</li>
+</ul>
+<p>You can find these entities on the device that manages your batteries. This is either your P1 Meter or kWh Meter, depending on which is set as your mains connection in the HomeWizard app. These entities are not available directly on the battery itself. If you add Plug-In Batteries after your initial setup, these entities may be disabled by default. For information on how to enable them, see <a>I can't find entities like voltage, current, battery group charging strategy, or battery group target power</a>.</p>
+<h4>Battery group charging strategy</h4>
+<p>The group of connected Plug-In Batteries can be controlled in different modes using the <strong>Battery group charging strategy</strong> select entity:</p>
+<ul>
+<li><strong>Net zero</strong>: In this charging strategy, the Plug-In Battery works to keep your home's net power consumption or production as close to zero as possible. The battery will automatically charge or discharge to maintain a balanced power flow. This is the default setting and helps you maximize self-consumption and minimize grid interaction.</li>
+<li><strong>Net zero (charge only)</strong>: The Plug-In Battery will only charge to absorb excess solar production, aiming to keep your home's power production at zero. Discharging is disabled in this mode. This is useful if you want to store solar energy for later use, such as during the evening or when energy prices are higher.</li>
+<li><strong>Net zero (discharge only)</strong>: The Plug-In Battery will only discharge to supply power when your home's consumption exceeds solar production, aiming to keep your home's power consumption at zero. Charging is disabled in this mode. This can be helpful when energy prices are high and you prefer to use stored energy or sell excess solar production to the grid.</li>
+<li><strong>One-time full charge</strong>: All connected Plug-In Batteries will be charged to 100%, regardless of the power consumption/production of your home. When all batteries are fully charged, the Plug-In Battery will switch to the standby mode.</li>
+<li><strong>Standby</strong>: Plug-In Batteries will enter standby mode. This means that the Plug-In Battery will neither charge nor discharge.</li>
+<li><strong>Smart charging</strong>: With this strategy, the Plug-In Batteries continuously predict the best moments to charge and discharge based on your production, consumption, and the local weather. This helps keep the grid in your area more stable and sustainable, and lets you save extra with a dynamic energy contract. Note: Smart charging requires a <a>cloud connection</a> for requesting a prediction plan.</li>
+</ul>
+<p>Read more about the <a>HomeWizard charging strategies (Dutch)</a>.</p>
+<p><strong>Tip</strong></p>
+<p><strong>Smart charging</strong> is available for the following devices:</p>
+<ul>
+<li>P1 Meter with firmware version 6.0400 or higher</li>
+<li>kWh Meter with firmware version 5.0200 or higher</li>
+</ul>
+<p>To learn how to update your device to the latest version, see <a>How do I check if I have the latest software on my HomeWizard product?</a></p>
+<h4>Battery group power and battery group target power</h4>
+<p>The <strong>Battery group power</strong> entity shows the total power consumed or produced by the group of connected Plug-In Batteries. The <strong>Battery group target power</strong> entity shows the target power for the battery group, as determined by the current battery group charging strategy. These values is expressed in watts (W). A negative value means the battery group is trying to produce power, while a positive value means the battery group is trying to consume power.</p>
+<h2>Identify</h2>
+<p>The identify button can be pressed to let the status light blink for a few seconds.
+<em>This feature is not available for the kWh Meter.</em></p>
+<h2>Cloud communication</h2>
+<p>The HomeWizard devices are designed to work with the HomeWizard app and require communication with the HomeWizard cloud to function with the app. The "Cloud connection" configuration toggle can be used to turn off all communication with the HomeWizard cloud, making the device fully local. The device cannot communicate with the app, and the device won't receive any future firmware updates.</p>
+<p>This feature is not available for the Plug-In Battery. Cloud communication is restored when the switch is turned on again. Cloud communications are also restored after a factory reset, or when the device is put in pairing mode.</p>
+<h2>Examples</h2>
+<h3>Send a notification when your washing machine is done</h3>
+<p>If you know the energy characteristics of your washing machine, you can create an automation that sends a notification when the energy usage drops below a certain threshold. This can notify you when your washing machine is done. You can use the following blueprint for this:</p>
+<ul>
+<li><a>Appliance Power Monitor Blueprint With Elapsed Time and Energy Used Variables</a>, created by <a>@Jhonattan-Souza</a></li>
+</ul>
+<h3>Add your Energy data to the Energy dashboard</h3>
+<p>The HomeWizard integration provides data that can be used in the Energy dashboard. To add your data to the Energy dashboard, follow the steps in the <a>Energy dashboard documentation</a>.</p>
+<h2>Data fetching interval</h2>
+<p>The integration is polling new data every 5 seconds. There is no limitation on the number or frequency of requests that can be made to the device.</p>
+<p>If you want to define a specific interval at which your device is being polled for data, you can disable the default polling interval and create your own polling automation.</p>
+<p>To turn off the default polling and create your own polling automation, follow these steps:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, and select your integration.</li>
+<li>On the integration entry, select the three dots  menu, and then select <strong>System options</strong>.</li>
+<li>Turn off <strong>Enable polling for changes</strong>, and then select <strong>Update</strong>.<ul>
+<li>If Home Assistant asks you to restart, restart it.</li>
+</ul>
+</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>Automations &amp; scenes</strong>, and select <strong>Create automation</strong> &gt; <strong>Create new automation</strong>.</li>
+<li>Add the triggers and conditions for when you want to poll for data.</li>
+<li>Select <strong>Add action</strong>, select <strong>By type</strong>, select <strong>Perform action</strong>, and then select <strong>+</strong> next to <strong>Perform action</strong>.</li>
+<li>Under <strong>Action</strong>, search for and select the <a><strong>Update entity</strong></a> action.</li>
+<li>Under <strong>Entities to update</strong>, select the entities you want to poll.<ul>
+<li>You can only select entities. Areas, devices, and labels aren't supported.</li>
+</ul>
+</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<p>Many integrations update their data at most once every 10 seconds. If you poll more often, Home Assistant waits until the 10 seconds have passed before it updates the data again.</p>
+<h2>Known limitations</h2>
+<h3>Watermeter cannot be used with batteries</h3>
+<p>The Watermeter can be powered via a USB-C cable and with batteries. When using batteries, it only connects to Wi-Fi every couple of hours. Because of this, the API can only be used when powered via the USB-C cable. It is not possible to use this integration when the Watermeter is powered by batteries.</p>
+<h3>P1 Meter may update slowly</h3>
+<p>The P1 Meter is updated by the smart meter, which usually updates every 1 or 10 seconds. This means that the P1 Meter may not update as fast as the other devices.</p>
+<h2>Troubleshooting</h2>
+<h3>My device is not showing up</h3>
+<p>It may happen that you can't find your devices or they won't show up in the integration setup. This can be caused by the following:</p>
+<ul>
+<li>The device is not connected to the network. You have to connect your new device to the network first via the HomeWizard app.</li>
+<li>Make sure you have updated the device to the latest firmware. Follow this guide to learn how to update your device: <a>How do I check if I have the latest software on my HomeWizard product?</a></li>
+<li>Make sure you have enabled the local API in device settings via the HomeWizard app.</li>
+<li>Make sure both Home Assistant and the device are on the same network.</li>
+</ul>
+<h3>Which button do I need to press to configure the device?</h3>
+<ol>
+<li>During setup, you may be asked to press a button on your device to authenticate it with Home Assistant.<ul>
+<li><strong>P1 Meter</strong>: Press the white button on the front of the P1 Meter.</li>
+<li><strong>Plug-In Battery</strong>: Press the black touch button on the front of the device. You will hear a beep.</li>
+<li><strong>kWh Meter</strong>: Press and hold the button with the Wi‑Fi icon for two seconds. Release the button before the display shows "AP".</li>
+<li><strong>Energy Socket</strong> and <strong>Watermeter</strong>: they do not require this step.</li>
+</ul>
+</li>
+<li>After pressing the button, you must select <strong>Continue</strong> within 30 seconds to complete the setup.<ul>
+<li>If the setup times out, you may need to press the button again.</li>
+</ul>
+</li>
+</ol>
+<h2>I can't find entities like voltage, current, or battery group charging strategy</h2>
+<p>Some entities are disabled by default. You can enable them in the integration setup. See the <a>enabling or disabling entities</a> documentation for more information.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>After deleting the integration, go to the HomeWizard app and disable the local API if no other integrations are using it.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/homewizard.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate HomeWizard into Home Assistant.
+ha_release: 2022.2
+ha_domain: homewizard
+works_with:
+  - local
+---
+
+Integration for the [HomeWizard](https://www.homewizard.com/) platform. It can collect data locally from HomeWizard products and create them as sensors in Home Assistant. Use this integration to monitor your energy, gas, and water usage to optimize your energy consumption. The information collected by this integration can be used by the [Energy dashboard](/home-energy-management).
+
+## Works with Home Assistant certified devices
+
+{% include integrations/device_list.html brand=&quot;homewizard&quot; %}
+
+## Other supported devices
+
+In addition to the certified devices, the following device is also supported:
+
+- [kWh Meter 3-Phase](https://www.homewizard.com/kwh-meter/): Sensors for power import/export and energy consumption (models: `HWE-KWH3`, `SDM630-wifi`).
+
+## Enable the API
+
+You have to enable the local API to allow Home Assistant to communicate with your device. Do this in the HomeWizard app:
+
+{% tip %}
+You can skip this step if you are configuring one of the following devices:
+
+- P1 Meter
+- kWh Meter
+- Plug-In Battery
+
+These products use a different authentication method that doesn&#x27;t require enabling the local API.
+{% endtip %}
+
+  1. Go to **Settings** (gear icon in the upper-right).
+  2. Go to **Meters**.
+  3. Select your device.
+  4. Scroll down and turn on **Local API**.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+IP address:
+  description: &quot;The IP address of your device. You can find it in your router.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+The HomeWizard integration provides sensors about what your device is measuring or doing. All of them are provided as {% term entities %} in Home Assistant. Below is an overview of the entities provided by this integration.
+
+### P1 Meter
+
+_Not all sensors are provided by all Smart Meters, only the available sensors are shown in the integration._
+
+- **Energy import/export (kWh)**: Total energy imported or exported since installation of your smart meter. Each tariff has its own sensor (e.g., T1, T2) and a sensor for the combined value.
+- **Power (W)**: Active consumed power measured, each phase has its own sensor. The sensors reading will negative if the power is generated.
+- **Voltage (V)**: Active voltage measured, each phase has its own sensor.
+- **Current (A)**: Active current measured, each phase has its own sensor.
+- **Tariff**: Current tariff that is used. Can be used to keep consumption as low as possible during peak hours.
+- **Frequency (Hz)**: Grid frequency.
+- **Voltage sags and swells**: Number of times a voltage sag or swell has been detected.
+- **Power failures**: Two sensors indicate the number of power failures detected by the smart meter. One for all power failures and another for &#x27;long&#x27; power failures.
+- **Peak demand**: Belgium users are charged for the peak usage per month (see [capaciteitstarief](https://www.fluvius.be/thema/factuur-en-tarieven/capaciteitstarief)). Two sensors are available: one shows the current quarterly average, and another shows the peak measured this month. Both sensors are provided directly from the smart meter and can be used to keep the peak as low as possible.
+- **Status light brightness**: Controls the brightness of the green status light. Error statuses are always visualized, even when the brightness is set to 0.
+
+External meters, like a gas or water meter, can be connected to your Smart meter. Each device is exposed as a separate {% term device %} with its own measurement.
+
+### kWh Meter
+
+- **Energy import/export (kWh)**: Total energy imported or exported measured by kWh meter.
+- **Power (W)**: Active consumed power that is measured, each phase has its own sensor. The sensors reading will negative if the power is generated.
+- **Production power (W)**: Active production power measured. The reading will negative if the power is consumed. This sensor can be used in the energy dashboard as solar production power sensor.
+- **Voltage (V)**: Active voltage measured, each phase has its own sensor.
+- **Current (A)**: Active current measured, each phase has its own sensor.
+- **Frequency (Hz)**: Grid frequency.
+- **Reactive power (VAR)**: Active reactive power measurement, each phase has its own sensor.
+- **Apparent power (VA)**: Active apparent power measurement, each phase has its own sensor.
+
+### Energy Socket
+
+- **Energy import/export (kWh)**: Total energy imported or exported measured by Energy Socket.
+- **Power (W)**: Active power that is measured. The sensors reading will negative if the power is generated.
+- **Production power (W)**: Active production power measured. The reading will negative if the power is consumed. This sensor can be used in the energy dashboard as solar production power sensor.
+- **Voltage (V)**: Active voltage measured.
+- **Current (A)**: Active current measured.
+- **Frequency (Hz)**: Grid frequency.
+- **Reactive power (VAR)***: Active reactive power measurement.
+- **Apparent power (VA)***: Active apparent power measurement.
+
+{% note %}
+Reactive power and apparent power are not available for all hardware versions, this depends on the internal metering chip.
+{% endnote %}
+
+The Energy Socket also has a switch to control the outlet state and a status light that can be controlled.
+
+- **Switch**: Controls the outlet state of the Energy Socket. This switch is permanently on when _Switch Lock_ is turned on. Use this to control the power of simple devices, such as a heater or a charger.
+- **Switch lock**: Forces the outlet state to the _on_ position and disables the physical button. This option is useful when the socket is used for a device that must not be turned off, such as a refrigerator.
+- **Status light brightness**: Controls the brightness of the green status light. This light turns on when the switch is on.
+
+### Watermeter
+
+- **Water usage (L/min)**: Flow of water measured at that time.
+- **Total water usage (m³)**: Total water usage since the installation of the Watermeter.
+
+### Plug-In Battery
+
+- **Energy import/export (kWh)**: Total energy imported or exported by the battery.
+- **Power (W)**: Active power consumed or produced by the battery. The sensors reading will negative if the power is generated.
+- **Production power (W)**: Active production power measured. The sensors reading will negative if the power is consumed. This sensor is to be used in the energy dashboard as battery power sensor.
+- **Voltage (V)**: Active voltage measured.
+- **Current (A)**: Active current consumed or produced by the battery.
+- **Frequency (Hz)**: Grid frequency.
+- **Cycles**: Number of charge cycles the battery has gone through.
+- **State of charge (%)**: The current state of charge of the battery.
+- **Status light brightness**: Controls the brightness of the LED strip. Error statuses are always visualized, even when the brightness is set to 0.
+
+The Plug-In Battery provides some special group-level entities to help you manage your batteries:
+
+- **Battery group charging strategy**: Lets you control how your group of Plug-In Batteries charges and discharges.
+- **Battery group power**: Shows the total power consumed or produced by the group of connected Plug-In Batteries.
+- **Battery group target power**: Shows the target power the group is trying to achieve.
+
+You can find these entities on the device that manages your batteries. This is either your P1 Meter or kWh Meter, depending on which is set as your mains connection in the HomeWizard app. These entities are not available directly on the battery itself. If you add Plug-In Batteries after your initial setup, these entities may be disabled by default. For information on how to enable them, see [I can&#x27;t find entities like voltage, current, battery group charging strategy, or battery group target power](#i-cant-find-entities-like-voltage-current-or-battery-group-charging-strategy).
+
+#### Battery group charging strategy
+
+The group of connected Plug-In Batteries can be controlled in different modes using the **Battery group charging strategy** select entity:
+
+- **Net zero**: In this charging strategy, the Plug-In Battery works to keep your home&#x27;s net power consumption or production as close to zero as possible. The battery will automatically charge or discharge to maintain a balanced power flow. This is the default setting and helps you maximize self-consumption and minimize grid interaction.
+- **Net zero (charge only)**: The Plug-In Battery will only charge to absorb excess solar production, aiming to keep your home&#x27;s power production at zero. Discharging is disabled in this mode. This is useful if you want to store solar energy for later use, such as during the evening or when energy prices are higher.
+- **Net zero (discharge only)**: The Plug-In Battery will only discharge to supply power when your home&#x27;s consumption exceeds solar production, aiming to keep your home&#x27;s power consumption at zero. Charging is disabled in this mode. This can be helpful when energy prices are high and you prefer to use stored energy or sell excess solar production to the grid.
+- **One-time full charge**: All connected Plug-In Batteries will be charged to 100%, regardless of the power consumption/production of your home. When all batteries are fully charged, the Plug-In Battery will switch to the standby mode.
+- **Standby**: Plug-In Batteries will enter standby mode. This means that the Plug-In Battery will neither charge nor discharge.
+- **Smart charging**: With this strategy, the Plug-In Batteries continuously predict the best moments to charge and discharge based on your production, consumption, and the local weather. This helps keep the grid in your area more stable and sustainable, and lets you save extra with a dynamic energy contract. Note: Smart charging requires a [cloud connection](#cloud-communication) for requesting a prediction plan.
+
+Read more about the [HomeWizard charging strategies (Dutch)](https://helpdesk.homewizard.com/nl/articles/14209959-hoe-bepaalt-de-batterij-wanneer-hij-gaat-laden-en-ontladen).
+
+{% tip %}
+**Smart charging** is available for the following devices:
+
+- P1 Meter with firmware version 6.0400 or higher
+- kWh Meter with firmware version 5.0200 or higher
+
+To learn how to update your device to the latest version, see [How do I check if I have the latest software on my HomeWizard product?](https://helpdesk.homewizard.com/en/articles/9167578-how-do-i-check-if-i-have-the-latest-software-on-my-homewizard-product)
+{% endtip %}
+
+#### Battery group power and battery group target power
+
+The **Battery group power** entity shows the total power consumed or produced by the group of connected Plug-In Batteries. The **Battery group target power** entity shows the target power for the battery group, as determined by the current battery group charging strategy. These values is expressed in watts (W). A negative value means the battery group is trying to produce power, while a positive value means the battery group is trying to consume power.
+
+## Identify
+
+The identify button can be pressed to let the status light blink for a few seconds.
+_This feature is not available for the kWh Meter._
+
+## Cloud communication
+
+The HomeWizard devices are designed to work with the HomeWizard app and require communication with the HomeWizard cloud to function with the app. The &quot;Cloud connection&quot; configuration toggle can be used to turn off all communication with the HomeWizard cloud, making the device fully local. The device cannot communicate with the app, and the device won&#x27;t receive any future firmware updates.
+
+This feature is not available for the Plug-In Battery. Cloud communication is restored when the switch is turned on again. Cloud communications are also restored after a factory reset, or when the device is put in pairing mode.
+
+## Examples
+
+### Send a notification when your washing machine is done
+
+If you know the energy characteristics of your washing machine, you can create an automation that sends a notification when the energy usage drops below a certain threshold. This can notify you when your washing machine is done. You can use the following blueprint for this:
+
+- [Appliance Power Monitor Blueprint With Elapsed Time and Energy Used Variables](https://community.home-assistant.io/t/549073), created by [@Jhonattan-Souza](https://community.home-assistant.io/u/jhonattan-souza)
+
+### Add your Energy data to the Energy dashboard
+
+The HomeWizard integration provides data that can be used in the Energy dashboard. To add your data to the Energy dashboard, follow the steps in the [Energy dashboard documentation](/home-energy-management).
+
+## Data fetching interval
+
+The integration is {% term polling %} new data every 5 seconds. There is no limitation on the number or frequency of requests that can be made to the device.
+
+{% include common-tasks/define_custom_polling.md %}
+
+## Known limitations
+
+### Watermeter cannot be used with batteries
+
+The Watermeter can be powered via a USB-C cable and with batteries. When using batteries, it only connects to Wi-Fi every couple of hours. Because of this, the API can only be used when powered via the USB-C cable. It is not possible to use this integration when the Watermeter is powered by batteries.
+
+### P1 Meter may update slowly
+
+The P1 Meter is updated by the smart meter, which usually updates every 1 or 10 seconds. This means that the P1 Meter may not update as fast as the other devices.
+
+## Troubleshooting
+
+### My device is not showing up
+
+It may happen that you can&#x27;t find your devices or they won&#x27;t show up in the integration setup. This can be caused by the following:
+
+- The device is not connected to the network. You have to connect your new device to the network first via the HomeWizard app.
+- Make sure you have updated the device to the latest firmware. Follow this guide to learn how to update your device: [How do I check if I have the latest software on my HomeWizard product?](https://helpdesk.homewizard.com/en/articles/9167578-how-do-i-check-if-i-have-the-latest-software-on-my-homewizard-product)
+- Make sure you have enabled the local API in device settings via the HomeWizard app.
+- Make sure both Home Assistant and the device are on the same network.
+
+### Which button do I need to press to configure the device?
+
+1. During setup, you may be asked to press a button on your device to authenticate it with Home Assistant.&#32;&#32;
+    - **P1 Meter**: Press the white button on the front of the P1 Meter.&#32;&#32;
+    - **Plug-In Battery**: Press the black touch button on the front of the device. You will hear a beep.
+    - **kWh Meter**: Press and hold the button with the Wi‑Fi icon for two seconds. Release the button before the display shows &quot;AP&quot;.
+    - **Energy Socket** and **Watermeter**: they do not require this step.
+2. After pressing the button, you must select **Continue** within 30 seconds to complete the setup.&#32;
+    - If the setup times out, you may need to press the button again.
+&#32;&#32;&#32;&#32;
+## I can&#x27;t find entities like voltage, current, or battery group charging strategy
+
+Some entities are disabled by default. You can enable them in the integration setup. See the [enabling or disabling entities](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) documentation for more information.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+
+After deleting the integration, go to the HomeWizard app and disable the local API if no other integrations are using it.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for HomeWizard.</p><p>The <strong>reconfigure</strong> configuration step lists <code>ip_address</code>.</p><p>The <strong>user</strong> configuration step lists <code>ip_address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Works with Home Assistant certified devices</li><li>Other supported devices</li><li>Enable the API</li><li>Supported functionality</li><li>Identify</li><li>Cloud communication</li><li>Examples</li><li>Data fetching interval</li><li>Known limitations</li><li>Troubleshooting</li><li>I can&#x27;t find entities like voltage, current, or battery group charging strategy</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homewizard/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homewizard</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homewizard</code></dd></dl></section><p><a href="../../integrations/homewizard/">Return to the HomeWizard guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,682 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Task reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:61" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ai_task/">AI Task guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>AI Task</h1><p>Instructions on how to set up AI task entities with Home Assistant.</p><section><h2>Overview</h2><p>The AI Task integration lets your automations, scripts, and the Home Assistant interface use AI for a single job. For example, to describe what a camera sees, to generate an image, or to decide whether a delivery driver is at the door.</p></section><section><h2>Ways to use AI tasks</h2><p>You can use AI tasks in the following ways:</p></section><section><h2>AI tasks, AI tools, and conversation agents</h2><p>AI tasks and AI tools work in opposite directions:</p></section><section><h2>Choosing the preferred AI task entities</h2><p>When an action doesn&#x27;t name an AI task entity, Home Assistant uses the preferred one. The Suggest button also uses the preferred AI task entity for data generation. You can choose a different one for each kind of task. For example, a fast model to generate text, and another model that can generate images.</p></section><section><h2>AI task states</h2><p>The state of an AI task entity is a timestamp showing the date and time when the AI task was last used. Home Assistant stores the timestamp in UTC, for example, 2026-01-01T12:00:00.123456+00:00. The Home Assistant interface shows it in your local date and time format.</p></section><section><h2>Automation: thank a delivery driver at the front door</h2><p>When someone rings the doorbell, use Evaluate to check a camera snapshot for a delivery driver. If the estimated probability is at least 90%, use Speak to play a thank-you message through the doorbell speaker.</p></section><section><h2>Template sensor: count chickens in the coop</h2><p>This template sensor uses Generate data to count the chickens in a camera snapshot of your coop. It updates when Home Assistant starts and every 5 minutes. It uses your preferred AI task entity for data generation.</p></section><section><h2>Script: create a weather and indoor comfort report</h2><p>This script uses Generate data with a structure. The AI task returns two separate fields: a funny description of the weather and an assessment of the indoor comfort. The script then shows both fields in a notification.</p></section><section><h2>Automation: notify when the garage door is left open</h2><p>When the garage door has been open for 10 minutes, this automation uses Generate data to write a funny reminder. Without a structure, the AI task returns plain text. The automation then shows the text in a notification.</p></section><section><h2>Template image: show the current weather as a picture</h2><p>When the weather changes, and every hour, this automation uses Generate image to create a picture of New York in the current weather. It then fires an event with the image URL. A template image entity reacts to that event and shows the new picture. The example uses your preferred AI task entity for image generation.</p></section><section><h2>Configuration details</h2><p>The domain used to identify AI Task in Home Assistant is <code>ai_task</code>.</p><h3>Documented actions</h3><ul class="chips"><li>clear images</li><li>evaluate</li><li>generate data</li><li>generate image</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Ways to use AI tasks</li><li>AI tasks, AI tools, and conversation agents</li><li>Choosing the preferred AI task entities</li><li>AI task states</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/ai_task/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/ai_task</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ai_task</code></dd></dl></section><p><a href="../../integrations/ai_task/">Return to the AI Task guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Task reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:61" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ai_task/">AI Task guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>AI Task</h1><p>Instructions on how to set up AI task entities with Home Assistant.</p><div class="reader-body"><p>The <strong>AI Task</strong> integration lets your automations, scripts, and the Home Assistant interface use AI for a single job. For example, to describe what a camera sees, to generate an image, or to decide whether a delivery driver is at the door.</p>
+<p><strong>Note</strong></p>
+<p><strong>Building block integration</strong></p>
+<p>This ai task is a building block integration that cannot be added to your Home Assistant directly but is used and provided by other integrations.</p>
+<p>A building block integration differs from the typical integration that connects to a device or service. Instead, other integrations that do integrate a device or service into Home Assistant use this ai task building block to provide entities, services, and other functionality that you can use in your automations or dashboards.</p>
+<p>If one of your integrations features this building block, this page documents the functionality the ai task building block offers.</p>
+<p>The AI task entities come from AI integrations. For example, OpenAI, Google Gemini, and Ollama add them. For the full list of AI integrations, refer to <a>AI integrations</a>.</p>
+<h2>Ways to use AI tasks</h2>
+<p>You can use AI tasks in the following ways:</p>
+<ul>
+<li>In automations and scripts, with the AI task actions. With them, you can generate text or structured data, generate images, and evaluate questions. For all actions, refer to <a>List of actions</a>.</li>
+<li>In the Home Assistant interface, with the <strong>Suggest</strong> button. For example, when you save an automation, it suggests a name, a description, a category, and labels.</li>
+</ul>
+<p>Not every AI task supports every action. For example, some AI tasks can generate data, but not images.</p>
+<h2>AI tasks, AI tools, and conversation agents</h2>
+<p>AI tasks and AI tools work in opposite directions:</p>
+<ul>
+<li>With AI tools, a conversation agent or an AI app uses Home Assistant. During a conversation, it decides which AI tools to call. For example, it calls an AI tool to turn off a light.</li>
+<li>With an AI task, Home Assistant uses the AI model of an AI integration. Your automation, your script, or the <strong>Suggest</strong> button sends a single job to an AI task, and gets the result back. For example, when someone rings the doorbell, your automation asks an AI task whether the camera image shows a delivery driver. There's no conversation, and an AI task doesn't use AI tools.</li>
+</ul>
+<p>So an AI task can't control your devices. To control your devices with AI, use a conversation agent with the <strong>Device control</strong> set of AI tools. For details, refer to <a href="../llm/">Sets of AI tools</a>.</p>
+<h2>Choosing the preferred AI task entities</h2>
+<p>When an action doesn't name an AI task entity, Home Assistant uses the preferred one. The <strong>Suggest</strong> button also uses the preferred AI task entity for data generation. You can choose a different one for each kind of task. For example, a fast model to generate text, and another model that can generate images.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>An administrator account in Home Assistant.</li>
+<li>An AI integration that adds AI tasks. For example, <a href="../openai_conversation/">OpenAI</a>.</li>
+</ul>
+<p>To choose the preferred AI task entities:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>AI</strong>.</li>
+<li>On the <strong>AI suggestions</strong> card, under <strong>Data generation tasks</strong>, select an AI task entity.<ul>
+<li>The list only shows AI tasks that can generate data.</li>
+</ul>
+</li>
+<li>Optional: under <strong>Image generation tasks</strong>, select an AI task entity that can generate images.</li>
+<li>Optional: under <strong>Decisions</strong>, select an AI task entity that can evaluate questions.</li>
+<li>Select <strong>Save</strong>.<ul>
+<li>Result: The actions and the <strong>Suggest</strong> button use these AI task entities when you don't select one yourself.</li>
+</ul>
+</li>
+</ol>
+<h2>AI task states</h2>
+<p>The state of an AI task entity is a timestamp showing the date and time when the AI task was last used. Home Assistant stores the timestamp in UTC, for example, <code>2026-01-01T12:00:00.123456+00:00</code>. The Home Assistant interface shows it in your local date and time format.</p>
+<p>In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:</p>
+<ul>
+<li><strong>Unavailable</strong> (<code>unavailable</code>): The entity is currently unavailable.</li>
+<li><strong>Unknown</strong> (<code>unknown</code>): The state is not yet known.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Examples</h2>
+<h3>Automation: thank a delivery driver at the front door</h3>
+<p>When someone rings the doorbell, use <a>Evaluate</a> to check a camera snapshot for a delivery driver. If the estimated probability is at least 90%, use <a>Speak</a> to play a thank-you message through the doorbell speaker.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>A doorbell with a camera and a doorbell event entity that supports the <a>Doorbell rang</a> trigger.</li>
+<li>A doorbell speaker exposed as a media player that supports text-to-speech playback, such as a supported <a href="../unifiprotect/">UniFi Protect</a> doorbell. Not every doorbell supports this.</li>
+<li>A configured <a href="../tts/">text-to-speech</a> entity and a preferred AI task evaluation entity that supports image attachments.</li>
+</ul>
+<p>In the automation editor, use this sequence:</p>
+<ol>
+<li>Add a <strong>Doorbell rang</strong> trigger and select your front door doorbell.</li>
+<li>Add an <strong>Evaluate</strong> action with a question named <code>delivery_driver</code>: "Is the person at the front door a delivery driver delivering a package?" Use the <code>noul</code> question type, attach the front door camera, and store the response in <code>delivery</code>.</li>
+<li>Add an <strong>If-then</strong> action with a template condition that checks whether <code>delivery.answers.delivery_driver.noul</code> is at least <code>0.9</code>.</li>
+<li>In the <strong>Then</strong> branch, add <strong>Speak</strong>, select your text-to-speech entity and doorbell media player, and enter "Thank you for delivering the package!".</li>
+</ol>
+<p>The example below includes the question format and condition. Replace the event, camera, media player, and text-to-speech entity IDs with your own. It uses your preferred evaluation entity; you can also set <code>entity_id</code> in the <strong>Evaluate</strong> action's data.</p>
+<h4>YAML example for thanking a delivery driver</h4>
+<p>Paste this into the YAML editor of a new automation:</p>
+<h4>Example</h4>
+<p>automation: |
+alias: "Thank a delivery driver at the front door"
+triggers:
+- trigger: doorbell.rang
+target:
+entity_id: event.front_door_doorbell
+actions:
+- action: ai_task.evaluate
+data:
+task_name: "Check for a delivery driver"
+questions:
+delivery_driver:
+type: noul
+instructions: &gt;
+Is the person at the front door a delivery driver delivering
+a package? Use visible evidence, such as a package being
+carried or placed by the door.
+attachments:
+- media_content_id: media-source://camera/camera.front_door
+media_content_type: image/jpeg
+response_variable: delivery
+- if: "{{ delivery.answers.delivery_driver.noul &gt;= 0.9 }}"
+then:
+- action: tts.speak
+target:
+entity_id: tts.home_assistant_cloud
+data:
+media_player_entity_id: media_player.front_door_doorbell
+message: "Thank you for delivering the package!"</p>
+<p>The <code>noul</code> value is the model's estimated probability, not a guarantee. Adjust the <code>0.9</code> threshold to suit your camera view. Below that threshold, the automation does not play a message.</p>
+<h3>Template sensor: count chickens in the coop</h3>
+<p>This template sensor uses <a>Generate data</a> to count the chickens in a camera snapshot of your coop. It updates when Home Assistant starts and every 5 minutes. It uses your preferred AI task entity for data generation.</p>
+<p>You can use the same approach for other counts. For example, count the free spots in a parking lot or the people in a room.</p>
+<p>Add this to your <code>configuration.yaml</code> file. Replace the camera entity ID with your own.</p>
+<pre><code>template:
+  - triggers:
+      - trigger: homeassistant
+        event: start
+      - trigger: time_pattern
+        # Update every 5 minutes
+        minutes: "/5"
+    actions:
+      - action: ai_task.generate_data
+        data:
+          task_name: "{{ this.entity_id }}"
+          instructions: &gt;
+            This is the inside of my chicken coop.
+            How many chickens are inside the coop?
+          structure:
+            chickens:
+              selector:
+                number:
+          attachments:
+            media_content_id: media-source://camera/camera.chicken_coop
+            media_content_type: image/jpeg
+        response_variable: result
+    sensor:
+      - name: "Chickens"
+        state: "{{ result.data.chickens }}"
+        state_class: measurement
+</code></pre>
+<h3>Script: create a weather and indoor comfort report</h3>
+<p>This script uses <a>Generate data</a> with a structure. The AI task returns two separate fields: a funny description of the weather and an assessment of the indoor comfort. The script then shows both fields in a notification.</p>
+<p>Paste this into the YAML editor of a new script. Replace the weather and sensor entity IDs with your own.</p>
+<h4>Example</h4>
+<p>script: |
+alias: "Weather and comfort report"
+sequence:
+- action: ai_task.generate_data
+data:
+task_name: "Weather comfort report"
+instructions: |
+Based on the current conditions:
+- Outdoor temperature:
+{{ states('sensor.outdoor_temperature', with_unit=True) }}
+- Weather condition: {{ states('weather.home') }}
+- Indoor temperature:
+{{ states('sensor.living_room_temperature', with_unit=True) }}
+- Indoor humidity:
+{{ states('sensor.living_room_humidity', with_unit=True) }}</p>
+<pre><code>      Generate a funny weather description and assess the indoor
+      comfort level.
+    structure:
+      weather_description:
+        description: "A funny description of the weather outside"
+        required: true
+        selector:
+          text:
+      indoor_comfort:
+        description: "How comfortable it is inside compared to outside"
+        required: true
+        selector:
+          text:
+  response_variable: comfort_report
+- action: notify.persistent_notification
+  data:
+    title: "Home climate report"
+    message: |
+      **Weather outside:**
+      {{ comfort_report.data.weather_description }}
+
+      **Indoor comfort:**
+      {{ comfort_report.data.indoor_comfort }}</code></pre>
+<h3>Automation: notify when the garage door is left open</h3>
+<p>When the garage door has been open for 10 minutes, this automation uses <a>Generate data</a> to write a funny reminder. Without a structure, the AI task returns plain text. The automation then shows the text in a notification.</p>
+<p>Paste this into the YAML editor of a new automation. Replace the cover entity ID with your own.</p>
+<h4>Example</h4>
+<p>automation: |
+alias: "Garage door notification"
+triggers:
+- trigger: state
+entity_id: cover.garage_door
+to: "open"
+for:
+minutes: 10
+actions:
+- action: ai_task.generate_data
+data:
+task_name: "Garage door left open comment"
+instructions: &gt;
+Generate a funny notification that the garage door was left
+open.
+response_variable: generated_text
+- action: notify.persistent_notification
+data:
+message: "{{ generated_text.data }}"</p>
+<h3>Template image: show the current weather as a picture</h3>
+<p>When the weather changes, and every hour, this automation uses <a>Generate image</a> to create a picture of New York in the current weather. It then fires an event with the image URL. A template image entity reacts to that event and shows the new picture. The example uses your preferred AI task entity for image generation.</p>
+<p>Add this to your <code>configuration.yaml</code> file. Replace the weather entity ID with your own. The action returns the image URL as a path, without the address of your Home Assistant. The template image adds <code>http://localhost:8123</code> in front of it. If your Home Assistant uses a different local address, replace that part.</p>
+<p>The image URL is only valid for one hour. That's why the automation also creates a new picture every hour, even if the weather stays the same. Each new picture is a request to your AI provider, which might cost money.</p>
+<pre><code>automation:
+  - alias: "Update the weather image"
+    triggers:
+      - trigger: state
+        entity_id: weather.home
+      # The image URL expires after one hour
+      - trigger: time_pattern
+        hours: "/1"
+    actions:
+      - alias: "Generate an image with AI Task"
+        action: ai_task.generate_image
+        response_variable: generated_image
+        data:
+          task_name: "Weather visualization"
+          instructions: &gt;
+            New York when the weather is {{ states('weather.home') }}
+      - alias: "Send out a manual event to update the image entity"
+        event: new_weather_image
+        event_data:
+          url: "{{ generated_image.url }}"
+
+template:
+  - triggers:
+      - alias: "Update image when a new weather image is generated"
+        trigger: event
+        event_type: new_weather_image
+    image:
+      - name: "AI generated image of New York"
+        url: "http://localhost:8123{{ trigger.event.data.url }}"
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/ai_task.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up AI task entities with Home Assistant.
+ha_release: &#x27;2025.7&#x27;
+ha_domain: ai_task
+---
+
+The **AI Task** {% term integration %} lets your automations, scripts, and the Home Assistant interface use AI for a single job. For example, to describe what a camera sees, to generate an image, or to decide whether a delivery driver is at the door.
+
+{% include integrations/building_block_integration.md %}
+
+The AI task {% term entities %} come from AI integrations. For example, OpenAI, Google Gemini, and Ollama add them. For the full list of AI integrations, refer to [AI integrations](/integrations/category/ai_voice/ai_models/).
+
+## Ways to use AI tasks
+
+You can use AI tasks in the following ways:
+
+- In automations and scripts, with the AI task actions. With them, you can generate text or structured data, generate images, and evaluate questions. For all actions, refer to [List of actions](#list-of-actions).
+- In the Home Assistant interface, with the **Suggest** button. For example, when you save an automation, it suggests a name, a description, a category, and labels.
+
+Not every AI task supports every action. For example, some AI tasks can generate data, but not images.
+
+## AI tasks, AI tools, and conversation agents
+
+AI tasks and {% term &quot;AI tools&quot; %} work in opposite directions:
+
+- With AI tools, a {% term &quot;conversation agent&quot; %} or an {% term &quot;AI app&quot; %} uses Home Assistant. During a conversation, it decides which AI tools to call. For example, it calls an AI tool to turn off a light.
+- With an AI task, Home Assistant uses the AI model of an AI integration. Your automation, your script, or the **Suggest** button sends a single job to an AI task, and gets the result back. For example, when someone rings the doorbell, your automation asks an AI task whether the camera image shows a delivery driver. There&#x27;s no conversation, and an AI task doesn&#x27;t use AI tools.
+
+So an AI task can&#x27;t control your devices. To control your devices with AI, use a conversation agent with the **Device control** set of AI tools. For details, refer to [Sets of AI tools](/integrations/llm/#sets-of-ai-tools).
+
+## Choosing the preferred AI task entities
+
+When an action doesn&#x27;t name an AI task entity, Home Assistant uses the preferred one. The **Suggest** button also uses the preferred AI task entity for data generation. You can choose a different one for each kind of task. For example, a fast model to generate text, and another model that can generate images.
+
+Prerequisites:
+
+- An administrator account in Home Assistant.
+- An AI integration that adds AI tasks. For example, [OpenAI](/integrations/openai_conversation/).
+
+To choose the preferred AI task entities:
+
+1. Go to {% my config_ai title=&quot;**Settings** &gt; **System** &gt; **AI**&quot; %}.
+2. On the **AI suggestions** card, under **Data generation tasks**, select an AI task entity.
+   - The list only shows AI tasks that can generate data.
+3. Optional: under **Image generation tasks**, select an AI task entity that can generate images.
+4. Optional: under **Decisions**, select an AI task entity that can evaluate questions.
+5. Select **Save**.
+   - Result: The actions and the **Suggest** button use these AI task entities when you don&#x27;t select one yourself.
+
+## AI task states
+
+The {% term state %} of an AI task {% term entity %} is a timestamp showing the date and time when the AI task was last used. Home Assistant stores the timestamp in UTC, for example, `2026-01-01T12:00:00.123456+00:00`. The Home Assistant interface shows it in your local date and time format.
+
+In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:
+
+- **Unavailable** (`unavailable`): The entity is currently unavailable.
+- **Unknown** (`unknown`): The state is not yet known.
+
+{% include integrations/actions.md %}
+
+## Examples
+
+### Automation: thank a delivery driver at the front door
+
+When someone rings the doorbell, use [Evaluate](/actions/ai_task.evaluate/) to check a camera snapshot for a delivery driver. If the estimated probability is at least 90%, use [Speak](/actions/tts.speak/) to play a thank-you message through the doorbell speaker.
+
+Prerequisites:
+
+- A doorbell with a camera and a doorbell event entity that supports the [Doorbell rang](/triggers/doorbell.rang/) trigger.
+- A doorbell speaker exposed as a media player that supports text-to-speech playback, such as a supported [UniFi Protect](/integrations/unifiprotect/) doorbell. Not every doorbell supports this.
+- A configured [text-to-speech](/integrations/tts/) entity and a preferred AI task evaluation entity that supports image attachments.
+
+In the automation editor, use this sequence:
+
+1. Add a **Doorbell rang** trigger and select your front door doorbell.
+2. Add an **Evaluate** action with a question named `delivery_driver`: &quot;Is the person at the front door a delivery driver delivering a package?&quot; Use the `noul` question type, attach the front door camera, and store the response in `delivery`.
+3. Add an **If-then** action with a template condition that checks whether `delivery.answers.delivery_driver.noul` is at least `0.9`.
+4. In the **Then** branch, add **Speak**, select your text-to-speech entity and doorbell media player, and enter &quot;Thank you for delivering the package!&quot;.
+
+The example below includes the question format and condition. Replace the event, camera, media player, and text-to-speech entity IDs with your own. It uses your preferred evaluation entity; you can also set `entity_id` in the **Evaluate** action&#x27;s data.
+
+{% details &quot;YAML example for thanking a delivery driver&quot; %}
+
+Paste this into the YAML editor of a new automation:
+
+{% example %}
+automation: |
+  alias: &quot;Thank a delivery driver at the front door&quot;
+  triggers:
+    - trigger: doorbell.rang
+      target:
+        entity_id: event.front_door_doorbell
+  actions:
+    - action: ai_task.evaluate
+      data:
+        task_name: &quot;Check for a delivery driver&quot;
+        questions:
+          delivery_driver:
+            type: noul
+            instructions: &gt;
+              Is the person at the front door a delivery driver delivering
+              a package? Use visible evidence, such as a package being
+              carried or placed by the door.
+        attachments:
+          - media_content_id: media-source://camera/camera.front_door
+            media_content_type: image/jpeg
+      response_variable: delivery
+    - if: &quot;{{ delivery.answers.delivery_driver.noul &gt;= 0.9 }}&quot;
+      then:
+        - action: tts.speak
+          target:
+            entity_id: tts.home_assistant_cloud
+          data:
+            media_player_entity_id: media_player.front_door_doorbell
+            message: &quot;Thank you for delivering the package!&quot;
+{% endexample %}
+
+{% enddetails %}
+
+The `noul` value is the model&#x27;s estimated probability, not a guarantee. Adjust the `0.9` threshold to suit your camera view. Below that threshold, the automation does not play a message.
+
+### Template sensor: count chickens in the coop
+
+This template sensor uses [Generate data](/actions/ai_task.generate_data/) to count the chickens in a camera snapshot of your coop. It updates when Home Assistant starts and every 5 minutes. It uses your preferred AI task entity for data generation.
+
+You can use the same approach for other counts. For example, count the free spots in a parking lot or the people in a room.
+
+Add this to your {% term &quot;`configuration.yaml`&quot; %} file. Replace the camera entity ID with your own.
+
+```yaml
+template:
+  - triggers:
+      - trigger: homeassistant
+        event: start
+      - trigger: time_pattern
+        # Update every 5 minutes
+        minutes: &quot;/5&quot;
+    actions:
+      - action: ai_task.generate_data
+        data:
+          task_name: &quot;{{ this.entity_id }}&quot;
+          instructions: &gt;
+            This is the inside of my chicken coop.
+            How many chickens are inside the coop?
+          structure:
+            chickens:
+              selector:
+                number:
+          attachments:
+            media_content_id: media-source://camera/camera.chicken_coop
+            media_content_type: image/jpeg
+        response_variable: result
+    sensor:
+      - name: &quot;Chickens&quot;
+        state: &quot;{{ result.data.chickens }}&quot;
+        state_class: measurement
+```
+
+### Script: create a weather and indoor comfort report
+
+This script uses [Generate data](/actions/ai_task.generate_data/) with a structure. The AI task returns two separate fields: a funny description of the weather and an assessment of the indoor comfort. The script then shows both fields in a notification.
+
+Paste this into the YAML editor of a new script. Replace the weather and sensor entity IDs with your own.
+
+{% example %}
+script: |
+  alias: &quot;Weather and comfort report&quot;
+  sequence:
+    - action: ai_task.generate_data
+      data:
+        task_name: &quot;Weather comfort report&quot;
+        instructions: |
+          Based on the current conditions:
+          - Outdoor temperature:
+            {{ states(&#x27;sensor.outdoor_temperature&#x27;, with_unit=True) }}
+          - Weather condition: {{ states(&#x27;weather.home&#x27;) }}
+          - Indoor temperature:
+            {{ states(&#x27;sensor.living_room_temperature&#x27;, with_unit=True) }}
+          - Indoor humidity:
+            {{ states(&#x27;sensor.living_room_humidity&#x27;, with_unit=True) }}
+
+          Generate a funny weather description and assess the indoor
+          comfort level.
+        structure:
+          weather_description:
+            description: &quot;A funny description of the weather outside&quot;
+            required: true
+            selector:
+              text:
+          indoor_comfort:
+            description: &quot;How comfortable it is inside compared to outside&quot;
+            required: true
+            selector:
+              text:
+      response_variable: comfort_report
+    - action: notify.persistent_notification
+      data:
+        title: &quot;Home climate report&quot;
+        message: |
+          **Weather outside:**
+          {{ comfort_report.data.weather_description }}
+
+          **Indoor comfort:**
+          {{ comfort_report.data.indoor_comfort }}
+{% endexample %}
+
+### Automation: notify when the garage door is left open
+
+When the garage door has been open for 10 minutes, this automation uses [Generate data](/actions/ai_task.generate_data/) to write a funny reminder. Without a structure, the AI task returns plain text. The automation then shows the text in a notification.
+
+Paste this into the YAML editor of a new automation. Replace the cover entity ID with your own.
+
+{% example %}
+automation: |
+  alias: &quot;Garage door notification&quot;
+  triggers:
+    - trigger: state
+      entity_id: cover.garage_door
+      to: &quot;open&quot;
+      for:
+        minutes: 10
+  actions:
+    - action: ai_task.generate_data
+      data:
+        task_name: &quot;Garage door left open comment&quot;
+        instructions: &gt;
+          Generate a funny notification that the garage door was left
+          open.
+      response_variable: generated_text
+    - action: notify.persistent_notification
+      data:
+        message: &quot;{{ generated_text.data }}&quot;
+{% endexample %}
+
+### Template image: show the current weather as a picture
+
+When the weather changes, and every hour, this automation uses [Generate image](/actions/ai_task.generate_image/) to create a picture of New York in the current weather. It then fires an event with the image URL. A template image entity reacts to that event and shows the new picture. The example uses your preferred AI task entity for image generation.
+
+Add this to your {% term &quot;`configuration.yaml`&quot; %} file. Replace the weather entity ID with your own. The action returns the image URL as a path, without the address of your Home Assistant. The template image adds `http://localhost:8123` in front of it. If your Home Assistant uses a different local address, replace that part.
+
+The image URL is only valid for one hour. That&#x27;s why the automation also creates a new picture every hour, even if the weather stays the same. Each new picture is a request to your AI provider, which might cost money.
+
+```yaml
+automation:
+  - alias: &quot;Update the weather image&quot;
+    triggers:
+      - trigger: state
+        entity_id: weather.home
+      # The image URL expires after one hour
+      - trigger: time_pattern
+        hours: &quot;/1&quot;
+    actions:
+      - alias: &quot;Generate an image with AI Task&quot;
+        action: ai_task.generate_image
+        response_variable: generated_image
+        data:
+          task_name: &quot;Weather visualization&quot;
+          instructions: &gt;
+            New York when the weather is {{ states(&#x27;weather.home&#x27;) }}
+      - alias: &quot;Send out a manual event to update the image entity&quot;
+        event: new_weather_image
+        event_data:
+          url: &quot;{{ generated_image.url }}&quot;
+
+template:
+  - triggers:
+      - alias: &quot;Update image when a new weather image is generated&quot;
+        trigger: event
+        event_type: new_weather_image
+    image:
+      - name: &quot;AI generated image of New York&quot;
+        url: &quot;http://localhost:8123{{ trigger.event.data.url }}&quot;
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify AI Task in Home Assistant is <code>ai_task</code>.</p><h3>Documented actions</h3><ul class="chips"><li>clear images</li><li>evaluate</li><li>generate data</li><li>generate image</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Ways to use AI tasks</li><li>AI tasks, AI tools, and conversation agents</li><li>Choosing the preferred AI task entities</li><li>AI task states</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/ai_task/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/ai_task</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ai_task</code></dd></dl></section><p><a href="../../integrations/ai_task/">Return to the AI Task guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

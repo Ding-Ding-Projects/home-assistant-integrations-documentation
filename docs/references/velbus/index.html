@@ -1,1 +1,904 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Velbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:69" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/velbus/">Velbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Velbus</h1><p>Access and control your Velbus devices.</p><section><h2>Overview</h2><p>The Velbus integration is used to control Velbus modules. It supports the Velbus USB, Velbus serial and a TCP/IP gateway.</p></section><section><h2>Configuration parameters</h2><p>During the setup you will be shown 2 choices on ways to connect to the Velbus bus:</p></section><section><h2>USB</h2><p>The USB connection is a way to connect to the Velbus bus. You will need a Velbus USB interface to connect to the bus. The USB interface is connected to the USB port of your Home Assistant device. The interface USB devices are automatically detected and shown in a list. Select the correct USB interface from the list and select Submit.</p></section><section><h2>TCP/IP</h2><p>The TCP/IP connection is a way to connect to the Velbus bus. You will need a Velbus TCP/IP interface available in your network.</p></section><section><h2>Supported functionality</h2><p>The Velbus integration supports the following functionality:</p></section><section><h2>Switch</h2><p>Every relay module will be represented as a switch entity in Home Assistant. You can turn the switch on and off to control the relay.</p></section><section><h2>Light</h2><p>Every dimmer module will be represented as a light entity in Home Assistant. You can turn the light on and off and set the brightness level. For each input module, a light entity will be created to control the LED of the push buttons. You can turn the LED on and off and set the flash mode.</p></section><section><h2>Binary sensor</h2><p>Every input module will be represented as a binary sensor entity in Home Assistant. The binary sensor will be on when the input is active and off when the input is inactive.</p></section><section><h2>Event</h2><p>Each physical Velbus button also has an event entity, with the same name as the button&#x27;s binary sensor. The event entity records how the button was pressed, so you can react to a short or long press in an automation:</p></section><section><h2>Select</h2><p>Every module that supports programs will have a select entity in Home Assistant. You can select the program that you want to activate.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Velbus.</p><p>The <strong>network</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>tls</code>.</p><p>The <strong>usbselect</strong> configuration step lists <code>port</code>.</p><p>The <strong>vlp</strong> configuration step lists <code>vlp_file</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>light</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>clear cache</li><li>scan</li><li>set memo text</li><li>sync clock</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration parameters</li><li>Supported functionality</li><li>Re-configuring the integration</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Supported devices</li><li>Unsupported devices</li><li>Use cases</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/velbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/velbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/velbus</code></dd></dl></section><p><a href="../../integrations/velbus/">Return to the Velbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Velbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:69" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/velbus/">Velbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Velbus</h1><p>Access and control your Velbus devices.</p><div class="reader-body"><p>The <strong>Velbus</strong> integration is used to control <a>Velbus</a> modules. It supports the Velbus USB, Velbus serial and a TCP/IP gateway.</p>
+<p>To use the Velbus integration, you need to have Velbus modules connected to a Velbus USB or TCP/IP interface.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Velbus</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Velbus</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Configuration parameters</h2>
+<p>During the setup you will be shown 2 choices on ways to connect to the Velbus bus:</p>
+<ul>
+<li>USB</li>
+<li>TCP/IP</li>
+</ul>
+<p>A connection test will be performed to ensure the connection is working. If successful, the integration will be added to Home Assistant.</p>
+<h3>USB</h3>
+<p>The USB connection is a way to connect to the Velbus bus. You will need a Velbus USB interface to connect to the bus. The USB interface is connected to the USB port of your Home Assistant device.
+The interface USB devices are automatically detected and shown in a list.
+Select the correct USB interface from the list and select <strong>Submit</strong>.</p>
+<p>There will be a connection test to make sure the connection is working, and if it's working the integration will be added to Home Assistant.</p>
+<h3>TCP/IP</h3>
+<p>The TCP/IP connection is a way to connect to the Velbus bus. You will need a Velbus TCP/IP interface available in your network.</p>
+<pre><code>
+tls:
+    description: "Enable TLS connection towards the Velbus TCP/IP interface. This is usually needed when connecting to a signum. This is optional and can be disabled when connecting to a velser or Home Assistant add-on."
+host:
+    description: "The IP address of the Velbus TCP/IP interface."
+port:
+    description: "The port number of the Velbus TCP/IP interface."
+password:
+    description: "The password to authenticate to the Velbus TCP/IP interface. This is optional and only needed if the devie has authentication enabled."
+
+</code></pre>
+<h4>Example: signum</h4>
+<ul>
+<li>tls: yes</li>
+<li>host: your signum IP address</li>
+<li>port: 27015</li>
+<li>password: your signum password (if configured)</li>
+</ul>
+<h4>Example: velser</h4>
+<ul>
+<li>tls: no</li>
+<li>host: your velser IP address</li>
+<li>port: 6000</li>
+<li>password: leave empty</li>
+</ul>
+<h4>Example: Home Assistant add-on</h4>
+<ul>
+<li>tls: depending on your configuration</li>
+<li>host: your Home Assistant IP address</li>
+<li>port: 27015 if you kept the default</li>
+<li>password: leave empty</li>
+</ul>
+<h2>Supported functionality</h2>
+<p>The Velbus integration supports the following functionality:</p>
+<h3>Switch</h3>
+<p>Every relay module will be represented as a switch entity in Home Assistant. You can turn the switch on and off to control the relay.</p>
+<h3>Light</h3>
+<p>Every dimmer module will be represented as a light entity in Home Assistant. You can turn the light on and off and set the brightness level.
+For each input module, a light entity will be created to control the LED of the push buttons. You can turn the LED on and off and set the flash mode.</p>
+<p><strong>Note</strong></p>
+<p>The pushbutton LEDs of input modules are <a>disabled by default</a>. These can be enabled from the <strong>Devices</strong> panel in the <strong>Configuration</strong> page of the web interface.</p>
+<h3>Binary sensor</h3>
+<p>Every input module will be represented as a binary sensor entity in Home Assistant. The binary sensor will be on when the input is active and off when the input is inactive.</p>
+<h3>Event</h3>
+<p>Each physical Velbus button also has an event entity, with the same name as the button's binary sensor. The event entity records how the button was pressed, so you can react to a short or long press in an automation:</p>
+<ul>
+<li><code>short_press</code>: The button was pressed and released without a long press. This is recorded when you release the button.</li>
+<li><code>long_press</code>: The Velbus module reported a long press. This is recorded right away, while you're still holding the button. Releasing the button afterward doesn't record another press.</li>
+</ul>
+<p>The Velbus module decides whether a press counts as long. You can't change this in Home Assistant.</p>
+<h3>Select</h3>
+<p>Every module that supports programs will have a select entity in Home Assistant. You can select the program that you want to activate.</p>
+<h3>Climate</h3>
+<p>Every module that supports thermostat functionality will be represented as a climate entity in Home Assistant. You can set the target temperature, the mode (heat/cool) and the preset mode (away/comfort/eco/home).</p>
+<h3>Cover</h3>
+<p>Every blind module will be represented as a cover entity in Home Assistant. You can open and close the blind and if the module supports it, you can set the position of the blind.</p>
+<h3>Button</h3>
+<p>Every input module will have a button entity in Home Assistant to trigger a button press event. This can be used to trigger Velbus actions from Home Assistant.</p>
+<h3>Sensor</h3>
+<p>Some modules expose sensors that can be used in Home Assistant.
+Known and implemented sensors are:</p>
+<ul>
+<li>energy consumption sensor: kWh</li>
+<li>temperature sensor: °C</li>
+<li>light level sensor: Lux</li>
+<li>PSU voltage sensor: Voltage</li>
+<li>PSU current sensor: Amps</li>
+<li>PSU load sensor: Percentage</li>
+</ul>
+<p>The Analog input module (VMB4AN) will have 4 sensor entities to read the analog values.
+The VMBMETEO module will have multiple sensor entities to read temperature, humidity, wind speed, wind direction, and rain level.</p>
+<h3>VLP file import</h3>
+<p><strong>Note</strong></p>
+<p>This step is optional.</p>
+<p>In the next step of the configuration, you have the option to import a Velbus VLP configuration file. This is the configuration file that you can export from the VelbusLink software.
+This will eliminate the need for a scan of the bus and will create all devices and entities based on the configuration file.</p>
+<pre><code>
+vlp:
+    description: "Path to the VLP file to import. If not provided, no VLP file will be imported and a bus scan will be performed."
+
+</code></pre>
+<p>If you don't have a VLP file or don't want to import it, you can skip this step, and the integration will perform a scan of the bus to discover the connected modules, but this is known to be less reliable than using a VLP file.</p>
+<h2>Re-configuring the integration</h2>
+<p>You can re-configure the Velbus integration by following these steps:</p>
+<h2>Options</h2>
+<p>To define options for Velbus, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Velbus are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+vlp:
+    description: "Path to the VLP file to import during re-configuration. If not provided, no VLP file will be imported and a bus scan will be performed."
+
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Examples</h2>
+<h3>Linking a Velbus button to another entity</h3>
+<p>The Velbus integration allows you to link a Velbus button (such as a button of a <a>VMBGPOD</a> module) to a controllable entity of Home Assistant.
+The actual linking can be realized by two automation rules. One rule to control the device using the push button and a second rule to update the LED state of the push button as soon as the entity state changes.</p>
+<pre><code># Control light living from Velbus push_button_10
+- alias: "Control light living using Velbus push_button_10"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.push_button_10
+      to: "on"
+  actions:
+    - action: light.toggle
+      entity_id: light.living
+&#32;&#32;&#32;&#32;&#32;&#32;
+
+# Keep status LED push_button_10 in sync to status light living
+- alias: "Update LED state of push_button_10"
+  triggers:
+    - trigger: state
+      entity_id: light.living
+      to: "on"
+    - trigger: state
+      entity_id: light.living
+      to: "off"
+  conditions:
+    - condition: or
+      conditions:
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: light.led_push_button_10
+            state: "on"
+          - condition: state
+            entity_id: light.living
+            state: "off"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: light.led_push_button_10
+              state: "off"
+            - condition: state
+              entity_id: light.living
+              state: "on"
+  actions:
+    - action: light.toggle
+      entity_id: light.led_push_button_10
+&#32;&#32;&#32;&#32;&#32;&#32;
+</code></pre>
+<h3>VMB7IN and the Energy dashboard</h3>
+<p>The VMB7IN sensor can be integrated with Home Assistant's Energy dashboard to track your utility consumption.</p>
+<p>In some cases, the VMB7IN sensor does not report what the counter is counting. If the counter is related to an energy device, everything will work out of the box.
+But if the VMB7IN sensor is a water or gas counter, you will need to specify this in your <code>configuration.yaml</code> file.</p>
+<pre><code>homeassistant:
+  customize:
+    sensor.eau_counter:
+      device_class: water
+</code></pre>
+<p>The <code>device_class</code> attribute can have 2 values:</p>
+<ul>
+<li>gas: if the counter represents a gas meter</li>
+<li>water: if the counter represents a water meter</li>
+</ul>
+<h2>Data updates</h2>
+<p>The integration is event driven, meaning that updates are pushed from the Velbus modules to Home Assistant as soon as a change occurs. This ensures that the state of the entities in Home Assistant is always up to date.</p>
+<p>For sensor entities, Velbus modules send periodic updates. The interval of these updates is configurable via VelbusLink software.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration will never reprogram Velbus modules. All changes that are not implemented in the <a>Velbus module protocol</a> need to be done via VelbusLink software.</li>
+<li>The integration does not support upgrading Velbus modules firmware. This needs to be done via VelbusLink software.</li>
+<li>For relay modules, the integration does not support the forced on/off state. This needs to be done via VelbusLink software.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<p>If you encounter issues with the Velbus integration, you can enable debug logging to get more information about the problem.</p>
+<h3>Common issues</h3>
+<ul>
+<li>If you have changed the configuration of your Velbus modules using VelbusLink software, you may need to clear the Velbus cache using the <code>velbus.clear_cache</code> action to ensure that Home Assistant has the latest configuration.</li>
+<li>If you use the VLP file configuration for the integration, ensure that the VLP file is up to date and matches the configuration of your Velbus modules.</li>
+</ul>
+<h3>Enabling debug logging</h3>
+<p>To enable debug logging for the Velbus integration, you can check <a>Home Assistant Troubleshooting documentation</a> for more information.</p>
+<h3>Can't connect to Velbus interface</h3>
+<h4>Symptom: “Unable to setup Velbus”</h4>
+<p>This error indicates that Home Assistant is unable to connect to the Velbus interface.</p>
+<h4>Resolution</h4>
+<p>Try the following steps:</p>
+<ul>
+<li>For USB connections:<ul>
+<li>Make sure the Velbus USB interface is properly connected to the Home Assistant device.</li>
+<li>Make sure no other application (like VelbusLink) is using the Velbus USB interface at the same time.</li>
+</ul>
+</li>
+<li>For TCP/IP connections:<ul>
+<li>Make sure the Velbus TCP/IP interface is powered on and connected to the network.</li>
+<li>Make sure the IP address and the port number are correct.</li>
+<li>Make sure the firewall or network security settings are not blocking the connection to the Velbus TCP/IP interface</li>
+</ul>
+</li>
+</ul>
+<h3>Module not detected</h3>
+<h4>Symptom: "Certain modules are not detected by the integration"</h4>
+<p>This issue indicates that some Velbus modules are not detected by the Velbus integration.</p>
+<h4>Description</h4>
+<p>This is likely caused by one of the following issues:</p>
+<ul>
+<li>The Velbus modules are not properly connected to the Velbus bus.</li>
+<li>The Velbus modules are not powered on.</li>
+<li>The Velbus bus scan has not been performed after adding new modules.</li>
+<li>The Velbus modules are not detected by the VelbusLink software.</li>
+<li>There are error messages in the Velbus integration debug logs related to module detection.</li>
+</ul>
+<h4>Resolution</h4>
+<ul>
+<li>Check if Velbuslink software detects all modules correctly.</li>
+<li>If the Velbuslink software detects all modules, but they do not show in Home Assistant, file a bug report including debug logs, diagnostics, and your VLP file.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The Velbus integration supports a wide range of Velbus modules. A non-exhaustive list of supported modules is given below:</p>
+<ul>
+<li>VMB1RYNOS</li>
+<li>VMBPIRM</li>
+<li>VMBPIRC</li>
+<li>VMBPIRO</li>
+<li>VMBGP4PIR</li>
+<li>VMB1BLS</li>
+<li>VMBDMI-R</li>
+<li>VMBMETEO</li>
+<li>VMB4AN</li>
+<li>VMBEL1</li>
+<li>VMBEL2</li>
+<li>VMBEL4</li>
+<li>VMBELO</li>
+<li>VMBELPIR</li>
+<li>VMBGP1-2</li>
+<li>VMBGP2-2</li>
+<li>VMBGP4-2</li>
+<li>VMBGPOD-2</li>
+<li>VMBGP4PIR-2</li>
+<li>VMB1RYS</li>
+<li>VMBIN</li>
+<li>VMB4PB</li>
+<li>VMBDALI</li>
+<li>VMB4RYLD-10</li>
+<li>VMB4RYNO-10</li>
+<li>VMB2BLE-10</li>
+<li>VMB8DC-20</li>
+<li>VMB6PB-20</li>
+<li>VMBPIR-20</li>
+<li>VMB8IN-20</li>
+<li>VMBEL1-20</li>
+<li>VMBEL2-20</li>
+<li>VMBEL4-20</li>
+<li>VMBELO-20</li>
+<li>VMBGP1-20</li>
+<li>VMBGP2-20</li>
+<li>VMBGP4-20</li>
+<li>VMBGPO-20</li>
+<li>VMBPIRO-20</li>
+<li>VMBDALI-20</li>
+<li>VMBEL4PIR-20</li>
+<li>VMBGP4PIR-20</li>
+<li>VMB2BLE-20</li>
+</ul>
+<h2>Unsupported devices</h2>
+<p>The following Velbus modules are currently not supported by the integration:</p>
+<ul>
+<li>VMBRF8S</li>
+<li>VMBVP01</li>
+<li>VMBCM3</li>
+<li>VMBUSBIP</li>
+<li>VMBKP</li>
+<li>VMBSIG</li>
+<li>VMBSIG-20</li>
+<li>VMBSIG-21</li>
+</ul>
+<h2>Use cases</h2>
+<ol>
+<li>Keep long term statistics of the Velbus sensor data using Home Assistant's built-in recorder and history features.</li>
+<li>Create automations to control your Velbus devices based on time, state changes, or other sensor data.</li>
+<li>Integrate Velbus devices with other smart home devices and services supported by Home Assistant.</li>
+<li>Use voice assistants like Google Assistant or Amazon Alexa to control your Velbus devices via Home Assistant.</li>
+<li>Create custom dashboards in Home Assistant to monitor and control your Velbus devices.</li>
+<li>Use Home Assistant's energy management features to monitor and optimize energy consumption using Velbus energy sensors.</li>
+<li>Link Velbus buttons to other Home Assistant entities for seamless control.</li>
+<li>Automate climate control using Velbus thermostat modules integrated with Home Assistant.</li>
+<li>Monitor environmental conditions using Velbus weather modules and create automations based on sensor readings.</li>
+<li>Set up notifications for specific events, such as when a Velbus sensor detects motion or when a door is opened.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>The Velbus integration and its entities can be removed by following these steps:</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>Note: Removing the integration will delete all Velbus devices and their history from Home Assistant.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/velbus.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Access and control your Velbus devices.
+ha_release: &#x27;0.50&#x27;
+ha_domain: velbus
+---
+
+The **Velbus** {% term integration %} is used to control [Velbus](https://www.velbus.eu/?lang=en) modules. It supports the Velbus USB, Velbus serial and a TCP/IP gateway.
+
+To use the Velbus integration, you need to have Velbus modules connected to a Velbus USB or TCP/IP interface.
+
+{% include integrations/config_flow.md %}
+
+## Configuration parameters
+
+During the setup you will be shown 2 choices on ways to connect to the Velbus bus:
+
+- USB
+- TCP/IP
+
+A connection test will be performed to ensure the connection is working. If successful, the integration will be added to Home Assistant.
+
+### USB
+
+The USB connection is a way to connect to the Velbus bus. You will need a Velbus USB interface to connect to the bus. The USB interface is connected to the USB port of your Home Assistant device.
+The interface USB devices are automatically detected and shown in a list.
+Select the correct USB interface from the list and select **Submit**.
+
+There will be a connection test to make sure the connection is working, and if it&#x27;s working the integration will be added to Home Assistant.
+
+### TCP/IP
+
+The TCP/IP connection is a way to connect to the Velbus bus. You will need a Velbus TCP/IP interface available in your network.
+
+{% configuration_basic %}
+tls:
+    description: &quot;Enable TLS connection towards the Velbus TCP/IP interface. This is usually needed when connecting to a signum. This is optional and can be disabled when connecting to a velser or Home Assistant add-on.&quot;
+host:
+    description: &quot;The IP address of the Velbus TCP/IP interface.&quot;
+port:
+    description: &quot;The port number of the Velbus TCP/IP interface.&quot;
+password:
+    description: &quot;The password to authenticate to the Velbus TCP/IP interface. This is optional and only needed if the devie has authentication enabled.&quot;
+{% endconfiguration_basic %}
+
+#### Example: signum
+
+- tls: yes
+- host: your signum IP address
+- port: 27015
+- password: your signum password (if configured)
+
+#### Example: velser
+
+- tls: no
+- host: your velser IP address
+- port: 6000
+- password: leave empty
+
+#### Example: Home Assistant add-on
+
+- tls: depending on your configuration
+- host: your Home Assistant IP address
+- port: 27015 if you kept the default
+- password: leave empty
+
+
+## Supported functionality
+
+The Velbus integration supports the following functionality:
+
+### Switch
+
+Every relay module will be represented as a switch entity in Home Assistant. You can turn the switch on and off to control the relay.
+
+### Light
+
+Every dimmer module will be represented as a light entity in Home Assistant. You can turn the light on and off and set the brightness level.
+For each input module, a light entity will be created to control the LED of the push buttons. You can turn the LED on and off and set the flash mode.
+
+{% note %}
+The pushbutton LEDs of input modules are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). These can be enabled from the **Devices** panel in the **Configuration** page of the web interface.
+{% endnote %}
+
+### Binary sensor
+
+Every input module will be represented as a binary sensor entity in Home Assistant. The binary sensor will be on when the input is active and off when the input is inactive.
+
+### Event
+
+Each physical Velbus button also has an event entity, with the same name as the button&#x27;s binary sensor. The event entity records how the button was pressed, so you can react to a short or long press in an automation:
+
+- `short_press`: The button was pressed and released without a long press. This is recorded when you release the button.
+- `long_press`: The Velbus module reported a long press. This is recorded right away, while you&#x27;re still holding the button. Releasing the button afterward doesn&#x27;t record another press.
+
+The Velbus module decides whether a press counts as long. You can&#x27;t change this in Home Assistant.
+### Select
+
+Every module that supports programs will have a select entity in Home Assistant. You can select the program that you want to activate.
+
+### Climate
+
+Every module that supports thermostat functionality will be represented as a climate entity in Home Assistant. You can set the target temperature, the mode (heat/cool) and the preset mode (away/comfort/eco/home).
+
+### Cover
+
+Every blind module will be represented as a cover entity in Home Assistant. You can open and close the blind and if the module supports it, you can set the position of the blind.
+
+### Button
+
+Every input module will have a button entity in Home Assistant to trigger a button press event. This can be used to trigger Velbus actions from Home Assistant.
+
+### Sensor
+
+Some modules expose sensors that can be used in Home Assistant.
+Known and implemented sensors are:
+
+- energy consumption sensor: kWh
+- temperature sensor: °C
+- light level sensor: Lux
+- PSU voltage sensor: Voltage
+- PSU current sensor: Amps
+- PSU load sensor: Percentage
+
+The Analog input module (VMB4AN) will have 4 sensor entities to read the analog values.
+The VMBMETEO module will have multiple sensor entities to read temperature, humidity, wind speed, wind direction, and rain level.
+
+### VLP file import
+
+{% note %}
+This step is optional.
+{% endnote %}
+
+In the next step of the configuration, you have the option to import a Velbus VLP configuration file. This is the configuration file that you can export from the VelbusLink software.
+This will eliminate the need for a scan of the bus and will create all devices and entities based on the configuration file.
+
+{% configuration_basic %}
+vlp:
+    description: &quot;Path to the VLP file to import. If not provided, no VLP file will be imported and a bus scan will be performed.&quot;
+{% endconfiguration_basic %}
+
+If you don&#x27;t have a VLP file or don&#x27;t want to import it, you can skip this step, and the integration will perform a scan of the bus to discover the connected modules, but this is known to be less reliable than using a VLP file.
+
+## Re-configuring the integration
+
+You can re-configure the Velbus integration by following these steps:
+
+{% include integrations/option_flow.md %}
+
+{% configuration_basic %}
+vlp:
+    description: &quot;Path to the VLP file to import during re-configuration. If not provided, no VLP file will be imported and a bus scan will be performed.&quot;
+{% endconfiguration_basic %}
+
+{% include integrations/actions.md %}
+
+## Examples
+
+### Linking a Velbus button to another entity
+
+The Velbus {% term integration %} allows you to link a Velbus button (such as a button of a [VMBGPOD](https://www.velbus.eu/products/view/?id=416302&amp;lang=en) module) to a controllable {% term entity %} of Home Assistant.
+The actual linking can be realized by two automation rules. One rule to control the device using the push button and a second rule to update the LED state of the push button as soon as the {% term entity %} state changes.
+
+```yaml
+# Control light living from Velbus push_button_10
+- alias: &quot;Control light living using Velbus push_button_10&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.push_button_10
+      to: &quot;on&quot;
+  actions:
+    - action: light.toggle
+      entity_id: light.living
+&#32;&#32;&#32;&#32;&#32;&#32;
+
+# Keep status LED push_button_10 in sync to status light living
+- alias: &quot;Update LED state of push_button_10&quot;
+  triggers:
+    - trigger: state
+      entity_id: light.living
+      to: &quot;on&quot;
+    - trigger: state
+      entity_id: light.living
+      to: &quot;off&quot;
+  conditions:
+    - condition: or
+      conditions:
+        - condition: and
+          conditions:
+          - condition: state
+            entity_id: light.led_push_button_10
+            state: &quot;on&quot;
+          - condition: state
+            entity_id: light.living
+            state: &quot;off&quot;
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: light.led_push_button_10
+              state: &quot;off&quot;
+            - condition: state
+              entity_id: light.living
+              state: &quot;on&quot;
+  actions:
+    - action: light.toggle
+      entity_id: light.led_push_button_10
+&#32;&#32;&#32;&#32;&#32;&#32;
+```
+
+### VMB7IN and the Energy dashboard
+
+The VMB7IN sensor can be integrated with Home Assistant&#x27;s Energy dashboard to track your utility consumption.
+
+In some cases, the VMB7IN sensor does not report what the counter is counting. If the counter is related to an energy device, everything will work out of the box.
+But if the VMB7IN sensor is a water or gas counter, you will need to specify this in your {% term &quot;`configuration.yaml`&quot; %} file.
+
+```yaml
+homeassistant:
+  customize:
+    sensor.eau_counter:
+      device_class: water
+```
+
+The `device_class` attribute can have 2 values:
+
+- gas: if the counter represents a gas meter
+- water: if the counter represents a water meter
+
+## Data updates
+
+The integration is event driven, meaning that updates are pushed from the Velbus modules to Home Assistant as soon as a change occurs. This ensures that the state of the entities in Home Assistant is always up to date.
+
+For sensor entities, Velbus modules send periodic updates. The interval of these updates is configurable via VelbusLink software.
+
+## Known limitations
+
+- The integration will never reprogram Velbus modules. All changes that are not implemented in the [Velbus module protocol](https://github.com/velbus/moduleprotocol) need to be done via VelbusLink software.
+- The integration does not support upgrading Velbus modules firmware. This needs to be done via VelbusLink software.
+- For relay modules, the integration does not support the forced on/off state. This needs to be done via VelbusLink software.
+
+## Troubleshooting
+
+If you encounter issues with the Velbus integration, you can enable debug logging to get more information about the problem.
+
+### Common issues
+
+- If you have changed the configuration of your Velbus modules using VelbusLink software, you may need to clear the Velbus cache using the `velbus.clear_cache` action to ensure that Home Assistant has the latest configuration.
+- If you use the VLP file configuration for the integration, ensure that the VLP file is up to date and matches the configuration of your Velbus modules.
+
+### Enabling debug logging
+
+To enable debug logging for the Velbus integration, you can check [Home Assistant Troubleshooting documentation](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics) for more information.
+
+### Can&#x27;t connect to Velbus interface
+
+#### Symptom: “Unable to setup Velbus”
+
+This error indicates that Home Assistant is unable to connect to the Velbus interface.
+
+#### Resolution
+
+Try the following steps:
+- For USB connections:
+  - Make sure the Velbus USB interface is properly connected to the Home Assistant device.
+  - Make sure no other application (like VelbusLink) is using the Velbus USB interface at the same time.
+- For TCP/IP connections:
+  - Make sure the Velbus TCP/IP interface is powered on and connected to the network.
+  - Make sure the IP address and the port number are correct.
+  - Make sure the firewall or network security settings are not blocking the connection to the Velbus TCP/IP interface
+
+### Module not detected
+
+#### Symptom: &quot;Certain modules are not detected by the integration&quot;
+
+This issue indicates that some Velbus modules are not detected by the Velbus integration.
+
+#### Description
+
+This is likely caused by one of the following issues:
+- The Velbus modules are not properly connected to the Velbus bus.
+- The Velbus modules are not powered on.
+- The Velbus bus scan has not been performed after adding new modules.
+- The Velbus modules are not detected by the VelbusLink software.
+- There are error messages in the Velbus integration debug logs related to module detection.
+
+#### Resolution
+
+- Check if Velbuslink software detects all modules correctly.
+- If the Velbuslink software detects all modules, but they do not show in Home Assistant, file a bug report including debug logs, diagnostics, and your VLP file.
+
+## Supported devices
+
+The Velbus integration supports a wide range of Velbus modules. A non-exhaustive list of supported modules is given below:
+
+- VMB1RYNOS
+- VMBPIRM
+- VMBPIRC
+- VMBPIRO
+- VMBGP4PIR
+- VMB1BLS
+- VMBDMI-R
+- VMBMETEO
+- VMB4AN
+- VMBEL1
+- VMBEL2
+- VMBEL4
+- VMBELO
+- VMBELPIR
+- VMBGP1-2
+- VMBGP2-2
+- VMBGP4-2
+- VMBGPOD-2
+- VMBGP4PIR-2
+- VMB1RYS
+- VMBIN
+- VMB4PB
+- VMBDALI
+- VMB4RYLD-10
+- VMB4RYNO-10
+- VMB2BLE-10
+- VMB8DC-20
+- VMB6PB-20
+- VMBPIR-20
+- VMB8IN-20
+- VMBEL1-20
+- VMBEL2-20
+- VMBEL4-20
+- VMBELO-20
+- VMBGP1-20
+- VMBGP2-20
+- VMBGP4-20
+- VMBGPO-20
+- VMBPIRO-20
+- VMBDALI-20
+- VMBEL4PIR-20
+- VMBGP4PIR-20
+- VMB2BLE-20
+
+## Unsupported devices
+
+The following Velbus modules are currently not supported by the integration:
+
+- VMBRF8S
+- VMBVP01
+- VMBCM3
+- VMBUSBIP
+- VMBKP
+- VMBSIG
+- VMBSIG-20
+- VMBSIG-21
+
+## Use cases
+
+1. Keep long term statistics of the Velbus sensor data using Home Assistant&#x27;s built-in recorder and history features.
+2. Create automations to control your Velbus devices based on time, state changes, or other sensor data.
+3. Integrate Velbus devices with other smart home devices and services supported by Home Assistant.
+4. Use voice assistants like Google Assistant or Amazon Alexa to control your Velbus devices via Home Assistant.
+5. Create custom dashboards in Home Assistant to monitor and control your Velbus devices.
+6. Use Home Assistant&#x27;s energy management features to monitor and optimize energy consumption using Velbus energy sensors.
+7. Link Velbus buttons to other Home Assistant entities for seamless control.
+8. Automate climate control using Velbus thermostat modules integrated with Home Assistant.
+9. Monitor environmental conditions using Velbus weather modules and create automations based on sensor readings.
+10. Set up notifications for specific events, such as when a Velbus sensor detects motion or when a door is opened.
+
+## Removing the integration
+
+The Velbus integration and its entities can be removed by following these steps:
+
+{% include integrations/remove_device_service.md %}
+
+Note: Removing the integration will delete all Velbus devices and their history from Home Assistant.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Velbus.</p><p>The <strong>network</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>tls</code>.</p><p>The <strong>usbselect</strong> configuration step lists <code>port</code>.</p><p>The <strong>vlp</strong> configuration step lists <code>vlp_file</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>light</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>clear cache</li><li>scan</li><li>set memo text</li><li>sync clock</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration parameters</li><li>Supported functionality</li><li>Re-configuring the integration</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Supported devices</li><li>Unsupported devices</li><li>Use cases</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/velbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/velbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/velbus</code></dd></dl></section><p><a href="../../integrations/velbus/">Return to the Velbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

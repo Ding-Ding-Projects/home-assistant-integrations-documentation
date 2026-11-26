@@ -1,1 +1,931 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recorder reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:194" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/recorder/">Recorder guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Recorder</h1><p>Instructions on how to configure the data recorder for Home Assistant.</p><section><h2>Overview</h2><p>The Recorder integration stores the history of your Home Assistant entities in a database. Every time an entity changes state, such as a light turning on, a sensor reporting a new temperature, or a door being opened, the recorder writes that change to the database. It can also store events that happen on your system, which makes it possible to look back in time and see what happened in your home.</p></section><section><h2>Supported databases</h2><p>The Recorder integration is enabled by default as a dependency of the History integration.</p></section><section><h2>Disk space requirements</h2><p>A bare minimum requirement is to have at least as much free temporary space available as the size of your database at all times. A table rebuild, repair, or repack may happen at any time, which can result in a copy of the data on disk during the operation. Meeting the bare minimum requirement is essential during a version upgrade, where the schema may change, as this operation almost always requires making a temporary copy of part of the database.</p></section><section><h2>Customizing the recorder configuration</h2><p>To change the defaults for the recorder integration in your installation, add the following to your configuration.yaml file:</p></section><section><h2>Configure filter</h2><p>By default, no entity will be excluded. To limit which entities are being exposed to recorder, you can use the include and exclude parameters.</p></section><section><h2>Common filtering examples</h2><p>Defining domains and entities to exclude (that is, blocklist) is convenient when you are basically happy with the information recorded, but just want to remove some entities or domains.</p></section><section><h2>Handling disk corruption and hardware failures</h2><p>When using SQLite, if the system encounters unrecoverable disk corruption, it will move the database aside and create a new database to keep the system online. In this case, having at least 2.5x the database size available in free disk space is essential. Starting a new database is the system&#x27;s last resort recovery option and is usually caused by failing flash storage, an inadequate power supply, an unclean shutdown, or another hardware failure.</p></section><section><h2>Custom database engines</h2><p>SQLite is the most tested, and newer version of Home Assistant are highly optimized to perform well when using SQLite.</p></section><section><h2>Database startup</h2><p>If you are running a database server instance on the same server as Home Assistant then you must ensure that this action starts before Home Assistant. For a Linux instance running Systemd (Raspberry Pi, Debian, Ubuntu and others) you should edit the service file. To help facilitate this, db_max_retry and db_retry_wait variables have been added to ensure the recorder retries the connection to your database enough times, for your database to start up.</p></section><section><h2>Installation notes</h2><p>Not all Python bindings for the chosen database engine can be installed directly. This section contains additional details that should help you to get it working.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Recorder in Home Assistant is <code>recorder</code>.</p><h3>Documented actions</h3><ul class="chips"><li>disable</li><li>enable</li><li>get statistics</li><li>purge</li><li>purge entities</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported databases</li><li>Disk space requirements</li><li>Customizing the recorder configuration</li><li>Handling disk corruption and hardware failures</li><li>Custom database engines</li><li>Installation notes</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/recorder/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/recorder</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/recorder</code></dd></dl></section><p><a href="../../integrations/recorder/">Return to the Recorder guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recorder reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:194" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/recorder/">Recorder guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Recorder</h1><p>Instructions on how to configure the data recorder for Home Assistant.</p><div class="reader-body"><p>The <strong>Recorder</strong> integration stores the history of your Home Assistant entities in a database. Every time an entity changes state, such as a light turning on, a sensor reporting a new temperature, or a door being opened, the recorder writes that change to the database. It can also store events that happen on your system, which makes it possible to look back in time and see what happened in your home.</p>
+<p>Many parts of Home Assistant rely on this stored data. The <a href="../history/"><strong>History</strong></a> and <a href="../logbook/"><strong>Activity</strong></a> panels, the graphs shown on dashboard cards, and <a>long-term statistics</a> all read from the database that the recorder maintains. Without the recorder, Home Assistant would still show the current state of your home, but it would not keep this history for those features.</p>
+<p>The flow of data looks like this:</p>
+<ol>
+<li>Something in your home changes, such as a device turning on or a sensor reporting a new value.</li>
+<li>Home Assistant registers this as a state change or an event.</li>
+<li>The recorder writes the change to the database.</li>
+<li>Features like history, activity, dashboard graphs, and statistics read from that database to show you what happened over time.</li>
+</ol>
+<p>The chart illustrates how data flows from a change in your home, through the recorder, into the database, and back out to the features that show you what happened over time.</p>
+<p>
+How the Recorder integration writes state changes and events to a database that other features read from.
+</p>
+
+<h2>Supported databases</h2>
+<p>The <strong>Recorder</strong> integration is enabled by default as a dependency of the <a href="../history/"><strong>History</strong></a> integration.</p>
+<p><strong>Important</strong></p>
+<p>This integration constantly saves data. If you use the default configuration, the data will be saved on the media Home Assistant is installed on. In case of Raspberry Pi with an SD card, it might affect your system's reaction time and life expectancy of the storage medium (the SD card). It is therefore recommended to set the <a href="../recorder/">commit_interval</a> to higher value, e.g. 30s, limit the amount of stored data (e.g., by excluding devices) or store the data elsewhere (e.g., another system).</p>
+<p>Home Assistant uses <a>SQLAlchemy</a>, which is an Object Relational Mapper (ORM). This makes it possible to use several database solutions.</p>
+<p>The supported database solutions are:</p>
+<ul>
+<li><a>MariaDB</a> ≥ 10.3</li>
+<li><a>MySQL</a> ≥ 8.0</li>
+<li><a>PostgreSQL</a> ≥ 12</li>
+<li><a>SQLite</a> ≥ 3.40.1</li>
+</ul>
+<p>Although SQLAlchemy supports database solutions in addition to the ones supported by Home Assistant, it will behave differently on different databases, and features relied on by the recorder may work differently, or not at all, in different databases.</p>
+<p>The default, and recommended, database engine is <a>SQLite</a> which does not require any configuration. The database is stored in your Home Assistant configuration directory ('/config/') and is named <code>home-assistant_v2.db</code>.</p>
+<p><strong>Caution</strong></p>
+<p>Changing database used by the recorder may result in losing your existing history. Migrating data is not supported.</p>
+<h2>Disk space requirements</h2>
+<p>A bare minimum requirement is to have at least as much free temporary space available as the size of your database at all times. A table rebuild, repair, or repack may happen at any time, which can result in a copy of the data on disk during the operation. Meeting the bare minimum requirement is essential during a version upgrade, where the schema may change, as this operation almost always requires making a temporary copy of part of the database.</p>
+<p>For example, if your database is 1.5&nbsp;GiB on disk, you must always have at least 1.5&nbsp;GiB free.</p>
+<h2>Customizing the recorder configuration</h2>
+<p>To change the defaults for the <code>recorder</code> integration in your installation, add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+recorder:
+</code></pre>
+<pre><code>
+recorder:
+  description: Enables the recorder integration. Only allowed once.
+  required: true
+  type: map
+  keys:
+    db_url:
+      description: The URL that points to your database. Examples of these can be found [here](#custom-database-engines).
+      required: false
+      type: string
+    db_max_retries:
+      description: The max amount of times, the recorder retries to connect to the database.
+      required: false
+      default: 10
+      type: integer
+    db_retry_wait:
+      description: The time in seconds, that the recorder sleeps when trying to connect to the database.
+      required: false
+      default: 3
+      type: integer&#32;
+    auto_purge:
+      description: Automatically purge the database every night at 04:12 local time. Purging keeps the database from growing indefinitely, which takes up disk space and can make Home Assistant slow. If you disable `auto_purge` it is recommended that you create an automation to call the [`recorder.purge`](#action-purge) periodically.
+      required: false
+      default: true
+      type: boolean
+    auto_repack:
+      description: Automatically repack the database on the second Sunday of each month, after the auto purge. Without a repack, the database may not decrease in size even after purging, which takes up disk space and can make Home Assistant slow. If you disable `auto_repack` it is recommended that you create an automation to call the [`recorder.purge`](#action-purge) periodically. This flag has no effect if `auto_purge` is disabled.
+      required: false
+      default: true
+      type: boolean
+    purge_keep_days:
+      description: Specify the number of history days to keep in recorder database after a purge.
+      required: false
+      default: 10
+      type: integer
+    commit_interval:
+      description: How often (in seconds) the events and state changes are committed to the database. The default of `5` allows events to be committed almost right away without trashing the disk when an event storm happens. Increasing this will reduce disk I/O and may prolong disk (SD card) lifetime with the trade-off being that the database will lag (the activity and history will not lag, because the changes are streamed to them immediately). If this is set to `0` (zero), commits are made as soon as possible after an event is processed.
+      required: false
+      default: 5
+      type: integer
+    exclude:
+      description: Configure which integrations should be excluded from recordings. ([Configure Filter](#configure-filter))
+      required: false
+      type: map
+      keys:
+        domains:
+          description: The list of domains to be excluded from recordings.
+          required: false
+          type: list
+        entity_globs:
+          description: Exclude all entities matching a listed pattern from recordings (e.g., `sensor.weather_*`).
+          required: false
+          type: list
+        entities:
+          description: The list of entity ids to be excluded from recordings.
+          required: false
+          type: list
+        event_types:
+          description: The list of event types to be excluded from recordings.
+          required: false
+          type: list
+    include:
+      description: Configure which integrations should be included in recordings. If set, all other entities will not be recorded. ([Configure Filter](#configure-filter))
+      required: false
+      type: map
+      keys:
+        domains:
+          description: The list of domains to be included in the recordings.
+          required: false
+          type: list
+        entity_globs:
+          description: Include all entities matching a listed pattern from recordings (e.g., `sensor.weather_*`).
+          required: false
+          type: list
+        entities:
+          description: The list of entity ids to be included in the recordings.
+          required: false
+          type: list
+
+</code></pre>
+<h3>Configure filter</h3>
+<p>By default, no entity will be excluded. To limit which entities are being exposed to <code>recorder</code>, you can use the <code>include</code> and <code>exclude</code> parameters.</p>
+<pre><code># Example filter to include specified domains and exclude specified entities
+recorder:
+  include:
+    domains:
+      - alarm_control_panel
+      - light
+    entity_globs:
+      - binary_sensor.*_occupancy
+  exclude:
+    entities:
+      - light.kitchen_light
+</code></pre>
+<p>Filters are applied as follows:</p>
+<ol>
+<li>No filter<ul>
+<li>All entities included</li>
+</ul>
+</li>
+<li>Only includes<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity matches domain include: include</li>
+<li>Otherwise, entity matches glob include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+<li>Only excludes<ul>
+<li>Entity listed in exclude: exclude</li>
+<li>Otherwise, entity matches domain exclude: exclude</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise: include</li>
+</ul>
+</li>
+<li>Domain and/or glob includes (may also have excludes)<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity listed in entities exclude: exclude</li>
+<li>Otherwise, entity matches glob include: include</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise, entity matches domain include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+<li>Domain and/or glob excludes (no domain and/or glob includes)<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity listed in exclude: exclude</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise, entity matches domain exclude: exclude</li>
+<li>Otherwise: include</li>
+</ul>
+</li>
+<li>No Domain and/or glob includes or excludes<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+</ol>
+<p>The following characters can be used in entity globs:</p>
+<p><code>*</code> - The asterisk represents zero, one, or multiple characters
+<code>?</code> - The question mark represents zero or one character</p>
+<p>If you only want to hide events from your <strong>Activity</strong> panel, take a look at the <a href="../logbook/">Activity integration</a>. But if you have privacy concerns about certain events or want them in neither the history nor activity, you should use the <code>exclude</code>/<code>include</code> options of the <code>recorder</code> integration. That way they aren't even in your database, you can reduce storage and keep the database small by excluding certain often-logged events (like <code>sensor.last_boot</code>).</p>
+<h4>Common filtering examples</h4>
+<p>Defining domains and entities to <code>exclude</code> (that is, blocklist) is convenient when you are basically happy with the information recorded, but just want to remove some entities or domains.</p>
+<pre><code># Example configuration.yaml entry with exclude
+recorder:
+  purge_keep_days: 5
+  db_url: sqlite:////home/user/.homeassistant/test
+  exclude:
+    domains:
+      - automation
+      - update
+    entity_globs:
+      - sensor.sun*
+      - weather.*
+    entities:
+      - sensor.date
+      - sensor.last_boot # Comes from 'systemmonitor' sensor platform
+      - sun.sun # Don't record sun data
+    event_types:
+      - my_custom_event
+</code></pre>
+<p>Defining domains and entities to record by using the <code>include</code> configuration (that is, allowlist) is convenient if you have a lot of entities in your system and your <code>exclude</code> lists possibly get very large, so it might be better just to define the entities or domains to record.</p>
+<pre><code># Example configuration.yaml entry with include
+recorder:
+  include:
+    domains:
+      - sensor
+      - switch
+      - media_player
+</code></pre>
+<p>You can also use the <code>include</code> list to define the domains/entities to record, and exclude some of those within the <code>exclude</code> list. This makes sense if you, for instance, include the <code>sensor</code> domain, but want to exclude some specific sensors. Instead of adding every sensor entity to the <code>include</code> <code>entities</code> list just include the <code>sensor</code> domain and exclude the sensor entities you are not interested in.</p>
+<pre><code># Example configuration.yaml entry with include and exclude
+recorder:
+  include:
+    domains:
+      - sensor
+      - switch
+      - media_player
+  exclude:
+    entities:
+      - sensor.last_boot
+      - sensor.date
+    entity_globs:
+      - sensor.weather_*
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Handling disk corruption and hardware failures</h2>
+<p>When using SQLite, if the system encounters unrecoverable disk corruption, it will move the database aside and create a new database to keep the system online. In this case, having at least 2.5x the database size available in free disk space is essential. Starting a new database is the system's last resort recovery option and is usually caused by failing flash storage, an inadequate power supply, an unclean shutdown, or another hardware failure.</p>
+<p>In this event, it may be possible to recover the old database by following the <a>SQLite recovery guide</a>.</p>
+<h2>Custom database engines</h2>
+<p><strong>Warning</strong></p>
+<p>SQLite is the most tested, and newer version of Home Assistant are highly optimized to perform well when using SQLite.</p>
+<p>When choosing another option, you should be comfortable in the role of the database administrator, including making backups of the external database.</p>
+<p>Here are examples to use with the <a><code>db_url</code></a> configuration option.</p>
+<pre><code>
+
+SQLite:
+  description: &gt;
+    `sqlite:////PATH/TO/DB_NAME`
+MariaDB (omit pymysql):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MariaDB (omit pymysql, using TLS encryption):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4&amp;ssl_mode=REQUIRED`
+MariaDB (omit pymysql, Socket):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+MySQL:
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MySQL (using TLS encryption):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4&amp;ssl_mode=REQUIRED`
+MySQL (Socket):
+  description: &gt;
+    `mysql://user:password@localhost/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+MariaDB:
+  description: &gt;
+    `mysql+pymysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MariaDB (Socket):
+  description: &gt;
+    `mysql+pymysql://user:password@localhost/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+PostgreSQL:
+  description: &gt;
+    `postgresql://user:password@SERVER_IP/DB_NAME`
+PostgreSQL (Socket):
+  description: &gt;
+    `postgresql://@/DB_NAME`
+PostgreSQL (Custom socket dir):
+  description: &gt;
+    `postgresql://@/DB_NAME?host=/path/to/dir`
+
+</code></pre>
+<p><strong>Note</strong></p>
+<p>Some installations of MariaDB/MySQL may require an ALTERNATE_PORT (3rd-party hosting providers or parallel installations) to be added to the SERVER_IP, e.g., <code>mysql://user:password@SERVER_IP:ALTERNATE_PORT/DB_NAME?charset=utf8mb4</code>.</p>
+<p><strong>Note</strong></p>
+<p>When using a MariaDB or MySQL server, adding <code>+pymysql</code> to the URL will use the pure Python MySQL library, which is slower but may be required if the C MySQL library is not available.</p>
+<p>When using the official Docker image, the C MySQL library will always be available. <code>pymysql</code> is most commonly used with <code>venv</code> where the C MySQL library is not installed.</p>
+<p><strong>Tip</strong></p>
+<p>Unix Socket connections always bring performance advantages over TCP, if the database is on the same host as the <code>recorder</code> instance (that is, <code>localhost</code>).</p>
+<p><strong>Note</strong></p>
+<p>If you want to use Unix Sockets for PostgreSQL you need to modify the <code>pg_hba.conf</code>. See <a>PostgreSQL</a></p>
+<h3>Database startup</h3>
+<p>If you are running a database server instance on the same server as Home Assistant then you must ensure that this action starts before Home Assistant. For a Linux instance running Systemd (Raspberry Pi, Debian, Ubuntu and others) you should edit the service file.
+To help facilitate this, db_max_retry and db_retry_wait variables have been added to ensure the recorder retries the connection to your database enough times, for your database to start up.</p>
+<pre><code>sudo nano /etc/systemd/system/home-assistant@homeassistant.service
+</code></pre>
+<p>and add the action for the database, for example, PostgreSQL:</p>
+<pre><code>[Unit]
+Description=Home Assistant
+After=network.target postgresql.service
+</code></pre>
+<p>Save the file then reload <code>systemctl</code>:</p>
+<pre><code>sudo systemctl daemon-reload
+</code></pre>
+<h2>Installation notes</h2>
+<p>Not all Python bindings for the chosen database engine can be installed directly. This section contains additional details that should help you to get it working.</p>
+<h3>MariaDB and MySQL</h3>
+<p><strong>Warning</strong></p>
+<p>MariaDB versions before 10.5.17, 10.6.9, 10.7.5, and 10.8.4 suffer from a performance regression which can result in the system becoming overloaded while querying history data or purging the database.</p>
+<p>Make sure the default character set of your database server is set to <code>utf8mb4</code> (see <a>MariaDB documentation</a>).
+If you are in a virtual environment, don't forget to activate it before installing the <code>mysqlclient</code> Python package described below.</p>
+<pre><code>pi@homeassistant:~ $ sudo -u homeassistant -H -s
+homeassistant@homeassistant:~$ source /srv/homeassistant/bin/activate
+(homeassistant) homeassistant@homeassistant:~$ pip3 install mysqlclient
+</code></pre>
+<p>For MariaDB you may have to install a few dependencies. If you're using MariaDB 10.3, the package <code>libmariadb-dev-compat</code> must also be installed. Please install the correct packages based on your MariaDB version.</p>
+<p>On the Python side we use the <code>mysqlclient</code>:</p>
+<pre><code>sudo apt-get install libmariadbclient-dev libssl-dev
+pip3 install mysqlclient
+</code></pre>
+<p>For MySQL you may have to install a few dependencies. You can choose between <code>pymysql</code> and <code>mysqlclient</code>:</p>
+<pre><code>sudo apt-get install default-libmysqlclient-dev libssl-dev
+pip3 install mysqlclient
+</code></pre>
+<p>After installing the dependencies, it is required to create the database manually. During the startup, Home Assistant will look for the database specified in the <code>db_url</code>. If the database doesn't exist, it will not automatically create it for you.</p>
+<p>The database engine must be <code>InnoDB</code> as <code>MyIASM</code> is not supported.</p>
+<pre><code>SET GLOBAL default_storage_engine = 'InnoDB';
+CREATE DATABASE DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+</code></pre>
+<p>Where <code>DB_NAME</code> is the name of your database</p>
+<p>Once Home Assistant finds the database, with the right level of permissions, all the required tables will then be automatically created and the data will be populated accordingly.</p>
+<h3>PostgreSQL</h3>
+<p>Create the PostgreSQL database with <code>utf8</code> encoding. The PostgreSQL default encoding is <code>SQL_ASCII</code>. From the <code>postgres</code> user account;</p>
+<pre><code>createdb -E utf8 DB_NAME
+</code></pre>
+<p>Where <code>DB_NAME</code> is the name of your database</p>
+<p>If the Database in use is not <code>utf8</code>, adding <code>?client_encoding=utf8</code> to the <code>db_url</code> may solve any issue.</p>
+<p>For PostgreSQL you may have to install a few dependencies:</p>
+<pre><code>sudo apt-get install postgresql-server-dev-X.Y
+pip3 install psycopg2
+</code></pre>
+<p>For using Unix Sockets, first create your user from the <code>postgres</code> user account;</p>
+<pre><code>createuser USER_NAME
+</code></pre>
+<p>Where <code>USER_NAME</code> is the name of the user running the Home Assistant instance (see <a>securing your installation</a>).</p>
+<p>Then add the following line to your <a><code>pg_hba.conf</code></a>:</p>
+<p><code>local  DB_NAME USER_NAME peer</code></p>
+<p>Where <code>DB_NAME</code> is the name of your database and <code>USER_NAME</code> is the name of the user running the Home Assistant instance (see <a>securing your installation</a>).</p>
+<p>Reload the PostgreSQL configuration after that:</p>
+<pre><code>$ sudo -i -u postgres psql -c "SELECT pg_reload_conf();"
+ pg_reload_conf
+----------------
+ t
+(1 row)
+</code></pre>
+<p>A service restart will work as well.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/recorder.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to configure the data recorder for Home Assistant.
+ha_release: pre 0.7
+ha_domain: recorder
+related:
+  - docs: /integrations/sql/
+    title: SQL integration
+---
+
+The **Recorder** {% term integration %} stores the history of your Home Assistant entities in a database. Every time an {% term entity %} changes state, such as a light turning on, a sensor reporting a new temperature, or a door being opened, the recorder writes that change to the database. It can also store events that happen on your system, which makes it possible to look back in time and see what happened in your home.
+
+Many parts of Home Assistant rely on this stored data. The [**History**](/integrations/history/) and [**Activity**](/integrations/logbook/) panels, the graphs shown on dashboard cards, and [long-term statistics](/docs/configuration/long-term-statistics/) all read from the database that the recorder maintains. Without the recorder, Home Assistant would still show the current state of your home, but it would not keep this history for those features.
+
+The flow of data looks like this:
+
+1. Something in your home changes, such as a device turning on or a sensor reporting a new value.
+2. Home Assistant registers this as a state change or an event.
+3. The recorder writes the change to the database.
+4. Features like history, activity, dashboard graphs, and statistics read from that database to show you what happened over time.
+
+The chart illustrates how data flows from a change in your home, through the recorder, into the database, and back out to the features that show you what happened over time.
+
+&lt;p class=&#x27;img&#x27;&gt;&lt;img class=&#x27;invertDark&#x27; src=&#x27;/images/integrations/recorder/recorder-overview.png&#x27; alt=&quot;Diagram showing how the Recorder integration writes state changes and events to a database that history, activity, dashboard graphs, and statistics read from.&quot;&gt;
+How the Recorder integration writes state changes and events to a database that other features read from.
+&lt;/p&gt;
+
+## Supported databases
+
+The **Recorder** integration is enabled by default as a dependency of the [**History**](/integrations/history/) integration.
+
+{% important %}
+This integration constantly saves data. If you use the default configuration, the data will be saved on the media Home Assistant is installed on. In case of Raspberry Pi with an SD card, it might affect your system&#x27;s reaction time and life expectancy of the storage medium (the SD card). It is therefore recommended to set the [commit_interval](/integrations/recorder#commit_interval) to higher value, e.g. 30s, limit the amount of stored data (e.g., by excluding devices) or store the data elsewhere (e.g., another system).
+{% endimportant %}
+
+Home Assistant uses [SQLAlchemy](https://www.sqlalchemy.org/), which is an Object Relational Mapper (ORM). This makes it possible to use several database solutions.
+
+The supported database solutions are:
+
+- [MariaDB](https://mariadb.org/) ≥ 10.3
+- [MySQL](https://www.mysql.com/) ≥ 8.0
+- [PostgreSQL](https://www.postgresql.org/) ≥ 12
+- [SQLite](https://www.sqlite.org/) ≥ 3.40.1
+
+Although SQLAlchemy supports database solutions in addition to the ones supported by Home Assistant, it will behave differently on different databases, and features relied on by the recorder may work differently, or not at all, in different databases.
+
+The default, and recommended, database engine is [SQLite](https://www.sqlite.org/) which does not require any configuration. The database is stored in your Home Assistant configuration directory (&#x27;/config/&#x27;) and is named `home-assistant_v2.db`.
+
+{% caution %}
+Changing database used by the recorder may result in losing your existing history. Migrating data is not supported.
+{% endcaution %}
+
+## Disk space requirements
+
+A bare minimum requirement is to have at least as much free temporary space available as the size of your database at all times. A table rebuild, repair, or repack may happen at any time, which can result in a copy of the data on disk during the operation. Meeting the bare minimum requirement is essential during a version upgrade, where the schema may change, as this operation almost always requires making a temporary copy of part of the database.
+
+For example, if your database is 1.5&amp;nbsp;GiB on disk, you must always have at least 1.5&amp;nbsp;GiB free.
+
+## Customizing the recorder configuration
+
+To change the defaults for the `recorder` integration in your installation, add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+recorder:
+```
+
+{% configuration %}
+recorder:
+  description: Enables the recorder integration. Only allowed once.
+  required: true
+  type: map
+  keys:
+    db_url:
+      description: The URL that points to your database. Examples of these can be found [here](#custom-database-engines).
+      required: false
+      type: string
+    db_max_retries:
+      description: The max amount of times, the recorder retries to connect to the database.
+      required: false
+      default: 10
+      type: integer
+    db_retry_wait:
+      description: The time in seconds, that the recorder sleeps when trying to connect to the database.
+      required: false
+      default: 3
+      type: integer&#32;
+    auto_purge:
+      description: Automatically purge the database every night at 04:12 local time. Purging keeps the database from growing indefinitely, which takes up disk space and can make Home Assistant slow. If you disable `auto_purge` it is recommended that you create an automation to call the [`recorder.purge`](#action-purge) periodically.
+      required: false
+      default: true
+      type: boolean
+    auto_repack:
+      description: Automatically repack the database on the second Sunday of each month, after the auto purge. Without a repack, the database may not decrease in size even after purging, which takes up disk space and can make Home Assistant slow. If you disable `auto_repack` it is recommended that you create an automation to call the [`recorder.purge`](#action-purge) periodically. This flag has no effect if `auto_purge` is disabled.
+      required: false
+      default: true
+      type: boolean
+    purge_keep_days:
+      description: Specify the number of history days to keep in recorder database after a purge.
+      required: false
+      default: 10
+      type: integer
+    commit_interval:
+      description: How often (in seconds) the events and state changes are committed to the database. The default of `5` allows events to be committed almost right away without trashing the disk when an event storm happens. Increasing this will reduce disk I/O and may prolong disk (SD card) lifetime with the trade-off being that the database will lag (the activity and history will not lag, because the changes are streamed to them immediately). If this is set to `0` (zero), commits are made as soon as possible after an event is processed.
+      required: false
+      default: 5
+      type: integer
+    exclude:
+      description: Configure which integrations should be excluded from recordings. ([Configure Filter](#configure-filter))
+      required: false
+      type: map
+      keys:
+        domains:
+          description: The list of domains to be excluded from recordings.
+          required: false
+          type: list
+        entity_globs:
+          description: Exclude all entities matching a listed pattern from recordings (e.g., `sensor.weather_*`).
+          required: false
+          type: list
+        entities:
+          description: The list of entity ids to be excluded from recordings.
+          required: false
+          type: list
+        event_types:
+          description: The list of event types to be excluded from recordings.
+          required: false
+          type: list
+    include:
+      description: Configure which integrations should be included in recordings. If set, all other entities will not be recorded. ([Configure Filter](#configure-filter))
+      required: false
+      type: map
+      keys:
+        domains:
+          description: The list of domains to be included in the recordings.
+          required: false
+          type: list
+        entity_globs:
+          description: Include all entities matching a listed pattern from recordings (e.g., `sensor.weather_*`).
+          required: false
+          type: list
+        entities:
+          description: The list of entity ids to be included in the recordings.
+          required: false
+          type: list
+{% endconfiguration %}
+
+### Configure filter
+
+By default, no entity will be excluded. To limit which entities are being exposed to `recorder`, you can use the `include` and `exclude` parameters.
+
+```yaml
+# Example filter to include specified domains and exclude specified entities
+recorder:
+  include:
+    domains:
+      - alarm_control_panel
+      - light
+    entity_globs:
+      - binary_sensor.*_occupancy
+  exclude:
+    entities:
+      - light.kitchen_light
+```
+
+{% include common-tasks/filters.md %}
+
+If you only want to hide events from your **Activity** panel, take a look at the [Activity integration](/integrations/logbook/). But if you have privacy concerns about certain events or want them in neither the history nor activity, you should use the `exclude`/`include` options of the `recorder` integration. That way they aren&#x27;t even in your database, you can reduce storage and keep the database small by excluding certain often-logged events (like `sensor.last_boot`).
+
+#### Common filtering examples
+
+Defining domains and entities to `exclude` (that is, blocklist) is convenient when you are basically happy with the information recorded, but just want to remove some entities or domains.
+
+```yaml
+# Example configuration.yaml entry with exclude
+recorder:
+  purge_keep_days: 5
+  db_url: sqlite:////home/user/.homeassistant/test
+  exclude:
+    domains:
+      - automation
+      - update
+    entity_globs:
+      - sensor.sun*
+      - weather.*
+    entities:
+      - sensor.date
+      - sensor.last_boot # Comes from &#x27;systemmonitor&#x27; sensor platform
+      - sun.sun # Don&#x27;t record sun data
+    event_types:
+      - my_custom_event
+```
+
+Defining domains and entities to record by using the `include` configuration (that is, allowlist) is convenient if you have a lot of entities in your system and your `exclude` lists possibly get very large, so it might be better just to define the entities or domains to record.
+
+```yaml
+# Example configuration.yaml entry with include
+recorder:
+  include:
+    domains:
+      - sensor
+      - switch
+      - media_player
+```
+
+You can also use the `include` list to define the domains/entities to record, and exclude some of those within the `exclude` list. This makes sense if you, for instance, include the `sensor` domain, but want to exclude some specific sensors. Instead of adding every sensor entity to the `include` `entities` list just include the `sensor` domain and exclude the sensor entities you are not interested in.
+
+```yaml
+# Example configuration.yaml entry with include and exclude
+recorder:
+  include:
+    domains:
+      - sensor
+      - switch
+      - media_player
+  exclude:
+    entities:
+      - sensor.last_boot
+      - sensor.date
+    entity_globs:
+      - sensor.weather_*
+```
+
+{% include integrations/actions.md %}
+
+## Handling disk corruption and hardware failures
+
+When using SQLite, if the system encounters unrecoverable disk corruption, it will move the database aside and create a new database to keep the system online. In this case, having at least 2.5x the database size available in free disk space is essential. Starting a new database is the system&#x27;s last resort recovery option and is usually caused by failing flash storage, an inadequate power supply, an unclean shutdown, or another hardware failure.
+
+In this event, it may be possible to recover the old database by following the [SQLite recovery guide](https://www.sqlite.org/recovery.html).
+
+## Custom database engines
+
+{% warning %}
+SQLite is the most tested, and newer version of Home Assistant are highly optimized to perform well when using SQLite.
+
+When choosing another option, you should be comfortable in the role of the database administrator, including making backups of the external database.
+{% endwarning %}
+
+Here are examples to use with the [`db_url`](#db_url) configuration option.
+
+{% configuration_basic %}
+
+SQLite:
+  description: &gt;
+    `sqlite:////PATH/TO/DB_NAME`
+MariaDB (omit pymysql):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MariaDB (omit pymysql, using TLS encryption):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4&amp;ssl_mode=REQUIRED`
+MariaDB (omit pymysql, Socket):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+MySQL:
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MySQL (using TLS encryption):
+  description: &gt;
+    `mysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4&amp;ssl_mode=REQUIRED`
+MySQL (Socket):
+  description: &gt;
+    `mysql://user:password@localhost/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+MariaDB:
+  description: &gt;
+    `mysql+pymysql://user:password@SERVER_IP/DB_NAME?charset=utf8mb4`
+MariaDB (Socket):
+  description: &gt;
+    `mysql+pymysql://user:password@localhost/DB_NAME?unix_socket=/var/run/mysqld/mysqld.sock&amp;charset=utf8mb4`
+PostgreSQL:
+  description: &gt;
+    `postgresql://user:password@SERVER_IP/DB_NAME`
+PostgreSQL (Socket):
+  description: &gt;
+    `postgresql://@/DB_NAME`
+PostgreSQL (Custom socket dir):
+  description: &gt;
+    `postgresql://@/DB_NAME?host=/path/to/dir`
+{% endconfiguration_basic %}
+
+{% note %}
+Some installations of MariaDB/MySQL may require an ALTERNATE_PORT (3rd-party hosting providers or parallel installations) to be added to the SERVER_IP, e.g., `mysql://user:password@SERVER_IP:ALTERNATE_PORT/DB_NAME?charset=utf8mb4`.
+{% endnote %}
+
+{% note %}
+When using a MariaDB or MySQL server, adding `+pymysql` to the URL will use the pure Python MySQL library, which is slower but may be required if the C MySQL library is not available.&#32;
+
+When using the official Docker image, the C MySQL library will always be available. `pymysql` is most commonly used with `venv` where the C MySQL library is not installed.
+{% endnote %}
+
+{% tip %}
+Unix Socket connections always bring performance advantages over TCP, if the database is on the same host as the `recorder` instance (that is, `localhost`).
+{% endtip %}
+
+{% note %}
+If you want to use Unix Sockets for PostgreSQL you need to modify the `pg_hba.conf`. See [PostgreSQL](#postgresql)
+{% endnote %}
+
+### Database startup
+
+If you are running a database server instance on the same server as Home Assistant then you must ensure that this action starts before Home Assistant. For a Linux instance running Systemd (Raspberry Pi, Debian, Ubuntu and others) you should edit the service file.
+To help facilitate this, db_max_retry and db_retry_wait variables have been added to ensure the recorder retries the connection to your database enough times, for your database to start up.
+
+```bash
+sudo nano /etc/systemd/system/home-assistant@homeassistant.service
+```
+
+and add the action for the database, for example, PostgreSQL:
+
+```txt
+[Unit]
+Description=Home Assistant
+After=network.target postgresql.service
+```
+
+Save the file then reload `systemctl`:
+
+```bash
+sudo systemctl daemon-reload
+```
+
+## Installation notes
+
+Not all Python bindings for the chosen database engine can be installed directly. This section contains additional details that should help you to get it working.
+
+### MariaDB and MySQL
+
+{% warning %}
+MariaDB versions before 10.5.17, 10.6.9, 10.7.5, and 10.8.4 suffer from a performance regression which can result in the system becoming overloaded while querying history data or purging the database.
+{% endwarning %}
+
+Make sure the default character set of your database server is set to `utf8mb4` (see [MariaDB documentation](https://mariadb.com/kb/en/setting-character-sets-and-collations/#example-changing-the-default-character-set-to-utf-8)).
+If you are in a virtual environment, don&#x27;t forget to activate it before installing the `mysqlclient` Python package described below.
+
+```bash
+pi@homeassistant:~ $ sudo -u homeassistant -H -s
+homeassistant@homeassistant:~$ source /srv/homeassistant/bin/activate
+(homeassistant) homeassistant@homeassistant:~$ pip3 install mysqlclient
+```
+
+For MariaDB you may have to install a few dependencies. If you&#x27;re using MariaDB 10.3, the package `libmariadb-dev-compat` must also be installed. Please install the correct packages based on your MariaDB version.
+
+On the Python side we use the `mysqlclient`:
+
+```bash
+sudo apt-get install libmariadbclient-dev libssl-dev
+pip3 install mysqlclient
+```
+
+For MySQL you may have to install a few dependencies. You can choose between `pymysql` and `mysqlclient`:
+
+```bash
+sudo apt-get install default-libmysqlclient-dev libssl-dev
+pip3 install mysqlclient
+```
+
+After installing the dependencies, it is required to create the database manually. During the startup, Home Assistant will look for the database specified in the `db_url`. If the database doesn&#x27;t exist, it will not automatically create it for you.
+
+The database engine must be `InnoDB` as `MyIASM` is not supported.
+
+```bash
+SET GLOBAL default_storage_engine = &#x27;InnoDB&#x27;;
+CREATE DATABASE DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+```
+Where `DB_NAME` is the name of your database
+
+Once Home Assistant finds the database, with the right level of permissions, all the required tables will then be automatically created and the data will be populated accordingly.
+
+### PostgreSQL
+
+Create the PostgreSQL database with `utf8` encoding. The PostgreSQL default encoding is `SQL_ASCII`. From the `postgres` user account;
+```bash
+createdb -E utf8 DB_NAME
+```
+Where `DB_NAME` is the name of your database
+
+If the Database in use is not `utf8`, adding `?client_encoding=utf8` to the `db_url` may solve any issue.
+
+For PostgreSQL you may have to install a few dependencies:
+
+```bash
+sudo apt-get install postgresql-server-dev-X.Y
+pip3 install psycopg2
+```
+
+For using Unix Sockets, first create your user from the `postgres` user account;
+```bash
+createuser USER_NAME
+```
+Where `USER_NAME` is the name of the user running the Home Assistant instance (see [securing your installation](/docs/configuration/securing/)).
+
+Then add the following line to your [`pg_hba.conf`](https://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html):
+
+`local  DB_NAME USER_NAME peer`
+
+Where `DB_NAME` is the name of your database and `USER_NAME` is the name of the user running the Home Assistant instance (see [securing your installation](/docs/configuration/securing/)).
+
+Reload the PostgreSQL configuration after that:
+```bash
+$ sudo -i -u postgres psql -c &quot;SELECT pg_reload_conf();&quot;
+ pg_reload_conf
+----------------
+ t
+(1 row)
+```
+A service restart will work as well.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Recorder in Home Assistant is <code>recorder</code>.</p><h3>Documented actions</h3><ul class="chips"><li>disable</li><li>enable</li><li>get statistics</li><li>purge</li><li>purge entities</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported databases</li><li>Disk space requirements</li><li>Customizing the recorder configuration</li><li>Handling disk corruption and hardware failures</li><li>Custom database engines</li><li>Installation notes</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/recorder/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/recorder</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/recorder</code></dd></dl></section><p><a href="../../integrations/recorder/">Return to the Recorder guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

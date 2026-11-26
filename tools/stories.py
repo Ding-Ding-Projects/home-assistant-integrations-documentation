@@ -50,4 +50,20 @@ def marketing(row, copy, guide):
     hero = f'<div class="hero campaign composition-{variant}"><div>{content}</div><div class="visual-plate">{image}{art}</div></div>'
     highlights = ''.join(f'<li>{e(h)}</li>' for h in copy['highlights'])
     body = f'<div class="story-notes"><section><h2>Inside the guide</h2><ul>{highlights or "<li>Setup and maintainer references</li>"}</ul></section><section><h2>Start exploring</h2><p>{e(row.get("summary") or row["name"])}</p><a href="{guide}#setup">Go to setup →</a></section></div>'
-    return path, hero + body
+    return path, hero + body + task_selector(row,guide)
+
+
+def task_selector(row, guide):
+    """A local task switcher with routes into the specific guide."""
+    platforms = row.get('platforms',[])
+    parent = row.get('supported_by')
+    steps = row.get('steps') or {}
+    cards = [
+        ('Connect', 'Set up '+row['name'], 'Use the supporting integration '+parent+'.' if parent else
+         ('Configuration stages include '+', '.join(list(steps)[:4]).replace('_',' ')+'.' if steps else 'Review the setup requirements and configuration method.'), 'section-0'),
+        ('Explore', 'See available capabilities', 'Available entity platforms include '+', '.join(platforms[:6]).replace('_',' ')+'.' if platforms else 'Read the documented uses and supported devices.', 'section-2'),
+        ('Understand', 'Check connectivity', (row.get('iot_class') or 'Consult the connection notes').replace('_',' ').capitalize()+'.', 'section-1')
+    ]
+    return '<section class="tasks"><h2>What would you like to do?</h2>'+''.join(
+        f'<details><summary>{e(title)}</summary><p>{e(body)}</p><a href="{guide}#{fragment}">{label} {e(row["name"])} →</a></details>'
+        for label,title,body,fragment in cards)+'</section>'

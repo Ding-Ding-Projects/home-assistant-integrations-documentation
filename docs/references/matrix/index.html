@@ -1,1 +1,794 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Matrix reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:165" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/matrix/">Matrix guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Matrix</h1><p>Matrix chatbot support</p><section><h2>Overview</h2><p>This integration allows you to send messages to matrix rooms, as well as to react to messages in matrix rooms. Reacting to commands is accomplished by firing an event when one of the configured commands is triggered.</p></section><section><h2>Configuration</h2><p>To enable the Matrix integration, add it to your configuration.yaml file.</p></section><section><h2>Authentication</h2><p>The integration signs in with the username and password from your configuration. After a successful sign-in, it saves the access token that the homeserver returned to a file named .matrix.conf in your configuration directory, next to your configuration.yaml file.</p></section><section><h2>Setting up authentication with an access token</h2><p>Some homeservers don&#x27;t allow accounts to sign in with a password. For example, on a homeserver that uses Matrix Authentication Service together with an external single sign-on provider and has password sign-in turned off.</p></section><section><h2>Event data</h2><p>If a command is triggered, a matrix_command event is fired. The event contains the name of the command in the name field.</p></section><section><h2>Comprehensive Configuration Example</h2><p>This example also uses the matrix notify platform.</p></section><section><h2>Notifications</h2><p>The matrix platform allows you to deliver notifications from Home Assistant to a Matrix room. Rooms can be both direct as well as group chats.</p></section><section><h2>Message formats</h2><p>Matrix supports sending messages using a limited HTML subset. To specify the message format, add it in the notification data.</p></section><section><h2>Images in notification</h2><p>It is possible to send images with notifications. To do so, add a list of paths in the notification data.</p></section><section><h2>Replying in threads</h2><p>The matrix_command event will contain an event_id field that represents the message identifier for the received message. It will also contain a thread_parent field that contains the message identifier for the parent message of the thread. If the message was inside of a thread, thread_parent will be the identifier of the root message of the thread. If it is not inside of a thread, thread_parent will be the same as event_id.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Matrix in Home Assistant is <code>matrix</code>.</p><h3>Documented actions</h3><ul class="chips"><li>react</li><li>send message</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration</li><li>Notifications</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/matrix/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/matrix</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/matrix</code></dd></dl></section><p><a href="../../integrations/matrix/">Return to the Matrix guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Matrix reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:165" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/matrix/">Matrix guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Matrix</h1><p>Matrix chatbot support</p><div class="reader-body"><p>This integration allows you to send messages to matrix rooms, as well as to react to messages in matrix rooms. Reacting to commands is accomplished by firing an event when one of the configured commands is triggered.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li><a>Notifications</a></li>
+</ul>
+<h2>Configuration</h2>
+<p>To enable the Matrix integration, add it to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code># Example configuration.yaml entry
+matrix:
+  homeserver: https://matrix.org
+  username: "@my_matrix_user:matrix.org"
+  password: supersecurepassword
+  rooms:
+    - "#hasstest:matrix.org"
+  commands:
+    - word: my_command
+      name: my_command
+</code></pre>
+<pre><code>
+username:
+  description: "The matrix username that Home Assistant should use to log in. *Note*: You must specify a full matrix ID here, including the homeserver domain, e.g., '@my_matrix_bot:matrix.org'. Please note also that the '@' character has a special meaning in YAML, so this must always be given in quotes."
+  required: true
+  type: string
+password:
+  description: "The password for your Matrix account. It is only used when there is no valid access token stored yet. See [Authentication](#authentication)."
+  required: true
+  type: string
+homeserver:
+  description: "The full URL for your homeserver. If you use the default matrix.org homeserver, this is 'https://matrix.org'."
+  required: true
+  type: string
+verify_ssl:
+  description: Verify the homeservers certificate.
+  required: false
+  type: string
+  default: true
+rooms:
+  description: "The list of rooms that the bot should join and listen for commands (see below) in. While you can limit the list of rooms that a certain command applies to on a per-command basis (see below), you must still list all rooms here that commands should be received in. Rooms can be given either by their internal ID (e.g., '!cURbafjkfsMDVwdRDQ:matrix.org') or any of their aliases (e.g., '#matrix:matrix.org')."
+  required: false
+  type: [string]
+  default: empty
+commands:
+  description: "A list of commands that the bot should listen for. If a command is triggered (via its *word* or *expression*, see below), an event is fired that you can handle using automations. Every command consists of these possible configuration options:"
+  required: false
+  type: map
+  default: empty
+  keys:
+    word:
+      description: "Specifies a word that the bot should listen for. If you specify 'my_command' here, the bot will handle any message starting with '!my_command'."
+      required: false
+      type: string
+    expression:
+      description: "Specifies a regular expression (in Python regexp syntax) that the bot should listen to. The bot will handle any message that matches the regular expression."
+      required: false
+      type: string
+    reaction:
+      description: "Specifies an emoji reaction that the bot should listen to. The bot will handle any message that is reacted to with this emoji."
+      required: false
+      type: string
+    name:
+      description: "The name of the command. This will be an attribute of the event that is fired when this command triggers."
+      required: true
+      type: string
+    rooms:
+      description: "A list of rooms that the bot should listen for this command in. If this is not given, the *rooms* list from the main configuration is used. Please note that every room in this list must also be in the main *room* configuration."
+      required: false
+      type: [string]
+      default: empty
+
+</code></pre>
+<p><strong>Warning</strong></p>
+<p>To prevent infinite loops when reacting to commands, you have to use a separate account for the Matrix integration.</p>
+<h3>Authentication</h3>
+<p>The integration signs in with the username and password from your configuration. After a successful sign-in, it saves the access token that the homeserver returned to a file named <code>.matrix.conf</code> in your configuration directory, next to your <code>configuration.yaml</code> file.</p>
+<p>On every restart, the integration first tries the saved access token and only signs in with the password if the homeserver rejects that token. The file is only created after the first successful sign-in, so it is normal that it is not there yet on a new installation.</p>
+<p>Because <code>.matrix.conf</code> starts with a dot, some backup and file copy tools skip it. Include it when you back up, move, or rebuild your installation, so that the integration keeps its session.</p>
+<h4>Setting up authentication with an access token</h4>
+<p>Some homeservers don't allow accounts to sign in with a password. For example, on a homeserver that uses Matrix Authentication Service together with an external single sign-on provider and has password sign-in turned off.</p>
+<p>In this case, the integration can't sign in with single sign-on, but it works with an access token that you create yourself:</p>
+<p><strong>Important</strong></p>
+<p><strong>Risk of unauthorized account access</strong></p>
+<p>The access token grants full access to the Matrix account. If the token is exposed, anyone who obtains it can read and send messages as this account until the token is revoked.</p>
+<p>To reduce this risk:</p>
+<ul>
+<li>Store the token as securely as a password.</li>
+<li>If the token is ever exposed, end that session on your homeserver and create a new token.</li>
+</ul>
+<ol>
+<li><p>On your homeserver, create an access token for the Matrix account that Home Assistant uses. How you do this depends on your homeserver:</p>
+<ul>
+<li>On a homeserver that uses <a>Matrix Authentication Service</a>, an administrator can create a long-lived compatibility token with the <a><code>mas-cli manage issue-compatibility-token</code></a> command. It takes the local part of the Matrix ID, for example <code>my_matrix_bot</code>, and not the full Matrix ID. The token is shown only once, so copy it right away.</li>
+<li>On a Synapse homeserver without Matrix Authentication Service, an administrator can use the <a>login as a user</a> admin API. By default, the tokens it returns do not expire.</li>
+</ul>
+</li>
+<li><p>Create or edit the file <code>.matrix.conf</code> in your configuration directory. It holds one entry per Matrix ID:</p>
+<pre><code>{
+  "@my_matrix_bot:example.com": "YOUR_ACCESS_TOKEN"
+}
+</code></pre>
+<p>If the file already exists, change only the value that belongs to your Matrix ID and leave the rest of the file as it is. Make sure Home Assistant can read the file.</p>
+</li>
+<li><p>Keep the <code>password</code> option in your configuration. It is required, but it is not used while the access token works. If the account has no password, you can enter any text as its value.</p>
+</li>
+<li><p>Restart Home Assistant and send a test message. A full restart is needed, because the integration only reads <code>.matrix.conf</code> during startup.</p>
+</li>
+</ol>
+<h3>Event data</h3>
+<p>If a command is triggered, a <code>matrix_command</code> event is fired. The event contains the name of the command in the <code>name</code> field.</p>
+<p>If the command is a word command, the <code>data</code> field contains a list of the command's arguments, that is, everything that stood behind the word, split at spaces. If the command is an expression command, the <code>data</code> field contains the <a>group dictionary</a> of the regular expression that matched the message.</p>
+<h3>Comprehensive Configuration Example</h3>
+<p>This example also uses the <a>matrix <code>notify</code> platform</a>.</p>
+<pre><code># The Matrix integration
+matrix:
+  homeserver: https://matrix.org
+  username: "@my_matrix_user:matrix.org"
+  password: supersecurepassword
+  rooms:
+    - "#hasstest:matrix.org"
+    - "#someothertest:matrix.org"
+  commands:
+    - word: testword
+      name: testword
+      rooms:
+        - "#someothertest:matrix.org"
+    - expression: "My name is (?P&lt;name&gt;.*)"
+      name: introduction
+    - reaction: 👍
+      name: thumbsup
+
+notify:
+  - name: matrix_notify
+    platform: matrix
+    default_room: "#hasstest:matrix.org"
+
+automation:
+  - alias: "Respond to !testword"
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: testword
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: "It looks like you wrote !testword"
+
+  - alias: "Respond to an introduction"
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: introduction
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: "Hello {{trigger.event.data.args['name']}}"
+
+  - alias: "Respond to a reaction in a thread"
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: thumbsup
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: "I saw that {{trigger.event.data.args['reaction']}} -- glad you appreciated this!"
+          data:
+            thread_id: "{{trigger.event.data.thread_parent}}"
+
+  - alias: "React to a command"
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: testword
+    actions:
+      - action: matrix.react
+        data:
+          reaction: "✅"
+          room: "{{trigger.event.data.room}}"
+          message_id: "{{trigger.event.data.event_id}}"
+</code></pre>
+<p>This configuration will:</p>
+<ul>
+<li>Listen for "!testword" in the room "#someothertest:matrix.org" (and <em>only</em>) there. If such a message is encountered, it will answer with "It looks like you wrote !testword" into the "#hasstest:matrix.org" channel and also place a ✅ reaction on the original message.</li>
+<li>Listen in both rooms for any message matching "My name is " and answer with "Hello " into "#hasstest:matrix.org".</li>
+<li>Listen in both rooms for messages reacted to with 👍 and answer in a thread with "I saw that 👍 -- glad you appreciated this!"</li>
+</ul>
+<h2>Notifications</h2>
+<p>The <code>matrix</code> platform allows you to deliver notifications from Home Assistant to a <a>Matrix</a> room. Rooms can be both direct as well as group chats.</p>
+<p>To enable Matrix notifications in your installation, you first need to configure the <a>Matrix integration</a>. Then, add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+notify:
+  - name: NOTIFIER_NAME
+    platform: matrix
+    default_room: ROOM_ID_OR_ALIAS
+</code></pre>
+<pre><code>
+name:
+  description: Setting the optional parameter `name` allows multiple notifiers to be created. The notifier will bind to the `notify.NOTIFIER_NAME` action.
+  required: false
+  default: notify
+  type: string
+default_room:
+  description: The room all messages will be sent to, when no other target is given.
+  required: true
+  type: string
+
+</code></pre>
+<p>The target room has to be precreated, the room id can be obtained from the rooms settings dialog. Rooms by default have a canonical id of the form <code>"!&lt;randomid&gt;:homeserver.tld"</code>, but can also be allocated aliases like <code>"#roomname:homeserver.tld"</code>. Make sure to use quotes around the room id or alias to escape special characters (<code>!</code>, and <code>#</code>) in YAML. The notifying account may need to be invited to the room, depending on the individual rooms policies.</p>
+<p>To use notifications, please see the <a>getting started with automation page</a>.</p>
+<h3>Message formats</h3>
+<p>Matrix supports sending messages using a <a>limited HTML subset</a>. To specify the message format, add it in the notification <code>data</code>.</p>
+<p>Supported formats are: <code>text</code> (default), and <code>html</code>.</p>
+<pre><code># Example of notification as HTML
+actions:
+  - action: notify.matrix_notify
+    data:
+      message: &gt;-
+        &lt;h1&gt;Hello, world!&lt;/h1&gt;
+      data:
+        format: "html"
+</code></pre>
+<h3>Images in notification</h3>
+<p>It is possible to send images with notifications. To do so, add a list of paths in the notification <code>data</code>.</p>
+<pre><code># Example of notification with images
+actions:
+  - action: notify.matrix_notify
+    data:
+      message: "Test with images"
+      data:
+        images:
+          - /path/to/picture.jpg
+</code></pre>
+<p><strong>Important</strong></p>
+<p>If you need to include a file from an external folder in your notifications, you will have to <a href="../homeassistant/">list the source folder as allowed</a>.</p>
+<pre><code>configuration.yaml
+...
+homeassistant:
+  allowlist_external_dirs:
+    - /tmp
+</code></pre>
+<h3>Replying in threads</h3>
+<p>The <code>matrix_command</code> event will contain an <code>event_id</code> field that represents the message identifier for the received message.
+It will also contain a <code>thread_parent</code> field that contains the message identifier for the parent message of the thread.
+If the message was inside of a thread, <code>thread_parent</code> will be the identifier of the root message of the thread. If it
+is not inside of a thread, <code>thread_parent</code> will be the same as <code>event_id</code>.</p>
+<p>To reply inside of a thread, pass the correct message identifier of the root message into <code>data.thread_id</code> when sending
+a reply message. For example:</p>
+<pre><code>action: notify.matrix_notify
+data:
+  message: "Reply message goes here"
+  data:
+    thread_id: "{{ trigger.event.data.thread_parent }}"
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Troubleshooting</h2>
+<h3>Home Assistant stopped sending Matrix messages</h3>
+<h4>Symptom: "Login failed, both token and username/password are invalid"</h4>
+<p>Messages are no longer delivered to your Matrix rooms, and <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong> shows the message <code>Login failed, both token and username/password are invalid</code>.</p>
+<h4>Description</h4>
+<p>The homeserver rejected the saved access token, and signing in with the password did not work either. The saved access token stops working when one of the following happens:</p>
+<ul>
+<li>The session or the device of the Matrix account was ended on the homeserver, for example by signing the account out everywhere.</li>
+<li>The file <code>.matrix.conf</code> was deleted.</li>
+<li>The homeserver ends sessions that were inactive for a long time.</li>
+</ul>
+<p>Normally, the integration then signs in again with the password. On a homeserver that doesn't allow password sign-in, that is not possible, so the integration stays signed out until you provide a new access token.</p>
+<h4>Resolution</h4>
+<ul>
+<li>If your homeserver allows password sign-in, check the <code>username</code> and <code>password</code> options in your <code>configuration.yaml</code> file, then restart Home Assistant.</li>
+<li>If your homeserver doesn't allow password sign-in, create a new access token and save it in <code>.matrix.conf</code>, as described in <a>Homeservers that don't allow password sign-in</a>.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/matrix.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Matrix chatbot support
+ha_release: 0.69
+ha_domain: matrix
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+This {% term integration %} allows you to send messages to matrix rooms, as well as to react to messages in matrix rooms. Reacting to commands is accomplished by firing an event when one of the configured commands is triggered.
+
+There is currently support for the following device types within Home Assistant:
+
+- [Notifications](#notifications)
+
+## Configuration
+
+To enable the Matrix {% term integration %}, add it to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+```yaml
+# Example configuration.yaml entry
+matrix:
+  homeserver: https://matrix.org
+  username: &quot;@my_matrix_user:matrix.org&quot;
+  password: supersecurepassword
+  rooms:
+    - &quot;#hasstest:matrix.org&quot;
+  commands:
+    - word: my_command
+      name: my_command
+```
+
+{% configuration %}
+username:
+  description: &quot;The matrix username that Home Assistant should use to log in. *Note*: You must specify a full matrix ID here, including the homeserver domain, e.g., &#x27;@my_matrix_bot:matrix.org&#x27;. Please note also that the &#x27;@&#x27; character has a special meaning in YAML, so this must always be given in quotes.&quot;
+  required: true
+  type: string
+password:
+  description: &quot;The password for your Matrix account. It is only used when there is no valid access token stored yet. See [Authentication](#authentication).&quot;
+  required: true
+  type: string
+homeserver:
+  description: &quot;The full URL for your homeserver. If you use the default matrix.org homeserver, this is &#x27;https://matrix.org&#x27;.&quot;
+  required: true
+  type: string
+verify_ssl:
+  description: Verify the homeservers certificate.
+  required: false
+  type: string
+  default: true
+rooms:
+  description: &quot;The list of rooms that the bot should join and listen for commands (see below) in. While you can limit the list of rooms that a certain command applies to on a per-command basis (see below), you must still list all rooms here that commands should be received in. Rooms can be given either by their internal ID (e.g., &#x27;!cURbafjkfsMDVwdRDQ:matrix.org&#x27;) or any of their aliases (e.g., &#x27;#matrix:matrix.org&#x27;).&quot;
+  required: false
+  type: [string]
+  default: empty
+commands:
+  description: &quot;A list of commands that the bot should listen for. If a command is triggered (via its *word* or *expression*, see below), an event is fired that you can handle using automations. Every command consists of these possible configuration options:&quot;
+  required: false
+  type: map
+  default: empty
+  keys:
+    word:
+      description: &quot;Specifies a word that the bot should listen for. If you specify &#x27;my_command&#x27; here, the bot will handle any message starting with &#x27;!my_command&#x27;.&quot;
+      required: false
+      type: string
+    expression:
+      description: &quot;Specifies a regular expression (in Python regexp syntax) that the bot should listen to. The bot will handle any message that matches the regular expression.&quot;
+      required: false
+      type: string
+    reaction:
+      description: &quot;Specifies an emoji reaction that the bot should listen to. The bot will handle any message that is reacted to with this emoji.&quot;
+      required: false
+      type: string
+    name:
+      description: &quot;The name of the command. This will be an attribute of the event that is fired when this command triggers.&quot;
+      required: true
+      type: string
+    rooms:
+      description: &quot;A list of rooms that the bot should listen for this command in. If this is not given, the *rooms* list from the main configuration is used. Please note that every room in this list must also be in the main *room* configuration.&quot;
+      required: false
+      type: [string]
+      default: empty
+{% endconfiguration %}
+
+{% warning %}
+To prevent infinite loops when reacting to commands, you have to use a separate account for the Matrix integration.
+{% endwarning %}
+
+### Authentication
+
+The integration signs in with the username and password from your configuration. After a successful sign-in, it saves the access token that the homeserver returned to a file named `.matrix.conf` in your configuration directory, next to your {% term &quot;`configuration.yaml`&quot; %} file.
+
+On every restart, the integration first tries the saved access token and only signs in with the password if the homeserver rejects that token. The file is only created after the first successful sign-in, so it is normal that it is not there yet on a new installation.
+
+Because `.matrix.conf` starts with a dot, some backup and file copy tools skip it. Include it when you back up, move, or rebuild your installation, so that the integration keeps its session.
+
+#### Setting up authentication with an access token
+
+Some homeservers don&#x27;t allow accounts to sign in with a password. For example, on a homeserver that uses Matrix Authentication Service together with an external single sign-on provider and has password sign-in turned off.
+
+In this case, the integration can&#x27;t sign in with single sign-on, but it works with an access token that you create yourself:
+
+{% important %}
+
+**Risk of unauthorized account access**
+
+The access token grants full access to the Matrix account. If the token is exposed, anyone who obtains it can read and send messages as this account until the token is revoked.
+
+To reduce this risk:
+
+- Store the token as securely as a password.
+- If the token is ever exposed, end that session on your homeserver and create a new token.
+{% endimportant %}
+1. On your homeserver, create an access token for the Matrix account that Home Assistant uses. How you do this depends on your homeserver:
+
+   - On a homeserver that uses [Matrix Authentication Service](https://element-hq.github.io/matrix-authentication-service/), an administrator can create a long-lived compatibility token with the [`mas-cli manage issue-compatibility-token`](https://element-hq.github.io/matrix-authentication-service/reference/cli/manage.html#manage-issue-compatibility-token) command. It takes the local part of the Matrix ID, for example `my_matrix_bot`, and not the full Matrix ID. The token is shown only once, so copy it right away.
+   - On a Synapse homeserver without Matrix Authentication Service, an administrator can use the [login as a user](https://element-hq.github.io/synapse/latest/admin_api/user_admin_api.html#login-as-a-user) admin API. By default, the tokens it returns do not expire.
+&#32;&#32;&#32;&#32;
+2. Create or edit the file `.matrix.conf` in your configuration directory. It holds one entry per Matrix ID:
+
+   ```json
+   {
+     &quot;@my_matrix_bot:example.com&quot;: &quot;YOUR_ACCESS_TOKEN&quot;
+   }
+   ```
+
+   If the file already exists, change only the value that belongs to your Matrix ID and leave the rest of the file as it is. Make sure Home Assistant can read the file.
+
+3. Keep the `password` option in your configuration. It is required, but it is not used while the access token works. If the account has no password, you can enter any text as its value.
+
+4. Restart Home Assistant and send a test message. A full restart is needed, because the integration only reads `.matrix.conf` during startup.
+
+### Event data
+
+If a command is triggered, a `matrix_command` event is fired. The event contains the name of the command in the `name` field.
+
+If the command is a word command, the `data` field contains a list of the command&#x27;s arguments, that is, everything that stood behind the word, split at spaces. If the command is an expression command, the `data` field contains the [group dictionary](https://docs.python.org/3.6/library/re.html?highlight=re#re.match.groupdict) of the regular expression that matched the message.
+
+### Comprehensive Configuration Example
+
+This example also uses the [matrix `notify` platform](#notifications).
+
+```yaml
+# The Matrix integration
+matrix:
+  homeserver: https://matrix.org
+  username: &quot;@my_matrix_user:matrix.org&quot;
+  password: supersecurepassword
+  rooms:
+    - &quot;#hasstest:matrix.org&quot;
+    - &quot;#someothertest:matrix.org&quot;
+  commands:
+    - word: testword
+      name: testword
+      rooms:
+        - &quot;#someothertest:matrix.org&quot;
+    - expression: &quot;My name is (?P&lt;name&gt;.*)&quot;
+      name: introduction
+    - reaction: 👍
+      name: thumbsup
+
+notify:
+  - name: matrix_notify
+    platform: matrix
+    default_room: &quot;#hasstest:matrix.org&quot;
+
+automation:
+  - alias: &quot;Respond to !testword&quot;
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: testword
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: &quot;It looks like you wrote !testword&quot;
+
+  - alias: &quot;Respond to an introduction&quot;
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: introduction
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: &quot;Hello {{trigger.event.data.args[&#x27;name&#x27;]}}&quot;
+
+  - alias: &quot;Respond to a reaction in a thread&quot;
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: thumbsup
+    actions:
+      - action: notify.matrix_notify
+        data:
+          message: &quot;I saw that {{trigger.event.data.args[&#x27;reaction&#x27;]}} -- glad you appreciated this!&quot;
+          data:
+            thread_id: &quot;{{trigger.event.data.thread_parent}}&quot;
+
+  - alias: &quot;React to a command&quot;
+    triggers:
+      - trigger: event
+        event_type: matrix_command
+        event_data:
+          command: testword
+    actions:
+      - action: matrix.react
+        data:
+          reaction: &quot;✅&quot;
+          room: &quot;{{trigger.event.data.room}}&quot;
+          message_id: &quot;{{trigger.event.data.event_id}}&quot;
+```
+
+This configuration will:
+
+- Listen for &quot;!testword&quot; in the room &quot;#someothertest:matrix.org&quot; (and *only*) there. If such a message is encountered, it will answer with &quot;It looks like you wrote !testword&quot; into the &quot;#hasstest:matrix.org&quot; channel and also place a ✅ reaction on the original message.
+- Listen in both rooms for any message matching &quot;My name is &lt;any string&gt;&quot; and answer with &quot;Hello &lt;the string&gt;&quot; into &quot;#hasstest:matrix.org&quot;.
+- Listen in both rooms for messages reacted to with 👍 and answer in a thread with &quot;I saw that 👍 -- glad you appreciated this!&quot;
+
+## Notifications
+
+The `matrix` platform allows you to deliver notifications from Home Assistant to a [Matrix](https://matrix.org/) room. Rooms can be both direct as well as group chats.
+
+To enable Matrix notifications in your installation, you first need to configure the [Matrix integration](#configuration). Then, add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+notify:
+  - name: NOTIFIER_NAME
+    platform: matrix
+    default_room: ROOM_ID_OR_ALIAS
+```
+
+{% configuration %}
+name:
+  description: Setting the optional parameter `name` allows multiple notifiers to be created. The notifier will bind to the `notify.NOTIFIER_NAME` action.
+  required: false
+  default: notify
+  type: string
+default_room:
+  description: The room all messages will be sent to, when no other target is given.
+  required: true
+  type: string
+{% endconfiguration %}
+
+The target room has to be precreated, the room id can be obtained from the rooms settings dialog. Rooms by default have a canonical id of the form `&quot;!&lt;randomid&gt;:homeserver.tld&quot;`, but can also be allocated aliases like `&quot;#roomname:homeserver.tld&quot;`. Make sure to use quotes around the room id or alias to escape special characters (`!`, and `#`) in YAML. The notifying account may need to be invited to the room, depending on the individual rooms policies.
+
+To use notifications, please see the [getting started with automation page](/getting-started/automation/).
+
+### Message formats
+
+Matrix supports sending messages using a [limited HTML subset](https://spec.matrix.org/v1.2/client-server-api/#mroommessage-msgtypes). To specify the message format, add it in the notification `data`.
+
+Supported formats are: `text` (default), and `html`.
+
+```yaml
+# Example of notification as HTML
+actions:
+  - action: notify.matrix_notify
+    data:
+      message: &gt;-
+        &lt;h1&gt;Hello, world!&lt;/h1&gt;
+      data:
+        format: &quot;html&quot;
+```
+
+### Images in notification
+
+It is possible to send images with notifications. To do so, add a list of paths in the notification `data`.
+
+```yaml
+# Example of notification with images
+actions:
+  - action: notify.matrix_notify
+    data:
+      message: &quot;Test with images&quot;
+      data:
+        images:
+          - /path/to/picture.jpg
+```
+
+{% important %}
+If you need to include a file from an external folder in your notifications, you will have to [list the source folder as allowed](/integrations/homeassistant/#allowlist_external_dirs).
+
+```yaml
+configuration.yaml
+...
+homeassistant:
+  allowlist_external_dirs:
+    - /tmp
+```
+
+{% endimportant %}
+
+### Replying in threads
+
+The `matrix_command` event will contain an `event_id` field that represents the message identifier for the received message.
+It will also contain a `thread_parent` field that contains the message identifier for the parent message of the thread.
+If the message was inside of a thread, `thread_parent` will be the identifier of the root message of the thread. If it
+is not inside of a thread, `thread_parent` will be the same as `event_id`.
+
+To reply inside of a thread, pass the correct message identifier of the root message into `data.thread_id` when sending
+a reply message. For example:
+
+```yaml
+action: notify.matrix_notify
+data:
+  message: &quot;Reply message goes here&quot;
+  data:
+    thread_id: &quot;{{ trigger.event.data.thread_parent }}&quot;
+```
+
+{% include integrations/actions.md %}
+
+## Troubleshooting
+
+### Home Assistant stopped sending Matrix messages
+
+#### Symptom: &quot;Login failed, both token and username/password are invalid&quot;
+
+Messages are no longer delivered to your Matrix rooms, and {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %} shows the message `Login failed, both token and username/password are invalid`.
+
+#### Description
+
+The homeserver rejected the saved access token, and signing in with the password did not work either. The saved access token stops working when one of the following happens:
+
+- The session or the device of the Matrix account was ended on the homeserver, for example by signing the account out everywhere.
+- The file `.matrix.conf` was deleted.
+- The homeserver ends sessions that were inactive for a long time.
+
+Normally, the integration then signs in again with the password. On a homeserver that doesn&#x27;t allow password sign-in, that is not possible, so the integration stays signed out until you provide a new access token.
+
+#### Resolution
+
+- If your homeserver allows password sign-in, check the `username` and `password` options in your {% term &quot;`configuration.yaml`&quot; %} file, then restart Home Assistant.
+- If your homeserver doesn&#x27;t allow password sign-in, create a new access token and save it in `.matrix.conf`, as described in [Homeservers that don&#x27;t allow password sign-in](#homeservers-that-dont-allow-password-sign-in).
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Matrix in Home Assistant is <code>matrix</code>.</p><h3>Documented actions</h3><ul class="chips"><li>react</li><li>send message</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration</li><li>Notifications</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/matrix/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/matrix</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/matrix</code></dd></dl></section><p><a href="../../integrations/matrix/">Return to the Matrix guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

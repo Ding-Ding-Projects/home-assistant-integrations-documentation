@@ -1,1 +1,1013 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SolarEdge Modbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:80" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/solaredge_modbus/">SolarEdge Modbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SolarEdge Modbus</h1><p>Instructions on how to integrate a SolarEdge solar inverter with Home Assistant over Modbus TCP.</p><section><h2>Overview</h2><p>The SolarEdge Modbus integration connects Home Assistant to your SolarEdge solar inverter over your own network, using the Modbus TCP interface built into the inverter. There is no account, no API key, and no cloud service involved, so your solar production keeps arriving in Home Assistant even when your internet connection is down.</p></section><section><h2>Use cases</h2><p>Reading the inverter directly, rather than through SolarEdge&#x27;s cloud, is worth it for a few things in particular:</p></section><section><h2>Supported devices</h2><p>This integration has been tested with, or reported to work on, the following inverters:</p></section><section><h2>Unsupported devices</h2><p>The following devices are not supported:</p></section><section><h2>Prerequisites</h2><p>An inverter is reached over your network or over RS485, and either way Modbus has to be turned on at the inverter itself first. How you get there depends on whether your inverter has a display.</p></section><section><h2>Supported functionality</h2><p>Your inverter is added as a device, with any energy meter or battery wired to it as a device of its own beneath it. Home Assistant reads the serial numbers during setup and uses those to recognize the hardware, so moving an inverter to another address does not create a second device, and replacing a meter does not hand the new one the old one&#x27;s history.</p></section><section><h2>Inverter sensors</h2><p>The following sensors are added, but disabled. They are useful for troubleshooting or for a detailed look at your installation, and there are a lot of them, so they stay out of the way until you need them. To use one, enable it in the entity&#x27;s settings.</p></section><section><h2>Meter sensors</h2><p>An energy meter measures what passes through it, which is what the inverter cannot see: what your home takes from the grid, and what it sends back. Every meter attached to the inverter gets a device named after its place on it, Meter 1 through Meter 3, with its own sensors.</p></section><section><h2>Battery sensors</h2><p>A battery attached to the inverter gets a device named after its place on it, Battery 1 through Battery 3, with what it holds and what it is doing with it.</p></section><section><h2>Storage state of charge</h2><p>Not every inverter lets Home Assistant read its battery over Modbus. A number of Home Hub inverters keep those registers to themselves, so no battery device appears for them. Some of those do report their storage a second way, and then a single sensor is added to the inverter itself:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SolarEdge Modbus.</p><p>The <strong>reconfigure</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>host</code>, <code>port</code>.</p><p>The <strong>serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>.</p><p>The <strong>tcp</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Energy dashboard</li><li>SolarEdge Modbus automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/solaredge_modbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/solaredge_modbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/solaredge_modbus</code></dd></dl></section><p><a href="../../integrations/solaredge_modbus/">Return to the SolarEdge Modbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SolarEdge Modbus reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:80" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/solaredge_modbus/">SolarEdge Modbus guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SolarEdge Modbus</h1><p>Instructions on how to integrate a SolarEdge solar inverter with Home Assistant over Modbus TCP.</p><div class="reader-body"><p>The <strong>SolarEdge Modbus</strong> integration connects Home Assistant to your SolarEdge solar inverter over your own network, using the Modbus TCP interface built into the inverter. There is no account, no API key, and no cloud service involved, so your solar production keeps arriving in Home Assistant even when your internet connection is down.</p>
+<p>Because it talks to the inverter directly, readings arrive every few seconds instead of every few minutes. That makes it a good source for the <a>Energy dashboard</a> and for automations that respond to what your panels are producing right now.</p>
+<p>If you would rather use SolarEdge's cloud service, for example to see how each individual panel is doing, use the <a href="../solaredge/">SolarEdge</a> integration instead. You can use both at the same time.</p>
+<h2>Use cases</h2>
+<p>Reading the inverter directly, rather than through SolarEdge's cloud, is worth it for a few things in particular:</p>
+<ul>
+<li><strong>Seeing your production as it happens.</strong> Values arrive every few seconds, which is fast enough to watch a cloud pass over your roof, and they keep arriving when your internet connection is unavailable.</li>
+<li><strong>Putting solar on the <a>Energy dashboard</a>.</strong> Production, and with a meter also what you take from the grid and send back to it, and with a battery what goes in and out of it.</li>
+<li><strong>Running appliances on your own power.</strong> An automation that starts the dishwasher, the washing machine or a car charger when production is high enough, rather than at a fixed time.</li>
+<li><strong>Noticing when something is wrong.</strong> An inverter that has stopped producing is easy to miss for weeks; a fault here is a state you can automate on the same day.</li>
+<li><strong>Changing what the installation does.</strong> The export limit, how the battery charges, and what the inverter may deliver, without an installer visit or the SolarEdge app.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>This integration has been tested with, or reported to work on, the following inverters:</p>
+<ul>
+<li>SE3800</li>
+<li>SE4K</li>
+<li>SE5000H</li>
+<li>SE8000H</li>
+<li>SE10K</li>
+<li>SE10000H</li>
+<li>SE15K</li>
+<li>SE17K</li>
+<li>SE4000-ER-01-NED</li>
+<li>SE3000H-RW000NNN2</li>
+</ul>
+<p>Both single-phase and three-phase inverters are covered by that list. Any SolarEdge inverter that offers Modbus TCP should work, whether or not it is listed.</p>
+<p>Your inverter reports itself as a part number, such as <code>SE17K-RW0T0BNN4</code>. The part before the dash is the model, and the rest describes the region it was built for and the options it was built with. An inverter of the same model as one in the list therefore works the same way, regardless of what comes after the dash.</p>
+<p>Modbus TCP is available on inverters that have a network connection. If you cannot find the setting on your inverter, updating the inverter firmware usually adds it.</p>
+<p>An inverter without a network port can be reached over RS485 instead, either wired to a serial port on the machine running Home Assistant, or through a Modbus TCP bridge such as a serial-to-network adapter.</p>
+<h2>Unsupported devices</h2>
+<p>The following devices are not supported:</p>
+<ul>
+<li>SolarEdge EV chargers, such as the SE-EV-SA-US-40P. They answer as a Modbus device, but serve no measurements. Home Assistant tells you when it finds one during setup.</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>An inverter is reached over your network or over RS485, and either way Modbus has to be turned on at the inverter itself first. How you get there depends on whether your inverter has a display.</p>
+<h4>Inverters without a display</h4>
+<p>Newer inverters have no display and are configured with SolarEdge's SetApp. You do not need the app or an installer account for this: the inverter serves the same settings page over an access point of its own.</p>
+<ol>
+<li>Move the inverter's red ON/OFF/P switch to <strong>P</strong> for less than five seconds, then release it. The inverter starts its own Wi-Fi access point.</li>
+<li>Connect to that access point. Its network name and password are printed on the sticker on the inverter.</li>
+<li>Open <code>http://172.16.0.1</code> in your browser.</li>
+<li>Go to <strong>Site Communication</strong>, and enable <strong>Modbus (TCP)</strong>.</li>
+</ol>
+<p>The same setting is under <strong>Site Communication</strong> in the SetApp mobile app, if you have it.</p>
+<h4>Older inverters with a display</h4>
+<p>The following older models have been reported to use a different menu procedure and Modbus TCP port.</p>
+<p><strong>SE4000-ER-01-NED</strong> (firmware <code>0003.2537</code>):</p>
+<ol>
+<li>Press and hold the inverter's button only until the menu opens, then release it immediately. Release it before four seconds; holding it for four seconds starts pairing mode instead.</li>
+<li>Press the button briefly to scroll, and hold it for 1–2 seconds to select.</li>
+<li>Go to <strong>Communication</strong> &gt; <strong>LAN Conf</strong> &gt; <strong>Modbus TCP</strong>, and select port <code>502</code>. The display shows the selected port when Modbus TCP is enabled. No menu password was required in the two reports for this model.</li>
+</ol>
+<p><strong>SE3000H-RW000NNN2</strong> (firmware <code>0003.2537</code>):</p>
+<ol>
+<li>Press and hold <strong>OK</strong>, the button on the far right, for about five seconds until the password prompt appears.</li>
+<li>Enter the password <code>12312312</code>.</li>
+<li>Go to <strong>Communication</strong> &gt; <strong>LAN Conf</strong> &gt; <strong>Modbus TCP</strong>, and select port <code>502</code>. The selected port is sufficient to enable Modbus TCP.</li>
+</ol>
+<h4>Other inverters with a display</h4>
+<p>For other display-based models, use the following procedure:</p>
+<ol>
+<li>Press and hold <strong>OK</strong>, the button on the right, to open the menu.</li>
+<li>Enter the password <code>12312312</code> by pressing <strong>Up</strong>, <strong>Down</strong>, <strong>OK</strong>, <strong>Up</strong>, <strong>Down</strong>, <strong>OK</strong>, <strong>Up</strong>, <strong>Down</strong>.</li>
+<li>Go to <strong>Communication</strong> &gt; <strong>LAN</strong>, and enable <strong>Modbus TCP</strong>.</li>
+</ol>
+<p>For most SolarEdge inverters, enabling Modbus TCP sets the port to <code>1502</code>. The older SE4000-ER-01-NED and SE3000H-RW000NNN2 models above use port <code>502</code>. The device ID of the inverter is <code>1</code>, unless you gave it another one yourself.</p>
+<p>For a network connection, you also need the hostname or IP address of the inverter. Giving it a fixed address in your router keeps Home Assistant pointed at the right device.</p>
+<p><strong>Tip</strong></p>
+<p>SolarEdge may stop supporting Modbus over Wi-Fi in a future firmware version. Connecting the inverter to your network with an Ethernet cable is the more reliable choice.</p>
+<p>For an RS485 connection, set the protocol of the inverter's RS485 port to <strong>SunSpec (Non-SE Logger)</strong> in the same communication settings, note its baud rate (<code>115200</code> unless it was changed), and know which serial port of your machine the bus is wired to.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>SolarEdge Modbus</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>SolarEdge Modbus</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Setting up starts by picking how the inverter is reached, <strong>Modbus TCP</strong> or <strong>Serial port (Modbus RTU)</strong>. A discovered inverter skips that question: it announced itself over the network.</p>
+<p>For a network connection:</p>
+<pre><code>
+Host:
+  description: "The hostname or IP address of your SolarEdge inverter, or of the Modbus TCP bridge it is connected through. For example, `192.168.1.100`."
+Port:
+  description: "The port the inverter listens on for Modbus requests. The default for most SolarEdge inverters is `1502`. The older SE4000-ER-01-NED and SE3000H-RW000NNN2 models reported here use `502`."
+Device ID:
+  description: "The Modbus device ID of the inverter, as configured on the inverter itself. The SolarEdge default is `1`. You only need to change this if your inverter was given another ID, for example because several inverters share one connection."
+
+</code></pre>
+<p>For a serial connection:</p>
+<pre><code>
+Serial port:
+  description: "The serial port the inverter's RS485 bus is wired to. For example, `/dev/ttyUSB0`."
+Baud rate:
+  description: "The baud rate of the RS485 bus, as configured on the inverter. The SolarEdge default is `115200`."
+Device ID:
+  description: "The Modbus device ID of the inverter, as configured on the inverter itself. The SolarEdge default is `1`. Inverters chained on one bus each need their own."
+
+</code></pre>
+<p>The above configuration can also be adjusted later via <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select  and select <strong>Reconfigure</strong>.</p>
+<h2>Supported functionality</h2>
+<p>Your inverter is added as a device, with any energy meter or battery wired to it as a device of its own beneath it. Home Assistant reads the serial numbers during setup and uses those to recognize the hardware, so moving an inverter to another address does not create a second device, and replacing a meter does not hand the new one the old one's history.</p>
+<h3>Inverter sensors</h3>
+<ul>
+<li><strong>Power</strong>: The AC power the inverter is feeding into your home right now. With a DC-coupled battery, this can include power discharged from the battery. See <a>Energy dashboard</a> before using it for solar production.</li>
+<li><strong>Energy</strong>: The total AC energy delivered by the inverter since it was installed. With a DC-coupled battery, this can include energy discharged from the battery. See <a>Energy dashboard</a> before using it for solar production.</li>
+<li><strong>Current</strong>: The AC current the inverter is delivering.</li>
+<li><strong>Current phase A</strong>, <strong>Current phase B</strong>, <strong>Current phase C</strong>: The current per phase. Only added for inverters that report per phase.</li>
+<li><strong>DC power</strong>: The power coming in from your solar panels.</li>
+<li><strong>DC current</strong>: The current coming in from your solar panels.</li>
+<li><strong>Temperature</strong>: The temperature of the inverter's heatsink. The inverter reports no temperature while it is asleep, so this is unknown at night.</li>
+<li><strong>Status</strong>: What the inverter is doing: <strong>Off</strong>, <strong>Sleeping</strong>, <strong>Starting</strong>, <strong>Producing</strong>, <strong>Throttled</strong>, <strong>Shutting down</strong>, <strong>Fault</strong>, or <strong>Standby</strong>. In automations and templates, a state goes by its own value rather than the name shown here, so <strong>Shutting down</strong> is <code>shutting_down</code>.</li>
+</ul>
+<p>The following sensors are added, but disabled. They are useful for troubleshooting or for a detailed look at your installation, and there are a lot of them, so they stay out of the way until you need them. To use one, enable it in the entity's settings.</p>
+<ul>
+<li><strong>Voltage</strong>, and per phase <strong>Voltage phase A-B</strong>, <strong>Voltage phase B-C</strong>, <strong>Voltage phase C-A</strong>, <strong>Voltage phase A-N</strong>, <strong>Voltage phase B-N</strong>, and <strong>Voltage phase C-N</strong>: The AC voltage. Which of these your inverter reports depends on how it is wired.</li>
+<li><strong>DC voltage</strong>: The voltage coming in from your solar panels.</li>
+<li><strong>Frequency</strong>: The frequency of the grid the inverter is connected to.</li>
+<li><strong>Apparent power</strong>, <strong>Reactive power</strong>, and <strong>Power factor</strong>: How the inverter's output relates to the grid.</li>
+</ul>
+<h3>Meter sensors</h3>
+<p>An energy meter measures what passes through it, which is what the inverter cannot see: what your home takes from the grid, and what it sends back. Every meter attached to the inverter gets a device named after its place on it, <strong>Meter 1</strong> through <strong>Meter 3</strong>, with its own sensors.</p>
+<ul>
+<li><strong>Power</strong>: What the meter measures right now.</li>
+<li><strong>Energy imported</strong> and <strong>Energy exported</strong>: The totals since the meter was installed. These are the sensors for the grid on the <a>Energy dashboard</a>.</li>
+<li><strong>Current</strong>: The current through the meter.</li>
+<li><strong>Per phase</strong>: Power and current for each phase the meter measures. A split-phase meter has two phases rather than three.</li>
+</ul>
+<p>The following sensors are added, but disabled, the same way the inverter's are. To use one, enable it in the entity's settings.</p>
+<ul>
+<li><strong>Voltage</strong>, and per phase <strong>Voltage phase A-N</strong>, <strong>Voltage phase B-N</strong>, <strong>Voltage phase C-N</strong>, <strong>Voltage phase A-B</strong>, <strong>Voltage phase B-C</strong>, and <strong>Voltage phase C-A</strong>: The AC voltage. Which of these exist depends on the meter: a delta meter has no neutral, so it measures nothing against one.</li>
+<li><strong>Frequency</strong>: The frequency of the grid the meter sits on.</li>
+<li><strong>Apparent power</strong>, <strong>Reactive power</strong>, and <strong>Power factor</strong>: How what the meter measures relates to the grid.</li>
+<li><strong>Energy imported</strong> and <strong>Energy exported</strong> per phase: The totals for each phase the meter measures.</li>
+</ul>
+<h3>Battery sensors</h3>
+<p>A battery attached to the inverter gets a device named after its place on it, <strong>Battery 1</strong> through <strong>Battery 3</strong>, with what it holds and what it is doing with it.</p>
+<ul>
+<li><strong>State of energy</strong>: How full the battery is, as a percentage.</li>
+<li><strong>Available energy</strong>: What is in the battery right now.</li>
+<li><strong>Energy imported</strong> and <strong>Energy exported</strong>: The totals charged into and discharged from the battery. These are the sensors for the battery on the <a>Energy dashboard</a>.</li>
+<li><strong>Status</strong>: What the battery is doing: <strong>Off</strong>, <strong>Standby</strong>, <strong>Initializing</strong>, <strong>Charging</strong>, <strong>Discharging</strong>, <strong>Fault</strong>, <strong>Preserving charge</strong>, <strong>Idle</strong>, or <strong>Power saving</strong>.</li>
+<li><strong>State of health</strong>: What is left of the battery's original capacity, as a percentage.</li>
+<li><strong>DC power</strong> and <strong>DC current</strong>: What flows between the battery and the inverter. Negative while it is charging.</li>
+<li><strong>Temperature</strong>: How warm the pack is on average.</li>
+</ul>
+<p>The following sensors are added, but disabled. To use one, enable it in the entity's settings.</p>
+<ul>
+<li><strong>Usable capacity</strong> and <strong>Rated energy</strong>: What the battery can hold as configured, and what it was rated for when it was built.</li>
+<li><strong>DC voltage</strong>: The voltage between the battery and the inverter.</li>
+<li><strong>Maximum charge power</strong> and <strong>Maximum discharge power</strong>, and their peak counterparts: What the battery allows, continuously and in bursts.</li>
+<li><strong>Maximum temperature</strong>: The warmest cell in the pack.</li>
+</ul>
+<h3>Storage state of charge</h3>
+<p>Not every inverter lets Home Assistant read its battery over Modbus. A number of Home Hub inverters keep those registers to themselves, so no battery device appears for them. Some of those do report their storage a second way, and then a single sensor is added to the inverter itself:</p>
+<ul>
+<li><strong>Storage state of charge</strong>: How full the attached storage is, as a percentage.</li>
+</ul>
+<p>This is all that is available that way. There is no capacity, health, or power to go with it, because the inverter does not report those here.</p>
+<p>It only appears when your installer has set the inverter to a grid profile that supports IEEE 1547-2018, and when no battery device was found. Where there is a battery device, that one is used instead: it reports far more, and it is tied to the battery's own serial number.</p>
+<p>An inverter with no battery attached reports 0% here, so the sensor is left out when that is what the inverter says at startup.</p>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Problem</strong>: On when the inverter reports a fault, so an automation can tell you the same day rather than at the end of the month.</li>
+<li><strong>Charging</strong>: On while a battery is taking charge. Home Assistant's battery-charging triggers and conditions look at this rather than at the status sensor, so this is the one to use for them.</li>
+<li><strong>On grid</strong>: Whether the inverter is connected to the grid. Only added for inverter firmware that reports it.</li>
+</ul>
+<h3>Numbers</h3>
+<p>The inverter holds settings of its own, which this integration can change as well as read. They sit under the inverter's configuration rather than with its measurements.</p>
+<ul>
+<li><strong>Backup reserve</strong>: How much of the battery is kept back for a power cut, as a percentage.</li>
+<li><strong>Storage charge limit</strong> and <strong>Storage discharge limit</strong>: How fast the battery is allowed to charge and discharge.</li>
+<li><strong>Site export limit</strong>: How much the site may feed back to the grid.</li>
+<li><strong>External production maximum</strong>: What other production at the site can deliver, which the inverter needs to know to keep the site within its export limit.</li>
+<li><strong>Active power limit</strong>: How much of its capacity the inverter may use, as a percentage.</li>
+<li><strong>Power factor setpoint</strong>: The cos phi the inverter aims for. Disabled by default, since it is an installer setting that a site rarely needs to move.</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><strong>Storage control mode</strong>: What the battery does. <strong>Maximize self-consumption</strong> keeps your own production at home, <strong>Time of use</strong> follows a schedule set on the inverter, <strong>Backup only</strong> keeps the battery for a power cut, and <strong>Remote control</strong> hands the decision to whatever writes the command mode below.</li>
+<li><strong>Storage default mode</strong> and <strong>Storage command mode</strong>: What the battery is told to do, and what it falls back to when a remote command times out. The options range from charging out of solar or the grid to discharging to cover your own use or to export.</li>
+<li><strong>Storage AC charge policy</strong>: Whether, and how much, the battery may charge from the grid rather than from the panels.</li>
+<li><strong>Export limitation</strong>: How the site limits what it feeds back to the grid. <strong>Production control</strong> limits the inverter itself; the meter-based options measure at the connection point and need a meter, so they are only offered when one is attached. Whatever the inverter is set to is always offered, even when the hardware for it is missing, since that is what the register says.</li>
+<li><strong>Export limit type</strong>: Whether the export limit counts per phase or as a total. Disabled by default.</li>
+</ul>
+<h3>Switches</h3>
+<p>These switches are flags on the export control. An installer sets them to describe the site, and they are <a>disabled by default</a>.</p>
+<ul>
+<li><strong>External production</strong>: Tells the inverter there is production at the site that it cannot see itself, so it can keep the whole site within its export limit.</li>
+<li><strong>Negative site limit</strong>: Lets the site limit go below zero, which turns it into a minimum import rather than a maximum export. It needs a meter at the connection point to mean anything.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>These settings live in the inverter's flash memory, which is meant to be written now and then rather than continuously. An automation that writes one every few minutes will wear it out. Change them when something actually changes.</p>
+<p>They can also affect what your installation is allowed to do. Export limits in particular are often part of an agreement with your grid operator, and changing them can put your site outside it, or change what you are billed.</p>
+<h2>Energy dashboard</h2>
+<p>You can use this integration's sensors in the <a>Energy dashboard</a>.</p>
+<p><strong>Important</strong></p>
+<p>If you have a DC-coupled battery, connected to the inverter on the same side as the solar panels, the inverter's <strong>Energy</strong> and <strong>Power</strong> sensors do not measure solar production separately. Battery discharge can be included in the inverter's output, while solar energy used to charge the battery directly does not pass through its AC output. Selecting these sensors as solar production can therefore count battery discharge as solar production and miss solar energy stored in the battery.</p>
+<p>The integration does not calculate separate solar production sensors for this setup. Subtracting battery discharge alone does not account for solar energy charging the battery directly.</p>
+<p>If your inverter has no DC-coupled battery, add its solar production as follows:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Dashboards</strong> &gt; <strong>Energy</strong>.</li>
+<li>Under <strong>Solar panels</strong>, select <strong>Add solar production</strong>.</li>
+<li>For <strong>Solar production energy</strong>, select the inverter's <strong>Energy</strong> sensor.</li>
+<li>For <strong>Solar production power</strong>, select the inverter's <strong>Power</strong> sensor. This one is optional, and it is what the live power flow card and the <strong>Now</strong> tab use to show your production as it happens.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<p>Home Assistant records long-term statistics for the <strong>Energy</strong> sensor from the moment the entity appears, so the dashboard also fills in the days before you added it here.</p>
+<p>The <strong>Electricity grid</strong> section needs a meter, since the inverter measures what it produces and not what your home takes from the grid or sends back to it. With a SolarEdge meter wired to the inverter, this integration provides that too:</p>
+<ol>
+<li>Under <strong>Electricity grid</strong>, select <strong>Add grid connection</strong>.</li>
+<li>For <strong>Grid consumption</strong>, select the meter's <strong>Energy imported</strong> sensor.</li>
+<li>For <strong>Return to grid</strong>, select the meter's <strong>Energy exported</strong> sensor.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<p>Without a meter, another energy monitor, such as one reading your utility meter, can fill those in instead.</p>
+<p>A battery goes under <strong>Home battery storage</strong> in the same way:</p>
+<ol>
+<li>Under <strong>Home battery storage</strong>, select <strong>Add battery system</strong>.</li>
+<li>For <strong>Energy charged into the battery</strong>, select the battery's <strong>Energy imported</strong> sensor.</li>
+<li>For <strong>Energy discharged from the battery</strong>, select its <strong>Energy exported</strong> sensor.</li>
+<li>For <strong>Battery state of charge sensor</strong>, select its <strong>State of energy</strong> sensor.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<h2>SolarEdge Modbus automation examples</h2>
+<p>Your inverter knows more about your solar production than a monthly report ever will. Here are a few ideas to get you started.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: get a notification when the inverter reports a fault</h3>
+<p>A solar installation on the roof is easy to forget about, and an inverter that has stopped producing costs you money every sunny hour. This automation sends a notification the moment the inverter reports a fault, so you find out on the same day instead of on your next bill.</p>
+<ul>
+<li><strong>Trigger</strong>: State changed<ul>
+<li><strong>Entity</strong>: Solaredge se10000h problem sensor</li>
+<li><strong>To</strong>: On</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a fault notification</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Solar inverter fault"
+triggers:
+- trigger: state
+entity_id: binary_sensor.solaredge_se10000h_problem
+to: "on"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: &gt;
+The solar inverter reports a fault and has stopped producing.</p>
+<h3>Automation: run the dishwasher on your own solar power</h3>
+<p>Appliances that do not care when they run are the cheapest way to use your own production instead of selling it. This automation starts the dishwasher once your panels have been producing more than 2 kW for ten minutes, which is long enough to know it is not a passing gap in the clouds.</p>
+<ul>
+<li><strong>Trigger</strong>: Numeric state crossed threshold<ul>
+<li><strong>Entity</strong>: Solaredge se10000h power</li>
+<li><strong>Above</strong>: <code>2000</code></li>
+<li><strong>For at least</strong>: <code>00:10:00</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Turn on switch<ul>
+<li><strong>Target</strong>: Dishwasher switch</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for running the dishwasher on solar power</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Dishwasher on solar power"
+triggers:
+- trigger: numeric_state
+entity_id: sensor.solaredge_se10000h_power
+above: 2000
+for: "00:10:00"
+actions:
+- action: switch.turn_on
+target:
+entity_id: switch.dishwasher</p>
+<h2>Data updates</h2>
+<p>The <strong>SolarEdge Modbus</strong> integration polling polls the inverter, and anything wired to it, every 10 seconds. The inverter's settings are read every 5 minutes instead: they only move when something writes them, and every read costs a slot on a connection that has few to give.</p>
+<p>Every 15 minutes, Home Assistant also asks the inverter what is connected. If it detects that a meter or battery was added or removed, it reloads the integration automatically.</p>
+<p>Home Assistant keeps one Modbus connection per address and shares it between the integrations that use it. If several inverters answer on the same address with different device IDs, for example because they are chained on one Modbus TCP bridge, they share a single connection instead of each opening their own.</p>
+<p>A <a href="../modbus/">Modbus</a> setup in your <code>configuration.yaml</code> is separate from this. It opens its own connection to the inverter, which counts against the number of clients the inverter accepts.</p>
+<p>If part of the installation does not answer a poll, only its entity entities become unavailable: a silent meter or battery leaves the inverter's sensors alone. Home Assistant does not keep showing the last known reading as if it were current.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Which of the inverter's settings exist depends on the installation. Storage settings need a battery, and the export settings need the inverter to have them enabled; what is absent is simply not added.</li>
+<li>SolarEdge does not document the control registers, and not every firmware exposes them the same way. What a setting does is the inverter's business, and it will refuse a value it does not accept.</li>
+<li>A meter or battery wired in or out while Home Assistant runs takes up to 15 minutes to appear or disappear, since that is how often the inverter is asked what is attached. Picking it up reloads the integration, so its entities are briefly unavailable. Reloading it yourself is quicker if you cannot wait.</li>
+<li>Modbus gives you what the inverter itself measures. Data per optimizer or per panel is only available through SolarEdge's cloud service, which the <a href="../solaredge/">SolarEdge</a> integration uses.</li>
+<li>The <strong>Storage state of charge</strong> sensor is decided on at startup. A battery that reads exactly 0% right then is indistinguishable from an inverter with no battery at all, so the sensor is left out. Reload the integration once the battery has charged to add it.</li>
+<li>An inverter accepts a limited number of Modbus TCP connections at the same time. If another system on your network already polls the inverter, Home Assistant may not be able to connect.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>The inverter cannot be reached</h4>
+<h3>Symptom: setup fails, or the entities stop updating</h3>
+<p>Setting up the integration times out, or an entry that worked turns unavailable and stays that way.</p>
+<h4>Description</h4>
+<p>Nothing is answering on the address the integration polls. The inverter may be off the network, Modbus may have been turned off on it, or another system may be holding the connection it would need.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Make sure the inverter is powered on and reachable on your network, for example by looking it up in your router.</li>
+<li>Check that Modbus TCP is still enabled on the inverter. An inverter firmware update or a visit from your installer can turn it off again.</li>
+<li>Check the port. Most SolarEdge inverters use <code>1502</code>; the older SE4000-ER-01-NED and SE3000H-RW000NNN2 models reported here use <code>502</code>. Modbus devices in general often use <code>502</code>.</li>
+<li>Check whether another system is already polling the inverter, and stop it while you test.</li>
+</ol>
+<p>On an RS485 connection, check the baud rate and the device ID against what the inverter is set to, and that its RS485 port speaks SunSpec rather than talking to a SolarEdge logger.</p>
+<h4>Setup says the device does not answer as a SolarEdge inverter</h4>
+<h3>Symptom: the form reports that the device is not a SolarEdge inverter</h3>
+<p>Setup reaches something on that address, and then reports that it is not a SolarEdge inverter.</p>
+<h4>Description</h4>
+<p>Something answers on that address and device ID, but it does not identify itself as one. Another Modbus device on your network can answer just as readily.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check the device ID, which is <code>1</code> on SolarEdge inverters. Another Modbus device on the same address can answer on a different ID.</li>
+<li>Check that the host belongs to the inverter, and not to another device that took over its address.</li>
+</ol>
+<h4>Setup says this is a different inverter</h4>
+<h3>Symptom: reconfiguring reports that this is a different inverter</h3>
+<p>Reconfiguring an entry, or setting one up again, reports that the inverter that answers is not the one the entry belongs to.</p>
+<h4>Description</h4>
+<p>Home Assistant recognizes your inverter by its serial number rather than by its address. This message means the address now belongs to another inverter, usually because addresses were handed out again on your network.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Look up the inverter's current address, and give it a fixed address while you are there.</li>
+<li>Select <strong>Reconfigure</strong> on the integration entry and enter the new address.</li>
+</ol>
+<h4>The inverter has a battery, but there is no battery device</h4>
+<h3>Symptom: a battery is attached, and no battery device appears</h3>
+<p>The inverter has a battery wired to it, and Home Assistant shows no battery device for it.</p>
+<h4>Description</h4>
+<p>Not every inverter serves its battery registers over Modbus. A number of Home Hub inverters keep them to themselves, whatever is wired to them, and there is nothing to configure around that.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check whether the inverter has a <strong>Storage state of charge</strong> sensor instead. That is the fallback described under <a>storage state of charge</a>, and a state of charge is all of the battery that such an inverter reports.</li>
+<li>If that sensor is missing too, check whether the battery was at 0% when the integration started. Reload the integration once the battery has charged.</li>
+<li>Otherwise, ask your installer whether the inverter can run a grid profile that supports IEEE 1547-2018, which makes those registers available.</li>
+</ol>
+<h3>Getting to what the inverter reports</h3>
+<p>The integration's diagnostics carry everything the inverter says about itself and about the hardware wired to it, including meters and batteries, whether or not there are entities for them. To download them, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select the integration, and use  &gt; <strong>Download diagnostics</strong>. Serial numbers are redacted.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>The Modbus TCP setting stays enabled on the inverter. You can turn it off in the inverter's own settings if nothing else uses it.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/solaredge_modbus.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate a SolarEdge solar inverter with Home Assistant over Modbus TCP.
+ha_release: &quot;2026.10&quot;
+ha_domain: solaredge_modbus
+---
+
+The **SolarEdge Modbus** {% term integration %} connects Home Assistant to your SolarEdge solar inverter over your own network, using the Modbus TCP interface built into the inverter. There is no account, no API key, and no cloud service involved, so your solar production keeps arriving in Home Assistant even when your internet connection is down.
+
+Because it talks to the inverter directly, readings arrive every few seconds instead of every few minutes. That makes it a good source for the [Energy dashboard](#energy-dashboard) and for automations that respond to what your panels are producing right now.
+
+If you would rather use SolarEdge&#x27;s cloud service, for example to see how each individual panel is doing, use the [SolarEdge](/integrations/solaredge/) integration instead. You can use both at the same time.
+
+## Use cases
+
+Reading the inverter directly, rather than through SolarEdge&#x27;s cloud, is worth it for a few things in particular:
+
+- **Seeing your production as it happens.** Values arrive every few seconds, which is fast enough to watch a cloud pass over your roof, and they keep arriving when your internet connection is unavailable.
+- **Putting solar on the [Energy dashboard](#energy-dashboard).** Production, and with a meter also what you take from the grid and send back to it, and with a battery what goes in and out of it.
+- **Running appliances on your own power.** An automation that starts the dishwasher, the washing machine or a car charger when production is high enough, rather than at a fixed time.
+- **Noticing when something is wrong.** An inverter that has stopped producing is easy to miss for weeks; a fault here is a state you can automate on the same day.
+- **Changing what the installation does.** The export limit, how the battery charges, and what the inverter may deliver, without an installer visit or the SolarEdge app.
+
+## Supported devices
+
+This integration has been tested with, or reported to work on, the following inverters:
+
+- SE3800
+- SE4K
+- SE5000H
+- SE8000H
+- SE10K
+- SE10000H
+- SE15K
+- SE17K
+- SE4000-ER-01-NED
+- SE3000H-RW000NNN2
+
+Both single-phase and three-phase inverters are covered by that list. Any SolarEdge inverter that offers Modbus TCP should work, whether or not it is listed.
+
+Your inverter reports itself as a part number, such as `SE17K-RW0T0BNN4`. The part before the dash is the model, and the rest describes the region it was built for and the options it was built with. An inverter of the same model as one in the list therefore works the same way, regardless of what comes after the dash.
+
+Modbus TCP is available on inverters that have a network connection. If you cannot find the setting on your inverter, updating the inverter firmware usually adds it.
+
+An inverter without a network port can be reached over RS485 instead, either wired to a serial port on the machine running Home Assistant, or through a Modbus TCP bridge such as a serial-to-network adapter.
+
+## Unsupported devices
+
+The following devices are not supported:
+
+- SolarEdge EV chargers, such as the SE-EV-SA-US-40P. They answer as a Modbus device, but serve no measurements. Home Assistant tells you when it finds one during setup.
+
+## Prerequisites
+
+An inverter is reached over your network or over RS485, and either way Modbus has to be turned on at the inverter itself first. How you get there depends on whether your inverter has a display.
+
+{% details &quot;Inverters without a display&quot; %}
+
+Newer inverters have no display and are configured with SolarEdge&#x27;s SetApp. You do not need the app or an installer account for this: the inverter serves the same settings page over an access point of its own.
+
+1. Move the inverter&#x27;s red ON/OFF/P switch to **P** for less than five seconds, then release it. The inverter starts its own Wi-Fi access point.
+2. Connect to that access point. Its network name and password are printed on the sticker on the inverter.
+3. Open `http://172.16.0.1` in your browser.
+4. Go to **Site Communication**, and enable **Modbus (TCP)**.
+
+The same setting is under **Site Communication** in the SetApp mobile app, if you have it.
+
+{% enddetails %}
+
+{% details &quot;Older inverters with a display&quot; %}
+
+The following older models have been reported to use a different menu procedure and Modbus TCP port.
+
+**SE4000-ER-01-NED** (firmware `0003.2537`):
+
+1. Press and hold the inverter&#x27;s button only until the menu opens, then release it immediately. Release it before four seconds; holding it for four seconds starts pairing mode instead.
+2. Press the button briefly to scroll, and hold it for 1–2 seconds to select.
+3. Go to **Communication** &gt; **LAN Conf** &gt; **Modbus TCP**, and select port `502`. The display shows the selected port when Modbus TCP is enabled. No menu password was required in the two reports for this model.
+
+**SE3000H-RW000NNN2** (firmware `0003.2537`):
+
+1. Press and hold **OK**, the button on the far right, for about five seconds until the password prompt appears.
+2. Enter the password `12312312`.
+3. Go to **Communication** &gt; **LAN Conf** &gt; **Modbus TCP**, and select port `502`. The selected port is sufficient to enable Modbus TCP.
+
+{% enddetails %}
+
+{% details &quot;Other inverters with a display&quot; %}
+
+For other display-based models, use the following procedure:
+
+1. Press and hold **OK**, the button on the right, to open the menu.
+2. Enter the password `12312312` by pressing **Up**, **Down**, **OK**, **Up**, **Down**, **OK**, **Up**, **Down**.
+3. Go to **Communication** &gt; **LAN**, and enable **Modbus TCP**.
+
+{% enddetails %}
+
+For most SolarEdge inverters, enabling Modbus TCP sets the port to `1502`. The older SE4000-ER-01-NED and SE3000H-RW000NNN2 models above use port `502`. The device ID of the inverter is `1`, unless you gave it another one yourself.
+
+For a network connection, you also need the hostname or IP address of the inverter. Giving it a fixed address in your router keeps Home Assistant pointed at the right device.
+
+{% tip %}
+SolarEdge may stop supporting Modbus over Wi-Fi in a future firmware version. Connecting the inverter to your network with an Ethernet cable is the more reliable choice.
+{% endtip %}
+
+For an RS485 connection, set the protocol of the inverter&#x27;s RS485 port to **SunSpec (Non-SE Logger)** in the same communication settings, note its baud rate (`115200` unless it was changed), and know which serial port of your machine the bus is wired to.
+
+{% include integrations/config_flow.md %}
+
+Setting up starts by picking how the inverter is reached, **Modbus TCP** or **Serial port (Modbus RTU)**. A discovered inverter skips that question: it announced itself over the network.
+
+For a network connection:
+
+{% configuration_basic %}
+Host:
+  description: &quot;The hostname or IP address of your SolarEdge inverter, or of the Modbus TCP bridge it is connected through. For example, `192.168.1.100`.&quot;
+Port:
+  description: &quot;The port the inverter listens on for Modbus requests. The default for most SolarEdge inverters is `1502`. The older SE4000-ER-01-NED and SE3000H-RW000NNN2 models reported here use `502`.&quot;
+Device ID:
+  description: &quot;The Modbus device ID of the inverter, as configured on the inverter itself. The SolarEdge default is `1`. You only need to change this if your inverter was given another ID, for example because several inverters share one connection.&quot;
+{% endconfiguration_basic %}
+
+For a serial connection:
+
+{% configuration_basic %}
+Serial port:
+  description: &quot;The serial port the inverter&#x27;s RS485 bus is wired to. For example, `/dev/ttyUSB0`.&quot;
+Baud rate:
+  description: &quot;The baud rate of the RS485 bus, as configured on the inverter. The SolarEdge default is `115200`.&quot;
+Device ID:
+  description: &quot;The Modbus device ID of the inverter, as configured on the inverter itself. The SolarEdge default is `1`. Inverters chained on one bus each need their own.&quot;
+{% endconfiguration_basic %}
+
+The above configuration can also be adjusted later via {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select {% icon &quot;mdi:dots-vertical&quot; %} and select **Reconfigure**.
+
+## Supported functionality
+
+Your inverter is added as a device, with any energy meter or battery wired to it as a device of its own beneath it. Home Assistant reads the serial numbers during setup and uses those to recognize the hardware, so moving an inverter to another address does not create a second device, and replacing a meter does not hand the new one the old one&#x27;s history.
+
+### Inverter sensors
+
+- **Power**: The AC power the inverter is feeding into your home right now. With a DC-coupled battery, this can include power discharged from the battery. See [Energy dashboard](#energy-dashboard) before using it for solar production.
+- **Energy**: The total AC energy delivered by the inverter since it was installed. With a DC-coupled battery, this can include energy discharged from the battery. See [Energy dashboard](#energy-dashboard) before using it for solar production.
+- **Current**: The AC current the inverter is delivering.
+- **Current phase A**, **Current phase B**, **Current phase C**: The current per phase. Only added for inverters that report per phase.
+- **DC power**: The power coming in from your solar panels.
+- **DC current**: The current coming in from your solar panels.
+- **Temperature**: The temperature of the inverter&#x27;s heatsink. The inverter reports no temperature while it is asleep, so this is unknown at night.
+- **Status**: What the inverter is doing: **Off**, **Sleeping**, **Starting**, **Producing**, **Throttled**, **Shutting down**, **Fault**, or **Standby**. In automations and templates, a state goes by its own value rather than the name shown here, so **Shutting down** is `shutting_down`.
+
+The following sensors are added, but disabled. They are useful for troubleshooting or for a detailed look at your installation, and there are a lot of them, so they stay out of the way until you need them. To use one, enable it in the entity&#x27;s settings.
+
+- **Voltage**, and per phase **Voltage phase A-B**, **Voltage phase B-C**, **Voltage phase C-A**, **Voltage phase A-N**, **Voltage phase B-N**, and **Voltage phase C-N**: The AC voltage. Which of these your inverter reports depends on how it is wired.
+- **DC voltage**: The voltage coming in from your solar panels.
+- **Frequency**: The frequency of the grid the inverter is connected to.
+- **Apparent power**, **Reactive power**, and **Power factor**: How the inverter&#x27;s output relates to the grid.
+
+### Meter sensors
+
+An energy meter measures what passes through it, which is what the inverter cannot see: what your home takes from the grid, and what it sends back. Every meter attached to the inverter gets a device named after its place on it, **Meter 1** through **Meter 3**, with its own sensors.
+
+- **Power**: What the meter measures right now.
+- **Energy imported** and **Energy exported**: The totals since the meter was installed. These are the sensors for the grid on the [Energy dashboard](#energy-dashboard).
+- **Current**: The current through the meter.
+- **Per phase**: Power and current for each phase the meter measures. A split-phase meter has two phases rather than three.
+
+The following sensors are added, but disabled, the same way the inverter&#x27;s are. To use one, enable it in the entity&#x27;s settings.
+
+- **Voltage**, and per phase **Voltage phase A-N**, **Voltage phase B-N**, **Voltage phase C-N**, **Voltage phase A-B**, **Voltage phase B-C**, and **Voltage phase C-A**: The AC voltage. Which of these exist depends on the meter: a delta meter has no neutral, so it measures nothing against one.
+- **Frequency**: The frequency of the grid the meter sits on.
+- **Apparent power**, **Reactive power**, and **Power factor**: How what the meter measures relates to the grid.
+- **Energy imported** and **Energy exported** per phase: The totals for each phase the meter measures.
+
+### Battery sensors
+
+A battery attached to the inverter gets a device named after its place on it, **Battery 1** through **Battery 3**, with what it holds and what it is doing with it.
+
+- **State of energy**: How full the battery is, as a percentage.
+- **Available energy**: What is in the battery right now.
+- **Energy imported** and **Energy exported**: The totals charged into and discharged from the battery. These are the sensors for the battery on the [Energy dashboard](#energy-dashboard).
+- **Status**: What the battery is doing: **Off**, **Standby**, **Initializing**, **Charging**, **Discharging**, **Fault**, **Preserving charge**, **Idle**, or **Power saving**.
+- **State of health**: What is left of the battery&#x27;s original capacity, as a percentage.
+- **DC power** and **DC current**: What flows between the battery and the inverter. Negative while it is charging.
+- **Temperature**: How warm the pack is on average.
+
+The following sensors are added, but disabled. To use one, enable it in the entity&#x27;s settings.
+
+- **Usable capacity** and **Rated energy**: What the battery can hold as configured, and what it was rated for when it was built.
+- **DC voltage**: The voltage between the battery and the inverter.
+- **Maximum charge power** and **Maximum discharge power**, and their peak counterparts: What the battery allows, continuously and in bursts.
+- **Maximum temperature**: The warmest cell in the pack.
+
+### Storage state of charge
+
+Not every inverter lets Home Assistant read its battery over Modbus. A number of Home Hub inverters keep those registers to themselves, so no battery device appears for them. Some of those do report their storage a second way, and then a single sensor is added to the inverter itself:
+
+- **Storage state of charge**: How full the attached storage is, as a percentage.
+
+This is all that is available that way. There is no capacity, health, or power to go with it, because the inverter does not report those here.
+
+It only appears when your installer has set the inverter to a grid profile that supports IEEE 1547-2018, and when no battery device was found. Where there is a battery device, that one is used instead: it reports far more, and it is tied to the battery&#x27;s own serial number.
+
+An inverter with no battery attached reports 0% here, so the sensor is left out when that is what the inverter says at startup.
+
+### Binary sensors
+
+- **Problem**: On when the inverter reports a fault, so an automation can tell you the same day rather than at the end of the month.
+- **Charging**: On while a battery is taking charge. Home Assistant&#x27;s battery-charging triggers and conditions look at this rather than at the status sensor, so this is the one to use for them.
+- **On grid**: Whether the inverter is connected to the grid. Only added for inverter firmware that reports it.
+
+### Numbers
+
+The inverter holds settings of its own, which this integration can change as well as read. They sit under the inverter&#x27;s configuration rather than with its measurements.
+
+- **Backup reserve**: How much of the battery is kept back for a power cut, as a percentage.
+- **Storage charge limit** and **Storage discharge limit**: How fast the battery is allowed to charge and discharge.
+- **Site export limit**: How much the site may feed back to the grid.
+- **External production maximum**: What other production at the site can deliver, which the inverter needs to know to keep the site within its export limit.
+- **Active power limit**: How much of its capacity the inverter may use, as a percentage.
+- **Power factor setpoint**: The cos phi the inverter aims for. Disabled by default, since it is an installer setting that a site rarely needs to move.
+
+### Selects
+
+- **Storage control mode**: What the battery does. **Maximize self-consumption** keeps your own production at home, **Time of use** follows a schedule set on the inverter, **Backup only** keeps the battery for a power cut, and **Remote control** hands the decision to whatever writes the command mode below.
+- **Storage default mode** and **Storage command mode**: What the battery is told to do, and what it falls back to when a remote command times out. The options range from charging out of solar or the grid to discharging to cover your own use or to export.
+- **Storage AC charge policy**: Whether, and how much, the battery may charge from the grid rather than from the panels.
+- **Export limitation**: How the site limits what it feeds back to the grid. **Production control** limits the inverter itself; the meter-based options measure at the connection point and need a meter, so they are only offered when one is attached. Whatever the inverter is set to is always offered, even when the hardware for it is missing, since that is what the register says.
+- **Export limit type**: Whether the export limit counts per phase or as a total. Disabled by default.
+
+### Switches
+
+These switches are flags on the export control. An installer sets them to describe the site, and they are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+
+- **External production**: Tells the inverter there is production at the site that it cannot see itself, so it can keep the whole site within its export limit.
+- **Negative site limit**: Lets the site limit go below zero, which turns it into a minimum import rather than a maximum export. It needs a meter at the connection point to mean anything.
+
+{% important %}
+These settings live in the inverter&#x27;s flash memory, which is meant to be written now and then rather than continuously. An automation that writes one every few minutes will wear it out. Change them when something actually changes.
+
+They can also affect what your installation is allowed to do. Export limits in particular are often part of an agreement with your grid operator, and changing them can put your site outside it, or change what you are billed.
+{% endimportant %}
+
+## Energy dashboard
+
+You can use this integration&#x27;s sensors in the [Energy dashboard](/docs/energy/solar-panels/).
+
+{% important %}
+If you have a DC-coupled battery, connected to the inverter on the same side as the solar panels, the inverter&#x27;s **Energy** and **Power** sensors do not measure solar production separately. Battery discharge can be included in the inverter&#x27;s output, while solar energy used to charge the battery directly does not pass through its AC output. Selecting these sensors as solar production can therefore count battery discharge as solar production and miss solar energy stored in the battery.
+
+The integration does not calculate separate solar production sensors for this setup. Subtracting battery discharge alone does not account for solar energy charging the battery directly.
+{% endimportant %}
+
+If your inverter has no DC-coupled battery, add its solar production as follows:
+
+1. Go to {% my config_energy title=&quot;**Settings** &gt; **Dashboards** &gt; **Energy**&quot; %}.
+2. Under **Solar panels**, select **Add solar production**.
+3. For **Solar production energy**, select the inverter&#x27;s **Energy** sensor.
+4. For **Solar production power**, select the inverter&#x27;s **Power** sensor. This one is optional, and it is what the live power flow card and the **Now** tab use to show your production as it happens.
+5. Select **Save**.
+
+Home Assistant records long-term statistics for the **Energy** sensor from the moment the entity appears, so the dashboard also fills in the days before you added it here.
+
+The **Electricity grid** section needs a meter, since the inverter measures what it produces and not what your home takes from the grid or sends back to it. With a SolarEdge meter wired to the inverter, this integration provides that too:
+
+1. Under **Electricity grid**, select **Add grid connection**.
+2. For **Grid consumption**, select the meter&#x27;s **Energy imported** sensor.
+3. For **Return to grid**, select the meter&#x27;s **Energy exported** sensor.
+4. Select **Save**.
+
+Without a meter, another energy monitor, such as one reading your utility meter, can fill those in instead.
+
+A battery goes under **Home battery storage** in the same way:
+
+1. Under **Home battery storage**, select **Add battery system**.
+2. For **Energy charged into the battery**, select the battery&#x27;s **Energy imported** sensor.
+3. For **Energy discharged from the battery**, select its **Energy exported** sensor.
+4. For **Battery state of charge sensor**, select its **State of energy** sensor.
+5. Select **Save**.
+
+## SolarEdge Modbus automation examples
+
+Your inverter knows more about your solar production than a monthly report ever will. Here are a few ideas to get you started.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: get a notification when the inverter reports a fault
+
+A solar installation on the roof is easy to forget about, and an inverter that has stopped producing costs you money every sunny hour. This automation sends a notification the moment the inverter reports a fault, so you find out on the same day instead of on your next bill.
+
+- **Trigger**: State changed
+  - **Entity**: Solaredge se10000h problem sensor
+  - **To**: On
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for a fault notification&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Solar inverter fault&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.solaredge_se10000h_problem
+      to: &quot;on&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &gt;
+          The solar inverter reports a fault and has stopped producing.
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: run the dishwasher on your own solar power
+
+Appliances that do not care when they run are the cheapest way to use your own production instead of selling it. This automation starts the dishwasher once your panels have been producing more than 2 kW for ten minutes, which is long enough to know it is not a passing gap in the clouds.
+
+- **Trigger**: Numeric state crossed threshold
+  - **Entity**: Solaredge se10000h power
+  - **Above**: `2000`
+  - **For at least**: `00:10:00`
+- **Action**: Turn on switch
+  - **Target**: Dishwasher switch
+
+{% details &quot;YAML example for running the dishwasher on solar power&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Dishwasher on solar power&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.solaredge_se10000h_power
+      above: 2000
+      for: &quot;00:10:00&quot;
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.dishwasher
+{% endexample %}
+
+{% enddetails %}
+
+## Data updates
+
+The **SolarEdge Modbus** integration {% term polling polls %} the inverter, and anything wired to it, every 10 seconds. The inverter&#x27;s settings are read every 5 minutes instead: they only move when something writes them, and every read costs a slot on a connection that has few to give.
+
+Every 15 minutes, Home Assistant also asks the inverter what is connected. If it detects that a meter or battery was added or removed, it reloads the integration automatically.
+
+Home Assistant keeps one Modbus connection per address and shares it between the integrations that use it. If several inverters answer on the same address with different device IDs, for example because they are chained on one Modbus TCP bridge, they share a single connection instead of each opening their own.
+
+A [Modbus](/integrations/modbus/) setup in your {% term &quot;`configuration.yaml`&quot; %} is separate from this. It opens its own connection to the inverter, which counts against the number of clients the inverter accepts.
+
+If part of the installation does not answer a poll, only its {% term entity entities %} become unavailable: a silent meter or battery leaves the inverter&#x27;s sensors alone. Home Assistant does not keep showing the last known reading as if it were current.
+
+## Known limitations
+
+- Which of the inverter&#x27;s settings exist depends on the installation. Storage settings need a battery, and the export settings need the inverter to have them enabled; what is absent is simply not added.
+- SolarEdge does not document the control registers, and not every firmware exposes them the same way. What a setting does is the inverter&#x27;s business, and it will refuse a value it does not accept.
+- A meter or battery wired in or out while Home Assistant runs takes up to 15 minutes to appear or disappear, since that is how often the inverter is asked what is attached. Picking it up reloads the integration, so its entities are briefly unavailable. Reloading it yourself is quicker if you cannot wait.
+- Modbus gives you what the inverter itself measures. Data per optimizer or per panel is only available through SolarEdge&#x27;s cloud service, which the [SolarEdge](/integrations/solaredge/) integration uses.
+- The **Storage state of charge** sensor is decided on at startup. A battery that reads exactly 0% right then is indistinguishable from an inverter with no battery at all, so the sensor is left out. Reload the integration once the battery has charged to add it.
+- An inverter accepts a limited number of Modbus TCP connections at the same time. If another system on your network already polls the inverter, Home Assistant may not be able to connect.
+
+## Troubleshooting
+
+{% details &quot;The inverter cannot be reached&quot; %}
+
+### Symptom: setup fails, or the entities stop updating
+
+Setting up the integration times out, or an entry that worked turns unavailable and stays that way.
+
+#### Description
+
+Nothing is answering on the address the integration polls. The inverter may be off the network, Modbus may have been turned off on it, or another system may be holding the connection it would need.
+
+#### Resolution
+
+1. Make sure the inverter is powered on and reachable on your network, for example by looking it up in your router.
+2. Check that Modbus TCP is still enabled on the inverter. An inverter firmware update or a visit from your installer can turn it off again.
+3. Check the port. Most SolarEdge inverters use `1502`; the older SE4000-ER-01-NED and SE3000H-RW000NNN2 models reported here use `502`. Modbus devices in general often use `502`.
+4. Check whether another system is already polling the inverter, and stop it while you test.
+
+On an RS485 connection, check the baud rate and the device ID against what the inverter is set to, and that its RS485 port speaks SunSpec rather than talking to a SolarEdge logger.
+
+{% enddetails %}
+
+{% details &quot;Setup says the device does not answer as a SolarEdge inverter&quot; %}
+
+### Symptom: the form reports that the device is not a SolarEdge inverter
+
+Setup reaches something on that address, and then reports that it is not a SolarEdge inverter.
+
+#### Description
+
+Something answers on that address and device ID, but it does not identify itself as one. Another Modbus device on your network can answer just as readily.
+
+#### Resolution
+
+1. Check the device ID, which is `1` on SolarEdge inverters. Another Modbus device on the same address can answer on a different ID.
+2. Check that the host belongs to the inverter, and not to another device that took over its address.
+
+{% enddetails %}
+
+{% details &quot;Setup says this is a different inverter&quot; %}
+
+### Symptom: reconfiguring reports that this is a different inverter
+
+Reconfiguring an entry, or setting one up again, reports that the inverter that answers is not the one the entry belongs to.
+
+#### Description
+
+Home Assistant recognizes your inverter by its serial number rather than by its address. This message means the address now belongs to another inverter, usually because addresses were handed out again on your network.
+
+#### Resolution
+
+1. Look up the inverter&#x27;s current address, and give it a fixed address while you are there.
+2. Select **Reconfigure** on the integration entry and enter the new address.
+
+{% enddetails %}
+
+{% details &quot;The inverter has a battery, but there is no battery device&quot; %}
+
+### Symptom: a battery is attached, and no battery device appears
+
+The inverter has a battery wired to it, and Home Assistant shows no battery device for it.
+
+#### Description
+
+Not every inverter serves its battery registers over Modbus. A number of Home Hub inverters keep them to themselves, whatever is wired to them, and there is nothing to configure around that.
+
+#### Resolution
+
+1. Check whether the inverter has a **Storage state of charge** sensor instead. That is the fallback described under [storage state of charge](#storage-state-of-charge), and a state of charge is all of the battery that such an inverter reports.
+2. If that sensor is missing too, check whether the battery was at 0% when the integration started. Reload the integration once the battery has charged.
+3. Otherwise, ask your installer whether the inverter can run a grid profile that supports IEEE 1547-2018, which makes those registers available.
+
+{% enddetails %}
+
+### Getting to what the inverter reports
+
+The integration&#x27;s diagnostics carry everything the inverter says about itself and about the hardware wired to it, including meters and batteries, whether or not there are entities for them. To download them, go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select the integration, and use {% icon &quot;mdi:dots-vertical&quot; %} &gt; **Download diagnostics**. Serial numbers are redacted.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+The Modbus TCP setting stays enabled on the inverter. You can turn it off in the inverter&#x27;s own settings if nothing else uses it.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SolarEdge Modbus.</p><p>The <strong>reconfigure</strong> configuration step lists <code>baudrate</code>, <code>device</code>, <code>host</code>, <code>port</code>.</p><p>The <strong>serial</strong> configuration step lists <code>baudrate</code>, <code>device</code>.</p><p>The <strong>tcp</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Energy dashboard</li><li>SolarEdge Modbus automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/solaredge_modbus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/solaredge_modbus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/solaredge_modbus</code></dd></dl></section><p><a href="../../integrations/solaredge_modbus/">Return to the SolarEdge Modbus guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

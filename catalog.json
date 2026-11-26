@@ -2730,60 +2730,25 @@
       "steps": {},
       "platforms": [],
       "actions": [],
-      "summary": "Instructions on how to build Smart Home skill to connect Amazon Alexa with Home Assistant.",
+      "summary": "Instructions on how to connect Alexa/Amazon Echo to Home Assistant.",
       "article_text": [
         [
-          "Overview",
-          "Amazon Alexa provides a Smart Home API for richer home automation control without requiring the user to say the skill name, such as:"
+          "Automatic setup via Home Assistant Cloud",
+          "With Home Assistant Cloud, you can connect your Home Assistant instance in a few simple clicks to Amazon Alexa. With Home Assistant Cloud, you don't have to deal with dynamic DNS, SSL certificates, or opening ports on your router. Just log in via the user interface and a secure connection with the cloud will be established. Home Assistant Cloud requires a paid subscription after a 30-day free trial."
         ],
         [
-          "Create an AWS Lambda Function",
-          "We will write a small piece of code hosted as an AWS Lambda function that will redirect requests from the Alexa Smart Home skill to your Home Assistant instance, then the Alexa integration in Home Assistant will process the request and send back the response. The Lambda function will then deliver the response back to the Alexa Smart Home skill."
+          "Manual setup",
+          "There are a few ways that you can use Amazon Alexa and Home Assistant together."
         ],
         [
-          "Create an IAM Role for Lambda",
-          "The first thing you need to do after signing into the AWS console is to create an IAM Role for Lambda execution. AWS has very strict access control, so you have to specifically define and assign the required permissions."
-        ],
-        [
-          "Test the Lambda Function",
-          "Now, you have created the Lambda function, but before you can test it, you have to set up the necessary aspects of your Home Assistant configuration. Put the following minimal configuration into your configuration.yaml file. It will expose all of your supported devices and automations to Alexa. It is strongly recommended to check the configuration section and setup control of which devices and entities are exposed."
-        ],
-        [
-          "Configure the Smart Home Service Endpoint",
-          "Now remove the long-lived access token (if you want), copy the ARN of your Lambda function, then navigate back to the Alexa Developer Console. You will finish the configuration of the Smart Home skill."
-        ],
-        [
-          "Account linking",
-          "Alexa needs to link your Amazon account to your Home Assistant account. Therefore Home Assistant can make sure only authenticated Alexa requests can access your home's devices. To link the account, you have to make sure your Home Assistant can be accessed from Internet."
-        ],
-        [
-          "Alexa locale",
-          "The locale should match the location and language used for your Amazon echo devices."
-        ],
-        [
-          "Proactive events",
-          "The endpoint, client_id and client_secret are optional, and are only required if you want to enable Alexa's proactive mode (that is, \"Send Alexa Events\" enabled). Note the following if you want to enable proactive mode:"
-        ],
-        [
-          "Configure filter",
-          "By default, no entity will be excluded. To limit which entities are being exposed to Alexa, you can use the filter parameter. Keep in mind that only supported platforms can be added."
-        ],
-        [
-          "Alexa Display Categories",
-          "Configure a display category to override the display category and iconography each entity is shown in the Alexa app. This makes it easier to find and monitor devices."
+          "Requirements",
+          "Manual setup of the integration with Amazon Alexa has several requirements:"
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/alexa.smart_home/",
+      "article": "https://www.home-assistant.io/integrations/alexa/",
       "topics": [
-        "Requirements",
-        "Create an Amazon Alexa Smart Home Skill",
-        "Create an AWS Lambda Function",
-        "Configure the Smart Home Service Endpoint",
-        "Account linking",
-        "Alexa Smart Home Integration Configuration",
-        "Supported platforms",
-        "Troubleshooting",
-        "Debugging"
+        "Automatic setup via Home Assistant Cloud",
+        "Manual setup"
       ]
     },
     {
@@ -36755,14 +36720,14 @@
         "sensor"
       ],
       "actions": [],
-      "summary": "Instructions on how to use the iOS sensors with Home Assistant.",
+      "summary": "Instructions on how to use the iOS companion app with Home Assistant.",
       "article_text": [
         [
           "Overview",
-          "The iOS sensor integration is the Home Assistant part for using the iOS companion app. For more information, see the Home Assistant iOS integration documentation."
+          "The Home Assistant iOS integration is used by the Home Assistant Companion App for iOS to store and provide settings for actionable notifications and actions. Both of these can also be configured for a single device within the app, in which case the ios integration is not required."
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/sensor.ios/",
+      "article": "https://www.home-assistant.io/integrations/ios/",
       "topics": []
     },
     {
@@ -48716,31 +48681,63 @@
         "publish",
         "reload"
       ],
-      "summary": "Instructions on how to integrate MQTT water heater into Home Assistant.",
+      "summary": "Instructions on how to set up MQTT within Home Assistant.",
       "article_text": [
         [
           "Overview",
-          "The MQTT water heater integration lets you control your MQTT enabled water heater devices."
+          "MQTT (aka MQ Telemetry Transport) is a machine-to-machine or \"Internet of Things\" connectivity protocol on top of TCP/IP. It allows extremely lightweight publish/subscribe messaging transport."
         ],
         [
-          "Optimistic mode",
-          "If a property works in *optimistic mode* (when the corresponding state topic is not set), Home Assistant will assume that any state changes published to the command topics did work and change the internal state of the entity immediately after publishing to the command topic. If it does not work in optimistic mode, the internal state of the entity is only updated when the requested update is confirmed by the device through the state topic. You can enforce optimistic mode by setting the optimistic option to true. When set, the internal state will always be updated, even when a state topic is defined."
+          "Setting up a broker",
+          "While public MQTT brokers are available, the easiest and most private option is running your own."
         ],
         [
-          "Using templates",
-          "For all *_state_topics, a template can be specified that will be used to render the incoming payloads on these topics. Also, a default template that applies to all state topics can be specified as value_template. This can be useful if you received payloads are e.g., in JSON format. Since in JSON, a quoted string (e.g., \"foo\") is just a string, this can also be used for unquoting."
+          "Broker configuration",
+          "MQTT broker settings are configured when the MQTT integration is first set up and can be changed later if needed."
         ],
         [
-          "Example",
-          "A full configuration example looks like the one below."
+          "Other broker configuration settings",
+          "Additional broker configuration options include setting a custom client ID, configuring a client certificate and key for authentication, and enabling TLS validation of the broker's certificate to ensure a secure connection. To access these settings, open the MQTT broker settings, and expand Other settings."
+        ],
+        [
+          "Alternative client ID",
+          "You can set a custom MQTT client ID, this can help when debugging. Mind that the client ID must be unique. Leave this settings default if you want Home Assistant to generate a unique ID."
+        ],
+        [
+          "Keep alive",
+          "The time in seconds between sending keep alive messages for this client. The default is 60 seconds. The keep alive setting should be at least 15 seconds."
+        ],
+        [
+          "Broker certificate validation",
+          "To enable a secure connection to the broker, the broker certificate should be validated. If your broker uses a trusted certificate, then choose Auto. This validates the broker certificate against the bundled certificate authority (CA) certificates. If a self-signed certificate is used, select Custom. A custom PEM- or DER-encoded CA certificate can be uploaded. Select Next to show the control to upload the CA certificate. If the server certificate does not match the hostname then validation will fail. To allow a connection without the verification of the hostname, turn the Ignore broker certificate validation switch on."
+        ],
+        [
+          "MQTT Protocol",
+          "Home Assistant requires that your broker supports MQTT protocol version 5. Most MQTT brokers, like the official \"Mosquitto broker\" App will support MQTT protocol version 5."
+        ],
+        [
+          "Securing the connection",
+          "With a secure broker connection, it is possible to use a client certificate for authentication. To set the client certificate and private key, turn on the option Use a client certificate and select Next to reveal file upload controls. A client certificate and the corresponding private key must be uploaded together. Both client certificate and private key must be either PEM- or DER-encoded. If the private key is encrypted with a password, ensure you supply the correct password when uploading the client certificate and key files."
+        ],
+        [
+          "Using WebSockets as transport",
+          "You can select websockets as the transport method if your MQTT broker supports it. When you select websockets and select Next, you will be able to add a WebSockets path (default is /) and WebSockets headers (optional). The target WebSockets URI ws://{broker}:{port}{ws_path} is built with the broker, port, and ws_path (WebSocket path) settings. To configure the WebSocket's headers, supply a valid JSON dictionary string. For example, { \"Authorization\": \"token\" , \"x-header\": \"some header\"}. The default transport method is tcp. The WebSockets transport can be secured using TLS and optionally using user credentials or a client certificate."
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/water_heater.mqtt/",
+      "article": "https://www.home-assistant.io/integrations/mqtt/",
       "topics": [
-        "Configuration",
-        "Optimistic mode",
-        "Using templates",
-        "Example"
+        "Setting up a broker",
+        "Broker configuration",
+        "Configure MQTT options",
+        "Testing your setup",
+        "Naming of MQTT Entities",
+        "MQTT device configuration",
+        "Grouping entities",
+        "MQTT Discovery",
+        "Manual configured MQTT items",
+        "Entity state updates",
+        "Using Templates",
+        "Logging"
       ]
     },
     {
@@ -52393,15 +52390,44 @@
         "persistent_notification",
         "send_message"
       ],
-      "summary": "Instructions on how to set up a Notify integration using TTS action and media_player within Home Assistant.",
+      "summary": "Instructions on how to add user notifications to Home Assistant.",
       "article_text": [
         [
           "Overview",
-          "The notify TTS platform lets you use the TTS integration speak or legacy say action and a media_player to alert you of important events. This integration provides a simple interface to use in your automations and alerts."
+          "The Notify integration makes it possible to send notifications to a wide variety of platforms. To use it, you have to set up at least one notification target (notifier). Check the integrations list for one that fits your use case."
+        ],
+        [
+          "Notify entity states",
+          "The state of a notify entity is a timestamp showing the date and time when a message was last sent. Home Assistant stores the timestamp in UTC, for example, 2026-01-01T12:00:00.123456+00:00. The Home Assistant interface shows it in your local date and time format."
+        ],
+        [
+          "Companion app notifications",
+          "A common notification integration is via the Home Assistant Companion app for Android or iOS. If your phone is available as a notify entity, use the Send a notification message action and select that phone as the target. Some older setups may still provide a phone-specific action such as notify.mobile_app_your_phone_name. Refer to the Companion app documentation for many customization options."
+        ],
+        [
+          "Notifications automation examples",
+          "Notifications are most useful when Home Assistant sends them at the right moment, such as when something needs your attention or when you want a message to stay visible in the interface. The examples below show two common ways to use notification actions in automations."
+        ],
+        [
+          "Automation: send a notification when the garage door stays open",
+          "This automation sends a message to your phone when the garage door has been open for 10 minutes."
+        ],
+        [
+          "Automation: show a persistent notification when a leak is detected",
+          "This automation shows a notification in the Home Assistant interface when a leak sensor detects moisture."
+        ],
+        [
+          "Testing a notification action",
+          "After you set up a notifier, test its action in Tools."
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/notify.tts/",
-      "topics": []
+      "article": "https://www.home-assistant.io/integrations/notify/",
+      "topics": [
+        "Notify entity states",
+        "Companion app notifications",
+        "Notifications automation examples",
+        "Testing a notification action"
+      ]
     },
     {
       "domain": "notify_events",
@@ -63930,26 +63956,15 @@
       "actions": [
         "reload"
       ],
-      "summary": "Instructions on how to integrate REST switches into Home Assistant.",
+      "summary": "Instructions on how to integrate REST sensors and binary sensors into Home Assistant.",
       "article_text": [
         [
           "Overview",
-          "The RESTful Switch integration allows you to control a given endpoint that supports a RESTful API. The switch can get the state via GET and set the state via POST on a given REST resource."
-        ],
-        [
-          "Configuration",
-          "To enable this switch, add the following lines to your configuration.yaml file:"
-        ],
-        [
-          "Switch with templated value",
-          "This example shows a switch that uses a template to allow Home Assistant to determine its state. In this example, the REST endpoint returns this JSON response with true indicating the switch is on."
+          "The RESTful integration is consuming a given endpoint which is exposed by a RESTful API of a device, an application, or a web service. The sensor has support for GET and POST requests."
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/switch.rest/",
-      "topics": [
-        "Configuration",
-        "Example"
-      ]
+      "article": "https://www.home-assistant.io/integrations/rest/",
+      "topics": []
     },
     {
       "domain": "rest_command",
@@ -68310,11 +68325,63 @@
         "set_cover_position_and_tilt",
         "set_kvs_value"
       ],
-      "summary": "Connect and control your Shelly Z-Wave devices using the Z-Wave integration",
-      "article_text": [],
-      "article": "https://www.home-assistant.io/integrations/shelly_zwave/",
+      "summary": "Integrate Shelly devices",
+      "article_text": [
+        [
+          "Overview",
+          "Integrate Shelly devices into Home Assistant."
+        ],
+        [
+          "Shelly device generations",
+          "There are four generations of devices and all generations are supported by this integration. There are some differences in how devices should be configured and in the naming of entities and devices between generations."
+        ],
+        [
+          "Shelly Enhanced Security",
+          "The Shelly integration automatically detects whether HTTPS is configured on the device and always communicates with that device over HTTPS using port 443. If you uploaded a certificate signed by a certificate authority your Home Assistant instance trusts, enable Verify SSL; otherwise, leave it disabled."
+        ],
+        [
+          "Data updates",
+          "Shelly devices push updates to Home Assistant upon changes for all main functions of the device. For push updates to work correctly, some devices need additional configuration:"
+        ],
+        [
+          "Shelly device configuration (generation 1)",
+          "We recommend using unicast for communication. To enable this, enter the local IP address of the Home Assistant server and port 5683 into the CoIoT peer field and push SAVE button. This is mandatory for battery operated devices (even if USB connected). After changing the CoIoT peer, the Shelly device needs to be manually restarted."
+        ],
+        [
+          "Shelly device configuration (generation 2+)",
+          "Generation 2+ devices use the RPC protocol to communicate with Home Assistant. By default, no additional configuration is required."
+        ],
+        [
+          "Shelly entities that poll data from the device (generation 1)",
+          "The following disabled by default entities polling poll data from the device every 60 seconds:"
+        ],
+        [
+          "Shelly entities that poll data from the device (generation 2+)",
+          "The following disabled by default entities polling poll data from the device every 60 seconds:"
+        ],
+        [
+          "Bluetooth Support",
+          "Shelly Gen 2 and newer devices (excluding battery-powered models) can act as Bluetooth proxies, forwarding advertisement data. You can enable either active or passive listening through the device’s options flow."
+        ],
+        [
+          "Range Extender Support",
+          "Shelly generation 2+ devices that are not battery-powered can act as a Range Extender. Devices of the same generations can be configured via those Range Extenders specifying a custom TCP port during the configuration flow. Currently, only static IP or DHCP reserved IP are supported for the main device."
+        ]
+      ],
+      "article": "https://www.home-assistant.io/integrations/shelly/",
       "topics": [
-        "Works with Home Assistant certified devices"
+        "Shelly device generations",
+        "Shelly Enhanced Security",
+        "Data updates",
+        "Bluetooth Support",
+        "Range Extender Support",
+        "Entity naming (generation 1)",
+        "Cover entities",
+        "Binary input sensors",
+        "Media player entities",
+        "Event entities",
+        "Events",
+        "Appliance type (generation 1)"
       ]
     },
     {
@@ -74250,21 +74317,61 @@
       "actions": [
         "add_password"
       ],
-      "summary": "Connect and control your SwitchBot Matter devices using the Matter integration",
+      "summary": "Instructions on how to set up SwitchBot Devices.",
       "article_text": [
         [
+          "Overview",
+          "The SwitchBot Bluetooth integration allows you to control SwitchBot devices such as sensors, locks, shades, lights, plugs, robot vacuums, and hubs."
+        ],
+        [
+          "How you can use this integration",
+          "The SwitchBot integration lets you do many things, such as switching devices on and off, changing device modes, monitoring sensor data and energy usage in the Home Assistant dashboards, and controlling device configurations manually or via automations."
+        ],
+        [
+          "Prerequisites",
+          "To use this integration, it is required to have working Bluetooth set up on the device running Home Assistant. A SwitchBot Hub is not required for this integration."
+        ],
+        [
+          "Add mode",
+          "Before adding SwitchBot devices over Bluetooth, confirm whether your Bluetooth adapter is set to Active or Passive mode in the Bluetooth integration configuration."
+        ],
+        [
+          "Adding encrypted SwitchBot devices",
+          "Some types of the SwitchBot devices are encrypted for improved security. More types and models will be added as encrypted devices in the future."
+        ],
+        [
+          "SwitchBot account (recommended)",
+          "Using this option you can provide your SwitchBot account login credentials and Home Assistant will import the appropriate encryption key from your account."
+        ],
+        [
+          "Enter the lock encryption key manually",
+          "This option is for those that would rather obtain the encryption key themselves, and/or want to know exactly where and how are their account credentials used."
+        ],
+        [
           "Works with Home Assistant certified devices",
-          "SwitchBot Matter devices are certified for use via one of their Matter hubs: either the SwitchBot Hub 2 or the Hub 3. Some are also certified via Matter over Wi-Fi as standalone devices."
+          "SwitchBot is committed to making sure their products are up-to-date and ready to use in Home Assistant. The following devices are certified for Bluetooth. To see the list of SwitchBot Matter-certified devices, visit the SwitchBot Matter page."
         ],
         [
           "Other supported devices",
           "In addition to the certified devices, the following devices are also supported:"
+        ],
+        [
+          "Plugs and switches",
+          "Switch entities are added for Bot, Plug Mini, and Relay Switch."
         ]
       ],
-      "article": "https://www.home-assistant.io/integrations/switchbot_matter/",
+      "article": "https://www.home-assistant.io/integrations/switchbot/",
       "topics": [
+        "How you can use this integration",
+        "Prerequisites",
         "Works with Home Assistant certified devices",
-        "Other supported devices"
+        "Other supported devices",
+        "Supported functionality",
+        "Data updates",
+        "Known limitations",
+        "Troubleshooting",
+        "Examples",
+        "Removing the integration"
       ]
     },
     {

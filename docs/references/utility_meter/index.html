@@ -1,1 +1,728 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Utility Meter reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:300" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/utility_meter/">Utility Meter guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Utility Meter</h1><p>Instructions on how to integrate the Utility Meter into Home Assistant.</p><section><h2>Overview</h2><p>The Utility Meter integration provides functionality to track consumptions of various utilities (e.g., energy, gas, water, heating).</p></section><section><h2>YAML configuration</h2><p>Alternatively, this integration can be configured and set up manually via YAML instead. To enable the Integration sensor in your installation, add the following to your configuration.yaml file:</p></section><section><h2>Time period dictionary example</h2><p>Some actions are only available if you have configured tariffs for the meter.</p></section><section><h2>Advanced configuration</h2><p>The following configuration shows an example where 2 utility_meters (daily_energy and monthly_energy) track daily and monthly energy consumptions.</p></section><section><h2>Advanced configuration for DSMR users</h2><p>When using the DSMR integration to get data from the utility meter, each tariff (peak and off-peak) has a separate sensor. Additionally, there is a separate sensor for gas consumption. The meter switches automatically between tariffs, so an automation is not necessary in this case. But, you do have to set up a few more instances of the utility_meter integration.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Create helper</strong>, and search for Utility Meter.</p><p>The <strong>user</strong> configuration step lists <code>always_available</code>, <code>cycle</code>, <code>delta_values</code>, <code>name</code>, <code>net_consumption</code>, <code>offset</code>, <code>periodically_resetting</code>, <code>source</code>, <code>tariffs</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>select</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>calibrate</li><li>reset</li></ul></section><section><h2>Topics in the original article</h2><ul><li>YAML configuration</li><li>Advanced configuration</li><li>Advanced configuration for DSMR users</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/utility_meter/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/utility_meter</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/utility_meter</code></dd></dl></section><p><a href="../../integrations/utility_meter/">Return to the Utility Meter guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Utility Meter reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:300" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/utility_meter/">Utility Meter guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Utility Meter</h1><p>Instructions on how to integrate the Utility Meter into Home Assistant.</p><div class="reader-body"><p>The <strong>Utility Meter</strong> integration provides functionality to track consumptions of various utilities (e.g., energy, gas, water, heating).</p>
+<p>From a user perspective, utility meters operate in cycles (usually monthly) for billing purposes. This sensor will track a source sensor values, automatically resetting the meter based on the configured cycle. On reset an attribute will store the previous meter value, providing the means for comparison operations (e.g., "did I spend more or less this month?") or billing estimation (e.g., through a sensor template that multiplies the metered value per the charged unit amount).</p>
+<p>Some utility providers have different tariffs according to time or resource availability. The utility meter enables you to define the various tariffs supported by your utility provider and accounts for your consumption accordingly. When tariffs are defined a new entity will show up, indicating the current tariff. To change the tariff, the user must perform an action, usually through an automation that can be based on time or other external sources (for example, a REST sensor).</p>
+<p><strong>Note</strong></p>
+<p>Sensors created with this integration are persistent, so values are retained across restarts of Home Assistant. The first cycle for each sensor will be incomplete; a sensor tracking daily usage will start to be accurate the next day after the integration was activated. A sensor tracking monthly usage will present accurate data starting the first of the next month after being added to Home Assistant.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Utility Meter</strong> helper to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>At the top of the screen, select the tab: <strong>Helpers</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Create helper</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Utility Meter</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Name:
+  description: The name the sensor should have. It can be changed again later.
+Input sensor:
+  description: The sensor entity providing utility readings (energy, water, gas, heating).
+Meter reset cycle:
+  description: &gt;
+    How often to reset the counter. If the offered reset cycles do not match
+    your use case, consider using the YAML configuration below, which allows
+    for creating CRON-style patterns.
+Meter reset offset:
+  description: &gt;
+    Cycle reset occur at the beginning of the period. This option enables
+    the offsetting of these beginnings, counted in days. If you need a more
+    fine-grained offset, consider using the YAML configuration below, which
+    allows for that.
+Supported tariffs:
+  description: &gt;
+    A list of supported tariffs, leave empty if only a single tariff is needed.
+Net consumption:
+  description: &gt;
+    Enable this if you would like to treat the source as a net meter.
+    This will allow your counter to go both positive and negative.
+Delta values:
+  description: &gt;
+    Enable this if the source values are delta values since the last reading instead of absolute values. When this option is enabled, each new value received will be added as-is to the utility meter instead of adding the _difference_ between the new value and previous value.
+Periodically resetting:
+  description: &gt;
+    Enable this if the source sensor can reset, for example, a smart plug that resets on boot. The reset does not have to be to `0`; when **Net consumption** is disabled, decreases in the source value are ignored. When **Net consumption** is enabled, negative differences are treated as valid consumption. When this option is disabled, the _difference_ between the new value and the last valid value is added to the utility meter.
+Sensor always available:
+  description: &gt;
+    If activated, the sensor will always be available with the last totalized value, even if the source entity is unavailable or unknown.
+    You need to understand that with this option activated, when the source entity becomes unavailable, the utility meter sensor will have the last totalized value and will not change until the source entity returns to a valid state.
+
+</code></pre>
+<p>If the meter reset cycle and reset offsets are too limited for your use case,
+consider using the YAML configuration below, which support CRON-style patterns
+that provide a greater flexibility.</p>
+<h2>YAML configuration</h2>
+<p>Alternatively, this integration can be configured and set up manually via YAML
+instead. To enable the Integration sensor in your installation, add the
+following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+utility_meter:
+  energy:
+    source: sensor.energy_in_kwh
+    cycle: monthly
+</code></pre>
+<pre><code>
+source:
+  description: The entity ID of the sensor providing utility readings (energy, water, gas, heating).
+  required: true
+  type: string
+name:
+  description: The friendly name to use in the GUI.&#32;
+  required: false
+  type: string
+unique_id:
+    description: An ID that uniquely identifies the utility_meter. Set this to a unique value to allow customization through the UI.
+    required: false
+    type: string
+cycle:
+  description: How often to reset the counter. Valid values are `quarter-hourly`, `hourly`, `daily`, `weekly`, `monthly`, `bimonthly`, `quarterly` and `yearly`. Cycle value `bimonthly` will reset the counter once in two months.
+  required: false
+  type: string
+offset:
+  description: "Cycle reset occur at the beginning of the period (0 minutes, 0h00 hours, Monday, day 1, January). This option enables the offsetting of these beginnings. Supported formats: `offset: 'HH:MM:SS'`, `offset: 'HH:MM'` and Time period dictionary (see example below)."
+  required: false
+  default: 0
+  type: time
+  type: integer
+cron:
+  description: This option is *mutually exclusive* of `cycle` and `offset`. It provides an advanced method of defining when should the counter be reset. It follows common [crontab syntax](https://crontab.guru) but extended to support more advanced scheduling. See the [croniter](https://github.com/kiorky/croniter) library.
+  required: true
+  type: string
+delta_values:
+  description: Set this to True if the source values are delta values since the last reading instead of absolute values. When this option is enabled, each new value received will be added as-is to the utility meter instead of adding the _difference_ between the new value and previous value. For example, you should enable this when the source sensor returns readings like "1", "0.5", "0.75" versus "1", "1.5", "2.25".
+  required: false
+  default: false
+  type: boolean
+net_consumption:
+  description: Set this to True if you would like to treat the source as a net meter. This will allow your counter to go both positive and negative.
+  required: false
+  default: false
+  type: boolean
+tariffs:
+  description: List of tariffs supported by the utility meter.
+  required: false
+  default: []
+  type: list
+periodically_resetting:
+  description: Enable this if the source sensor can reset, for example, a smart plug that resets on boot. The reset does not have to be to `0`; when `net_consumption` is disabled, decreases in the source value are ignored. When `net_consumption` is enabled, negative differences are treated as valid consumption. When this option is disabled, the _difference_ between the new value and the last valid value is added to the utility meter.
+  required: false
+  default: true
+  type: boolean
+always_available:
+  description: If activated, the sensor will always be available with the last totalized value, even if the source entity is unavailable or unknown.
+  required: false
+  default: false
+  type: boolean
+
+</code></pre>
+<p><strong>Important</strong></p>
+<p>When using the <code>offset</code> configuration parameter, the defined period must not be longer than 28 days.</p>
+<h3>Time period dictionary example</h3>
+<pre><code>offset:
+  # At least one of these must be specified:
+  days: 1
+  hours: 0
+  minutes: 0
+</code></pre>
+<p>Some actions are only available if you have configured tariffs for the meter.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Advanced configuration</h2>
+<p>The following configuration shows an example where 2 utility_meters (<code>daily_energy</code> and <code>monthly_energy</code>) track daily and monthly energy consumptions.</p>
+<p>Both track the same sensor (<code>sensor.energy</code>) which continuously monitors the energy consumed.</p>
+<p>4 different sensors will be created, 2 per utility meter and corresponding to each tariff.
+Sensor <code>sensor.daily_energy_peak</code>, <code>sensor.daily_energy_offpeak</code>, <code>sensor.monthly_energy_peak</code> and <code>sensor.monthly_energy_offpeak</code> will automatically be created to track the consumption in each tariff for the given cycle.</p>
+<p>The <code>select.daily_energy</code> and <code>select.monthly_energy</code> select entities will track the current tariff and allow changing the tariff.</p>
+<pre><code>utility_meter:
+  daily_energy:
+    source: sensor.energy
+    name: Daily Energy
+    cycle: daily
+    tariffs:
+      - peak
+      - offpeak
+  monthly_energy:
+    source: sensor.energy
+    name: Monthly Energy
+    cycle: monthly
+    tariffs:
+      - peak
+      - offpeak
+</code></pre>
+<p>Assuming your energy provider tariffs are time based according to:</p>
+<ul>
+<li><em>peak</em>: from 9h00 to 21h00</li>
+<li><em>offpeak</em>: from 21h00 to 9h00 next day</li>
+</ul>
+<p>a time based automation can be used:</p>
+<pre><code>automation:
+  triggers:
+    - trigger: time
+      at: "09:00:00"
+      variables:
+        tariff: "peak"
+    - trigger: time
+      at: "21:00:00"
+      variables:
+        tariff: "offpeak"
+  actions:
+    - action: select.select_option
+      target:
+        entity_id: select.daily_energy
+      data:
+        option: "{{ tariff }}"
+    - action: select.select_option
+      target:
+        entity_id: select.monthly_energy
+      data:
+        option: "{{ tariff }}"
+</code></pre>
+<p>Assuming your utility provider cycle is offset from the last day of the month</p>
+<ul>
+<li>cycles at 17h00 on the last day of the month</li>
+</ul>
+<p>a cron(extended syntax used for last day of month) based utility meter can be used:</p>
+<pre><code>utility_meter:
+  monthly_energy:
+    source: sensor.energy
+    name: Monthly Energy
+    cron: "0 17 L * *"
+</code></pre>
+<h2>Advanced configuration for DSMR users</h2>
+<p>When using the <a href="../dsmr/">DSMR integration</a> to get data from the utility meter, each tariff (peak and off-peak) has a separate sensor. Additionally, there is a separate sensor for gas consumption. The meter switches automatically between tariffs, so an automation is not necessary in this case. But, you do have to set up a few more instances of the <code>utility_meter</code> integration.</p>
+<p>If you want to create a daily and monthly sensor for each tariff, you have to track separate sensors:</p>
+<ul>
+<li><code>sensor.energy_consumption_tarif_1</code> for tarif 1 power (for example off-peak)</li>
+<li><code>sensor.energy_consumption_tarif_2</code> for tarif 2 power (for example peak)</li>
+<li><code>sensor.gas_consumption</code> for gas consumption</li>
+</ul>
+<p>So, tracking daily and monthly consumption for each sensor, will require setting up 6 entries under the <code>utility_meter</code> integration.</p>
+<pre><code>utility_meter:
+  daily_energy_offpeak:
+    source: sensor.energy_consumption_tarif_1
+    name: Daily Energy (Offpeak)
+    cycle: daily
+  daily_energy_peak:
+    source: sensor.energy_consumption_tarif_2
+    name: Daily Energy (Peak)
+    cycle: daily
+  daily_gas:
+    source: sensor.gas_consumption
+    name: Daily Gas
+    cycle: daily
+  monthly_energy_offpeak:
+    source: sensor.energy_consumption_tarif_1
+    name: Monthly Energy (Offpeak)
+    cycle: monthly
+  monthly_energy_peak:
+    source: sensor.energy_consumption_tarif_2
+    name: Monthly Energy (Peak)
+    cycle: monthly
+  monthly_gas:
+    source: sensor.gas_consumption
+    name: Monthly Gas
+    cycle: monthly
+</code></pre>
+<p>Additionally, you can add template sensors to compute daily and monthly total usage. Important note, in these examples,
+we use the <code>is_number()</code> <a>function</a> to verify the values
+returned from the sensors are numeric. If this evaluates to false, <code>None</code> is returned.</p>
+<pre><code>template:
+  - sensor:
+    - name: 'Daily Energy Total'
+      device_class: energy
+      unit_of_measurement: kWh
+      state: &gt;
+        {% if is_number(states('sensor.daily_energy_offpeak')) and is_number(states('sensor.daily_energy_peak')) %}
+          {{ states('sensor.daily_energy_offpeak') | float + states('sensor.daily_energy_peak') | float }}
+        {% else %}
+          None
+        {% endif %}
+
+    - name: 'Monthly Energy Total'
+      device_class: energy
+      unit_of_measurement: kWh
+      state: &gt;
+        {% if is_number(states('sensor.monthly_energy_offpeak')) and is_number(states('sensor.monthly_energy_peak')) %}
+          {{ states('sensor.monthly_energy_offpeak') | float + states('sensor.monthly_energy_peak') | float }}
+        {% else %}
+          None
+        {% endif %}
+</code></pre>
+<p><strong>Caution</strong></p>
+<p>Don't add a sensor like <code>Daily Energy Total</code> above to the Energy dashboard. Because the two underlying utility meter sensors may not reset at the exact same moment, summing them can briefly record a false value in your long-term statistics that requires manual correction. Add each utility meter sensor to the dashboard separately instead. See the <a>Energy dashboard FAQ</a> for details.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/utility_meter.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate the Utility Meter into Home Assistant.
+ha_release: 0.87
+ha_domain: utility_meter
+---
+
+The **Utility Meter** {% term integration %} provides functionality to track consumptions of various utilities (e.g., energy, gas, water, heating).
+
+From a user perspective, utility meters operate in cycles (usually monthly) for billing purposes. This sensor will track a source sensor values, automatically resetting the meter based on the configured cycle. On reset an attribute will store the previous meter value, providing the means for comparison operations (e.g., &quot;did I spend more or less this month?&quot;) or billing estimation (e.g., through a sensor template that multiplies the metered value per the charged unit amount).
+
+Some utility providers have different tariffs according to time or resource availability. The utility meter enables you to define the various tariffs supported by your utility provider and accounts for your consumption accordingly. When tariffs are defined a new {% term entity %} will show up, indicating the current tariff. To change the tariff, the user must perform an action, usually through an automation that can be based on time or other external sources (for example, a REST sensor).
+
+{% note %}
+Sensors created with this {% term integration %} are persistent, so values are retained across restarts of Home Assistant. The first cycle for each sensor will be incomplete; a sensor tracking daily usage will start to be accurate the next day after the {% term integration %} was activated. A sensor tracking monthly usage will present accurate data starting the first of the next month after being added to Home Assistant.
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+{% configuration_basic %}
+Name:
+  description: The name the sensor should have. It can be changed again later.
+Input sensor:
+  description: The sensor entity providing utility readings (energy, water, gas, heating).
+Meter reset cycle:
+  description: &gt;
+    How often to reset the counter. If the offered reset cycles do not match
+    your use case, consider using the YAML configuration below, which allows
+    for creating CRON-style patterns.
+Meter reset offset:
+  description: &gt;
+    Cycle reset occur at the beginning of the period. This option enables
+    the offsetting of these beginnings, counted in days. If you need a more
+    fine-grained offset, consider using the YAML configuration below, which
+    allows for that.
+Supported tariffs:
+  description: &gt;
+    A list of supported tariffs, leave empty if only a single tariff is needed.
+Net consumption:
+  description: &gt;
+    Enable this if you would like to treat the source as a net meter.
+    This will allow your counter to go both positive and negative.
+Delta values:
+  description: &gt;
+    Enable this if the source values are delta values since the last reading instead of absolute values. When this option is enabled, each new value received will be added as-is to the utility meter instead of adding the _difference_ between the new value and previous value.
+Periodically resetting:
+  description: &gt;
+    Enable this if the source sensor can reset, for example, a smart plug that resets on boot. The reset does not have to be to `0`; when **Net consumption** is disabled, decreases in the source value are ignored. When **Net consumption** is enabled, negative differences are treated as valid consumption. When this option is disabled, the _difference_ between the new value and the last valid value is added to the utility meter.
+Sensor always available:
+  description: &gt;
+    If activated, the sensor will always be available with the last totalized value, even if the source entity is unavailable or unknown.
+    You need to understand that with this option activated, when the source entity becomes unavailable, the utility meter sensor will have the last totalized value and will not change until the source entity returns to a valid state.
+{% endconfiguration_basic %}
+
+If the meter reset cycle and reset offsets are too limited for your use case,
+consider using the YAML configuration below, which support CRON-style patterns
+that provide a greater flexibility.
+
+## YAML configuration
+
+Alternatively, this {% term integration %} can be configured and set up manually via YAML
+instead. To enable the Integration sensor in your installation, add the
+following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+utility_meter:
+  energy:
+    source: sensor.energy_in_kwh
+    cycle: monthly
+```
+
+{% configuration %}
+source:
+  description: The entity ID of the sensor providing utility readings (energy, water, gas, heating).
+  required: true
+  type: string
+name:
+  description: The friendly name to use in the GUI.&#32;
+  required: false
+  type: string
+unique_id:
+    description: An ID that uniquely identifies the utility_meter. Set this to a unique value to allow customization through the UI.
+    required: false
+    type: string
+cycle:
+  description: How often to reset the counter. Valid values are `quarter-hourly`, `hourly`, `daily`, `weekly`, `monthly`, `bimonthly`, `quarterly` and `yearly`. Cycle value `bimonthly` will reset the counter once in two months.
+  required: false
+  type: string
+offset:
+  description: &quot;Cycle reset occur at the beginning of the period (0 minutes, 0h00 hours, Monday, day 1, January). This option enables the offsetting of these beginnings. Supported formats: `offset: &#x27;HH:MM:SS&#x27;`, `offset: &#x27;HH:MM&#x27;` and Time period dictionary (see example below).&quot;
+  required: false
+  default: 0
+  type: time
+  type: integer
+cron:
+  description: This option is *mutually exclusive* of `cycle` and `offset`. It provides an advanced method of defining when should the counter be reset. It follows common [crontab syntax](https://crontab.guru) but extended to support more advanced scheduling. See the [croniter](https://github.com/kiorky/croniter) library.
+  required: true
+  type: string
+delta_values:
+  description: Set this to True if the source values are delta values since the last reading instead of absolute values. When this option is enabled, each new value received will be added as-is to the utility meter instead of adding the _difference_ between the new value and previous value. For example, you should enable this when the source sensor returns readings like &quot;1&quot;, &quot;0.5&quot;, &quot;0.75&quot; versus &quot;1&quot;, &quot;1.5&quot;, &quot;2.25&quot;.
+  required: false
+  default: false
+  type: boolean
+net_consumption:
+  description: Set this to True if you would like to treat the source as a net meter. This will allow your counter to go both positive and negative.
+  required: false
+  default: false
+  type: boolean
+tariffs:
+  description: List of tariffs supported by the utility meter.
+  required: false
+  default: []
+  type: list
+periodically_resetting:
+  description: Enable this if the source sensor can reset, for example, a smart plug that resets on boot. The reset does not have to be to `0`; when `net_consumption` is disabled, decreases in the source value are ignored. When `net_consumption` is enabled, negative differences are treated as valid consumption. When this option is disabled, the _difference_ between the new value and the last valid value is added to the utility meter.
+  required: false
+  default: true
+  type: boolean
+always_available:
+  description: If activated, the sensor will always be available with the last totalized value, even if the source entity is unavailable or unknown.
+  required: false
+  default: false
+  type: boolean
+{% endconfiguration %}
+
+{% important %}
+When using the `offset` configuration parameter, the defined period must not be longer than 28 days.
+{% endimportant %}
+
+### Time period dictionary example
+
+```yaml
+offset:
+  # At least one of these must be specified:
+  days: 1
+  hours: 0
+  minutes: 0
+```
+
+Some actions are only available if you have configured tariffs for the meter.
+
+{% include integrations/actions.md %}
+
+## Advanced configuration
+
+The following configuration shows an example where 2 utility_meters (`daily_energy` and `monthly_energy`) track daily and monthly energy consumptions.
+
+Both track the same sensor (`sensor.energy`) which continuously monitors the energy consumed.
+
+4 different sensors will be created, 2 per utility meter and corresponding to each tariff.
+Sensor `sensor.daily_energy_peak`, `sensor.daily_energy_offpeak`, `sensor.monthly_energy_peak` and `sensor.monthly_energy_offpeak` will automatically be created to track the consumption in each tariff for the given cycle.
+
+The `select.daily_energy` and `select.monthly_energy` select entities will track the current tariff and allow changing the tariff.
+
+```yaml
+utility_meter:
+  daily_energy:
+    source: sensor.energy
+    name: Daily Energy
+    cycle: daily
+    tariffs:
+      - peak
+      - offpeak
+  monthly_energy:
+    source: sensor.energy
+    name: Monthly Energy
+    cycle: monthly
+    tariffs:
+      - peak
+      - offpeak
+```
+
+Assuming your energy provider tariffs are time based according to:
+
+- *peak*: from 9h00 to 21h00
+- *offpeak*: from 21h00 to 9h00 next day
+
+a time based automation can be used:
+
+```yaml
+automation:
+  triggers:
+    - trigger: time
+      at: &quot;09:00:00&quot;
+      variables:
+        tariff: &quot;peak&quot;
+    - trigger: time
+      at: &quot;21:00:00&quot;
+      variables:
+        tariff: &quot;offpeak&quot;
+  actions:
+    - action: select.select_option
+      target:
+        entity_id: select.daily_energy
+      data:
+        option: &quot;{{ tariff }}&quot;
+    - action: select.select_option
+      target:
+        entity_id: select.monthly_energy
+      data:
+        option: &quot;{{ tariff }}&quot;
+```
+
+Assuming your utility provider cycle is offset from the last day of the month
+
+- cycles at 17h00 on the last day of the month
+
+a cron(extended syntax used for last day of month) based utility meter can be used:
+
+```yaml
+utility_meter:
+  monthly_energy:
+    source: sensor.energy
+    name: Monthly Energy
+    cron: &quot;0 17 L * *&quot;
+```
+
+## Advanced configuration for DSMR users
+
+When using the [DSMR integration](/integrations/dsmr) to get data from the utility meter, each tariff (peak and off-peak) has a separate sensor. Additionally, there is a separate sensor for gas consumption. The meter switches automatically between tariffs, so an automation is not necessary in this case. But, you do have to set up a few more instances of the `utility_meter` {% term integration %}.
+
+If you want to create a daily and monthly sensor for each tariff, you have to track separate sensors:
+
+- `sensor.energy_consumption_tarif_1` for tarif 1 power (for example off-peak)
+- `sensor.energy_consumption_tarif_2` for tarif 2 power (for example peak)
+- `sensor.gas_consumption` for gas consumption
+
+So, tracking daily and monthly consumption for each sensor, will require setting up 6 entries under the `utility_meter` {% term integration %}.
+
+```yaml
+utility_meter:
+  daily_energy_offpeak:
+    source: sensor.energy_consumption_tarif_1
+    name: Daily Energy (Offpeak)
+    cycle: daily
+  daily_energy_peak:
+    source: sensor.energy_consumption_tarif_2
+    name: Daily Energy (Peak)
+    cycle: daily
+  daily_gas:
+    source: sensor.gas_consumption
+    name: Daily Gas
+    cycle: daily
+  monthly_energy_offpeak:
+    source: sensor.energy_consumption_tarif_1
+    name: Monthly Energy (Offpeak)
+    cycle: monthly
+  monthly_energy_peak:
+    source: sensor.energy_consumption_tarif_2
+    name: Monthly Energy (Peak)
+    cycle: monthly
+  monthly_gas:
+    source: sensor.gas_consumption
+    name: Monthly Gas
+    cycle: monthly
+```
+
+Additionally, you can add template sensors to compute daily and monthly total usage. Important note, in these examples,
+we use the `is_number()` [function](/docs/templating/patterns/) to verify the values
+returned from the sensors are numeric. If this evaluates to false, `None` is returned.
+
+```yaml
+template:
+  - sensor:
+    - name: &#x27;Daily Energy Total&#x27;
+      device_class: energy
+      unit_of_measurement: kWh
+      state: &gt;
+        {% if is_number(states(&#x27;sensor.daily_energy_offpeak&#x27;)) and is_number(states(&#x27;sensor.daily_energy_peak&#x27;)) %}
+          {{ states(&#x27;sensor.daily_energy_offpeak&#x27;) | float + states(&#x27;sensor.daily_energy_peak&#x27;) | float }}
+        {% else %}
+          None
+        {% endif %}
+
+    - name: &#x27;Monthly Energy Total&#x27;
+      device_class: energy
+      unit_of_measurement: kWh
+      state: &gt;
+        {% if is_number(states(&#x27;sensor.monthly_energy_offpeak&#x27;)) and is_number(states(&#x27;sensor.monthly_energy_peak&#x27;)) %}
+          {{ states(&#x27;sensor.monthly_energy_offpeak&#x27;) | float + states(&#x27;sensor.monthly_energy_peak&#x27;) | float }}
+        {% else %}
+          None
+        {% endif %}
+```
+
+{% caution %}
+Don&#x27;t add a sensor like `Daily Energy Total` above to the Energy dashboard. Because the two underlying utility meter sensors may not reset at the exact same moment, summing them can briefly record a false value in your long-term statistics that requires manual correction. Add each utility meter sensor to the dashboard separately instead. See the [Energy dashboard FAQ](/docs/energy/faq/#why-is-my-energy-dashboard-showing-inflated-totals) for details.
+{% endcaution %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Create helper</strong>, and search for Utility Meter.</p><p>The <strong>user</strong> configuration step lists <code>always_available</code>, <code>cycle</code>, <code>delta_values</code>, <code>name</code>, <code>net_consumption</code>, <code>offset</code>, <code>periodically_resetting</code>, <code>source</code>, <code>tariffs</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>select</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>calibrate</li><li>reset</li></ul></section><section><h2>Topics in the original article</h2><ul><li>YAML configuration</li><li>Advanced configuration</li><li>Advanced configuration for DSMR users</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/utility_meter/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/utility_meter</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/utility_meter</code></dd></dl></section><p><a href="../../integrations/utility_meter/">Return to the Utility Meter guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

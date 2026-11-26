@@ -1,1 +1,930 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Assistant Core Integration reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:42" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homeassistant/">Home Assistant Core Integration guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Home Assistant Core Integration</h1><p>Set up core Home Assistant settings, automation triggers, and generic actions.</p><section><h2>Overview</h2><p>The Home Assistant Core integration provides generic implementations like the generic homeassistant.turn_on action.</p></section><section><h2>Editing the General Settings in YAML</h2><p>If you prefer editing in YAML, you can define your general settings in the configuration.yaml file. Note that for some of the settings, these can&#x27;t be edited from the UI if they were defined in YAML. They will be grayed out or inaccessible.</p></section><section><h2>Editing entity settings in YAML</h2><p>The Home Assistant Core integration is also responsible for entity settings. By default, all of your devices will be visible and have a default icon determined by their domain. You can customize the look and feel of your front page by altering some of these parameters. This can be done by overriding attributes of specific entities.</p></section><section><h2>Device class</h2><p>Devices classes categorize certain entities and influence how these are shown in the dashboard. Some device classes categorize by measurement type, such as sensors or binary sensors. Other device classes categorize into more specific types. For example, a cover can be a blind or a curtain. For a given platform, the device class influences what is shown in the user interface. For example: humidifier has two device classes, humidifier and dehumidifier. If the device class is set to humidifier, the UI shows Humidifying. If it is set to dehumidifier, it shows Drying.</p></section><section><h2>Manual customization</h2><p>If you implement customize, customize_domain, or customize_glob, in your configuration.yaml file, you must make sure it is done inside of homeassistant: or it will fail.</p></section><section><h2>Custom STUN and TURN servers</h2><p>It&#x27;s possible to override the default list of STUN and TURN servers which are used to initiate WebRTC streaming. Each STUN or TURN server can be configured as described in the table below.</p></section><section><h2>WebRTC configuration example</h2><p>If you implement webrtc in your configuration.yaml file, you must make sure it is done inside of homeassistant: or it will fail.</p></section><section><h2>Restart and reboot required</h2><p>Some changes only take effect after Home Assistant restarts, like an update of a custom integration, or a setting that is only read at startup. On Home Assistant OS, some updates also need the system to reboot, like an update of Home Assistant OS itself.</p></section><section><h2>Home Assistant Core automation examples</h2><p>You can use these core triggers to react to events, state changes, schedules, and Home Assistant lifecycle events.</p></section><section><h2>Automation: send a notification when Home Assistant starts</h2><p>If you restart Home Assistant for an update or maintenance, this automation lets you know when it is ready again. It sends a message to your phone as soon as startup finishes.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Home Assistant Core Integration in Home Assistant is <code>homeassistant</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>scene</li></ul><h3>Documented actions</h3><ul class="chips"><li>check config</li><li>reload all</li><li>reload config entry</li><li>reload core config</li><li>reload custom templates</li><li>restart</li><li>save persistent states</li><li>set location</li><li>stop</li><li>toggle</li><li>turn off</li><li>turn on</li><li>update entity</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Editing the General Settings in YAML</li><li>Editing entity settings in YAML</li><li>Custom STUN and TURN servers</li><li>Restart and reboot required</li><li>Home Assistant Core automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homeassistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homeassistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homeassistant</code></dd></dl></section><p><a href="../../integrations/homeassistant/">Return to the Home Assistant Core Integration guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Assistant Core Integration reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:42" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homeassistant/">Home Assistant Core Integration guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Home Assistant Core Integration</h1><p>Set up core Home Assistant settings, automation triggers, and generic actions.</p><div class="reader-body"><p>The <strong>Home Assistant Core</strong> integration provides generic implementations like the generic <code>homeassistant.turn_on</code> action.</p>
+<h2>Editing the General Settings in YAML</h2>
+<p>The Home Assistant Core integration is also responsible for the general settings. These settings are defined during onboarding, but you can change them later under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>General</strong>. For the detailed steps, refer to <a>Basic settings</a>.</p>
+<p>If you prefer editing in YAML, you can define your general settings in the <code>configuration.yaml</code> file.
+Note that for some of the settings, these can't be edited from the UI if they were defined in YAML. They will be grayed out or inaccessible.</p>
+<p>
+&#32;&#32;&#32;&#32;
+    Screenshot showing coordinates cannot be edited because they are defined in configuration.yaml file.
+</p>
+
+<p>To get started with the general settings in YAML, follow these steps:</p>
+<ol>
+<li><p>Copy the following information to your <code>configuration.yaml</code> file.</p>
+<pre><code>homeassistant:
+  name: Home
+  latitude: 32.87336
+  longitude: 117.22743
+  elevation: 430
+  radius: 100
+  unit_system: metric
+  currency: USD
+  country: US
+  time_zone: "America/Los_Angeles"
+  allowlist_external_dirs:
+    - "/usr/var/dumping-ground"
+    - "/tmp"
+  allowlist_external_urls:
+    - "http://images.com/image1.png"
+  media_dirs:
+    media: "/media"
+    recordings: "/mnt/recordings"
+  debug: false
+</code></pre>
+</li>
+<li><p>Edit each entry to fit your home.</p>
+</li>
+</ol>
+<pre><code>
+name:
+  description: Name of the location where Home Assistant is running.
+  required: false
+  type: string
+latitude:
+  description: Latitude of your location required to calculate the time the sun rises and sets.
+  required: false
+  type: float
+longitude:
+  description: Longitude of your location required to calculate the time the sun rises and sets.
+  required: false
+  type: float
+elevation:
+  description: Altitude above sea level in meters. Impacts sunrise data.
+  required: false
+  type: integer
+radius:
+  description: Radius in meters defining your locations area. Impacts location awareness.
+  required: false
+  type: integer
+unit_system:
+  description: "`metric` for Metric, `us_customary` for US Customary. This also sets temperature_unit, Celsius for Metric and Fahrenheit for US Customary"
+  required: false
+  type: string
+temperature_unit:
+  description: "Override temperature unit set by unit_system. `C` for Celsius, `F` for Fahrenheit."
+  required: false
+  type: string
+time_zone:
+  description: "Pick your time zone from the column **TZ** of [Wikipedia's list of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)"
+  required: false
+  type: string
+currency:
+  description: "Pick your currency code from the column **Code** of [Wikipedia's list of ISO 4217 active codes](https://en.wikipedia.org/wiki/ISO_4217#Active_codes)"
+  required: false
+  type: string
+  default: "EUR"
+external_url:
+  description: "The URL that Home Assistant is available on from the internet. For example: `https://example.duckdns.org:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **Settings &gt; System &gt; Network**."
+  required: false
+  type: string
+internal_url:
+  description: "The URL that Home Assistant is available on from your local network. For example: `http://192.168.0.10:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **Settings &gt; System &gt; Network**."
+  required: false
+  type: string
+customize:
+  description: "[Customize](#editing-entity-settings-in-yaml) entities."
+  required: false
+  type: string
+customize_domain:
+  description: "[Customize](#editing-entity-settings-in-yaml) all entities in a domain."
+  required: false
+  type: string
+customize_glob:
+  description: "[Customize](#editing-entity-settings-in-yaml) entities matching a pattern."
+  required: false
+  type: string
+allowlist_external_dirs:
+  description: "Extra folders that integrations are allowed to read from or write to, on top of the defaults. By default, the `www` folder inside your configuration directory and every folder listed under `media_dirs` are already allowed, and you do not need to repeat them here. Only add directories outside of those defaults."
+  required: false
+  type: list
+allowlist_external_urls:
+  description: List of external URLs that can be fetched. URLs can match specific resources (e.g., `http://10.10.10.12/images/image1.jpg`) or a relative path that allows access to resources within it (e.g., `http://10.10.10.12/images` would allow access to anything under that path)
+  required: false
+  type: list
+media_dirs:
+  description: A mapping of local media sources and their paths on disk.
+  required: false
+  type: map
+language:
+  description: "Default language used by Home Assistant. This may, for example, influence the language used by voice assistants. The language should be specified as an RFC 5646 language tag, and must be a language which Home Assistant is translated to."
+  required: false
+  type: string
+  default: "en"
+country:
+  description: "Country in which Home Assistant is running. This may, for example, influence radio settings to comply with local regulations. The country should be specified as an ISO 3166.1 alpha-2 code. Pick your country from the column **Code** of [Wikipedia's list of ISO 31661 alpha-2 officially assigned code codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements)"
+  required: false
+  type: string
+debug:
+  description: Turns on extra checks that report programming errors in integrations to the log. Meant for developers. To get more detailed log messages from an integration, use [debug logging](/docs/configuration/troubleshooting/#enabling-debug-logging) instead.
+  required: false
+  type: boolean
+  default: false
+webrtc:
+  description: A [custom list of STUN and TURN servers for WebRTC video streaming](#custom-stun-and-turn-servers).
+  required: false
+  type: map
+
+</code></pre>
+<h2>Editing entity settings in YAML</h2>
+<p>The Home Assistant Core integration is also responsible for entity settings.
+By default, all of your devices will be visible and have a default icon determined by their domain. You can customize the look and feel of your front page by altering some of these parameters. This can be done by overriding attributes of specific entities.</p>
+<p>Most of these settings can be changed from the UI. For the detailed steps, refer to <a>Customizing entities</a>.</p>
+<p>If you prefer editing in YAML, you can define your general settings in the <code>configuration.yaml</code> file.</p>
+<h3>Possible values</h3>
+<pre><code>
+friendly_name:
+  description: Name of the entity as displayed in the UI.
+  required: false
+  type: string
+entity_picture:
+  description: URL to use as picture for entity.
+  required: false
+  type: string
+icon:
+  description: "Any icon from [Material Design Icons](https://pictogrammers.com/library/mdi/). Prefix name with `mdi:`, ie `mdi:home`. Note: Newer icons may not yet be available in the current Home Assistant release."
+  required: false
+  type: string
+assumed_state:
+  description: For switches with an assumed state two buttons are shown (turn off, turn on) instead of a switch. By setting `assumed_state` to `false` you will get the default switch icon.
+  required: false
+  type: boolean
+  default: true
+device_class:
+  description: Sets the class of the device, changing the device state and icon that is displayed on the UI (see below). It does not set the `unit_of_measurement`.
+  required: false
+  type: device_class
+  default: None
+unit_of_measurement:
+  description: Defines the units of measurement, if any. For a sensor with a `device_class`, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes). This will also influence the graphical presentation in the history visualization as continuous value. Sensors with missing `unit_of_measurement` are showing as discrete values.
+  required: false
+  type: string
+  default: None
+initial_state:
+  description: Sets the initial state for automations, `on` or `off`.
+  required: false
+  type: boolean
+  default: None
+
+</code></pre>
+<h3>Device class</h3>
+<p>Devices classes categorize certain entities and influence how these are shown in the dashboard. Some device classes categorize by measurement type, such as sensors or binary sensors. Other device classes categorize into more specific types. For example, a cover can be a blind or a curtain. For a given platform, the device class influences what is shown in the user interface. For example: humidifier has two device classes, humidifier and dehumidifier. If the device class is set to <code>humidifier</code>, the UI shows <strong>Humidifying</strong>. If it is set to <code>dehumidifier</code>, it shows <strong>Drying</strong>.</p>
+<p>Device class is currently supported by the following platforms:</p>
+<ul>
+<li><a href="../binary_sensor/">Binary sensor</a></li>
+<li><a href="../button/">Button</a></li>
+<li><a href="../cover/">Cover</a></li>
+<li><a href="../event/">Event</a></li>
+<li><a href="../humidifier/">Humidifier</a></li>
+<li><a href="../media_player/">Media player</a></li>
+<li><a href="../number/">Number</a></li>
+<li><a href="../sensor/">Sensor</a></li>
+<li><a href="../switch/">Switch</a></li>
+<li><a href="../update/">Update</a></li>
+<li><a href="../valve/">Valve</a></li>
+</ul>
+<p>For a list of the supported device classes, refer to the documentation of the platform.</p>
+<h3>Manual customization</h3>
+<p><strong>Important</strong></p>
+<p>If you implement <code>customize</code>, <code>customize_domain</code>, or <code>customize_glob</code>, in your <code>configuration.yaml</code> file, you must make sure it is done inside of <code>homeassistant:</code> or it will fail.</p>
+<pre><code>homeassistant:
+  name: Home
+  unit_system: metric
+  # etc
+
+  customize:
+    # Add an entry for each entity that you want to overwrite.
+    thermostat.family_room:
+      entity_picture: https://example.com/images/nest.jpg
+      friendly_name: Nest
+    switch.wemo_switch_1:
+      friendly_name: Toaster
+      entity_picture: /local/toaster.jpg
+    switch.wemo_switch_2:
+      friendly_name: Kitchen kettle
+      icon: mdi:kettle
+    switch.rfxtrx_switch:
+      assumed_state: false
+    media_player.my_media_player:
+      source_list:
+        - Channel/input from my available sources
+  # Customize all entities in a domain
+  customize_domain:
+    light:
+      icon: mdi:home
+    automation:
+      initial_state: "on"
+  # Customize entities matching a pattern
+  customize_glob:
+    "light.kitchen_*":
+      icon: mdi:description
+    "scene.month_*_colors":
+      icon: mdi:other
+</code></pre>
+<h2>Custom STUN and TURN servers</h2>
+<p>It's possible to override the default list of STUN and TURN servers which are used to initiate WebRTC streaming.
+Each STUN or TURN server can be configured as described in the table below.</p>
+<pre><code>
+ice_servers:
+  description: List of STUN and TURN server configurations
+  required: true
+  type: list
+  keys:
+    url:
+      description: STUN or TURN server URLs. This can either be a single URL or a list of URLs.
+      required: true
+      type: string
+    username:
+      description: Username for TURN server authentication
+      required: false
+      type: string
+    credential:
+      description: Credential for TURN server authentication
+      required: false
+      type: string
+
+</code></pre>
+<h3>WebRTC configuration example</h3>
+<p><strong>Important</strong></p>
+<p>If you implement <code>webrtc</code> in your <code>configuration.yaml</code> file, you must make sure it is done inside of <code>homeassistant:</code> or it will fail.</p>
+<pre><code>homeassistant:
+  name: Home
+  unit_system: metric
+  # etc
+
+  webrtc:
+    ice_servers:
+    # Add an entry for each STUN or TURN server
+    - url:
+      - "stun:stun.example.com:19302"
+      - "stun:stun2.example.com:12345"
+    - url: "turn:turn.domain.com"
+      username: "username"
+      credential: "abc123"
+</code></pre>
+<h2>List of triggers</h2>
+<p>This integration does not provide any documented triggers yet. See the <a>triggers reference</a> for triggers from other integrations.</p>
+<h2>List of conditions</h2>
+<p>This integration does not provide any documented conditions yet. See the <a>conditions reference</a> for conditions from other integrations.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Restart and reboot required</h2>
+<p>Some changes only take effect after Home Assistant restarts, like an update of a custom integration, or a setting that is only read at startup. On Home Assistant OS, some updates also need the system to reboot, like an update of Home Assistant OS itself.</p>
+<p>When that is the case, administrators see a bar at the top of the screen, saying Home Assistant needs to be restarted, or the system needs to be rebooted. A reboot restarts Home Assistant as well, so when both are pending, the bar only shows the reboot.</p>
+<ul>
+<li>Select <strong>Restart</strong> or <strong>Reboot</strong> to open the restart dialog, where you confirm the restart or reboot.</li>
+<li>Select <strong>Later</strong> to hide the bar for now. This hides it for every administrator, on every device. A hidden restart bar comes back once another integration asks for a restart. A hidden reboot bar only comes back once a new reboot is needed.</li>
+<li>Under <strong>Settings</strong>, the bar always shows. When it shows a restart, it also lists the integrations that requested it. The <strong>Settings</strong> item in the sidebar also counts it.</li>
+</ul>
+<p>The restart or reboot stays pending until it is done, also when you select <strong>Later</strong>. To act on it in your automations, use the <a>Restart required</a> and <a>Host reboot required</a> triggers, and the <a>Restart required</a> and <a>Host reboot required</a> conditions.</p>
+<h2>Home Assistant Core automation examples</h2>
+<p>You can use these core triggers to react to events, state changes, schedules, and Home Assistant lifecycle events.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: send a notification when Home Assistant starts</h3>
+<p>If you restart Home Assistant for an update or maintenance, this automation lets you know when it is ready again. It sends a message to your phone as soon as startup finishes.</p>
+<ul>
+<li><strong>Trigger</strong>: Home Assistant<ul>
+<li><strong>Event</strong>: Start</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for notifying when Home Assistant starts</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Notify when Home Assistant starts"
+triggers:
+- trigger: homeassistant
+event: start
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "Home Assistant has started."</p>
+<h3>Automation: save persistent states before Home Assistant shuts down</h3>
+<p>If you are about to restart or stop Home Assistant, this automation tells Home Assistant to save persistent states right away. This can be useful before planned maintenance.</p>
+<ul>
+<li><strong>Trigger</strong>: Home Assistant<ul>
+<li><strong>Event</strong>: Shutdown</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Home Assistant Core Integration: Save persistent states</li>
+</ul>
+<h4>YAML example for saving persistent states before shutdown</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Save persistent states before shutdown"
+triggers:
+- trigger: homeassistant
+event: shutdown
+actions:
+- action: homeassistant.save_persistent_states</p>
+<h3>Automation: send a reminder when a door stays open for 5 minutes</h3>
+<p>If a door stays open longer than expected, this automation sends a message to your phone. It uses the <strong>State changed</strong> trigger to wait until the entity stays in the <code>on</code> state for 5 minutes.</p>
+<ul>
+<li><strong>Trigger</strong>: State changed<ul>
+<li><strong>Entity</strong>: Back door sensor (<code>binary_sensor.back_door</code>)</li>
+<li><strong>To</strong>: <code>on</code></li>
+<li><strong>For at least</strong>: 5 minutes</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send a notification message<ul>
+<li><strong>Target</strong>: My Device (<code>notify.my_device</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for a door-left-open reminder</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Remind me when the back door stays open"
+triggers:
+- trigger: state
+entity_id: binary_sensor.back_door
+to: "on"
+for: "00:05:00"
+actions:
+- action: notify.send_message
+target:
+entity_id: notify.my_device
+data:
+message: "The back door has been open for 5 minutes."</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/homeassistant.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Set up core Home Assistant settings, automation triggers, and generic actions.
+ha_release: 0.0
+ha_domain: homeassistant
+related:
+  - docs: /docs/configuration/basic/
+    title: Basic information
+  - docs: /docs/configuration/
+  - docs: /docs/configuration/customizing-entities/
+---
+
+The **Home Assistant Core** {% term integration %} provides generic implementations like the generic `homeassistant.turn_on` action.
+
+## Editing the General Settings in YAML
+
+The Home Assistant Core integration is also responsible for the general settings. These settings are defined during onboarding, but you can change them later under {% my general title=&quot;**Settings** &gt; **System** &gt; **General**&quot; %}. For the detailed steps, refer to [Basic settings](/docs/configuration/basic/).
+
+If you prefer editing in YAML, you can define your general settings in the {% term &quot;`configuration.yaml`&quot; %} file.
+Note that for some of the settings, these can&#x27;t be edited from the UI if they were defined in YAML. They will be grayed out or inaccessible.
+
+&lt;p class=&#x27;img&#x27;&gt;
+    &lt;img class=&quot;no-shadow&quot; src=&#x27;/images/docs/configuration/coordinates-defined-in-yaml.png&#x27; alt=&#x27;Screenshot showing coordinates cannot be edited because they are defined in configuration.yaml file&#x27;&gt;
+    Screenshot showing coordinates cannot be edited because they are defined in configuration.yaml file.
+&lt;/p&gt;
+
+To get started with the general settings in YAML, follow these steps:
+
+1. Copy the following information to your {% term &quot;`configuration.yaml`&quot; %} file.
+
+    ```yaml
+    homeassistant:
+      name: Home
+      latitude: 32.87336
+      longitude: 117.22743
+      elevation: 430
+      radius: 100
+      unit_system: metric
+      currency: USD
+      country: US
+      time_zone: &quot;America/Los_Angeles&quot;
+      allowlist_external_dirs:
+        - &quot;/usr/var/dumping-ground&quot;
+        - &quot;/tmp&quot;
+      allowlist_external_urls:
+        - &quot;http://images.com/image1.png&quot;
+      media_dirs:
+        media: &quot;/media&quot;
+        recordings: &quot;/mnt/recordings&quot;
+      debug: false
+    ```
+
+2. Edit each entry to fit your home.
+
+{% configuration %}
+name:
+  description: Name of the location where Home Assistant is running.
+  required: false
+  type: string
+latitude:
+  description: Latitude of your location required to calculate the time the sun rises and sets.
+  required: false
+  type: float
+longitude:
+  description: Longitude of your location required to calculate the time the sun rises and sets.
+  required: false
+  type: float
+elevation:
+  description: Altitude above sea level in meters. Impacts sunrise data.
+  required: false
+  type: integer
+radius:
+  description: Radius in meters defining your locations area. Impacts location awareness.
+  required: false
+  type: integer
+unit_system:
+  description: &quot;`metric` for Metric, `us_customary` for US Customary. This also sets temperature_unit, Celsius for Metric and Fahrenheit for US Customary&quot;
+  required: false
+  type: string
+temperature_unit:
+  description: &quot;Override temperature unit set by unit_system. `C` for Celsius, `F` for Fahrenheit.&quot;
+  required: false
+  type: string
+time_zone:
+  description: &quot;Pick your time zone from the column **TZ** of [Wikipedia&#x27;s list of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)&quot;
+  required: false
+  type: string
+currency:
+  description: &quot;Pick your currency code from the column **Code** of [Wikipedia&#x27;s list of ISO 4217 active codes](https://en.wikipedia.org/wiki/ISO_4217#Active_codes)&quot;
+  required: false
+  type: string
+  default: &quot;EUR&quot;
+external_url:
+  description: &quot;The URL that Home Assistant is available on from the internet. For example: `https://example.duckdns.org:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **{% my network title=&quot;Settings &gt; System &gt; Network&quot; %}**.&quot;
+  required: false
+  type: string
+internal_url:
+  description: &quot;The URL that Home Assistant is available on from your local network. For example: `http://192.168.0.10:8123`. Note that this setting may only contain a protocol, hostname and port; using a path is not supported. This can also be configured by navigating to **{% my network title=&quot;Settings &gt; System &gt; Network&quot; %}**.&quot;
+  required: false
+  type: string
+customize:
+  description: &quot;[Customize](#editing-entity-settings-in-yaml) entities.&quot;
+  required: false
+  type: string
+customize_domain:
+  description: &quot;[Customize](#editing-entity-settings-in-yaml) all entities in a domain.&quot;
+  required: false
+  type: string
+customize_glob:
+  description: &quot;[Customize](#editing-entity-settings-in-yaml) entities matching a pattern.&quot;
+  required: false
+  type: string
+allowlist_external_dirs:
+  description: &quot;Extra folders that integrations are allowed to read from or write to, on top of the defaults. By default, the `www` folder inside your configuration directory and every folder listed under `media_dirs` are already allowed, and you do not need to repeat them here. Only add directories outside of those defaults.&quot;
+  required: false
+  type: list
+allowlist_external_urls:
+  description: List of external URLs that can be fetched. URLs can match specific resources (e.g., `http://10.10.10.12/images/image1.jpg`) or a relative path that allows access to resources within it (e.g., `http://10.10.10.12/images` would allow access to anything under that path)
+  required: false
+  type: list
+media_dirs:
+  description: A mapping of local media sources and their paths on disk.
+  required: false
+  type: map
+language:
+  description: &quot;Default language used by Home Assistant. This may, for example, influence the language used by voice assistants. The language should be specified as an RFC 5646 language tag, and must be a language which Home Assistant is translated to.&quot;
+  required: false
+  type: string
+  default: &quot;en&quot;
+country:
+  description: &quot;Country in which Home Assistant is running. This may, for example, influence radio settings to comply with local regulations. The country should be specified as an ISO 3166.1 alpha-2 code. Pick your country from the column **Code** of [Wikipedia&#x27;s list of ISO 31661 alpha-2 officially assigned code codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements)&quot;
+  required: false
+  type: string
+debug:
+  description: Turns on extra checks that report programming errors in integrations to the log. Meant for developers. To get more detailed log messages from an integration, use [debug logging](/docs/configuration/troubleshooting/#enabling-debug-logging) instead.
+  required: false
+  type: boolean
+  default: false
+webrtc:
+  description: A [custom list of STUN and TURN servers for WebRTC video streaming](#custom-stun-and-turn-servers).
+  required: false
+  type: map
+{% endconfiguration %}
+
+## Editing entity settings in YAML
+
+The Home Assistant Core integration is also responsible for entity settings.
+By default, all of your devices will be visible and have a default icon determined by their domain. You can customize the look and feel of your front page by altering some of these parameters. This can be done by overriding attributes of specific entities.
+
+Most of these settings can be changed from the UI. For the detailed steps, refer to [Customizing entities](/docs/configuration/customizing-entities/).
+
+If you prefer editing in YAML, you can define your general settings in the {% term &quot;`configuration.yaml`&quot; %} file.
+
+### Possible values
+
+{% configuration customize %}
+friendly_name:
+  description: Name of the entity as displayed in the UI.
+  required: false
+  type: string
+entity_picture:
+  description: URL to use as picture for entity.
+  required: false
+  type: string
+icon:
+  description: &quot;Any icon from [Material Design Icons](https://pictogrammers.com/library/mdi/). Prefix name with `mdi:`, ie `mdi:home`. Note: Newer icons may not yet be available in the current Home Assistant release.&quot;
+  required: false
+  type: string
+assumed_state:
+  description: For switches with an assumed state two buttons are shown (turn off, turn on) instead of a switch. By setting `assumed_state` to `false` you will get the default switch icon.
+  required: false
+  type: boolean
+  default: true
+device_class:
+  description: Sets the class of the device, changing the device state and icon that is displayed on the UI (see below). It does not set the `unit_of_measurement`.
+  required: false
+  type: device_class
+  default: None
+unit_of_measurement:
+  description: Defines the units of measurement, if any. For a sensor with a `device_class`, the unit must be one of the [units listed for that device class](/integrations/sensor/#list-of-available-device-classes). This will also influence the graphical presentation in the history visualization as continuous value. Sensors with missing `unit_of_measurement` are showing as discrete values.
+  required: false
+  type: string
+  default: None
+initial_state:
+  description: Sets the initial state for automations, `on` or `off`.
+  required: false
+  type: boolean
+  default: None
+{% endconfiguration %}
+
+### Device class
+
+Devices classes categorize certain entities and influence how these are shown in the dashboard. Some device classes categorize by measurement type, such as sensors or binary sensors. Other device classes categorize into more specific types. For example, a cover can be a blind or a curtain. For a given platform, the device class influences what is shown in the user interface. For example: humidifier has two device classes, humidifier and dehumidifier. If the device class is set to `humidifier`, the UI shows **Humidifying**. If it is set to `dehumidifier`, it shows **Drying**.
+
+Device class is currently supported by the following platforms:
+
+- [Binary sensor](/integrations/binary_sensor/#device-class)
+- [Button](/integrations/button/#device-class)
+- [Cover](/integrations/cover/#device-class)
+- [Event](/integrations/event/#device-class)
+- [Humidifier](/integrations/humidifier/#device-class)
+- [Media player](/integrations/media_player/#device-class)
+- [Number](/integrations/number/#device-class)
+- [Sensor](/integrations/sensor#device-class)
+- [Switch](/integrations/switch/#device-class)
+- [Update](/integrations/update/#device-class)
+- [Valve](/integrations/valve/#device-class)
+
+For a list of the supported device classes, refer to the documentation of the platform.
+
+### Manual customization
+
+{% important %}
+If you implement `customize`, `customize_domain`, or `customize_glob`, in your {% term &quot;`configuration.yaml`&quot; %} file, you must make sure it is done inside of `homeassistant:` or it will fail.
+{% endimportant %}
+
+```yaml
+homeassistant:
+  name: Home
+  unit_system: metric
+  # etc
+
+  customize:
+    # Add an entry for each entity that you want to overwrite.
+    thermostat.family_room:
+      entity_picture: https://example.com/images/nest.jpg
+      friendly_name: Nest
+    switch.wemo_switch_1:
+      friendly_name: Toaster
+      entity_picture: /local/toaster.jpg
+    switch.wemo_switch_2:
+      friendly_name: Kitchen kettle
+      icon: mdi:kettle
+    switch.rfxtrx_switch:
+      assumed_state: false
+    media_player.my_media_player:
+      source_list:
+        - Channel/input from my available sources
+  # Customize all entities in a domain
+  customize_domain:
+    light:
+      icon: mdi:home
+    automation:
+      initial_state: &quot;on&quot;
+  # Customize entities matching a pattern
+  customize_glob:
+    &quot;light.kitchen_*&quot;:
+      icon: mdi:description
+    &quot;scene.month_*_colors&quot;:
+      icon: mdi:other
+```
+
+## Custom STUN and TURN servers
+
+It&#x27;s possible to override the default list of STUN and TURN servers which are used to initiate WebRTC streaming.
+Each STUN or TURN server can be configured as described in the table below.
+
+{% configuration webrtc %}
+ice_servers:
+  description: List of STUN and TURN server configurations
+  required: true
+  type: list
+  keys:
+    url:
+      description: STUN or TURN server URLs. This can either be a single URL or a list of URLs.
+      required: true
+      type: string
+    username:
+      description: Username for TURN server authentication
+      required: false
+      type: string
+    credential:
+      description: Credential for TURN server authentication
+      required: false
+      type: string
+{% endconfiguration %}
+
+### WebRTC configuration example
+
+{% important %}
+If you implement `webrtc` in your {% term &quot;`configuration.yaml`&quot; %} file, you must make sure it is done inside of `homeassistant:` or it will fail.
+{% endimportant %}
+
+```yaml
+homeassistant:
+  name: Home
+  unit_system: metric
+  # etc
+
+  webrtc:
+    ice_servers:
+    # Add an entry for each STUN or TURN server
+    - url:
+      - &quot;stun:stun.example.com:19302&quot;
+      - &quot;stun:stun2.example.com:12345&quot;
+    - url: &quot;turn:turn.domain.com&quot;
+      username: &quot;username&quot;
+      credential: &quot;abc123&quot;
+```
+
+{% include integrations/triggers_conditions_actions.md %}
+
+## Restart and reboot required
+
+Some changes only take effect after Home Assistant restarts, like an update of a custom integration, or a setting that is only read at startup. On Home Assistant OS, some updates also need the system to reboot, like an update of Home Assistant OS itself.
+
+When that is the case, administrators see a bar at the top of the screen, saying Home Assistant needs to be restarted, or the system needs to be rebooted. A reboot restarts Home Assistant as well, so when both are pending, the bar only shows the reboot.
+
+- Select **Restart** or **Reboot** to open the restart dialog, where you confirm the restart or reboot.
+- Select **Later** to hide the bar for now. This hides it for every administrator, on every device. A hidden restart bar comes back once another integration asks for a restart. A hidden reboot bar only comes back once a new reboot is needed.
+- Under {% my config title=&quot;**Settings**&quot; %}, the bar always shows. When it shows a restart, it also lists the integrations that requested it. The **Settings** item in the sidebar also counts it.
+
+The restart or reboot stays pending until it is done, also when you select **Later**. To act on it in your automations, use the [Restart required](/triggers/homeassistant.restart_required/) and [Host reboot required](/triggers/homeassistant.host_reboot_required/) triggers, and the [Restart required](/conditions/homeassistant.restart_required/) and [Host reboot required](/conditions/homeassistant.host_reboot_required/) conditions.
+
+## Home Assistant Core automation examples
+
+You can use these core triggers to react to events, state changes, schedules, and Home Assistant lifecycle events.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: send a notification when Home Assistant starts
+
+If you restart Home Assistant for an update or maintenance, this automation lets you know when it is ready again. It sends a message to your phone as soon as startup finishes.
+
+- **Trigger**: Home Assistant
+  - **Event**: Start
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for notifying when Home Assistant starts&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Notify when Home Assistant starts&quot;
+  triggers:
+    - trigger: homeassistant
+      event: start
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;Home Assistant has started.&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: save persistent states before Home Assistant shuts down
+
+If you are about to restart or stop Home Assistant, this automation tells Home Assistant to save persistent states right away. This can be useful before planned maintenance.
+
+- **Trigger**: Home Assistant
+  - **Event**: Shutdown
+- **Action**: Home Assistant Core Integration: Save persistent states
+
+{% details &quot;YAML example for saving persistent states before shutdown&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Save persistent states before shutdown&quot;
+  triggers:
+    - trigger: homeassistant
+      event: shutdown
+  actions:
+    - action: homeassistant.save_persistent_states
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: send a reminder when a door stays open for 5 minutes
+
+If a door stays open longer than expected, this automation sends a message to your phone. It uses the **State changed** trigger to wait until the entity stays in the `on` state for 5 minutes.
+
+- **Trigger**: State changed
+  - **Entity**: Back door sensor (`binary_sensor.back_door`)
+  - **To**: `on`
+  - **For at least**: 5 minutes
+- **Action**: Send a notification message
+  - **Target**: My Device (`notify.my_device`)
+
+{% details &quot;YAML example for a door-left-open reminder&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Remind me when the back door stays open&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.back_door
+      to: &quot;on&quot;
+      for: &quot;00:05:00&quot;
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_device
+      data:
+        message: &quot;The back door has been open for 5 minutes.&quot;
+{% endexample %}
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Home Assistant Core Integration in Home Assistant is <code>homeassistant</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>scene</li></ul><h3>Documented actions</h3><ul class="chips"><li>check config</li><li>reload all</li><li>reload config entry</li><li>reload core config</li><li>reload custom templates</li><li>restart</li><li>save persistent states</li><li>set location</li><li>stop</li><li>toggle</li><li>turn off</li><li>turn on</li><li>update entity</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Editing the General Settings in YAML</li><li>Editing entity settings in YAML</li><li>Custom STUN and TURN servers</li><li>Restart and reboot required</li><li>Home Assistant Core automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homeassistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homeassistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homeassistant</code></dd></dl></section><p><a href="../../integrations/homeassistant/">Return to the Home Assistant Core Integration guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

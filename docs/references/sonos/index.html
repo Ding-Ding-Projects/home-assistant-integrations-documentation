@@ -1,1 +1,970 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sonos reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:69" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/sonos/">Sonos guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Sonos</h1><p>Instructions on how to integrate Sonos devices into Home Assistant.</p><section><h2>Overview</h2><p>The Sonos integration allows you to control your Sonos wireless speakers from Home Assistant. It also works with IKEA Symfonisk speakers.</p></section><section><h2>Feature controls and sensors</h2><p>Speaker-level controls are exposed as number, select or switch entities. Additionally, various sensor and binary_sensor entities are provided.</p></section><section><h2>Select</h2><p>The following select entities are created:</p></section><section><h2>TV Autoplay and Ungroup on Autoplay support notes</h2><p>Since the Sonos UPnP spec does not emit events for these, both entities rely on polling for state updates from external changes (for example, changes made in the Sonos app). That means those entities will always have some delay before updating, so changes made outside of Home Assistant will be reflected on the next device polling, which defaults to 30 seconds.</p></section><section><h2>Battery support notes</h2><p>Battery sensors are fully supported for the Sonos Roam and Sonos Move devices on S2 firmware. Sonos Move speakers still on S1 firmware are supported but may update infrequently.</p></section><section><h2>Alarm support notes</h2><p>The Sonos integration adds one switch for each alarm set in the Sonos app. The alarm switches are detected, deleted, and assigned automatically and come with several attributes that help you monitor Sonos alarms.</p></section><section><h2>Important note about updating multiple alarms</h2><p>When enabling, disabling, or updating multiple Sonos alarms in a single automation or script, you may notice that not all alarms update as expected. This is a limitation of how Sonos synchronizes its alarm list across all speakers. If multiple alarm updates are sent rapidly (for example, by toggling several alarm switches at once), some changes may be lost or overwritten before they are fully synchronized between speakers.</p></section><section><h2>Microphone support notes</h2><p>The microphone can only be enabled/disabled from physical buttons on the Sonos device and cannot be controlled from Home Assistant. A binary_sensor reports its current state.</p></section><section><h2>Sonos Favorites support notes</h2><p>The favorites sensor provides the names and media_content_id values for each of the favorites saved to My Sonos in the native Sonos app. This sensor is intended for users that need to access the favorites in a custom template. For most users, accessing favorites by using the Media Browser functionality and &quot;Play media&quot; script/automation action is recommended.</p></section><section><h2>Playing media</h2><p>Sonos accepts a variety of media_content_id formats in the media_player.play_media action, but most commonly as URIs. For example, both Spotify and Tidal share links can be provided as-is. Playback of music hosted on a Plex server is possible. Direct HTTP/HTTPS links to local or remote media files can also be used if the Sonos device can reach the URI directly, but specific media encoding support may vary.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Sonos.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>clear sleep timer</li><li>get queue</li><li>play queue</li><li>remove from queue</li><li>restore</li><li>set sleep timer</li><li>snapshot</li><li>update alarm</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Feature controls and sensors</li><li>Playing media</li><li>Searching the music library</li><li>Network requirements</li><li>Advanced use</li><li>Removing the integration</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/sonos/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/sonos</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/sonos</code></dd></dl></section><p><a href="../../integrations/sonos/">Return to the Sonos guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sonos reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:69" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/sonos/">Sonos guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Sonos</h1><p>Instructions on how to integrate Sonos devices into Home Assistant.</p><div class="reader-body"><p>The <strong>Sonos</strong> integration allows you to control your <a>Sonos</a> wireless speakers from Home Assistant. It also works with IKEA Symfonisk speakers.</p>
+<h2>Prerequisites</h2>
+<p>UPnP must be enabled on your Sonos system for this integration to work. In the Sonos app, go to <strong>Account</strong> &gt; <strong>Privacy and Security</strong> &gt; <strong>UPnP</strong> and enable the setting.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Sonos</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Sonos</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Feature controls and sensors</h2>
+<p>Speaker-level controls are exposed as <code>number</code>, <code>select</code> or <code>switch</code> entities. Additionally, various <code>sensor</code> and <code>binary_sensor</code> entities are provided.</p>
+<h3>Controllable features</h3>
+<ul>
+<li><strong>All devices</strong>: Alarms, Bass, Treble, Loudness, Crossfade, Status Light, Touch Controls</li>
+<li><strong>Home theater devices</strong>: Audio Delay ("Lip Sync"), Night Sound, Speech Enhancement, Surround Enabled, Surround Music Full Volume ("Full/Ambient"), Surround Level ("TV Level"), Music Surround Level, TV Autoplay, Ungroup on Autoplay</li>
+<li><strong>When paired with a sub</strong>: Subwoofer Enabled, Subwoofer Gain, Subwoofer Crossover Frequency (Sonos Amp only)</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li><strong>Each Sonos system</strong>: Sonos Favorites</li>
+<li><strong>Devices with battery</strong>: Battery level, Power state</li>
+<li><strong>Home theater devices</strong>: Audio Input Format</li>
+<li><strong>Voice-enabled devices</strong>: Microphone Enabled</li>
+</ul>
+<h3>Select</h3>
+<p>The following select entities are created:</p>
+<ul>
+<li><strong>Dialog Level</strong><br>
+Lets you set the dialog mode on your <strong>Sonos Arc Ultra</strong> soundbar. You can choose from None, Low, Medium, High, or Max.</li>
+</ul>
+<h3>TV Autoplay and Ungroup on Autoplay support notes</h3>
+<p>Since the Sonos UPnP spec does not emit events for these, both entities rely on polling for state updates from external changes (for example, changes made in the Sonos app). That means those entities will always have some delay before updating, so changes made outside of Home Assistant will be reflected on the next device polling, which defaults to 30 seconds.</p>
+<h3>Battery support notes</h3>
+<p>Battery sensors are fully supported for the <code>Sonos Roam</code> and <code>Sonos Move</code> devices on S2 firmware. <code>Sonos Move</code> speakers still on S1 firmware are supported but may update infrequently.</p>
+<p>For each speaker with a battery, a <code>sensor</code> showing the current battery charge level and a <code>binary_sensor</code> showing the power state of the speaker are created. The <code>binary_sensor</code> reports if the speaker is currently powered by an external source and its <code>power_source</code> attribute shows which specific source is providing the current power. This source attribute can be one of <code>BATTERY</code>, <code>SONOS_CHARGING_RING</code> if using wireless charging, or <code>USB_POWER</code> if charging via USB cable. Note that the Roam will report <code>SONOS_CHARGING_RING</code> even when using a generic Qi charger.</p>
+<p><strong>Note</strong></p>
+<p>The battery sensors rely on working change events or updates will be delayed. S1 battery sensors <strong>require</strong> working events to report any data. See more details in <a>Advanced use</a>.</p>
+<h3>Alarm support notes</h3>
+<p>The Sonos integration adds one <code>switch</code> for each alarm set in the Sonos app. The alarm switches are detected, deleted, and assigned automatically and come with several attributes that help you monitor Sonos alarms.</p>
+<h4>Important note about updating multiple alarms</h4>
+<p>When enabling, disabling, or updating multiple Sonos alarms in a single automation or script, you may notice that not all alarms update as expected. This is a limitation of how Sonos synchronizes its alarm list across all speakers. If multiple alarm updates are sent rapidly (for example, by toggling several alarm switches at once), some changes may be lost or overwritten before they are fully synchronized between speakers.</p>
+<p>To ensure reliable updates, add a wait between each alarm update in your automation. A 1-second wait works well as a starting point, but you may need to increase it based on your setup. For example, add a <code>delay</code> action between each <code>switch.turn_on</code>, <code>switch.turn_off</code>, or <code>sonos.update_alarm</code> action call. This gives Sonos time to synchronize the alarm list before the next change.</p>
+<p><em>Automation Example:</em></p>
+<pre><code>actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_1
+  - delay:
+      seconds: 1
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_2
+  - delay:
+      seconds: 1
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_3
+</code></pre>
+<p>If you do not add a delay, you may see inconsistent alarm states, or some alarms may not update at all. In rare cases, rapidly updating alarms can cause a speaker to become unavailable. If this happens, power cycle the speaker and reload the integration.</p>
+<h3>Microphone support notes</h3>
+<p>The microphone can only be enabled/disabled from physical buttons on the Sonos device and cannot be controlled from Home Assistant. A <code>binary_sensor</code> reports its current state.</p>
+<h3>Sonos Favorites support notes</h3>
+<p>The favorites sensor provides the names and <code>media_content_id</code> values for each of the favorites saved to My Sonos in the native Sonos app. This sensor is intended for users that need to access the favorites in a custom template. For most users, accessing favorites by using the Media Browser functionality and "Play media" script/automation action is recommended.</p>
+<p>When calling the <code>media_player.play_media</code> action, the <code>media_content_type</code> must be set to "favorite_item_id" and the <code>media_content_id</code> must be set to just the key portion of the favorite item.</p>
+<p>Example action using the item id:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos_speaker1
+data:
+  media_content_type: "favorite_item_id"
+  media_content_id: "FV:2/31"
+</code></pre>
+<p>Example using the Sonos playlist name:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos_speaker1
+data:
+  media_content_type: playlist
+  media_content_id: stevie_wonder
+</code></pre>
+<p>Example templates:</p>
+<pre><code># Get all favorite names as a list (old behavior)
+{{ state_attr("sensor.sonos_favorites", "items").values() | list }}
+
+# Pick a specific favorite name by position
+{{ (state_attr("sensor.sonos_favorites", "items").values() | list)[3] }}
+
+# Pick a random item's `media_content_id`
+{{ state_attr("sensor.sonos_favorites", "items") | list | random }}
+
+# Loop through and grab name &amp; media_content_id
+{% for media_id, name in state_attr("sensor.sonos_favorites", "items").items() %}
+  {{ name, media_id }}
+{% endfor %}
+</code></pre>
+<p><strong>Tip</strong></p>
+<p>The Sonos favorites sensor (<code>sensor.sonos_favorites</code>) is <a>disabled by default</a>. It can be found and enabled from the entities associated with the Sonos integration on your Integrations page.</p>
+<h2>Playing media</h2>
+<p>Sonos accepts a variety of <code>media_content_id</code> formats in the <code>media_player.play_media</code> action, but most commonly as URIs. For example, both Spotify and Tidal share links can be provided as-is. Playback of <a href="../plex/">music hosted on a Plex server</a> is possible. Direct HTTP/HTTPS links to local or remote media files can also be used if the Sonos device can reach the URI directly, but specific media encoding support may vary.</p>
+<p>Music services that require an account, such as Spotify, must first be configured using the Sonos app.</p>
+<p>Playing TTS (text-to-speech) or audio files as alerts (e.g., a doorbell or alarm) is possible by setting the <code>announce</code> argument to <code>true</code>. Using <code>announce</code> will play the provided media URL as an overlay, gently lowering the current music volume and automatically restoring to the original level when finished. An optional <code>volume</code> argument can also be provided in the <code>extra</code> dictionary to play the alert at a specific volume level. Note that older Sonos hardware or legacy firmware versions ("S1") may not fully support these features. Additionally, see <a>Network Requirements</a> for use in restricted networking environments.</p>
+<p>An optional <code>enqueue</code> argument can be added to the action. If <code>replace</code> or not provided then the queue will be replaced and the item will be played. If <code>add</code> the item will be appended to the queue. If <code>next</code> the item will be added into the queue to play next. If <code>play</code>, the item will be added into the queue and played immediately.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<p>In addition to the actions listed above, Sonos speakers support the <a href="../media_player/">standard media player actions</a>.</p>
+<h3>Examples</h3>
+<p>Below is an example action that plays an audio file from a web server on the local network (like the Home Assistant built-in webserver) using the <code>announce</code> feature and its associated (optional) <code>volume</code> parameter:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  announce: true
+  media_content_type: "music"
+  media_content_id: "http://192.168.1.50:8123/local/sound_files/doorbell-front.mp3"
+  extra:
+    volume: 20
+</code></pre>
+<p>The standard <code>tts.&lt;source&gt;_say</code> actions do not accept the <code>volume</code> parameter directly. To set the <code>volume</code> for a TTS announcement, you can use a TTS Media Source URL with the standard <code>media_player.play_media</code> action:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  announce: true
+  media_content_id: &gt;
+    media-source://tts/cloud?message="I am very loud"
+  media_content_type: "music"
+  extra:
+    volume: 80
+</code></pre>
+<p>Sonos can also play music or playlists from Spotify. Both Spotify URIs and URLs can be used directly. The optional <code>title</code> parameter can be used to fill the media_playlist attribute correctly. An example action using a playlist URI:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: "playlist"
+  media_content_id: "spotify:playlist:abcdefghij0123456789XY"
+  enqueue: true
+  extra:
+    title: Example Playlist
+</code></pre>
+<p>An example action using a Spotify URL:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: "music"
+  media_content_id: "https://open.spotify.com/album/abcdefghij0123456789YZ"
+</code></pre>
+<p>Run a <a href="../plex/">Plex Media Server</a> in your home? The Sonos integration can work with that as well. This example plays music directly from your Plex server:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: "music"
+  media_content_id: &gt;
+    plex://{ "library_name": "Music", "artist_name": "M83", "album_name": "Hurry Up, We're Dreaming" }
+</code></pre>
+<h4>Sonos Music Library</h4>
+<p>If you have configured a Sonos music library, you can play music from it.</p>
+<p>Play all albums by the Beatles.</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: album
+  media_content_id: A:ALBUMARTIST/Beatles
+</code></pre>
+<p>Play a specific album:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: album
+  media_content_id: A:ALBUM/The Wall
+  enqueue: replace
+</code></pre>
+<p>Or add a specific album by a specific artist to the queue. This is useful when you have multiple albums with the same name.</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.sonos&#32;&#32;&#32;&#32;&#32;&#32;
+data:
+  media_content_type: album
+  media_content_id: A:ALBUMARTIST/Neil Young/Greatest Hits
+  enqueue: add
+</code></pre>
+<p>Play all albums by a composer.</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: composer
+  media_content_id: A:COMPOSER/Carlos Santana
+  enqueue: play
+</code></pre>
+<p>Play all albums by a genre.</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: genre
+  media_content_id: "A:GENRE/Classic%20Rock/"
+  enqueue: play
+</code></pre>
+<p>Play an imported playlist by using its title.</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: playlist
+  media_content_id: S:/MyPlaylist
+  enqueue: play
+</code></pre>
+<h2>Searching the music library</h2>
+<p>You can search your local Sonos music library using the <code>media_player.search_media</code> action. This returns a list of matching items that you can then pass to <code>media_player.play_media</code> to play. It also powers the search box in the Home Assistant media picker UI.</p>
+<p>The action requires a <code>search_query</code> and accepts an optional <code>media_content_type</code> to narrow results to a specific kind of content. If you omit the type, the search defaults to <code>track</code>.</p>
+<p>The following values are supported for <code>media_content_type</code>:</p>
+<ul>
+<li><code>track</code> (default)</li>
+<li><code>album</code></li>
+<li><code>artist</code></li>
+<li><code>contributing_artist</code></li>
+<li><code>composer</code></li>
+<li><code>genre</code></li>
+<li><code>playlist</code></li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Searching is limited to your local Sonos music library. Streaming services such as Spotify or Tidal are not included in search results.</p>
+<p>Because the action returns data, use <code>response_variable</code> to capture the results and then loop through or pick from them in your automation or script.</p>
+<h3>Example: Search and add all matching tracks to the queue</h3>
+<p>This example searches for all tracks matching "love", clears the queue, adds them to the queue, and then plays the queue:</p>
+<h4>Example</h4>
+<p>actions:</p>
+<ul>
+<li>action: media_player.search_media
+data:
+search_query: "love"
+media_content_type: track
+response_variable: results
+target:
+entity_id: media_player.kitchen</li>
+<li>action: media_player.clear_playlist
+target:
+entity_id: media_player.kitchen</li>
+<li>variables:
+search_length: "{{ results['media_player.kitchen']['result']|count }}"</li>
+<li>repeat:
+sequence:
+- action: media_player.play_media
+target:
+entity_id: media_player.kitchen
+data:
+enqueue: add
+media:
+media_content_id: &gt;-
+{{ results['media_player.kitchen']['result'][repeat.index -
+1]['media_content_id'] }}
+media_content_type: &gt;-
+{{ results['media_player.kitchen']['result'][repeat.index -
+1]['media_content_type'] }}
+until:
+- condition: template
+value_template: '{{search_length == repeat.index}}'</li>
+<li>action: sonos.play_queue
+target:
+entity_id: media_player.kitchen</li>
+</ul>
+<h3>Example: Search for an album</h3>
+<h4>Example</h4>
+<p>actions:</p>
+<ul>
+<li>action: media_player.search_media
+target:
+entity_id: media_player.living_room
+data:
+search_query: "Abbey Road"
+media_content_type: album
+response_variable: results</li>
+</ul>
+<h2>Network requirements</h2>
+<p>To work optimally, the Sonos devices must be able to connect back to the Home Assistant host on TCP port 1400. This will allow the push-based updates to work properly. If this port is blocked or otherwise unreachable from the Sonos devices, the integration will fall back to a polling mode which is slower to update and much less efficient. The integration will alert the user if this problem is detected.</p>
+<p>Playing audio using the <code>announce</code> option or TTS requires TCP port 1443 on each Sonos device to be reachable from the Home Assistant host.</p>
+<p>See <a>Advanced use</a> below for additional configuration options which may be needed to address this issue in setups with more complex network topologies.</p>
+<h2>Advanced use</h2>
+<p>For advanced uses, there are some manual configuration options available. These are usually only needed if you have a complex network setup where Home Assistant and Sonos are not on the same subnet.</p>
+<p>You can disable auto-discovery by specifying the Sonos IP addresses:</p>
+<pre><code># Example configuration.yaml entry with manually specified Sonos IP addresses
+sonos:
+  media_player:
+    hosts:
+      - 192.0.2.25
+      - 192.0.2.26
+      - 192.0.2.27
+</code></pre>
+<p>If your Home Assistant instance has multiple IP addresses, you can select the specific IP address that should be used for Sonos auto-discovery with the <a href="../network/">Network</a> integration. This should only be necessary if the Sonos speakers are on a network segment not reachable from the default interface.</p>
+<p>The Sonos speakers will attempt to connect back to Home Assistant to deliver change events. By default, Home Assistant will listen on port 1400 but will try the next 100 ports above 1400 if it is in use. You can change the IP address that Home Assistant advertises to Sonos speakers. This can help in NAT scenarios such as when <em>not</em> using the Docker option <code>--net=host</code>:</p>
+<pre><code># Example configuration.yaml entry modifying the advertised host address
+sonos:
+  media_player:
+    advertise_addr: 192.0.2.1
+</code></pre>
+<h2>Removing the integration</h2>
+<p>This integration follows the standard integration removal process; no extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h2>Troubleshooting</h2>
+<h3>403 error when setting up the integration</h3>
+<h4>Symptom</h4>
+<p>When setting up the integration you see the following error:</p>
+<pre><code>requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: http://192.168.1.1:1400/DeviceProperties/Control
+</code></pre>
+<h4>Description</h4>
+<p>This error means UPnP is not properly enabled on your Sonos system. The integration requires UPnP to communicate with your Sonos devices.</p>
+<h4>Resolution</h4>
+<p>To fix this issue, enable UPnP on your Sonos system:</p>
+<ol>
+<li>Open the Sonos app on your phone or tablet.</li>
+<li>Go to <strong>Account</strong> &gt; <strong>Privacy and Security</strong> &gt; <strong>UPnP</strong>.</li>
+<li>Enable the <strong>UPnP</strong> setting.</li>
+<li>Try setting up the integration again.</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/sonos.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Sonos devices into Home Assistant.
+featured: true
+ha_release: 0.7.3
+ha_domain: sonos
+---
+
+The **Sonos** {% term integration %} allows you to control your [Sonos](https://www.sonos.com) wireless speakers from Home Assistant. It also works with IKEA Symfonisk speakers.
+
+## Prerequisites
+
+UPnP must be enabled on your Sonos system for this integration to work. In the Sonos app, go to **Account** &gt; **Privacy and Security** &gt; **UPnP** and enable the setting.
+
+{% include integrations/config_flow.md %}
+
+## Feature controls and sensors
+
+Speaker-level controls are exposed as `number`, `select` or `switch` entities. Additionally, various `sensor` and `binary_sensor` entities are provided.
+
+### Controllable features
+
+- **All devices**: Alarms, Bass, Treble, Loudness, Crossfade, Status Light, Touch Controls
+- **Home theater devices**: Audio Delay (&quot;Lip Sync&quot;), Night Sound, Speech Enhancement, Surround Enabled, Surround Music Full Volume (&quot;Full/Ambient&quot;), Surround Level (&quot;TV Level&quot;), Music Surround Level, TV Autoplay, Ungroup on Autoplay
+- **When paired with a sub**: Subwoofer Enabled, Subwoofer Gain, Subwoofer Crossover Frequency (Sonos Amp only)
+
+### Sensors
+
+- **Each Sonos system**: Sonos Favorites
+- **Devices with battery**: Battery level, Power state
+- **Home theater devices**: Audio Input Format
+- **Voice-enabled devices**: Microphone Enabled
+
+### Select
+
+The following select entities are created:
+
+- **Dialog Level**&#32;&#32;
+  Lets you set the dialog mode on your **Sonos Arc Ultra** soundbar. You can choose from None, Low, Medium, High, or Max.
+
+### TV Autoplay and Ungroup on Autoplay support notes
+
+Since the Sonos UPnP spec does not emit events for these, both entities rely on polling for state updates from external changes (for example, changes made in the Sonos app). That means those entities will always have some delay before updating, so changes made outside of Home Assistant will be reflected on the next device polling, which defaults to 30 seconds.
+
+### Battery support notes
+
+Battery sensors are fully supported for the `Sonos Roam` and `Sonos Move` devices on S2 firmware. `Sonos Move` speakers still on S1 firmware are supported but may update infrequently.
+
+For each speaker with a battery, a `sensor` showing the current battery charge level and a `binary_sensor` showing the power state of the speaker are created. The `binary_sensor` reports if the speaker is currently powered by an external source and its `power_source` attribute shows which specific source is providing the current power. This source attribute can be one of `BATTERY`, `SONOS_CHARGING_RING` if using wireless charging, or `USB_POWER` if charging via USB cable. Note that the Roam will report `SONOS_CHARGING_RING` even when using a generic Qi charger.
+
+{% note %}
+The battery sensors rely on working change events or updates will be delayed. S1 battery sensors **require** working events to report any data. See more details in [Advanced use](#advanced-use).&#32;
+{% endnote %}
+
+
+### Alarm support notes
+
+The Sonos integration adds one `switch` for each alarm set in the Sonos app. The alarm switches are detected, deleted, and assigned automatically and come with several attributes that help you monitor Sonos alarms.
+
+#### Important note about updating multiple alarms
+
+When enabling, disabling, or updating multiple Sonos alarms in a single automation or script, you may notice that not all alarms update as expected. This is a limitation of how Sonos synchronizes its alarm list across all speakers. If multiple alarm updates are sent rapidly (for example, by toggling several alarm switches at once), some changes may be lost or overwritten before they are fully synchronized between speakers.
+
+To ensure reliable updates, add a wait between each alarm update in your automation. A 1-second wait works well as a starting point, but you may need to increase it based on your setup. For example, add a `delay` action between each `switch.turn_on`, `switch.turn_off`, or `sonos.update_alarm` action call. This gives Sonos time to synchronize the alarm list before the next change.
+
+_Automation Example:_
+
+```yaml
+actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_1
+  - delay:
+      seconds: 1
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_2
+  - delay:
+      seconds: 1
+  - action: switch.turn_on
+    target:
+      entity_id: switch.sonos_alarm_3
+```
+
+If you do not add a delay, you may see inconsistent alarm states, or some alarms may not update at all. In rare cases, rapidly updating alarms can cause a speaker to become unavailable. If this happens, power cycle the speaker and reload the integration.
+
+### Microphone support notes
+
+The microphone can only be enabled/disabled from physical buttons on the Sonos device and cannot be controlled from Home Assistant. A `binary_sensor` reports its current state.
+
+### Sonos Favorites support notes
+
+The favorites sensor provides the names and `media_content_id` values for each of the favorites saved to My Sonos in the native Sonos app. This sensor is intended for users that need to access the favorites in a custom template. For most users, accessing favorites by using the Media Browser functionality and &quot;Play media&quot; script/automation action is recommended.
+
+When calling the `media_player.play_media` action, the `media_content_type` must be set to &quot;favorite_item_id&quot; and the `media_content_id` must be set to just the key portion of the favorite item.&#32;
+
+Example action using the item id:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos_speaker1
+data:
+  media_content_type: &quot;favorite_item_id&quot;
+  media_content_id: &quot;FV:2/31&quot;
+```
+
+Example using the Sonos playlist name:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos_speaker1
+data:
+  media_content_type: playlist
+  media_content_id: stevie_wonder
+```
+
+Example templates:
+
+```yaml
+# Get all favorite names as a list (old behavior)
+{{ state_attr(&quot;sensor.sonos_favorites&quot;, &quot;items&quot;).values() | list }}
+
+# Pick a specific favorite name by position
+{{ (state_attr(&quot;sensor.sonos_favorites&quot;, &quot;items&quot;).values() | list)[3] }}
+
+# Pick a random item&#x27;s `media_content_id`
+{{ state_attr(&quot;sensor.sonos_favorites&quot;, &quot;items&quot;) | list | random }}
+
+# Loop through and grab name &amp; media_content_id
+{% for media_id, name in state_attr(&quot;sensor.sonos_favorites&quot;, &quot;items&quot;).items() %}
+  {{ name, media_id }}
+{% endfor %}
+```
+
+{% tip %}
+The Sonos favorites sensor (`sensor.sonos_favorites`) is [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). It can be found and enabled from the entities associated with the Sonos integration on your {% my integrations %} page.
+{% endtip %}
+
+## Playing media
+
+Sonos accepts a variety of `media_content_id` formats in the `media_player.play_media` action, but most commonly as URIs. For example, both Spotify and Tidal share links can be provided as-is. Playback of [music hosted on a Plex server](/integrations/plex#sonos-playback) is possible. Direct HTTP/HTTPS links to local or remote media files can also be used if the Sonos device can reach the URI directly, but specific media encoding support may vary.
+
+Music services that require an account, such as Spotify, must first be configured using the Sonos app.
+
+Playing TTS (text-to-speech) or audio files as alerts (e.g., a doorbell or alarm) is possible by setting the `announce` argument to `true`. Using `announce` will play the provided media URL as an overlay, gently lowering the current music volume and automatically restoring to the original level when finished. An optional `volume` argument can also be provided in the `extra` dictionary to play the alert at a specific volume level. Note that older Sonos hardware or legacy firmware versions (&quot;S1&quot;) may not fully support these features. Additionally, see [Network Requirements](#network-requirements) for use in restricted networking environments.
+
+An optional `enqueue` argument can be added to the action. If `replace` or not provided then the queue will be replaced and the item will be played. If `add` the item will be appended to the queue. If `next` the item will be added into the queue to play next. If `play`, the item will be added into the queue and played immediately.
+
+{% include integrations/actions.md %}
+
+In addition to the actions listed above, Sonos speakers support the [standard media player actions](/integrations/media_player/#actions).
+
+### Examples
+
+Below is an example action that plays an audio file from a web server on the local network (like the Home Assistant built-in webserver) using the `announce` feature and its associated (optional) `volume` parameter:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  announce: true
+  media_content_type: &quot;music&quot;
+  media_content_id: &quot;http://192.168.1.50:8123/local/sound_files/doorbell-front.mp3&quot;
+  extra:
+    volume: 20
+```
+
+The standard `tts.&lt;source&gt;_say` actions do not accept the `volume` parameter directly. To set the `volume` for a TTS announcement, you can use a TTS Media Source URL with the standard `media_player.play_media` action:
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  announce: true
+  media_content_id: &gt;
+    media-source://tts/cloud?message=&quot;I am very loud&quot;
+  media_content_type: &quot;music&quot;
+  extra:
+    volume: 80
+```
+
+Sonos can also play music or playlists from Spotify. Both Spotify URIs and URLs can be used directly. The optional `title` parameter can be used to fill the media_playlist attribute correctly. An example action using a playlist URI:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: &quot;playlist&quot;
+  media_content_id: &quot;spotify:playlist:abcdefghij0123456789XY&quot;
+  enqueue: true
+  extra:
+    title: Example Playlist
+```
+
+An example action using a Spotify URL:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: &quot;music&quot;
+  media_content_id: &quot;https://open.spotify.com/album/abcdefghij0123456789YZ&quot;
+```
+
+Run a [Plex Media Server](/integrations/plex#sonos-playback) in your home? The Sonos integration can work with that as well. This example plays music directly from your Plex server:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: &quot;music&quot;
+  media_content_id: &gt;
+    plex://{ &quot;library_name&quot;: &quot;Music&quot;, &quot;artist_name&quot;: &quot;M83&quot;, &quot;album_name&quot;: &quot;Hurry Up, We&#x27;re Dreaming&quot; }
+```
+
+#### Sonos Music Library
+
+If you have configured a Sonos music library, you can play music from it.
+
+Play all albums by the Beatles.
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: album
+  media_content_id: A:ALBUMARTIST/Beatles
+```
+
+Play a specific album:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos
+data:
+  media_content_type: album
+  media_content_id: A:ALBUM/The Wall
+  enqueue: replace
+```
+
+Or add a specific album by a specific artist to the queue. This is useful when you have multiple albums with the same name.
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.sonos&#32;&#32;&#32;&#32;&#32;&#32;
+data:
+  media_content_type: album
+  media_content_id: A:ALBUMARTIST/Neil Young/Greatest Hits
+  enqueue: add
+```
+
+Play all albums by a composer.
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: composer
+  media_content_id: A:COMPOSER/Carlos Santana
+  enqueue: play
+```
+
+Play all albums by a genre.
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: genre
+  media_content_id: &quot;A:GENRE/Classic%20Rock/&quot;
+  enqueue: play
+```
+
+Play an imported playlist by using its title.
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.porch
+data:
+  media_content_type: playlist
+  media_content_id: S:/MyPlaylist
+  enqueue: play
+```
+
+## Searching the music library
+
+You can search your local Sonos music library using the `media_player.search_media` action. This returns a list of matching items that you can then pass to `media_player.play_media` to play. It also powers the search box in the Home Assistant media picker UI.
+
+The action requires a `search_query` and accepts an optional `media_content_type` to narrow results to a specific kind of content. If you omit the type, the search defaults to `track`.
+
+The following values are supported for `media_content_type`:
+
+- `track` (default)
+- `album`
+- `artist`
+- `contributing_artist`
+- `composer`
+- `genre`
+- `playlist`
+
+{% note %}
+Searching is limited to your local Sonos music library. Streaming services such as Spotify or Tidal are not included in search results.
+{% endnote %}
+
+Because the action returns data, use `response_variable` to capture the results and then loop through or pick from them in your automation or script.
+
+### Example: Search and add all matching tracks to the queue
+
+This example searches for all tracks matching &quot;love&quot;, clears the queue, adds them to the queue, and then plays the queue:
+
+{% example %}
+actions:
+  - action: media_player.search_media
+    data:
+      search_query: &quot;love&quot;
+      media_content_type: track
+    response_variable: results
+    target:
+      entity_id: media_player.kitchen
+  - action: media_player.clear_playlist
+    target:
+      entity_id: media_player.kitchen
+  - variables:
+      search_length: &quot;{{ results[&#x27;media_player.kitchen&#x27;][&#x27;result&#x27;]|count }}&quot;
+  - repeat:
+      sequence:
+        - action: media_player.play_media
+          target:
+            entity_id: media_player.kitchen
+          data:
+            enqueue: add
+            media:
+              media_content_id: &gt;-
+                {{ results[&#x27;media_player.kitchen&#x27;][&#x27;result&#x27;][repeat.index -
+                1][&#x27;media_content_id&#x27;] }}
+              media_content_type: &gt;-
+                {{ results[&#x27;media_player.kitchen&#x27;][&#x27;result&#x27;][repeat.index -
+                1][&#x27;media_content_type&#x27;] }}
+      until:
+        - condition: template
+          value_template: &#x27;{{search_length == repeat.index}}&#x27;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+  - action: sonos.play_queue
+    target:
+      entity_id: media_player.kitchen
+{% endexample %}
+
+### Example: Search for an album
+
+{% example %}
+actions:
+  - action: media_player.search_media
+    target:
+      entity_id: media_player.living_room
+    data:
+      search_query: &quot;Abbey Road&quot;
+      media_content_type: album
+    response_variable: results
+{% endexample %}
+
+
+
+## Network requirements
+
+To work optimally, the Sonos devices must be able to connect back to the Home Assistant host on TCP port 1400. This will allow the push-based updates to work properly. If this port is blocked or otherwise unreachable from the Sonos devices, the integration will fall back to a polling mode which is slower to update and much less efficient. The integration will alert the user if this problem is detected.
+
+Playing audio using the `announce` option or TTS requires TCP port 1443 on each Sonos device to be reachable from the Home Assistant host.
+
+See [Advanced use](#advanced-use) below for additional configuration options which may be needed to address this issue in setups with more complex network topologies.
+
+## Advanced use
+
+For advanced uses, there are some manual configuration options available. These are usually only needed if you have a complex network setup where Home Assistant and Sonos are not on the same subnet.
+
+You can disable auto-discovery by specifying the Sonos IP addresses:
+
+```yaml
+# Example configuration.yaml entry with manually specified Sonos IP addresses
+sonos:
+  media_player:
+    hosts:
+      - 192.0.2.25
+      - 192.0.2.26
+      - 192.0.2.27
+```
+
+If your Home Assistant instance has multiple IP addresses, you can select the specific IP address that should be used for Sonos auto-discovery with the [Network](/integrations/network/) integration. This should only be necessary if the Sonos speakers are on a network segment not reachable from the default interface.
+
+The Sonos speakers will attempt to connect back to Home Assistant to deliver change events. By default, Home Assistant will listen on port 1400 but will try the next 100 ports above 1400 if it is in use. You can change the IP address that Home Assistant advertises to Sonos speakers. This can help in NAT scenarios such as when _not_ using the Docker option `--net=host`:
+
+```yaml
+# Example configuration.yaml entry modifying the advertised host address
+sonos:
+  media_player:
+    advertise_addr: 192.0.2.1
+```
+
+## Removing the integration
+
+This integration follows the standard integration removal process; no extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+## Troubleshooting
+
+### 403 error when setting up the integration
+
+#### Symptom
+
+When setting up the integration you see the following error:
+
+```txt
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: http://192.168.1.1:1400/DeviceProperties/Control
+```
+
+#### Description
+
+This error means UPnP is not properly enabled on your Sonos system. The integration requires UPnP to communicate with your Sonos devices.
+
+#### Resolution
+
+To fix this issue, enable UPnP on your Sonos system:
+
+1. Open the Sonos app on your phone or tablet.
+2. Go to **Account** &gt; **Privacy and Security** &gt; **UPnP**.
+3. Enable the **UPnP** setting.
+4. Try setting up the integration again.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Sonos.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>clear sleep timer</li><li>get queue</li><li>play queue</li><li>remove from queue</li><li>restore</li><li>set sleep timer</li><li>snapshot</li><li>update alarm</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Feature controls and sensors</li><li>Playing media</li><li>Searching the music library</li><li>Network requirements</li><li>Advanced use</li><li>Removing the integration</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/sonos/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/sonos</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/sonos</code></dd></dl></section><p><a href="../../integrations/sonos/">Return to the Sonos guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

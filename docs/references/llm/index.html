@@ -1,1 +1,575 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LLM reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:25" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/llm/">LLM guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>LLM</h1><p>Provides the AI tools that conversation agents and AI apps use to read information, control entities, and manage Home Assistant.</p><section><h2>Overview</h2><p>The AI tools are grouped into sets. You choose which sets each conversation agent can use, in its AI tools option. AI apps outside Home Assistant can use the same sets through the Model Context Protocol integration.</p></section><section><h2>Sets of AI tools</h2><p>Each set contains related AI tools. Home Assistant has two built-in sets:</p></section><section><h2>What the Home Assistant AI tools can reach</h2><p>The Home Assistant AI tools can read the state of every entity, the status of your integrations, your logs, and the history of your sensors. For the full list, refer to List of Home Assistant AI tools.</p></section><section><h2>Who can use the Home Assistant AI tools</h2><p>Only administrators can use the Home Assistant AI tools. Home Assistant checks the user account that each request comes from. When you talk to a conversation agent in Assist in Home Assistant or in the Home Assistant Companion app, the request comes from the user account that is signed in.</p></section><section><h2>Adding the Home Assistant AI tools to your conversation agent</h2><p>Use this procedure if only administrators use your conversation agent. Afterwards, you can ask it why an integration isn&#x27;t working, or which errors are in the logs. The conversation agent then no longer works for voice satellites or for users who aren&#x27;t administrators. For details, refer to Who can use the Home Assistant AI tools.</p></section><section><h2>Setting up a separate assistant for the Home Assistant AI tools</h2><p>Use this procedure if voice satellites or users who aren&#x27;t administrators use your assistant. Your current assistant stays as it is for them. You get a second assistant that you can ask why an integration isn&#x27;t working. For details, refer to Who can use the Home Assistant AI tools.</p></section><section><h2>List of Home Assistant AI tools</h2><p>You don&#x27;t call these tools yourself. When you ask the conversation agent something, it decides which tools to call. You can&#x27;t select single tools. You give the conversation agent the entire set, as described in Adding the Home Assistant AI tools to your conversation agent.</p></section><section><h2>Symptom: &quot;Error preparing LLM API&quot;</h2><p>When you talk to a conversation agent, it doesn&#x27;t do what you asked. Instead, it answers &quot;Error preparing LLM API&quot;.</p></section><section><h2>Description</h2><p>The conversation agent couldn&#x27;t prepare its sets of AI tools. This happens in the following situations:</p></section><section><h2>Resolution</h2><p>The Home Assistant AI tools only work for administrators. You can&#x27;t make them available to other users or to voice satellites. If a voice satellite or a user who isn&#x27;t an administrator uses this conversation agent, remove the Home Assistant AI tools from it:</p></section><section><h2>Configuration details</h2><p>The domain used to identify LLM in Home Assistant is <code>llm</code>.</p></section><section><h2>Topics in the original article</h2><ul><li>Sets of AI tools</li><li>What the Home Assistant AI tools can reach</li><li>Who can use the Home Assistant AI tools</li><li>Adding the Home Assistant AI tools to your conversation agent</li><li>Setting up a separate assistant for the Home Assistant AI tools</li><li>Supported functionality</li><li>Known limitations</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/llm/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/llm</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/llm</code></dd></dl></section><p><a href="../../integrations/llm/">Return to the LLM guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LLM reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:25" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/llm/">LLM guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>LLM</h1><p>Provides the AI tools that conversation agents and AI apps use to read information, control entities, and manage Home Assistant.</p><div class="reader-body"><p>The <strong>LLM</strong> integration provides the AI tools in Home Assistant. An AI tool is a function that conversation agents and AI apps can use to read information, control entities, or manage Home Assistant. For example, with AI tools, a conversation agent can tell you the temperature in the living room, turn on your lights, or reload an integration that failed to set up.</p>
+<p>The AI tools are grouped into <a>sets</a>. You choose which sets each conversation agent can use, in its <strong>AI tools</strong> option. AI apps outside Home Assistant can use the same sets through the <a href="../mcp_server/">Model Context Protocol</a> integration.</p>
+<p>The <strong>LLM</strong> integration is an internal system integration. It loads as part of the <a href="../default_config/">default configuration</a>. Every AI integration that adds a conversation agent loads it too. You can't add or remove it, and it has no options.</p>
+<h2>Sets of AI tools</h2>
+<p>Each set contains related AI tools. Home Assistant has two built-in sets:</p>
+<ul>
+<li><strong>Device control</strong>: Reads and controls the entities you expose to voice assistants. For example, it can check the bedroom temperature or turn off the kitchen light. Any user can use it.</li>
+<li><strong>Home Assistant</strong>: Looks into and manages Home Assistant itself. For example, it can read the logs, look up past sensor values, or reload an integration that failed to set up. It can reach all of Home Assistant, not only exposed entities. Only administrators can use it.</li>
+</ul>
+<p>On this page, the tools in the <strong>Home Assistant</strong> set are called the Home Assistant AI tools.</p>
+<p>Integrations can add more sets. For example, <a href="../knx/">KNX</a> adds a <strong>KNX</strong> set, and the <a href="../mcp/">Model Context Protocol Client</a> adds a set for each server that you connect.</p>
+<p>You choose the sets in the <strong>AI tools</strong> option of each conversation agent. For example, <a href="../anthropic/">Anthropic</a>, <a href="../google_generative_ai_conversation/">Google Gemini</a>, <a href="../ollama/">Ollama</a>, and <a href="../openai_conversation/">OpenAI</a> have this option. A new conversation agent starts with <strong>Device control</strong> only. In Ollama, it starts with no sets.</p>
+<p><strong>Important</strong></p>
+<p><strong>Risk of unintended device actions</strong></p>
+<p>The <strong>Home Assistant</strong> set of AI tools can control every entity and change Home Assistant itself. It doesn't ask you before it acts. It also isn't limited to the entities that you expose to voice assistants. If the conversation agent misunderstands a request, it can turn off devices or change settings that you didn't intend to change.</p>
+<p>To avoid this:</p>
+<ul>
+<li>Only select the <strong>Home Assistant</strong> set for a conversation agent that you use to manage Home Assistant.</li>
+<li>For everyday voice control, use a separate assistant whose conversation agent only uses <strong>Device control</strong>. For the steps, refer to <a>Setting up a separate assistant for the Home Assistant AI tools</a>.</li>
+</ul>
+<h2>What the Home Assistant AI tools can reach</h2>
+<p>The Home Assistant AI tools can read the state of every entity, the status of your integrations, your logs, and the history of your sensors. For the full list, refer to <a>List of Home Assistant AI tools</a>.</p>
+<p>Most of the Home Assistant AI tools only read. Two tools can change things:</p>
+<ul>
+<li><strong>Call action</strong> can perform any action in Home Assistant, on any entity, device, or area. This includes entities that you didn't expose. For example, it can turn off a light, run a script, or restart Home Assistant.</li>
+<li><strong>Reload config entry</strong> can reload an integration.</li>
+</ul>
+<h2>Who can use the Home Assistant AI tools</h2>
+<p>Only administrators can use the Home Assistant AI tools. Home Assistant checks the user account that each request comes from. When you talk to a conversation agent in Assist in Home Assistant or in the Home Assistant Companion app, the request comes from the user account that is signed in.</p>
+<p>A voice satellite isn't signed in to a user account. For example, <a>Home Assistant Voice Preview Edition</a> is a voice satellite. Its requests don't belong to any user. If its conversation agent has the <strong>Home Assistant</strong> set selected, every request from the voice satellite fails. This also stops <strong>Device control</strong> on that conversation agent. This means the voice satellite can't turn on a light either. Requests from users who aren't administrators fail the same way.</p>
+<h2>Adding the Home Assistant AI tools to your conversation agent</h2>
+<p>Use this procedure if only administrators use your conversation agent. Afterwards, you can ask it why an integration isn't working, or which errors are in the logs. The conversation agent then no longer works for voice satellites or for users who aren't administrators. For details, refer to <a>Who can use the Home Assistant AI tools</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>An administrator account in Home Assistant.</li>
+<li>A conversation agent from an AI integration. For example, <a href="../openai_conversation/">OpenAI</a> adds conversation agents.</li>
+</ul>
+<p>To add the Home Assistant AI tools to your conversation agent:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, and select your AI integration.<ul>
+<li>For example, select <strong>OpenAI</strong>.</li>
+</ul>
+</li>
+<li>In the row of the conversation agent, select <strong>Reconfigure conversation agent</strong> .<ul>
+<li>The right row shows <strong>Conversation agent</strong> under the name. For example, OpenAI calls it <strong>OpenAI Conversation</strong>.</li>
+<li>Don't use the rows below it. They show its devices.</li>
+<li>Some integrations call this button <strong>Configure</strong>.</li>
+</ul>
+</li>
+<li>Under <strong>AI tools</strong>, select <strong>Home Assistant</strong>.<ul>
+<li>To keep controlling your devices, leave <strong>Device control</strong> selected.</li>
+</ul>
+</li>
+<li>Select <strong>Submit</strong>. If the dialog shows more options, select <strong>Submit</strong> again.<ul>
+<li>Result: The conversation agent can use the Home Assistant AI tools the next time you talk to it.</li>
+</ul>
+</li>
+</ol>
+<h2>Setting up a separate assistant for the Home Assistant AI tools</h2>
+<p>Use this procedure if voice satellites or users who aren't administrators use your assistant. Your current assistant stays as it is for them. You get a second assistant that you can ask why an integration isn't working. For details, refer to <a>Who can use the Home Assistant AI tools</a>.</p>
+<p>Prerequisites:</p>
+<ul>
+<li>An administrator account in Home Assistant.</li>
+<li>An AI integration that adds conversation agents. For example, <a href="../openai_conversation/">OpenAI</a> adds them.</li>
+</ul>
+<p>To set up a separate assistant for the Home Assistant AI tools:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, and select your AI integration.<ul>
+<li>For example, select <strong>OpenAI</strong>.</li>
+</ul>
+</li>
+<li>Select <strong>Add conversation agent</strong>.</li>
+<li>Under <strong>Name</strong>, enter a name for the new conversation agent.<ul>
+<li>For example, enter <code>Home Assistant helper</code>.</li>
+</ul>
+</li>
+<li>Under <strong>AI tools</strong>, select <strong>Home Assistant</strong>.<ul>
+<li>To also control your devices with it, leave <strong>Device control</strong> selected.</li>
+</ul>
+</li>
+<li>Select <strong>Submit</strong>. If the dialog shows more options, select <strong>Submit</strong> again.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>Voice assistants</strong>, and select <strong>Add assistant</strong>.</li>
+<li>Enter a name for the assistant. Under <strong>Conversation agent</strong>, select the conversation agent that you just added.</li>
+<li>Select <strong>Create</strong>.</li>
+<li>To use the new assistant, open the Assist dialog. At the top, select the name of the current assistant, and then select the new assistant.<ul>
+<li>Result: The new assistant can use the Home Assistant AI tools in the Assist dialog of Home Assistant and of the Home Assistant Companion app. This works when you're signed in with an administrator account.</li>
+</ul>
+</li>
+</ol>
+<h2>Supported functionality</h2>
+<h3>List of Home Assistant AI tools</h3>
+<p>You don't call these tools yourself. When you ask the conversation agent something, it decides which tools to call. You can't select single tools. You give the conversation agent the entire set, as described in <a>Adding the Home Assistant AI tools to your conversation agent</a>.</p>
+<p>The <strong>Home Assistant</strong> set of AI tools contains the following tools. Each entry starts with the title of the tool, followed by its ID. The Assist dialog shows the ID under <strong>Show details</strong>. Many tools do something that you can also do yourself in the UI, without a conversation agent. Where you can, the entry says how. For example, you can check what the conversation agent tells you.</p>
+<ul>
+<li><strong>Render template</strong> (<code>homeassistant__render_template</code>): Renders a <a>template</a> and returns the result. Templates can read the state and attributes of all entities. Only reads.<ul>
+<li>To do this yourself: Use the <strong>Template</strong> tab, under <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Template</strong>.</li>
+</ul>
+</li>
+<li><strong>Search actions</strong> (<code>homeassistant__search_actions</code>): Finds the actions that Home Assistant can perform, with their targets and fields. Only reads.<ul>
+<li>To do this yourself: Use the <strong>Actions</strong> tab, under <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Actions</strong>.</li>
+</ul>
+</li>
+<li><strong>Call action</strong> (<code>homeassistant__call_action</code>): Performs an action, and returns its response if it has one. Changes things.<ul>
+<li>To do this yourself: Use the <strong>Actions</strong> tab, under <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Actions</strong>.</li>
+<li>To see which actions the conversation agent performed: Go to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Action history</strong>.</li>
+</ul>
+</li>
+<li><strong>Get config entries</strong> (<code>config__get_config_entries</code>): Lists the integrations and helpers that are set up, with their status, such as loaded or failed to set up, and the reason for an error. It can filter by integration and by status. Only reads.<ul>
+<li>To do this yourself: Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+</ul>
+</li>
+<li><strong>Reload config entry</strong> (<code>config__reload_config_entry</code>): Reloads an integration that is set up. For example, it helps after a temporary connection error. Changes things.<ul>
+<li>To do this yourself: On the integration page, under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>Menu</strong>  &gt; <strong>Reload</strong> on the integration entry.</li>
+</ul>
+</li>
+<li><strong>Search available integrations</strong> (<code>config__search_integrations</code>): Searches the integrations and helpers that you can set up from the UI, including ones that you haven't added yet. Only reads.<ul>
+<li>To do this yourself: Select <strong>Add integration</strong>, under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+</ul>
+</li>
+<li><strong>Search Home Assistant</strong> (<code>search__search</code>): Finds entities, devices, areas, labels, automations, scripts, and scenes by name. Only reads.<ul>
+<li>To do this yourself: Use the <a>quick search</a>.</li>
+</ul>
+</li>
+<li><strong>Get system info</strong> (<code>system_health__get_system_info</code>): Returns the installation type, the CPU architecture, the time zone, and the versions of Home Assistant Core, the frontend, Python, the operating system, and the Supervisor. For example, you can use it to fill in a bug report. Only reads.<ul>
+<li>To do this yourself: Under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong>, select <strong>Menu</strong>  &gt; <strong>System information</strong>.</li>
+</ul>
+</li>
+<li><strong>Get history</strong> (<code>history__get_history</code>): Returns statistics of entities, not their individual state changes. For example, it can return the mean, minimum, and maximum temperature per 5 minutes or per hour. It only works for entities with statistics, such as sensors with a state class. Only reads.<ul>
+<li>To do this yourself: Use the <strong>History</strong> panel.</li>
+</ul>
+</li>
+<li><strong>Get system log entries</strong> (<code>system_log__get_entries</code>): Returns recent errors and warnings from the system log. It doesn't include info or debug messages. It can filter by level and by integration. Only reads.<ul>
+<li>To do this yourself: Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong>.</li>
+</ul>
+</li>
+<li><strong>Get logs</strong> (<code>system_log__get_logs</code> or <code>hassio__get_logs</code>): Reads the full logs in a time window. This includes info and debug messages, if Home Assistant logs them. Values that look like credentials are masked. Only reads.<ul>
+<li>On Home Assistant Operating System and Home Assistant Supervised installations, the ID is <code>hassio__get_logs</code>. It also reads the logs of the Supervisor, the operating system, the DNS, audio, and multicast plugins, and your apps.</li>
+<li>On Home Assistant Container installations, and on other installations without the Supervisor, the ID is <code>system_log__get_logs</code>. It only reads the Home Assistant log, and it needs the log file.</li>
+<li>To do this yourself: Under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong>, select <strong>Menu</strong>  &gt; <strong>Show raw logs</strong>.</li>
+</ul>
+</li>
+<li><strong>Get date and time</strong> (<code>llm__GetDateTime</code>): Returns the current date and time. Both built-in sets of AI tools, <strong>Device control</strong> and <strong>Home Assistant</strong>, have this tool. Only reads.</li>
+</ul>
+<h2>Known limitations</h2>
+<h3>Access to AI tools</h3>
+<ul>
+<li>Only administrators can use the Home Assistant AI tools. Requests without an administrator account fail. For example, requests from a voice satellite fail, and so do requests from users who aren't administrators. This also stops <strong>Device control</strong> on that conversation agent, because the agent can't prepare any of its sets of AI tools.</li>
+<li>The <strong>Home Assistant Cloud</strong> conversation agent of <a href="../cloud/">Home Assistant Cloud</a> can't use the Home Assistant AI tools. It always uses <strong>Device control</strong>.</li>
+</ul>
+<h3>Entity history</h3>
+<ul>
+<li><strong>Get history</strong> returns statistics, not individual state changes. Entities without statistics have no history for this tool. For example, a switch has no statistics, and neither does a sensor without a <a href="../sensor/">state class</a>. For how statistics work, refer to <a>Long-term statistics</a>.</li>
+</ul>
+<h3>Logs and credentials</h3>
+<ul>
+<li>In Home Assistant Container installations, and in other installations without the Supervisor, <strong>Get logs</strong> needs the Home Assistant log file. If Home Assistant doesn't write a log file, this tool isn't available. For example, the <code>HA_DISABLE_LOG_FILE</code> environment variable turns off the log file.</li>
+<li><strong>Get logs</strong> masks values that look like credentials, such as tokens, passwords, and API keys. It can't recognize every credential, so other secrets in your logs can still reach the AI provider.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>The conversation agent answers “Error preparing LLM API”</h4>
+<h3>Symptom: "Error preparing LLM API"</h3>
+<p>When you talk to a conversation agent, it doesn't do what you asked. Instead, it answers "Error preparing LLM API".</p>
+<h4>Description</h4>
+<p>The conversation agent couldn't prepare its sets of AI tools. This happens in the following situations:</p>
+<ul>
+<li>The conversation agent has the Home Assistant AI tools, and the request doesn't come from an administrator. For example, it comes from a voice satellite, or from a user who isn't an administrator. In this case, <strong>Device control</strong> doesn't work on this conversation agent either.</li>
+<li>A set of AI tools that the conversation agent uses no longer exists. For example, you removed the integration that added it.</li>
+</ul>
+<h4>Resolution</h4>
+<p>The Home Assistant AI tools only work for administrators. You can't make them available to other users or to voice satellites. If a voice satellite or a user who isn't an administrator uses this conversation agent, remove the Home Assistant AI tools from it:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, and select your AI integration.</li>
+<li>In the row of the conversation agent, select <strong>Reconfigure conversation agent</strong> .<ul>
+<li>In some integrations, this button is called <strong>Configure</strong>.</li>
+</ul>
+</li>
+<li>Under <strong>AI tools</strong>, clear <strong>Home Assistant</strong>.<ul>
+<li>To keep controlling your devices with this conversation agent, make sure <strong>Device control</strong> is selected.</li>
+</ul>
+</li>
+<li>Select <strong>Submit</strong>. If the dialog shows more options, select <strong>Submit</strong> again.<ul>
+<li>Result: The conversation agent controls your devices again, for everyone who uses it.</li>
+</ul>
+</li>
+</ol>
+<p>To keep using the Home Assistant AI tools yourself, set up a separate assistant for them. For the steps, refer to <a>Setting up a separate assistant for the Home Assistant AI tools</a>.</p>
+<p>If you removed the integration that added a set of AI tools, open the settings of the conversation agent, as described in steps 1 and 2 above. Then, select <strong>Submit</strong>. If the dialog shows more options, select <strong>Submit</strong> again. The settings only show the sets of AI tools that still exist, so saving them removes the missing set.</p>
+<h4>Get history: “No statistics are recorded for this entity”</h4>
+<h3>Symptom: The conversation agent can't tell you the past values of an entity</h3>
+<p>You ask the conversation agent about the past values of an entity, and it can't answer. Under <strong>Show details</strong> in the Assist dialog, the result of <code>history__get_history</code> says "No statistics are recorded for this entity."</p>
+<h4>Description</h4>
+<p><strong>Get history</strong> only reads statistics, not individual state changes. Home Assistant only keeps statistics for entities that measure something over time, such as a temperature sensor or an energy meter. Other entities have no statistics. For example, a switch has none. For how statistics work, refer to <a>Long-term statistics</a>.</p>
+<h4>Resolution</h4>
+<ul>
+<li>To see the past states of the entity yourself, use the <strong>History</strong> panel.</li>
+<li>If the entity is a sensor that should have statistics, check for an issue under <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Statistics</strong>. For how to fix it, refer to <a>Fixing a statistics issue</a>.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/llm.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Provides the AI tools that conversation agents and AI apps use to read information, control entities, and manage Home Assistant.
+ha_categories:
+  - ai_voice.ai_models
+ha_release: 2026.7
+ha_domain: llm
+---
+
+The **&lt;abbr title=&quot;Large Language Model&quot;&gt;LLM&lt;/abbr&gt;** {% term integration %} provides the {% term &quot;AI tools&quot; %} in Home Assistant. An AI tool is a function that {% term &quot;conversation agents&quot; %} and {% term &quot;AI apps&quot; %} can use to read information, control {% term entities %}, or manage Home Assistant. For example, with AI tools, a conversation agent can tell you the temperature in the living room, turn on your lights, or reload an integration that failed to set up.
+
+The AI tools are grouped into [sets](#sets-of-ai-tools). You choose which sets each conversation agent can use, in its **AI tools** option. AI apps outside Home Assistant can use the same sets through the [Model Context Protocol](/integrations/mcp_server/) integration.
+
+The **LLM** integration is an internal system integration. It loads as part of the [default configuration](/integrations/default_config/). Every AI integration that adds a conversation agent loads it too. You can&#x27;t add or remove it, and it has no options.
+
+## Sets of AI tools
+
+Each set contains related {% term &quot;AI tools&quot; %}. Home Assistant has two built-in sets:
+
+- **Device control**: Reads and controls the {% term entities %} you expose to voice assistants. For example, it can check the bedroom temperature or turn off the kitchen light. Any user can use it.
+- **Home Assistant**: Looks into and manages Home Assistant itself. For example, it can read the logs, look up past sensor values, or reload an {% term integration %} that failed to set up. It can reach all of Home Assistant, not only exposed entities. Only administrators can use it.
+
+On this page, the tools in the **Home Assistant** set are called the Home Assistant AI tools.
+
+Integrations can add more sets. For example, [KNX](/integrations/knx/) adds a **KNX** set, and the [Model Context Protocol Client](/integrations/mcp/) adds a set for each server that you connect.
+
+You choose the sets in the **AI tools** option of each {% term &quot;conversation agent&quot; %}. For example, [Anthropic](/integrations/anthropic/), [Google Gemini](/integrations/google_generative_ai_conversation/), [Ollama](/integrations/ollama/), and [OpenAI](/integrations/openai_conversation/) have this option. A new conversation agent starts with **Device control** only. In Ollama, it starts with no sets.
+
+{% important %}
+**Risk of unintended device actions**
+
+The **Home Assistant** set of AI tools can control every entity and change Home Assistant itself. It doesn&#x27;t ask you before it acts. It also isn&#x27;t limited to the entities that you expose to voice assistants. If the conversation agent misunderstands a request, it can turn off {% term devices %} or change settings that you didn&#x27;t intend to change.
+
+To avoid this:
+
+- Only select the **Home Assistant** set for a conversation agent that you use to manage Home Assistant.
+- For everyday voice control, use a separate {% term assistant %} whose conversation agent only uses **Device control**. For the steps, refer to [Setting up a separate assistant for the Home Assistant AI tools](#setting-up-a-separate-assistant-for-the-home-assistant-ai-tools).
+{% endimportant %}
+
+## What the Home Assistant AI tools can reach
+
+The Home Assistant {% term &quot;AI tools&quot; %} can read the state of every entity, the status of your {% term integrations %}, your logs, and the history of your sensors. For the full list, refer to [List of Home Assistant AI tools](#list-of-home-assistant-ai-tools).
+
+Most of the Home Assistant AI tools only read. Two tools can change things:
+
+- **Call action** can perform any {% term action %} in Home Assistant, on any entity, device, or area. This includes entities that you didn&#x27;t expose. For example, it can turn off a light, run a script, or restart Home Assistant.
+- **Reload config entry** can reload an integration.
+
+## Who can use the Home Assistant AI tools
+
+Only administrators can use the Home Assistant {% term &quot;AI tools&quot; %}. Home Assistant checks the user account that each request comes from. When you talk to a {% term &quot;conversation agent&quot; %} in {% term Assist %} in Home Assistant or in the {% term &quot;Home Assistant Companion app&quot; %}, the request comes from the user account that is signed in.
+
+A {% term &quot;voice satellite&quot; %} isn&#x27;t signed in to a user account. For example, [Home Assistant Voice Preview Edition](/voice-pe/) is a voice satellite. Its requests don&#x27;t belong to any user. If its conversation agent has the **Home Assistant** set selected, every request from the voice satellite fails. This also stops **Device control** on that conversation agent. This means the voice satellite can&#x27;t turn on a light either. Requests from users who aren&#x27;t administrators fail the same way.
+
+## Adding the Home Assistant AI tools to your conversation agent
+
+Use this procedure if only administrators use your {% term &quot;conversation agent&quot; %}. Afterwards, you can ask it why an {% term integration %} isn&#x27;t working, or which errors are in the logs. The conversation agent then no longer works for {% term &quot;voice satellites&quot; %} or for users who aren&#x27;t administrators. For details, refer to [Who can use the Home Assistant AI tools](#who-can-use-the-home-assistant-ai-tools).
+
+Prerequisites:
+
+- An administrator account in Home Assistant.
+- A conversation agent from an AI integration. For example, [OpenAI](/integrations/openai_conversation/) adds conversation agents.
+
+To add the Home Assistant {% term &quot;AI tools&quot; %} to your conversation agent:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, and select your AI integration.
+   - For example, select **OpenAI**.
+2. In the row of the conversation agent, select **Reconfigure conversation agent** {% icon &quot;mdi:cog-outline&quot; %}.
+   - The right row shows **Conversation agent** under the name. For example, OpenAI calls it **OpenAI Conversation**.
+   - Don&#x27;t use the rows below it. They show its devices.
+   - Some integrations call this button **Configure**.
+3. Under **AI tools**, select **Home Assistant**.
+   - To keep controlling your devices, leave **Device control** selected.
+4. Select **Submit**. If the dialog shows more options, select **Submit** again.
+   - Result: The conversation agent can use the Home Assistant AI tools the next time you talk to it.
+
+## Setting up a separate assistant for the Home Assistant AI tools
+
+Use this procedure if {% term &quot;voice satellites&quot; %} or users who aren&#x27;t administrators use your {% term assistant %}. Your current assistant stays as it is for them. You get a second assistant that you can ask why an {% term integration %} isn&#x27;t working. For details, refer to [Who can use the Home Assistant AI tools](#who-can-use-the-home-assistant-ai-tools).
+
+Prerequisites:
+
+- An administrator account in Home Assistant.
+- An AI integration that adds conversation agents. For example, [OpenAI](/integrations/openai_conversation/) adds them.
+
+To set up a separate assistant for the Home Assistant AI tools:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, and select your AI integration.
+   - For example, select **OpenAI**.
+2. Select **Add conversation agent**.
+3. Under **Name**, enter a name for the new conversation agent.
+   - For example, enter `Home Assistant helper`.
+4. Under **AI tools**, select **Home Assistant**.
+   - To also control your devices with it, leave **Device control** selected.
+5. Select **Submit**. If the dialog shows more options, select **Submit** again.
+6. Go to {% my voice_assistants title=&quot;**Settings** &gt; **Voice assistants**&quot; %}, and select **Add assistant**.
+7. Enter a name for the assistant. Under **Conversation agent**, select the conversation agent that you just added.
+8. Select **Create**.
+9. To use the new assistant, open the Assist dialog. At the top, select the name of the current assistant, and then select the new assistant.
+   - Result: The new assistant can use the Home Assistant AI tools in the Assist dialog of Home Assistant and of the {% term &quot;Home Assistant Companion app&quot; %}. This works when you&#x27;re signed in with an administrator account.
+
+## Supported functionality
+
+### List of Home Assistant AI tools
+
+You don&#x27;t call these tools yourself. When you ask the {% term &quot;conversation agent&quot; %} something, it decides which tools to call. You can&#x27;t select single tools. You give the conversation agent the entire set, as described in [Adding the Home Assistant AI tools to your conversation agent](#adding-the-home-assistant-ai-tools-to-your-conversation-agent).
+
+The **Home Assistant** set of {% term &quot;AI tools&quot; %} contains the following tools. Each entry starts with the title of the tool, followed by its ID. The {% term Assist %} dialog shows the ID under **Show details**. Many tools do something that you can also do yourself in the UI, without a conversation agent. Where you can, the entry says how. For example, you can check what the conversation agent tells you.
+
+- **Render template** (`homeassistant__render_template`): Renders a [template](/docs/templating/) and returns the result. Templates can read the state and attributes of all {% term entities %}. Only reads.
+  - To do this yourself: Use the **Template** tab, under {% my developer_template title=&quot;**Settings** &gt; **Tools** &gt; **Template**&quot; %}.
+- **Search actions** (`homeassistant__search_actions`): Finds the {% term actions %} that Home Assistant can perform, with their targets and fields. Only reads.
+  - To do this yourself: Use the **Actions** tab, under {% my developer_services title=&quot;**Settings** &gt; **Tools** &gt; **Actions**&quot; %}.
+- **Call action** (`homeassistant__call_action`): Performs an action, and returns its response if it has one. Changes things.
+  - To do this yourself: Use the **Actions** tab, under {% my developer_services title=&quot;**Settings** &gt; **Tools** &gt; **Actions**&quot; %}.
+  - To see which actions the conversation agent performed: Go to **Settings** &gt; **Tools** &gt; **Action history**.
+- **Get config entries** (`config__get_config_entries`): Lists the {% term integrations %} and helpers that are set up, with their status, such as loaded or failed to set up, and the reason for an error. It can filter by integration and by status. Only reads.
+  - To do this yourself: Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+- **Reload config entry** (`config__reload_config_entry`): Reloads an integration that is set up. For example, it helps after a temporary connection error. Changes things.
+  - To do this yourself: On the integration page, under {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **Menu** {% icon &quot;mdi:dots-vertical&quot; %} &gt; **Reload** on the integration entry.
+- **Search available integrations** (`config__search_integrations`): Searches the integrations and helpers that you can set up from the UI, including ones that you haven&#x27;t added yet. Only reads.
+  - To do this yourself: Select **Add integration**, under {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+- **Search Home Assistant** (`search__search`): Finds entities, devices, areas, labels, automations, scripts, and scenes by name. Only reads.
+  - To do this yourself: Use the [quick search](/docs/tools/quick-search/).
+- **Get system info** (`system_health__get_system_info`): Returns the installation type, the CPU architecture, the time zone, and the versions of Home Assistant Core, the frontend, Python, the operating system, and the Supervisor. For example, you can use it to fill in a bug report. Only reads.
+  - To do this yourself: Under {% my repairs title=&quot;**Settings** &gt; **System** &gt; **Repairs**&quot; %}, select **Menu** {% icon &quot;mdi:dots-vertical&quot; %} &gt; **System information**.
+- **Get history** (`history__get_history`): Returns statistics of entities, not their individual state changes. For example, it can return the mean, minimum, and maximum temperature per 5 minutes or per hour. It only works for entities with statistics, such as sensors with a state class. Only reads.
+  - To do this yourself: Use the {% my history title=&quot;**History**&quot; %} panel.
+- **Get system log entries** (`system_log__get_entries`): Returns recent errors and warnings from the system log. It doesn&#x27;t include info or debug messages. It can filter by level and by integration. Only reads.
+  - To do this yourself: Go to {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %}.
+- **Get logs** (`system_log__get_logs` or `hassio__get_logs`): Reads the full logs in a time window. This includes info and debug messages, if Home Assistant logs them. Values that look like credentials are masked. Only reads.
+  - On {% term &quot;Home Assistant Operating System&quot; %} and {% term &quot;Home Assistant Supervised&quot; %} installations, the ID is `hassio__get_logs`. It also reads the logs of the Supervisor, the operating system, the DNS, audio, and multicast plugins, and your apps.
+  - On {% term &quot;Home Assistant Container&quot; %} installations, and on other installations without the Supervisor, the ID is `system_log__get_logs`. It only reads the Home Assistant log, and it needs the log file.
+  - To do this yourself: Under {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %}, select **Menu** {% icon &quot;mdi:dots-vertical&quot; %} &gt; **Show raw logs**.
+- **Get date and time** (`llm__GetDateTime`): Returns the current date and time. Both built-in sets of AI tools, **Device control** and **Home Assistant**, have this tool. Only reads.
+
+## Known limitations
+
+### Access to AI tools
+
+- Only administrators can use the Home Assistant {% term &quot;AI tools&quot; %}. Requests without an administrator account fail. For example, requests from a {% term &quot;voice satellite&quot; %} fail, and so do requests from users who aren&#x27;t administrators. This also stops **Device control** on that {% term &quot;conversation agent&quot; %}, because the agent can&#x27;t prepare any of its sets of AI tools.
+- The **Home Assistant Cloud** conversation agent of [Home Assistant Cloud](/integrations/cloud/) can&#x27;t use the Home Assistant AI tools. It always uses **Device control**.
+
+### Entity history
+
+- **Get history** returns statistics, not individual state changes. {% term Entities %} without statistics have no history for this tool. For example, a switch has no statistics, and neither does a sensor without a [state class](/integrations/sensor/#state-class). For how statistics work, refer to [Long-term statistics](/docs/configuration/long-term-statistics/).
+
+### Logs and credentials
+
+- In {% term &quot;Home Assistant Container&quot; %} installations, and in other installations without the Supervisor, **Get logs** needs the Home Assistant log file. If Home Assistant doesn&#x27;t write a log file, this tool isn&#x27;t available. For example, the `HA_DISABLE_LOG_FILE` environment variable turns off the log file.
+- **Get logs** masks values that look like credentials, such as tokens, passwords, and API keys. It can&#x27;t recognize every credential, so other secrets in your logs can still reach the AI provider.
+
+## Troubleshooting
+
+{% details &quot;The conversation agent answers “Error preparing LLM API”&quot; %}
+
+### Symptom: &quot;Error preparing LLM API&quot;
+
+When you talk to a {% term &quot;conversation agent&quot; %}, it doesn&#x27;t do what you asked. Instead, it answers &quot;Error preparing LLM API&quot;.
+
+#### Description
+
+The conversation agent couldn&#x27;t prepare its sets of {% term &quot;AI tools&quot; %}. This happens in the following situations:
+
+- The conversation agent has the Home Assistant AI tools, and the request doesn&#x27;t come from an administrator. For example, it comes from a {% term &quot;voice satellite&quot; %}, or from a user who isn&#x27;t an administrator. In this case, **Device control** doesn&#x27;t work on this conversation agent either.
+- A set of AI tools that the conversation agent uses no longer exists. For example, you removed the {% term integration %} that added it.
+
+#### Resolution
+
+The Home Assistant AI tools only work for administrators. You can&#x27;t make them available to other users or to voice satellites. If a voice satellite or a user who isn&#x27;t an administrator uses this conversation agent, remove the Home Assistant AI tools from it:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, and select your AI integration.
+2. In the row of the conversation agent, select **Reconfigure conversation agent** {% icon &quot;mdi:cog-outline&quot; %}.
+   - In some integrations, this button is called **Configure**.
+3. Under **AI tools**, clear **Home Assistant**.
+   - To keep controlling your devices with this conversation agent, make sure **Device control** is selected.
+4. Select **Submit**. If the dialog shows more options, select **Submit** again.
+   - Result: The conversation agent controls your devices again, for everyone who uses it.
+
+To keep using the Home Assistant AI tools yourself, set up a separate assistant for them. For the steps, refer to [Setting up a separate assistant for the Home Assistant AI tools](#setting-up-a-separate-assistant-for-the-home-assistant-ai-tools).
+
+If you removed the integration that added a set of AI tools, open the settings of the conversation agent, as described in steps 1 and 2 above. Then, select **Submit**. If the dialog shows more options, select **Submit** again. The settings only show the sets of AI tools that still exist, so saving them removes the missing set.
+
+{% enddetails %}
+
+{% details &quot;Get history: “No statistics are recorded for this entity”&quot; %}
+
+### Symptom: The conversation agent can&#x27;t tell you the past values of an entity
+
+You ask the {% term &quot;conversation agent&quot; %} about the past values of an {% term entity %}, and it can&#x27;t answer. Under **Show details** in the {% term Assist %} dialog, the result of `history__get_history` says &quot;No statistics are recorded for this entity.&quot;
+
+#### Description
+
+**Get history** only reads statistics, not individual state changes. Home Assistant only keeps statistics for entities that measure something over time, such as a temperature sensor or an energy meter. Other entities have no statistics. For example, a switch has none. For how statistics work, refer to [Long-term statistics](/docs/configuration/long-term-statistics/).
+
+#### Resolution
+
+- To see the past states of the entity yourself, use the {% my history title=&quot;**History**&quot; %} panel.
+- If the entity is a sensor that should have statistics, check for an issue under {% my developer_statistics title=&quot;**Settings** &gt; **Tools** &gt; **Statistics**&quot; %}. For how to fix it, refer to [Fixing a statistics issue](/docs/tools/dev-tools/#fixing-a-statistics-issue).
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify LLM in Home Assistant is <code>llm</code>.</p></section><section><h2>Topics in the original article</h2><ul><li>Sets of AI tools</li><li>What the Home Assistant AI tools can reach</li><li>Who can use the Home Assistant AI tools</li><li>Adding the Home Assistant AI tools to your conversation agent</li><li>Setting up a separate assistant for the Home Assistant AI tools</li><li>Supported functionality</li><li>Known limitations</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/llm/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/llm</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/llm</code></dd></dl></section><p><a href="../../integrations/llm/">Return to the LLM guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

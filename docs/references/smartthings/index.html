@@ -1,1 +1,1455 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SmartThings reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:352" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/smartthings/">SmartThings guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SmartThings</h1><p>Instructions on setting up SmartThings within Home Assistant.</p><section><h2>Overview</h2><p>Samsung has announced that free access to the SmartThings API will be phased out starting in October 2026. After this date, the SmartThings API access will require a paid Personal Plan subscription ($4.99/month).</p></section><section><h2>Supported functionality</h2><p>SmartThings represents devices as a set of capabilities. The SmartThings integration maps those capabilities to entities in Home Assistant. A single device may be represented by one or more entities.</p></section><section><h2>Binary sensor</h2><p>In Home Assistant, a binary sensor entity will be created for each of the following SmartThings capabilities:</p></section><section><h2>Button</h2><p>The SmartThings Button platform provides the following buttons:</p></section><section><h2>Climate</h2><p>The SmartThings Climate platform lets you control devices that have air conditioner, thermostat, or heat pump related capabilities.</p></section><section><h2>Air conditioners</h2><p>For a SmartThings Air Conditioner to be represented by the climate entity, it must have all of the following required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.</p></section><section><h2>Thermostats</h2><p>For a SmartThings thermostat to be represented by the climate entity, it must have all of the required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.</p></section><section><h2>Heat pump zones</h2><p>For a SmartThings heat pump zone to be represented by the climate entity, it must have all of the required capabilities on an INDOOR, INDOOR1, or INDOOR2 component.</p></section><section><h2>Cover</h2><p>The SmartThings Cover platform lets you control devices that have open/close related capabilities. For a device to be represented by the cover entity, it must either have the doorControl or windowShade capability. Otherwise the features will be represented as individual sensors in Home Assistant.</p></section><section><h2>Event</h2><p>The SmartThings Event platform will create entities for every button. It will show any button presses and allows you to automate on these events.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SmartThings.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>media player</li><li>number</li><li>scene</li><li>select</li><li>sensor</li><li>switch</li><li>update</li><li>vacuum</li><li>valve</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Troubleshooting</li><li>SmartThings community</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/smartthings/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/smartthings</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/smartthings</code></dd></dl></section><p><a href="../../integrations/smartthings/">Return to the SmartThings guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SmartThings reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:352" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/smartthings/">SmartThings guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SmartThings</h1><p>Instructions on setting up SmartThings within Home Assistant.</p><div class="reader-body"><p><a>SmartThings</a> is a home automation platform for connecting with Samsung or third-party devices.</p>
+<p><strong>Warning</strong></p>
+<p><strong>Upcoming breaking API change (October 2026).</strong></p>
+<p>Samsung has announced that free access to the SmartThings API will be phased out starting in <strong>October 2026</strong>. After this date, the SmartThings API access will require a paid Personal Plan subscription ($4.99/month).</p>
+<p>If you use this integration, you will need to either subscribe to Samsung's Personal Plan or migrate your devices (like local Zigbee/Z-Wave devices) before October 2026 to avoid a service disruption. For full details, see the <a>SmartThings community announcement</a>.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>You need a Samsung account and account credentials.</li>
+<li>To connect devices, you need the SmartThings app installed on your phone.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>SmartThings</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>SmartThings</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Supported functionality</h2>
+<p>SmartThings represents devices as a set of <a>capabilities</a>. The SmartThings integration maps those capabilities to entities in Home Assistant. A single device may be represented by one or more entities.</p>
+<ul>
+<li><a>Binary sensor</a></li>
+<li><a>Button</a></li>
+<li><a>Climate</a></li>
+<li><a>Cover</a></li>
+<li><a>Event</a></li>
+<li><a>Fan</a></li>
+<li><a>Light</a></li>
+<li><a>Lock</a></li>
+<li><a>Media player</a></li>
+<li><a>Number</a></li>
+<li><a>Scene</a></li>
+<li><a>Select</a></li>
+<li><a>Sensor</a></li>
+<li><a>Switch</a></li>
+<li><a>Update</a></li>
+<li><a>Vacuum</a></li>
+<li><a>Valve</a></li>
+<li><a>Water heater</a></li>
+</ul>
+<h3>Binary sensor</h3>
+<p>In Home Assistant, a binary sensor entity will be created for each of the following SmartThings capabilities:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>accelerationSensor</code></td>
+</tr>
+<tr>
+  <td><a><code>contactSensor</code></a></td>
+</tr>
+<tr>
+  <td><code>custom.dryerWrinklePrevent</code></td>
+</tr>
+<tr>
+  <td><code>custom.ovenCavityStatus</code></td>
+</tr>
+<tr>
+  <td><code>custom.waterFilter</code></td>
+</tr>
+<tr>
+  <td><a><code>filterStatus</code></a></td>
+</tr>
+<tr>
+  <td><a><code>gasDetector</code></a></td>
+</tr>
+<tr>
+  <td><a><code>motionSensor</code></a></td>
+</tr>
+<tr>
+  <td><a><code>presenceSensor</code></a></td>
+</tr>
+<tr>
+  <td><a><code>remoteControlStatus</code></a></td>
+</tr>
+<tr>
+  <td><code>samsungce.doorState</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.kidsLock</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.steamClosetKeepFreshMode</code></td>
+</tr>
+<tr>
+  <td><a><code>soundSensor</code></a></td>
+</tr>
+<tr>
+  <td><code>switch</code> (only for appliance categories such as washers, dryers, dishwashers, cooktops, microwaves, and clothing care machines)</td>
+</tr>
+<tr>
+  <td><a><code>tamperAlert</code></a></td>
+</tr>
+<tr>
+  <td><a><code>waterSensor</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3>Button</h3>
+<p>The SmartThings Button platform provides the following buttons:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Button</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>ovenOperatingState</code></a></td>
+  <td>Stop</td>
+</tr>
+<tr>
+  <td><code>custom.waterFilter</code></td>
+  <td>Reset water filter</td>
+</tr>
+<tr>
+  <td><code>samsungce.hoodFilter</code></td>
+  <td>Reset hood filter</td>
+</tr>
+</tbody>
+</table>
+<h3>Climate</h3>
+<p>The SmartThings Climate platform lets you control devices that have air conditioner, thermostat, or heat pump related capabilities.</p>
+<h4>Air conditioners</h4>
+<p>For a SmartThings Air Conditioner to be represented by the climate entity, it must have all of the following required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related climate features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>airConditionerMode</code></a> (required)</td>
+  <td><code>hvac mode</code></td>
+</tr>
+<tr>
+  <td><a><code>airConditionerFanMode</code></a> (required)</td>
+  <td><code>fan mode</code></td>
+</tr>
+<tr>
+  <td><a><code>switch</code></a> (required)</td>
+  <td><code>turn on</code>, <code>turn off</code></td>
+</tr>
+<tr>
+  <td><a><code>temperatureMeasurement</code></a> (required)</td>
+  <td><code>temperature</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a> (required)</td>
+  <td><code>target temp</code></td>
+</tr>
+<tr>
+  <td><code>custom.airConditionerOptionalMode</code></td>
+  <td><code>preset mode</code></td>
+</tr>
+<tr>
+  <td><a><code>demandResponseLoadControl</code></a></td>
+  <td><code>drlc_status_duration</code> (state attribute), <code>drlc_status_level</code> (state attribute), <code>drlc_status_override</code> (state attribute), <code>drlc_status_start</code> (state attribute)</td>
+</tr>
+<tr>
+  <td><a><code>fanOscillationMode</code></a></td>
+  <td><code>swing mode</code></td>
+</tr>
+</tbody>
+</table>
+<h4>Thermostats</h4>
+<p>For a SmartThings thermostat to be represented by the climate entity, it must have all of the required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related climate features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>thermostatMode</code></a> (required)</td>
+  <td><code>hvac mode</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatHeatingSetpoint</code></a> (required)</td>
+  <td><code>target temp</code>, <code>target temp low</code></td>
+</tr>
+<tr>
+  <td><a><code>temperatureMeasurement</code></a> (required)</td>
+  <td><code>temperature</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a></td>
+  <td><code>target temp</code>, <code>target temp high</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatOperatingState</code></a></td>
+  <td><code>hvac action</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatFanMode</code></a></td>
+  <td><code>fan mode</code></td>
+</tr>
+<tr>
+  <td><a><code>relativeHumidityMeasurement</code></a></td>
+  <td><code>humidity</code> (state attribute)</td>
+</tr>
+</tbody>
+</table>
+<h4>Heat pump zones</h4>
+<p>For a SmartThings heat pump zone to be represented by the climate entity, it must have all of the required capabilities on an <code>INDOOR</code>, <code>INDOOR1</code>, or <code>INDOOR2</code> component.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related climate features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>airConditionerMode</code></a> (required)</td>
+  <td><code>hvac mode</code></td>
+</tr>
+<tr>
+  <td><a><code>switch</code></a> (required)</td>
+  <td><code>turn on</code>, <code>turn off</code></td>
+</tr>
+<tr>
+  <td><a><code>temperatureMeasurement</code></a> (required)</td>
+  <td><code>temperature</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a> (required)</td>
+  <td><code>target temp</code></td>
+</tr>
+<tr>
+  <td><code>custom.thermostatSetpointControl</code> (required)</td>
+  <td><code>min temp</code>, <code>max temp</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Cover</h3>
+<p>The SmartThings Cover platform lets you control devices that have open/close related capabilities. For a device to be represented by the cover entity, it must either have the <code>doorControl</code> or <code>windowShade</code> capability. Otherwise the features will be represented as individual sensors in Home Assistant.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related cover features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>doorControl</code></a></td>
+  <td><code>open</code> and <code>close</code></td>
+</tr>
+<tr>
+  <td><a><code>windowShade</code></a></td>
+  <td><code>open</code> and <code>close</code></td>
+</tr>
+<tr>
+  <td><a><code>switchLevel</code></a></td>
+  <td><code>position</code></td>
+</tr>
+<tr>
+  <td><a><code>windowShadeLevel</code></a></td>
+  <td><code>position</code></td>
+</tr>
+<tr>
+  <td><a><code>battery</code></a></td>
+  <td><code>battery_level</code> (state attribute)</td>
+</tr>
+</tbody>
+</table>
+<h3>Event</h3>
+<p>The SmartThings Event platform will create entities for every button. It will show any button presses and allows you to automate on these events.</p>
+<h3>Fan</h3>
+<p>The SmartThings Fan lets you control devices that have fan-related capabilities. For a SmartThings device to be represented by the fan entity, it must have one or more of the capabilities below in addition to the <a><code>switch</code></a> capability. Devices with <code>fanSpeed</code> or <code>airConditionerFanMode</code> that also have <code>thermostatCoolingSetpoint</code> will be represented as climate entities instead.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related fan features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>fanSpeed</code></a></td>
+  <td><code>speed</code> (percentage)</td>
+</tr>
+<tr>
+  <td><a><code>airConditionerFanMode</code></a></td>
+  <td><code>preset mode</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.hoodFanSpeed</code> (creates a separate hood fan entity for range hoods with smart fan speed support)</td>
+  <td><code>speed</code> (percentage), <code>preset mode</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Light</h3>
+<p>The SmartThings Light lets you control devices that have light-related capabilities. For a SmartThings device to be represented by the light entity, it must have one or more of the capabilities below in addition to the <a><code>switch</code></a> capability.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related light features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>switchLevel</code></a></td>
+  <td><code>brightness</code> and <code>transition</code></td>
+</tr>
+<tr>
+  <td><a><code>colorControl</code></a></td>
+  <td><code>color</code></td>
+</tr>
+<tr>
+  <td><a><code>colorTemperature</code></a></td>
+  <td><code>color_temp</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Lock</h3>
+<p>The SmartThings Lock platform lets you control devices that have the <a><code>lock</code></a> capability, showing current lock status and supporting lock and unlock commands.</p>
+<h3>Media player</h3>
+<p>The SmartThings Media player lets you control devices that have media player-related capabilities. For a SmartThings device to be represented by the media player entity, it must have all required capabilities.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related media player features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>audioMute</code></a> (required)</td>
+  <td><code>volume_mute</code></td>
+</tr>
+<tr>
+  <td><a><code>audioVolume</code></a> (required)</td>
+  <td><code>volume_up</code>, <code>volume_down</code>, <code>volume_set</code></td>
+</tr>
+<tr>
+  <td><a><code>audioTrackData</code></a></td>
+  <td><code>media_title</code> and <code>media_artist</code></td>
+</tr>
+<tr>
+  <td><a><code>mediaPlayback</code></a></td>
+  <td><code>media_play</code>, <code>media_pause</code>, <code>media_stop</code>, <code>media_next_track</code>, <code>media_previous_track</code></td>
+</tr>
+<tr>
+  <td><a><code>mediaInputSource</code></a></td>
+  <td><code>select_source</code></td>
+</tr>
+<tr>
+  <td><a><code>mediaPlaybackRepeat</code></a></td>
+  <td><code>repeat_set</code></td>
+</tr>
+<tr>
+  <td><a><code>mediaPlaybackShuffle</code></a></td>
+  <td><code>shuffle_set</code></td>
+</tr>
+<tr>
+  <td><code>custom.soundmode</code></td>
+  <td><code>select_sound_mode</code></td>
+</tr>
+<tr>
+  <td><a><code>switch</code></a></td>
+  <td><code>turn_on</code>, <code>turn_off</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Number</h3>
+<p>The SmartThings number platform lets you control numeric values for the following capabilities:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Number entity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>custom.washerRinseCycles</code></td>
+  <td>Washer rinse cycles</td>
+</tr>
+<tr>
+  <td><code>samsungce.hoodFanSpeed</code> (on hood component)</td>
+  <td>Hood fan speed</td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a> (on cooler, freezer, or onedoor components)</td>
+  <td>Refrigerator temperature</td>
+</tr>
+</tbody>
+</table>
+<h3>Scene</h3>
+<p>The SmartThings scene platform lets you activate scenes that you defined in SmartThings. A scene entity is created for each SmartThings scene.</p>
+<h3>Select</h3>
+<p>The SmartThings Select platform lets you configure device options. Some capabilities require remote control to be enabled on the device before they can be changed.</p>
+<p>The following SmartThings capabilities are supported for Select entities:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>custom.picturemode</code></td>
+</tr>
+<tr>
+  <td><code>custom.washerSoilLevel</code></td>
+</tr>
+<tr>
+  <td><code>custom.washerSpinLevel</code></td>
+</tr>
+<tr>
+  <td><code>custom.washerWaterTemperature</code></td>
+</tr>
+<tr>
+  <td><a><code>dishwasherOperatingState</code></a></td>
+</tr>
+<tr>
+  <td><a><code>dryerOperatingState</code></a></td>
+</tr>
+<tr>
+  <td><code>samsungce.autoDispenseDetergent</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.dishwasherWashingOptions</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.dustFilterAlarm</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.flexibleAutoDispenseDetergent</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.lamp</code></td>
+</tr>
+<tr>
+  <td><a><code>washerOperatingState</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3>Sensor</h3>
+<p>The SmartThings Sensor platform lets you view devices that have sensor-related capabilities. A Sensor entity is created for each attribute (below) supported by the device.</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related entities in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>activityLightingMode</code></a></td>
+  <td>Activity lighting mode</td>
+</tr>
+<tr>
+  <td><a><code>airConditionerMode</code></a></td>
+  <td>Air conditioner mode</td>
+</tr>
+<tr>
+  <td><a><code>airQualitySensor</code></a></td>
+  <td>Air quality</td>
+</tr>
+<tr>
+  <td><a><code>alarm</code></a></td>
+  <td>Alarm</td>
+</tr>
+<tr>
+  <td><a><code>atmosphericPressureMeasurement</code></a></td>
+  <td>Atmospheric pressure</td>
+</tr>
+<tr>
+  <td><a><code>audioVolume</code></a></td>
+  <td>Volume</td>
+</tr>
+<tr>
+  <td><a><code>battery</code></a></td>
+  <td>Battery</td>
+</tr>
+<tr>
+  <td><a><code>bodyMassIndexMeasurement</code></a></td>
+  <td>Body mass index</td>
+</tr>
+<tr>
+  <td><a><code>bodyWeightMeasurement</code></a></td>
+  <td>Body weight</td>
+</tr>
+<tr>
+  <td><a><code>carbonDioxideMeasurement</code></a></td>
+  <td>Carbon dioxide</td>
+</tr>
+<tr>
+  <td><a><code>carbonMonoxideDetector</code></a></td>
+  <td>Carbon monoxide detector</td>
+</tr>
+<tr>
+  <td><a><code>carbonMonoxideMeasurement</code></a></td>
+  <td>Carbon monoxide</td>
+</tr>
+<tr>
+  <td><code>custom.cooktopOperatingState</code></td>
+  <td>Cooktop operating state</td>
+</tr>
+<tr>
+  <td><code>custom.waterFilter</code></td>
+  <td>Water filter usage</td>
+</tr>
+<tr>
+  <td><a><code>dishwasherOperatingState</code></a></td>
+  <td>Machine state<br>Job state<br>Completion time</td>
+</tr>
+<tr>
+  <td><a><code>dryerMode</code></a></td>
+  <td>Dryer mode</td>
+</tr>
+<tr>
+  <td><a><code>dryerOperatingState</code></a></td>
+  <td>Machine state<br>Job state<br>Completion time</td>
+</tr>
+<tr>
+  <td><a><code>dustHealthConcern</code></a></td>
+  <td>PM10 health concern</td>
+</tr>
+<tr>
+  <td><a><code>dustSensor</code></a></td>
+  <td>PM10<br>PM2.5</td>
+</tr>
+<tr>
+  <td><a><code>energyMeter</code></a></td>
+  <td>Energy</td>
+</tr>
+<tr>
+  <td><a><code>equivalentCarbonDioxideMeasurement</code></a></td>
+  <td>Equivalent carbon dioxide</td>
+</tr>
+<tr>
+  <td><a><code>fineDustHealthConcern</code></a></td>
+  <td>PM2.5 health concern</td>
+</tr>
+<tr>
+  <td><a><code>fineDustSensor</code></a></td>
+  <td>PM2.5</td>
+</tr>
+<tr>
+  <td><a><code>formaldehydeMeasurement</code></a></td>
+  <td>Formaldehyde</td>
+</tr>
+<tr>
+  <td><a><code>gasMeter</code></a></td>
+  <td>Gas meter<br>Gas meter calorific<br>Gas meter time<br>Gas</td>
+</tr>
+<tr>
+  <td><a><code>illuminanceMeasurement</code></a></td>
+  <td>Illuminance</td>
+</tr>
+<tr>
+  <td><a><code>infraredLevel</code></a></td>
+  <td>Infrared level</td>
+</tr>
+<tr>
+  <td><a><code>mediaInputSource</code></a></td>
+  <td>Media input source</td>
+</tr>
+<tr>
+  <td><a><code>mediaPlaybackRepeat</code></a></td>
+  <td>Media playback repeat</td>
+</tr>
+<tr>
+  <td><a><code>mediaPlaybackShuffle</code></a></td>
+  <td>Media playback shuffle</td>
+</tr>
+<tr>
+  <td><a><code>mediaPlayback</code></a></td>
+  <td>Media playback status</td>
+</tr>
+<tr>
+  <td><a><code>odorSensor</code></a></td>
+  <td>Odor sensor</td>
+</tr>
+<tr>
+  <td><a><code>ovenMode</code></a></td>
+  <td>Oven mode</td>
+</tr>
+<tr>
+  <td><a><code>ovenOperatingState</code></a></td>
+  <td>Machine state<br>Job state<br>Completion time</td>
+</tr>
+<tr>
+  <td><a><code>ovenSetpoint</code></a></td>
+  <td>Set point</td>
+</tr>
+<tr>
+  <td><a><code>powerConsumptionReport</code></a></td>
+  <td>Energy difference<br>Power energy<br>Energy saved<br>Power<br>Energy</td>
+</tr>
+<tr>
+  <td><a><code>powerMeter</code></a></td>
+  <td>Power</td>
+</tr>
+<tr>
+  <td><a><code>powerSource</code></a></td>
+  <td>Power source</td>
+</tr>
+<tr>
+  <td><code>relativeBrightness</code></td>
+  <td>Brightness intensity</td>
+</tr>
+<tr>
+  <td><a><code>refrigerationSetpoint</code></a></td>
+  <td>Set point</td>
+</tr>
+<tr>
+  <td><a><code>relativeHumidityMeasurement</code></a></td>
+  <td>Humidity</td>
+</tr>
+<tr>
+  <td><a><code>robotCleanerCleaningMode</code></a></td>
+  <td>Cleaning mode</td>
+</tr>
+<tr>
+  <td><a><code>robotCleanerMovement</code></a></td>
+  <td>Movement</td>
+</tr>
+<tr>
+  <td><a><code>robotCleanerTurboMode</code></a></td>
+  <td>Turbo mode</td>
+</tr>
+<tr>
+  <td><code>samsungce.cooktopHeatingPower</code></td>
+  <td>Manual level<br>Heating mode</td>
+</tr>
+<tr>
+  <td><code>samsungce.dryerOperatingState</code></td>
+  <td>Progress</td>
+</tr>
+<tr>
+  <td><code>samsungce.ehsDiverterValve</code></td>
+  <td>Diverter valve position</td>
+</tr>
+<tr>
+  <td><code>samsungce.hoodFilter</code></td>
+  <td>Hood filter usage</td>
+</tr>
+<tr>
+  <td><code>samsungce.washerOperatingState</code></td>
+  <td>Progress</td>
+</tr>
+<tr>
+  <td><code>samsungce.waterConsumptionReport</code></td>
+  <td>Water consumption</td>
+</tr>
+<tr>
+  <td><a><code>signalStrength</code></a></td>
+  <td>Link quality<br>Signal strength</td>
+</tr>
+<tr>
+  <td><a><code>smokeDetector</code></a></td>
+  <td>Smoke detector</td>
+</tr>
+<tr>
+  <td><a><code>temperatureMeasurement</code></a></td>
+  <td>Temperature</td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a></td>
+  <td>Cooling set point</td>
+</tr>
+<tr>
+  <td><a><code>thermostatFanMode</code></a></td>
+  <td>Fan mode</td>
+</tr>
+<tr>
+  <td><a><code>thermostatHeatingSetpoint</code></a></td>
+  <td>Heating set point</td>
+</tr>
+<tr>
+  <td><a><code>thermostatMode</code></a></td>
+  <td>Mode</td>
+</tr>
+<tr>
+  <td><a><code>thermostatOperatingState</code></a></td>
+  <td>Operating state</td>
+</tr>
+<tr>
+  <td><a><code>thermostatSetpoint</code></a></td>
+  <td>Set point</td>
+</tr>
+<tr>
+  <td><a><code>threeAxis</code></a></td>
+  <td>X coordinate<br>Y coordinate<br>Z coordinate</td>
+</tr>
+<tr>
+  <td><a><code>tvChannel</code></a></td>
+  <td>TV channel<br>TV channel name</td>
+</tr>
+<tr>
+  <td><a><code>tvocMeasurement</code></a></td>
+  <td>Volatile organic compounds</td>
+</tr>
+<tr>
+  <td><a><code>ultravioletIndex</code></a></td>
+  <td>UV index</td>
+</tr>
+<tr>
+  <td><a><code>veryFineDustHealthConcern</code></a></td>
+  <td>PM1.0 health concern</td>
+</tr>
+<tr>
+  <td><a><code>veryFineDustSensor</code></a></td>
+  <td>PM1.0</td>
+</tr>
+<tr>
+  <td><a><code>voltageMeasurement</code></a></td>
+  <td>Voltage</td>
+</tr>
+<tr>
+  <td><a><code>washerMode</code></a></td>
+  <td>Washer mode</td>
+</tr>
+<tr>
+  <td><a><code>washerOperatingState</code></a></td>
+  <td>Machine state<br>Job state<br>Completion time</td>
+</tr>
+</tbody>
+</table>
+<h3>Switch</h3>
+<p>The SmartThings Switch lets you control devices that have the <a><code>switch</code></a> capability that are not already represented by a more specific platform. It will also create switches for the following capabilities:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>custom.dryerWrinklePrevent</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.airConditionerBeep</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.airConditionerLighting</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.dishwasherWashingOptions</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.powerCool</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.powerFreeze</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.sabbathMode</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.steamClosetAutoCycleLink</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.steamClosetKeepFreshMode</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.steamClosetSanitizeMode</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.washerBubbleSoak</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Time</h3>
+<p>The SmartThings time platform lets you control the start and end time for the do not disturb mode on supported devices.</p>
+<h3>Update</h3>
+<p>The SmartThings update platform lets you update the firmware of devices that have the <a><code>firmwareUpdate</code></a> capability.</p>
+<h3>Vacuum</h3>
+<p>The SmartThings Vacuum platform lets you control devices that have the <code>samsungce.robotCleanerOperatingState</code> capability, showing the vacuum status and controlling the device.</p>
+<h3>Valve</h3>
+<p>The SmartThings Valve platform lets you control devices that have the <a><code>valve</code></a> capability, showing the valve status and opening and closing.</p>
+<h3>Water heater</h3>
+<p>The SmartThings Water heater platform lets you control heat pumps that provide hot water. For a device to be represented by the water heater entity, it must have all of the following capabilities:</p>
+<table>
+<thead>
+<tr>
+  <th>SmartThings capability</th>
+  <th>Related water heater features in Home Assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a><code>switch</code></a> (required)</td>
+  <td><code>turn on</code>, <code>turn off</code></td>
+</tr>
+<tr>
+  <td><a><code>airConditionerMode</code></a> (required)</td>
+  <td><code>operation mode</code></td>
+</tr>
+<tr>
+  <td><a><code>temperatureMeasurement</code></a> (required)</td>
+  <td><code>temperature</code></td>
+</tr>
+<tr>
+  <td><code>custom.thermostatSetpointControl</code> (required)</td>
+  <td><code>min temp</code>, <code>max temp</code></td>
+</tr>
+<tr>
+  <td><a><code>thermostatCoolingSetpoint</code></a> (required)</td>
+  <td><code>target temp</code></td>
+</tr>
+<tr>
+  <td><code>samsungce.ehsThermostat</code> (required)</td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>custom.outingMode</code> (required)</td>
+  <td><code>away mode</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Troubleshooting</h2>
+<h3>Enabling debug logs</h3>
+<p>If debug logging is enabled, the integration shows all the received events in the logs. The log captures events for that device for 5 seconds, and returns a JSON file with the state of the device and the events.
+Debug logs can be helpful for diagnosing state updates, for example by selecting the button and then turning on the device physically.</p>
+<ul>
+<li>To enable debug logs, follow the <a>steps to enable debug logs</a>.</li>
+</ul>
+<h3>Viewing device diagnostics</h3>
+<p>The SmartThings integration provides diagnostics at two levels. To download diagnostics, follow the <a>steps to download diagnostics</a>.</p>
+<ul>
+<li><strong>Device diagnostics</strong>: Contains all capabilities and their current states for a single device. This is useful when troubleshooting a specific device — it shows exactly what capabilities, attributes, and attribute values the device exposes to the SmartThings API.</li>
+<li><strong>Config entry diagnostics</strong>: Contains information about all capabilities and devices in your SmartThings location, but without the current state values. This is useful for getting a comprehensive overview of available capabilities across all your connected devices.</li>
+</ul>
+<h3>Missing device functionality</h3>
+<p>The SmartThings integration does not support all SmartThings capabilities. Only the capabilities listed in this documentation are supported. If a feature of your device is not available in Home Assistant, there are a few possible reasons:</p>
+<ol>
+<li>To see which capabilities are currently implemented, check the <a>supported functionality</a> section.<ul>
+<li>The capability you are looking for might not yet be supported by this integration.</li>
+</ul>
+</li>
+<li>To see if the necessary capability is available for your device in the API, check the <a>SmartThings Developer Portal</a>.<ul>
+<li>Some device features are only available in the SmartThings app and are not exposed through the API.</li>
+</ul>
+</li>
+<li>If the capability is available in the SmartThings API but not yet supported by this integration, you can request support by creating a <a>GitHub Discussion</a>.<ul>
+<li>Do not create a GitHub Issue for feature requests, as issues are intended for bug reports.</li>
+<li>When creating a feature request, attach the <a>device diagnostics</a> for the device that is missing functionality. This helps identify which capabilities your device exposes and speeds up the implementation.</li>
+</ul>
+</li>
+</ol>
+<h2>SmartThings community</h2>
+<p>The SmartThings integration is complex due to the breadth of devices and capabilities it supports. If you need community support or want to discuss device integration topics with other SmartThings users, you can join the <a>SmartThings Integration community on Discord</a>.</p>
+<h2>Removing the integration</h2>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li><p>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</p>
+</li>
+<li><p>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.</p>
+<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>To confirm, select <strong>Delete</strong>.</p>
+<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li><p>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</p>
+</li>
+<li><p>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.</p>
+<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+<li><p>Open the SmartThings app and delete the Home Assistant application from SmartThings.</p>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/smartthings.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on setting up SmartThings within Home Assistant.
+featured: true
+ha_release: 0.87
+ha_domain: smartthings
+---
+
+[SmartThings](https://www.samsung.com/smartthings/) is a home automation platform for connecting with Samsung or third-party devices.
+
+{% warning %}
+**Upcoming breaking API change (October 2026).**
+
+Samsung has announced that free access to the SmartThings API will be phased out starting in **October 2026**. After this date, the SmartThings API access will require a paid Personal Plan subscription ($4.99/month).
+
+If you use this integration, you will need to either subscribe to Samsung&#x27;s Personal Plan or migrate your devices (like local Zigbee/Z-Wave devices) before October 2026 to avoid a service disruption. For full details, see the [SmartThings community announcement](https://community.smartthings.com/t/a-new-enhanced-smartthings-api-experience/309947).
+{% endwarning %}
+
+## Prerequisites
+
+- You need a Samsung account and account credentials.
+- To connect devices, you need the SmartThings app installed on your phone.
+
+{% include integrations/config_flow.md %}
+
+## Supported functionality
+
+SmartThings represents devices as a set of [capabilities](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference). The SmartThings integration maps those capabilities to entities in Home Assistant. A single device may be represented by one or more entities.
+
+- [Binary sensor](#binary-sensor)
+- [Button](#button)
+- [Climate](#climate)
+- [Cover](#cover)
+- [Event](#event)
+- [Fan](#fan)
+- [Light](#light)
+- [Lock](#lock)
+- [Media player](#media-player)
+- [Number](#number)
+- [Scene](#scene)
+- [Select](#select)
+- [Sensor](#sensor)
+- [Switch](#switch)
+- [Update](#update)
+- [Vacuum](#vacuum)
+- [Valve](#valve)
+- [Water heater](#water-heater)
+
+### Binary sensor
+
+In Home Assistant, a binary sensor entity will be created for each of the following SmartThings capabilities:
+
+| SmartThings capability                                                                                                          |
+|---------------------------------------------------------------------------------------------------------------------------------|
+| `accelerationSensor`                                                                                                            |
+| [`contactSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#contactSensor)             |
+| `custom.dryerWrinklePrevent`                                                                                                    |
+| `custom.ovenCavityStatus`                                                                                                       |
+| `custom.waterFilter`                                                                                                            |
+| [`filterStatus`](https://developer.smartthings.com/docs/devices/capabilities/proposed#filterStatus)                             |
+| [`gasDetector`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#gasDetector)                 |
+| [`motionSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#motionSensor)               |
+| [`presenceSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#presenceSensor)           |
+| [`remoteControlStatus`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#remoteControlStatus) |
+| `samsungce.doorState`                                                                                                           |
+| `samsungce.kidsLock`                                                                                                            |
+| `samsungce.steamClosetKeepFreshMode`                                                                                            |
+| [`soundSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#soundSensor)                 |
+| `switch` (only for appliance categories such as washers, dryers, dishwashers, cooktops, microwaves, and clothing care machines) |
+| [`tamperAlert`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#tamperAlert)                 |
+| [`waterSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#waterSensor)                 |
+
+### Button
+
+The SmartThings Button platform provides the following buttons:
+
+| SmartThings capability                                                                                                            | Button                |
+|-----------------------------------------------------------------------------------------------------------------------------------|-----------------------|
+| [`ovenOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#ovenOperatingState)     | Stop                  |
+| `custom.waterFilter`                                                                                                              | Reset water filter    |
+| `samsungce.hoodFilter`                                                                                                            | Reset hood filter     |
+
+### Climate
+
+The SmartThings Climate platform lets you control devices that have air conditioner, thermostat, or heat pump related capabilities.
+
+#### Air conditioners
+
+For a SmartThings Air Conditioner to be represented by the climate entity, it must have all of the following required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.
+
+| SmartThings capability                                                                                                                                 | Related climate features in Home Assistant                                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`airConditionerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerMode) (required)                             | `hvac mode`                                                                                                                                                      |
+| [`airConditionerFanMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerFanMode) (required)                       | `fan mode`                                                                                                                                                       |
+| [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) (required)                                       | `turn on`, `turn off`                                                                                                                                            |
+| [`temperatureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#temperatureMeasurement) (required)       | `temperature`                                                                                                                                                    |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint) (required) | `target temp`                                                                                                                                                    |
+| `custom.airConditionerOptionalMode`                                                                                                                    | `preset mode`                                                                                                                                                    |
+| [`demandResponseLoadControl`](https://developer.smartthings.com/docs/devices/capabilities/proposed#demandResponseLoadControl)                          | `drlc_status_duration` (state attribute), `drlc_status_level` (state attribute), `drlc_status_override` (state attribute), `drlc_status_start` (state attribute) |
+| [`fanOscillationMode`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#fanOscillationMode)                          | `swing mode`                                                                                                                                                     |
+
+#### Thermostats
+
+For a SmartThings thermostat to be represented by the climate entity, it must have all of the required capabilities. If it does not have all the capabilities, the features will be represented in Home Assistant as individual sensors instead of a climate entity.
+
+| SmartThings capability                                                                                                                              | Related climate features in Home Assistant |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [`thermostatMode`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatMode) (required)                    | `hvac mode`                                |
+| [`thermostatHeatingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatHeatingSetpoint) (required) | `target temp`, `target temp low`        |
+| [`temperatureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#temperatureMeasurement) (required)    | `temperature`                              |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint)         | `target temp`, `target temp high`          |
+| [`thermostatOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatOperatingState)           | `hvac action`                              |
+| [`thermostatFanMode`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatFanMode)                         | `fan mode`                                 |
+| [`relativeHumidityMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#relativeHumidityMeasurement)     | `humidity` (state attribute)               |
+
+#### Heat pump zones
+
+For a SmartThings heat pump zone to be represented by the climate entity, it must have all of the required capabilities on an `INDOOR`, `INDOOR1`, or `INDOOR2` component.
+
+| SmartThings capability                                                                                                                                 | Related climate features in Home Assistant |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| [`airConditionerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerMode) (required)                             | `hvac mode`                                |
+| [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) (required)                                       | `turn on`, `turn off`                      |
+| [`temperatureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#temperatureMeasurement) (required)       | `temperature`                              |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint) (required) | `target temp`                              |
+| `custom.thermostatSetpointControl` (required)                                                                                                          | `min temp`, `max temp`                     |
+
+### Cover
+
+The SmartThings Cover platform lets you control devices that have open/close related capabilities. For a device to be represented by the cover entity, it must either have the `doorControl` or `windowShade` capability. Otherwise the features will be represented as individual sensors in Home Assistant.
+
+| SmartThings capability                                                                                                     | Related cover features in Home Assistant |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [`doorControl`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#doorControl)            | `open` and `close`                       |
+| [`windowShade`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#windowShade)            | `open` and `close`                       |
+| [`switchLevel`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switchLevel)            | `position`                               |
+| [`windowShadeLevel`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference/#windowShadeLevel) | `position`                               |
+| [`battery`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#battery)                    | `battery_level` (state attribute)        |
+
+### Event
+
+The SmartThings Event platform will create entities for every button. It will show any button presses and allows you to automate on these events.
+
+### Fan
+
+The SmartThings Fan lets you control devices that have fan-related capabilities. For a SmartThings device to be represented by the fan entity, it must have one or more of the capabilities below in addition to the [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) capability. Devices with `fanSpeed` or `airConditionerFanMode` that also have `thermostatCoolingSetpoint` will be represented as climate entities instead.
+
+| SmartThings capability                                                                                                                                  | Related fan features in Home Assistant |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| [`fanSpeed`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#fanSpeed)                                               | `speed` (percentage)                   |
+| [`airConditionerFanMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerFanMode)                                   | `preset mode`                          |
+| `samsungce.hoodFanSpeed` (creates a separate hood fan entity for range hoods with smart fan speed support)                                              | `speed` (percentage), `preset mode`    |
+
+### Light
+
+The SmartThings Light lets you control devices that have light-related capabilities. For a SmartThings device to be represented by the light entity, it must have one or more of the capabilities below in addition to the [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) capability.
+
+| SmartThings capability                                                                                                    | Related light features in Home Assistant |
+| ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [`switchLevel`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switchLevel)           | `brightness` and `transition`            |
+| [`colorControl`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#colorControl)         | `color`                                  |
+| [`colorTemperature`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#colorTemperature) | `color_temp`                             |
+
+### Lock
+
+The SmartThings Lock platform lets you control devices that have the [`lock`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#lock) capability, showing current lock status and supporting lock and unlock commands.
+
+### Media player
+
+The SmartThings Media player lets you control devices that have media player-related capabilities. For a SmartThings device to be represented by the media player entity, it must have all required capabilities.
+
+| SmartThings capability                                                                                                            | Related media player features in Home Assistant                                       |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [`audioMute`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#audioMute) (required)            | `volume_mute`                                                                         |
+| [`audioVolume`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#audioVolume) (required)        | `volume_up`, `volume_down`, `volume_set`                                              |
+| [`audioTrackData`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#audioTrackData)             | `media_title` and `media_artist`                                                      |
+| [`mediaPlayback`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#mediaPlayback)               | `media_play`, `media_pause`, `media_stop`, `media_next_track`, `media_previous_track` |
+| [`mediaInputSource`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#mediaInputSource)         | `select_source`                                                                       |
+| [`mediaPlaybackRepeat`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#mediaPlaybackRepeat)   | `repeat_set`                                                                          |
+| [`mediaPlaybackShuffle`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#mediaPlaybackShuffle) | `shuffle_set`                                                                         |
+| `custom.soundmode`                                                                                                                | `select_sound_mode`                                                                   |
+| [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch)                             | `turn_on`, `turn_off`                                                                 |
+
+### Number
+
+The SmartThings number platform lets you control numeric values for the following capabilities:
+
+| SmartThings capability                                                                                                                                 | Number entity                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- |
+| `custom.washerRinseCycles`                                                                                                                             | Washer rinse cycles          |
+| `samsungce.hoodFanSpeed` (on hood component)                                                                                                           | Hood fan speed               |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint) (on cooler, freezer, or onedoor components) | Refrigerator temperature |
+
+### Scene
+
+The SmartThings scene platform lets you activate scenes that you defined in SmartThings. A scene entity is created for each SmartThings scene.
+
+### Select
+
+The SmartThings Select platform lets you configure device options. Some capabilities require remote control to be enabled on the device before they can be changed.
+
+The following SmartThings capabilities are supported for Select entities:
+
+| SmartThings capability                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `custom.picturemode`                                                                                                                       |
+| `custom.washerSoilLevel`                                                                                                                   |
+| `custom.washerSpinLevel`                                                                                                                   |
+| `custom.washerWaterTemperature`                                                                                                            |
+| [`dishwasherOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#dishwasherOperatingState)  |
+| [`dryerOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#dryerOperatingState)            |
+| `samsungce.autoDispenseDetergent`                                                                                                          |
+| `samsungce.dishwasherWashingOptions`                                                                                                       |
+| `samsungce.dustFilterAlarm`                                                                                                                |
+| `samsungce.flexibleAutoDispenseDetergent`                                                                                                  |
+| `samsungce.lamp`                                                                                                                           |
+| [`washerOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#washerOperatingState)          |
+
+### Sensor
+
+The SmartThings Sensor platform lets you view devices that have sensor-related capabilities. A Sensor entity is created for each attribute (below) supported by the device.
+
+| SmartThings capability                                                                                                                                        | Related entities in Home Assistant                                       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [`activityLightingMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#activityLightingMode)                                           | Activity lighting mode                                                   |
+| [`airConditionerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerMode)                                               | Air conditioner mode                                                     |
+| [`airQualitySensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#airQualitySensor)                                     | Air quality                                                              |
+| [`alarm`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#alarm)                                                           | Alarm                                                                    |
+| [`atmosphericPressureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#atmosphericPressureMeasurement)         | Atmospheric pressure                                                     |
+| [`audioVolume`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#audioVolume)                                               | Volume                                                                   |
+| [`battery`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#battery)                                                       | Battery                                                                  |
+| [`bodyMassIndexMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/proposed#bodyMassIndexMeasurement)                                   | Body mass index                                                          |
+| [`bodyWeightMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/proposed#bodyWeightMeasurement)                                         | Body weight                                                              |
+| [`carbonDioxideMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#carbonDioxideMeasurement)                     | Carbon dioxide                                                           |
+| [`carbonMonoxideDetector`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#carbonMonoxideDetector)                         | Carbon monoxide detector                                                 |
+| [`carbonMonoxideMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/proposed#carbonMonoxideMeasurement)                                 | Carbon monoxide                                                          |
+| `custom.cooktopOperatingState`                                                                                                                                | Cooktop operating state                                                  |
+| `custom.waterFilter`                                                                                                                                          | Water filter usage                                                       |
+| [`dishwasherOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/proposed#dishwasherOperatingState)                                   | Machine state&lt;br/&gt;Job state&lt;br/&gt;Completion time                          |
+| [`dryerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#dryerMode)                                                                 | Dryer mode                                                               |
+| [`dryerOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/proposed#dryerOperatingState)                                             | Machine state&lt;br/&gt;Job state&lt;br/&gt;Completion time                          |
+| [`dustHealthConcern`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#dustHealthConcern)                                   | PM10 health concern                                                      |
+| [`dustSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#dustSensor)                                                 | PM10&lt;br/&gt;PM2.5                                                           |
+| [`energyMeter`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#energyMeter)                                               | Energy                                                                   |
+| [`equivalentCarbonDioxideMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#equivalentCarbonDioxideMeasurement) | Equivalent carbon dioxide                                                |
+| [`fineDustHealthConcern`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#fineDustHealthConcern)                           | PM2.5 health concern                                                     |
+| [`fineDustSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#fineDustSensor)                                         | PM2.5                                                                    |
+| [`formaldehydeMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#formaldehydeMeasurement)                       | Formaldehyde                                                             |
+| [`gasMeter`](https://developer.smartthings.com/docs/devices/capabilities/proposed#gasMeter)                                                                   | Gas meter&lt;br/&gt;Gas meter calorific&lt;br/&gt;Gas meter time&lt;br/&gt;Gas             |
+| [`illuminanceMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#illuminanceMeasurement)                         | Illuminance                                                              |
+| [`infraredLevel`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#infraredLevel)                                           | Infrared level                                                           |
+| [`mediaInputSource`](https://developer.smartthings.com/docs/devices/capabilities/proposed#mediaInputSource)                                                   | Media input source                                                       |
+| [`mediaPlaybackRepeat`](https://developer.smartthings.com/docs/devices/capabilities/proposed#mediaPlaybackRepeat)                                             | Media playback repeat                                                    |
+| [`mediaPlaybackShuffle`](https://developer.smartthings.com/docs/devices/capabilities/proposed#mediaPlaybackShuffle)                                           | Media playback shuffle                                                   |
+| [`mediaPlayback`](https://developer.smartthings.com/docs/devices/capabilities/proposed#mediaPlayback)                                                         | Media playback status                                                    |
+| [`odorSensor`](https://developer.smartthings.com/docs/devices/capabilities/proposed#odorSensor)                                                               | Odor sensor                                                              |
+| [`ovenMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#ovenMode)                                                                   | Oven mode                                                                |
+| [`ovenOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/proposed#ovenOperatingState)                                               | Machine state&lt;br/&gt;Job state&lt;br/&gt;Completion time                          |
+| [`ovenSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/proposed#ovenSetpoint)                                                           | Set point                                                                |
+| [`powerConsumptionReport`](https://developer.smartthings.com/docs/devices/capabilities/proposed#powerConsumptionReport)                                       | Energy difference&lt;br/&gt;Power energy&lt;br/&gt;Energy saved&lt;br/&gt;Power&lt;br/&gt;Energy |
+| [`powerMeter`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#powerMeter)                                                 | Power                                                                    |
+| [`powerSource`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#powerSource)                                               | Power source                                                             |
+| `relativeBrightness`                                                                                                                                          | Brightness intensity                                                     |
+| [`refrigerationSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/proposed#refrigerationSetpoint)                                         | Set point                                                                |
+| [`relativeHumidityMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#relativeHumidityMeasurement)               | Humidity                                                                 |
+| [`robotCleanerCleaningMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#robotCleanerCleaningMode)                                   | Cleaning mode                                                            |
+| [`robotCleanerMovement`](https://developer.smartthings.com/docs/devices/capabilities/proposed#robotCleanerMovement)                                           | Movement                                                                 |
+| [`robotCleanerTurboMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#robotCleanerTurboMode)                                         | Turbo mode                                                               |
+| `samsungce.cooktopHeatingPower`                                                                                                                               | Manual level&lt;br/&gt;Heating mode                                            |
+| `samsungce.dryerOperatingState`                                                                                                                               | Progress                                                                 |
+| `samsungce.ehsDiverterValve`                                                                                                                                  | Diverter valve position                                                  |
+| `samsungce.hoodFilter`                                                                                                                                        | Hood filter usage                                                        |
+| `samsungce.washerOperatingState`                                                                                                                              | Progress                                                                 |
+| `samsungce.waterConsumptionReport`                                                                                                                            | Water consumption                                                        |
+| [`signalStrength`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#signalStrength)                                         | Link quality&lt;br/&gt;Signal strength                                         |
+| [`smokeDetector`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#smokeDetector)                                           | Smoke detector                                                           |
+| [`temperatureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#temperatureMeasurement)                         | Temperature                                                              |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint)                   | Cooling set point                                                        |
+| [`thermostatFanMode`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatFanMode)                                   | Fan mode                                                                 |
+| [`thermostatHeatingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatHeatingSetpoint)                   | Heating set point                                                        |
+| [`thermostatMode`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatMode)                                         | Mode                                                                     |
+| [`thermostatOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatOperatingState)                     | Operating state                                                          |
+| [`thermostatSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/deprecated#thermostatSetpoint)                                             | Set point                                                                |
+| [`threeAxis`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#threeAxis)                                                   | X coordinate&lt;br/&gt;Y coordinate&lt;br/&gt;Z coordinate                           |
+| [`tvChannel`](https://developer.smartthings.com/docs/devices/capabilities/proposed#tvChannel)                                                                 | TV channel&lt;br/&gt;TV channel name                                           |
+| [`tvocMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#tvocMeasurement)                                       | Volatile organic compounds                                               |
+| [`ultravioletIndex`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#ultravioletIndex)                                     | UV index                                                                 |
+| [`veryFineDustHealthConcern`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#veryFineDustHealthConcern)                   | PM1.0 health concern                                                     |
+| [`veryFineDustSensor`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#veryFineDustSensor)                                 | PM1.0                                                                    |
+| [`voltageMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#voltageMeasurement)                                 | Voltage                                                                  |
+| [`washerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#washerMode)                                                               | Washer mode                                                              |
+| [`washerOperatingState`](https://developer.smartthings.com/docs/devices/capabilities/proposed#washerOperatingState)                                           | Machine state&lt;br/&gt;Job state&lt;br/&gt;Completion time                          |
+
+### Switch
+
+The SmartThings Switch lets you control devices that have the [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) capability that are not already represented by a more specific platform. It will also create switches for the following capabilities:
+
+| SmartThings capability                 |
+|----------------------------------------|
+| `custom.dryerWrinklePrevent`           |
+| `samsungce.airConditionerBeep`         |
+| `samsungce.airConditionerLighting`     |
+| `samsungce.dishwasherWashingOptions`   |
+| `samsungce.powerCool`                  |
+| `samsungce.powerFreeze`               |
+| `samsungce.sabbathMode`               |
+| `samsungce.steamClosetAutoCycleLink`   |
+| `samsungce.steamClosetKeepFreshMode`   |
+| `samsungce.steamClosetSanitizeMode`    |
+| `samsungce.washerBubbleSoak`           |
+
+### Time
+
+The SmartThings time platform lets you control the start and end time for the do not disturb mode on supported devices.
+
+### Update
+
+The SmartThings update platform lets you update the firmware of devices that have the [`firmwareUpdate`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#firmwareUpdate) capability.
+
+### Vacuum
+
+The SmartThings Vacuum platform lets you control devices that have the `samsungce.robotCleanerOperatingState` capability, showing the vacuum status and controlling the device.
+
+### Valve
+
+The SmartThings Valve platform lets you control devices that have the [`valve`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#valve) capability, showing the valve status and opening and closing.
+
+### Water heater
+
+The SmartThings Water heater platform lets you control heat pumps that provide hot water. For a device to be represented by the water heater entity, it must have all of the following capabilities:
+
+| SmartThings capability                                                                                                                                 | Related water heater features in Home Assistant |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| [`switch`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#switch) (required)                                       | `turn on`, `turn off`                           |
+| [`airConditionerMode`](https://developer.smartthings.com/docs/devices/capabilities/proposed#airConditionerMode) (required)                             | `operation mode`                                |
+| [`temperatureMeasurement`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#temperatureMeasurement) (required)       | `temperature`                                   |
+| `custom.thermostatSetpointControl` (required)                                                                                                          | `min temp`, `max temp`                          |
+| [`thermostatCoolingSetpoint`](https://developer.smartthings.com/docs/devices/capabilities/capabilities-reference#thermostatCoolingSetpoint) (required) | `target temp`                                   |
+| `samsungce.ehsThermostat` (required)                                                                                                                   |                                                 |
+| `custom.outingMode` (required)                                                                                                                         | `away mode`                                     |
+
+## Troubleshooting
+
+### Enabling debug logs
+
+If debug logging is enabled, the integration shows all the received events in the logs. The log captures events for that device for 5 seconds, and returns a JSON file with the state of the device and the events.
+Debug logs can be helpful for diagnosing state updates, for example by selecting the button and then turning on the device physically.
+
+- To enable debug logs, follow the [steps to enable debug logs](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics).
+
+### Viewing device diagnostics
+
+The SmartThings integration provides diagnostics at two levels. To download diagnostics, follow the [steps to download diagnostics](/docs/configuration/troubleshooting/#download-diagnostics).
+
+- **Device diagnostics**: Contains all capabilities and their current states for a single device. This is useful when troubleshooting a specific device — it shows exactly what capabilities, attributes, and attribute values the device exposes to the SmartThings API.
+- **Config entry diagnostics**: Contains information about all capabilities and devices in your SmartThings location, but without the current state values. This is useful for getting a comprehensive overview of available capabilities across all your connected devices.
+
+### Missing device functionality
+
+The SmartThings integration does not support all SmartThings capabilities. Only the capabilities listed in this documentation are supported. If a feature of your device is not available in Home Assistant, there are a few possible reasons:
+
+1. To see which capabilities are currently implemented, check the [supported functionality](#supported-functionality) section.
+   - The capability you are looking for might not yet be supported by this integration.&#32;
+2. To see if the necessary capability is available for your device in the API, check the [SmartThings Developer Portal](https://my.smartthings.com/advanced/devices).
+   - Some device features are only available in the SmartThings app and are not exposed through the API.&#32;
+3. If the capability is available in the SmartThings API but not yet supported by this integration, you can request support by creating a [GitHub Discussion](https://github.com/orgs/home-assistant/discussions?discussions_q=is%3Aopen+label%3A%22integration%3A+smartthings%22).
+   - Do not create a GitHub Issue for feature requests, as issues are intended for bug reports.
+   - When creating a feature request, attach the [device diagnostics](#viewing-device-diagnostics) for the device that is missing functionality. This helps identify which capabilities your device exposes and speeds up the implementation.
+
+## SmartThings community
+
+The SmartThings integration is complex due to the breadth of devices and capabilities it supports. If you need community support or want to discuss device integration topics with other SmartThings users, you can join the [SmartThings Integration community on Discord](https://discord.gg/EJYdwMCz7K).
+
+## Removing the integration
+
+{% include integrations/remove_device_service.md %}
+4. Open the SmartThings app and delete the Home Assistant application from SmartThings.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SmartThings.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>media player</li><li>number</li><li>scene</li><li>select</li><li>sensor</li><li>switch</li><li>update</li><li>vacuum</li><li>valve</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Troubleshooting</li><li>SmartThings community</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/smartthings/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/smartthings</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/smartthings</code></dd></dl></section><p><a href="../../integrations/smartthings/">Return to the SmartThings guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

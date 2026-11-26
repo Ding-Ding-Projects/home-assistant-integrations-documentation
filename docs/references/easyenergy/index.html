@@ -1,1 +1,627 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>easyEnergy reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:119" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/easyenergy/">easyEnergy guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>easyEnergy</h1><p>Instructions on how to integrate easyEnergy within Home Assistant.</p><section><h2>Overview</h2><p>The easyEnergy integration integrates the easyEnergy API platform with Home Assistant.</p></section><section><h2>Sensors</h2><p>The easyEnergy integration creates several sensor entities for both gas and electricity prices.</p></section><section><h2>Energy market prices</h2><p>easyEnergy provides separate prices for electricity that you use (buy) and return (sell).</p></section><section><h2>Gas market price</h2><p>For the dynamic gas prices, only entities are created that display the current hour and next hour price because the price is always fixed for 24 hours.</p></section><section><h2>Use cases</h2><p>With the energy dashboard you can use the current hour price entity to calculate how much the electricity or gas has cost each hour based on the prices from easyEnergy. Or use one of the actions in combination with a template sensor to show the prices for today in a chart on your dashboard.</p></section><section><h2>easyEnergy automation examples</h2><p>These blueprints use the Current hour sensor on the easyEnergy Energy market price - Usage device. Set your price threshold in EUR/kWh; the sensor price includes VAT but excludes energy tax and purchase costs. Both blueprints run when the price crosses below the threshold. They do not run immediately if you enable them while the price is already below it. They can also run when price data becomes available again with a value below the threshold.</p></section><section><h2>Automation: Send a notification when the energy price is low</h2><p>Receive a notification when the electricity usage price drops below your chosen threshold. Select your easyEnergy price sensor and a notification entity when creating the automation. The message includes the current price.</p></section><section><h2>Automation: Start a dishwasher when the energy price is low</h2><p>Turn on a switch when the electricity usage price drops below your chosen threshold. For a dishwasher, choose a switch that starts its program; switching on the power supply alone may not start a cycle. You can also use this blueprint for another device controlled by a switch. The switch remains on when prices rise.</p></section><section><h2>Templates</h2><p>Create template sensors to display the prices in a chart or to calculate the all-in hour price.</p></section><section><h2>Prices sensor with response data</h2><p>To use the response data from the actions, you can create a template sensor that updates every hour. This example retrieves today&#x27;s all-in electricity usage prices at quarter-hour intervals. Replace YOUR_CONFIG_ENTRY_ID with your easyEnergy configuration entry ID.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for easyEnergy.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get energy return prices</li><li>get energy usage prices</li><li>get gas prices</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported functionality</li><li>Use cases</li><li>easyEnergy automation examples</li><li>Templates</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/easyenergy/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/easyenergy</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/easyenergy</code></dd></dl></section><p><a href="../../integrations/easyenergy/">Return to the easyEnergy guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>easyEnergy reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:119" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/easyenergy/">easyEnergy guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>easyEnergy</h1><p>Instructions on how to integrate easyEnergy within Home Assistant.</p><div class="reader-body"><p>The <strong>easyEnergy</strong> integration integrates the <a>easyEnergy</a> API platform with Home Assistant.</p>
+<p>The integration makes it possible to retrieve the dynamic energy/gas prices
+from easyEnergy to gain insight into the price trend of the day and
+to adjust your consumption accordingly.</p>
+<p>Companies that use the data from easyEnergy:</p>
+<ul>
+<li><a>NieuweStroom</a></li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>easyEnergy</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>easyEnergy</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Supported functionality</h2>
+<h3>Sensors</h3>
+<p>The easyEnergy integration creates several sensor entities for both gas
+and electricity prices.</p>
+<h4>Energy market prices</h4>
+<p>easyEnergy provides separate prices for electricity that you use (buy) and return (sell).</p>
+<ul>
+<li>The <code>current hour</code> and <code>next hour</code> electricity market price</li>
+<li>Average electricity price of the day</li>
+<li>Lowest energy price</li>
+<li>Highest energy price</li>
+<li>Time of day when the price is highest</li>
+<li>Time of day when the price is at its lowest</li>
+<li>Percentage of the current price compared to the maximum price</li>
+</ul>
+<p>For electricity usage, an additional sensor counts the hours with a price equal to or lower than the current usage price. For electricity return, an additional sensor counts the hours with a price equal to or higher than the current return price. With this information, you could switch devices during the cheapest hours of the day, as illustrated in the graph below.</p>
+<p>
+&#32;&#32;
+  Example showing the energy price graph.
+</p>
+
+<h4>Gas market price</h4>
+<p>For the dynamic gas prices, only entities are created that display the
+<code>current hour</code> and <code>next hour</code> price because the price is always fixed for
+24 hours.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Use cases</h2>
+<p>With the <a>energy dashboard</a> you can use the <code>current hour</code> price entity to calculate how much the electricity or gas has cost each hour based on the prices from easyEnergy. Or use one of the actions in combination with a <a>template sensor</a> to show the prices for today in a chart on your dashboard.</p>
+<h2>easyEnergy automation examples</h2>
+<p>These blueprints use the <strong>Current hour</strong> sensor on the easyEnergy <strong>Energy market price - Usage</strong> device. Set your price threshold in EUR/kWh; the sensor price includes VAT but excludes energy tax and purchase costs. Both blueprints run when the price crosses below the threshold. They do not run immediately if you enable them while the price is already below it. They can also run when price data becomes available again with a value below the threshold.</p>
+<h3>Automation: Send a notification when the energy price is low</h3>
+<p>Receive a notification when the electricity usage price drops below your chosen threshold. Select your easyEnergy price sensor and a notification entity when creating the automation. The message includes the current price.</p>
+<pre><code>blueprint:
+  name: easyEnergy low price notification
+  description: &gt;
+    Send a notification when the current electricity usage price drops below
+    your chosen threshold. It runs once when the price crosses below the
+    threshold, rather than on every price update. Enabling the automation
+    while the price is already below the threshold does not send a notification.
+    It can also run when price data becomes available again with a value
+    below the threshold.
+  domain: automation
+  author: klaasnicolaas
+
+  input:
+    price_sensor:
+      name: Current electricity usage price
+      description: &gt;
+        Select the Current hour sensor on the easyEnergy
+        Energy market price - Usage device. Its unit is EUR/kWh.
+        Do not select a return, gas, next-hour, or daily summary sensor.
+      selector:
+        entity:
+          filter:
+            - integration: easyenergy
+              domain: sensor
+
+    price_threshold:
+      name: Price threshold
+      description: &gt;
+        Run when the price drops below this value in EUR/kWh.
+        The sensor price includes VAT but excludes energy tax and purchase
+        costs. Negative thresholds are supported.
+      default: 0.15
+      selector:
+        number:
+          mode: box
+          step: 0.001
+          unit_of_measurement: EUR/kWh
+
+    notification_entity:
+      name: Notification destination
+      description: The notification entity to send the low price message to.
+      selector:
+        entity:
+          filter:
+            - domain: notify
+
+triggers:
+  - trigger: numeric_state
+    entity_id: !input price_sensor
+    below: !input price_threshold
+
+actions:
+  - action: notify.send_message
+    target:
+      entity_id: !input notification_entity
+    data:
+      title: "Low energy price"
+      message: &gt;
+        The current electricity usage price is
+        {{ trigger.to_state.state }} EUR/kWh.
+</code></pre>
+<h3>Automation: Start a dishwasher when the energy price is low</h3>
+<p>Turn on a switch when the electricity usage price drops below your chosen threshold. For a dishwasher, choose a switch that starts its program; switching on the power supply alone may not start a cycle. You can also use this blueprint for another device controlled by a switch. The switch remains on when prices rise.</p>
+<pre><code>blueprint:
+  name: easyEnergy turn on a device at a low price
+  description: &gt;
+    Turn on a switch when the current electricity usage price drops below
+    your chosen threshold. For example, start a dishwasher whose program can
+    be started by a switch. It runs once when the price crosses below the
+    threshold and leaves the switch on when prices rise. Enabling the
+    automation while the price is already below the threshold does not
+    turn on the switch.
+    It can also run when price data becomes available again with a value
+    below the threshold.
+  domain: automation
+  author: klaasnicolaas
+
+  input:
+    price_sensor:
+      name: Current electricity usage price
+      description: &gt;
+        Select the Current hour sensor on the easyEnergy
+        Energy market price - Usage device. Its unit is EUR/kWh.
+        Do not select a return, gas, next-hour, or daily summary sensor.
+      selector:
+        entity:
+          filter:
+            - integration: easyenergy
+              domain: sensor
+
+    price_threshold:
+      name: Price threshold
+      description: &gt;
+        Run when the price drops below this value in EUR/kWh.
+        The sensor price includes VAT but excludes energy tax and purchase
+        costs. Negative thresholds are supported.
+      default: 0.15
+      selector:
+        number:
+          mode: box
+          step: 0.001
+          unit_of_measurement: EUR/kWh
+
+    switch_entity:
+      name: Device switch
+      description: &gt;
+        The switch to turn on at a low price. For a dishwasher, select a
+        switch that starts its program, not just its power supply.
+      selector:
+        entity:
+          filter:
+            - domain: switch
+
+triggers:
+  - trigger: numeric_state
+    entity_id: !input price_sensor
+    below: !input price_threshold
+
+actions:
+  - action: switch.turn_on
+    target:
+      entity_id: !input switch_entity
+</code></pre>
+<h2>Templates</h2>
+<p>Create template sensors to display the prices in a chart or to calculate the all-in hour price.</p>
+<h3>Prices sensor with response data</h3>
+<p>To use the response data from the actions, you can create a template sensor that updates every hour. This example retrieves today's all-in electricity usage prices at quarter-hour intervals. Replace <code>YOUR_CONFIG_ENTRY_ID</code> with your easyEnergy configuration entry ID.</p>
+<pre><code>template:
+  - triggers:
+      - trigger: time_pattern
+        minutes: 0
+    actions:
+      - action: easyenergy.get_energy_usage_prices
+        response_variable: prices
+        data:
+          config_entry: YOUR_CONFIG_ENTRY_ID
+          incl_vat: true
+          granularity: quarter
+          price_type: invoice
+    sensor:
+      - name: Energy prices
+        device_class: timestamp
+        state: "{{ now() }}"
+        attributes:
+          prices: "{{ prices }}"
+</code></pre>
+<h3>All-in price sensor</h3>
+<p>Create an all-in electricity price sensor by adding your energy tax and purchase costs to the current easyEnergy usage price.</p>
+<pre><code>blueprint:
+  name: easyEnergy all-in current price
+  description: &gt;
+    Create a template sensor that adds energy tax and purchase costs to the
+    current easyEnergy electricity usage price.
+  domain: template
+  author: klaasnicolaas
+
+  input:
+    price_sensor:
+      name: Current electricity usage price
+      description: &gt;
+        Select the Current hour sensor on the easyEnergy
+        Energy market price - Usage device. Its unit is EUR/kWh.
+      selector:
+        entity:
+          filter:
+            - integration: easyenergy
+              domain: sensor
+
+    energy_tax:
+      name: Energy tax
+      description: The energy tax to add in EUR/kWh.
+      selector:
+        number:
+          mode: box
+          step: 0.001
+          unit_of_measurement: EUR/kWh
+
+    purchase_costs:
+      name: Purchase costs
+      description: The purchase costs to add in EUR/kWh.
+      selector:
+        number:
+          mode: box
+          step: 0.001
+          unit_of_measurement: EUR/kWh
+
+variables:
+  price_sensor: !input price_sensor
+  energy_tax: !input energy_tax
+  purchase_costs: !input purchase_costs
+
+sensor:
+  name: easyEnergy all-in current price
+  unique_id: easyenergy_all_in_current_price
+  icon: mdi:cash
+  unit_of_measurement: "€/kWh"
+  state_class: measurement
+  state: &gt;
+    {% set current_price = states(price_sensor) | float(0) %}
+    {{ (current_price + energy_tax + purchase_costs) | round(2) }}
+</code></pre>
+<h2>Data updates</h2>
+<p>The integration will polling poll the easyEnergy API every 10 minutes to update the data in Home Assistant.</p>
+<p>Electricity prices for the following day and gas prices are published daily. You can retrieve published prices for a specific date using the actions.</p>
+<h2>Known limitations</h2>
+<p>The sensor prices are bare prices including VAT, however an energy company also charges other rates such as energy tax and purchase costs. The integration has no configuration option to add these values, but you could create a <a>template sensor</a> for this.</p>
+<h2>Troubleshooting</h2>
+<h4>Prices for tomorrow are unavailable</h4>
+<p><strong>Symptom:</strong> An action cannot retrieve tomorrow's prices.</p>
+<p><strong>Description:</strong> Prices for the requested date may not have been published yet. See <a>data updates</a>.</p>
+<p><strong>Resolution:</strong>
+Wait until easyEnergy has published the prices, then run the action again with <code>start</code> and <code>end</code> set to the same date in <code>YYYY-MM-DD</code> format. In YAML, quote the date values to keep them as strings.</p>
+<h4>The prices do not match my energy bill</h4>
+<p><strong>Symptom:</strong> The price shown by Home Assistant is lower than the price charged by the energy company.</p>
+<p><strong>Description:</strong> The sensor prices exclude the additional costs described under <a>known limitations</a>.</p>
+<p><strong>Resolution:</strong>
+Create a template sensor that adds these extra costs to the current price. See the <a>all-in price sensor</a> example.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal steps. If you also use the template sensors, you need to remove them manually.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/easyenergy.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate easyEnergy within Home Assistant.
+ha_release: 2023.3
+ha_domain: easyenergy
+---
+
+The **easyEnergy** {% term integration %} integrates the [easyEnergy](https://www.easyenergy.com) API platform with Home Assistant.
+
+The integration makes it possible to retrieve the dynamic energy/gas prices
+from easyEnergy to gain insight into the price trend of the day and
+to adjust your consumption accordingly.
+
+Companies that use the data from easyEnergy:
+
+- [NieuweStroom](https://nieuwestroom.nl)
+
+{% include integrations/config_flow.md %}
+
+## Supported functionality
+
+### Sensors
+
+The easyEnergy integration creates several sensor entities for both gas
+and electricity prices.
+
+#### Energy market prices
+
+easyEnergy provides separate prices for electricity that you use (buy) and return (sell).
+
+- The `current hour` and `next hour` electricity market price
+- Average electricity price of the day
+- Lowest energy price
+- Highest energy price
+- Time of day when the price is highest
+- Time of day when the price is at its lowest
+- Percentage of the current price compared to the maximum price
+
+For electricity usage, an additional sensor counts the hours with a price equal to or lower than the current usage price. For electricity return, an additional sensor counts the hours with a price equal to or higher than the current return price. With this information, you could switch devices during the cheapest hours of the day, as illustrated in the graph below.
+
+&lt;p class=&#x27;img&#x27;&gt;
+  &lt;img src=&#x27;/images/integrations/easyenergy/pricegraph.png&#x27; alt=&#x27;Screenshot showing energy price graph.&#x27;&gt;
+  Example showing the energy price graph.
+&lt;/p&gt;
+
+#### Gas market price
+
+For the dynamic gas prices, only entities are created that display the
+`current hour` and `next hour` price because the price is always fixed for
+24 hours.
+
+{% include integrations/actions.md %}
+
+## Use cases
+
+With the [energy dashboard](/energy) you can use the `current hour` price entity to calculate how much the electricity or gas has cost each hour based on the prices from easyEnergy. Or use one of the actions in combination with a [template sensor](#prices-sensor-with-response-data) to show the prices for today in a chart on your dashboard.
+
+## easyEnergy automation examples
+
+These blueprints use the **Current hour** sensor on the easyEnergy **Energy market price - Usage** device. Set your price threshold in EUR/kWh; the sensor price includes VAT but excludes energy tax and purchase costs. Both blueprints run when the price crosses below the threshold. They do not run immediately if you enable them while the price is already below it. They can also run when price data becomes available again with a value below the threshold.
+
+### Automation: Send a notification when the energy price is low
+
+Receive a notification when the electricity usage price drops below your chosen threshold. Select your easyEnergy price sensor and a notification entity when creating the automation. The message includes the current price.
+
+{% blueprint_example blueprint=&quot;easyenergy/easyenergy_low_price_notification.yaml&quot; %}
+
+### Automation: Start a dishwasher when the energy price is low
+
+Turn on a switch when the electricity usage price drops below your chosen threshold. For a dishwasher, choose a switch that starts its program; switching on the power supply alone may not start a cycle. You can also use this blueprint for another device controlled by a switch. The switch remains on when prices rise.
+
+{% blueprint_example blueprint=&quot;easyenergy/easyenergy_low_price_switch.yaml&quot; %}
+
+## Templates
+
+Create template sensors to display the prices in a chart or to calculate the all-in hour price.
+
+### Prices sensor with response data
+
+To use the response data from the actions, you can create a template sensor that updates every hour. This example retrieves today&#x27;s all-in electricity usage prices at quarter-hour intervals. Replace `YOUR_CONFIG_ENTRY_ID` with your easyEnergy configuration entry ID.
+
+```yaml
+template:
+  - triggers:
+      - trigger: time_pattern
+        minutes: 0
+    actions:
+      - action: easyenergy.get_energy_usage_prices
+        response_variable: prices
+        data:
+          config_entry: YOUR_CONFIG_ENTRY_ID
+          incl_vat: true
+          granularity: quarter
+          price_type: invoice
+    sensor:
+      - name: Energy prices
+        device_class: timestamp
+        state: &quot;{{ now() }}&quot;
+        attributes:
+          prices: &quot;{{ prices }}&quot;
+```
+
+### All-in price sensor
+
+Create an all-in electricity price sensor by adding your energy tax and purchase costs to the current easyEnergy usage price.
+
+{% blueprint_example blueprint=&quot;easyenergy/easyenergy_all_in_price_sensor.yaml&quot; %}
+
+## Data updates
+
+The integration will {% term polling poll %} the easyEnergy API every 10 minutes to update the data in Home Assistant.
+
+Electricity prices for the following day and gas prices are published daily. You can retrieve published prices for a specific date using the actions.
+
+## Known limitations
+
+The sensor prices are bare prices including VAT, however an energy company also charges other rates such as energy tax and purchase costs. The integration has no configuration option to add these values, but you could create a [template sensor](#all-in-price-sensor) for this.
+
+## Troubleshooting
+
+{% details &quot;Prices for tomorrow are unavailable&quot; %}
+
+**Symptom:** An action cannot retrieve tomorrow&#x27;s prices.
+
+**Description:** Prices for the requested date may not have been published yet. See [data updates](#data-updates).
+
+**Resolution:**
+Wait until easyEnergy has published the prices, then run the action again with `start` and `end` set to the same date in `YYYY-MM-DD` format. In YAML, quote the date values to keep them as strings.
+
+{% enddetails %}
+
+{% details &quot;The prices do not match my energy bill&quot; %}
+
+**Symptom:** The price shown by Home Assistant is lower than the price charged by the energy company.
+
+**Description:** The sensor prices exclude the additional costs described under [known limitations](#known-limitations).
+
+**Resolution:**
+Create a template sensor that adds these extra costs to the current price. See the [all-in price sensor](#all-in-price-sensor) example.
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal steps. If you also use the template sensors, you need to remove them manually.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for easyEnergy.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>get energy return prices</li><li>get energy usage prices</li><li>get gas prices</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported functionality</li><li>Use cases</li><li>easyEnergy automation examples</li><li>Templates</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/easyenergy/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/easyenergy</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/easyenergy</code></dd></dl></section><p><a href="../../integrations/easyenergy/">Return to the easyEnergy guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

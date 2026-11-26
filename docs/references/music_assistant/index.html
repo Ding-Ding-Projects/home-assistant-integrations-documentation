@@ -1,1 +1,453 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Music Assistant reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:2" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/music_assistant/">Music Assistant guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Music Assistant</h1><p>Instructions on how to integrate Music Assistant into Home Assistant.</p><section><h2>Overview</h2><p>The Music Assistant (MA) integration allows you to connect Home Assistant to a Music Assistant Server. Once configured, all MA Players show up as Home Assistant media player entities.  Media players will allow you to control media playback and see the currently playing item.</p></section><section><h2>Prerequisites</h2><p>This integration connects to a Music Assistant server.</p></section><section><h2>Setting up with the Music Assistant app</h2><p>If you run Home Assistant Operating System, the setup asks whether you want to use the official Music Assistant app.</p></section><section><h2>Manual configuration</h2><p>Under normal circumstances, Home Assistant automatically discovers your running Music Assistant server. If there is something special about the Home Assistant or Music Assistant setup (for example, the Music Assistant server is running as a remote Docker container) or discovery is not working, you can manually specify the URL to your Music Assistant server.</p></section><section><h2>Supported functionality</h2><p>There is currently support for the following Home Assistant Platforms:</p></section><section><h2>Media player entities</h2><p>The Music Assistant integration creates media player entities for all players and groups available in MA, including those imported from Home Assistant. This is needed to provide the full functionality Music Assistant has to offer. This full functionality includes transfer of the playing queue of music from one player to another, automatic pausing of playback during announcements, and richer options for selecting the media for playback. These entities will display media information, playback progress, and playback controls.</p></section><section><h2>Dashboards</h2><p>Music Assistant can show dashboards, such as a party queue or a &quot;Now playing&quot; screen, on display devices like a Chromecast running the Music Assistant receiver, a Fully Kiosk browser, or an Apple TV. Each display becomes its own Home Assistant device (a &quot;Dashboard display&quot;) with a single media player entity, using the tv device class. A display gets its entity while its provider is running, and the entity becomes unavailable whenever the display disconnects. A browser tab open on the Music Assistant web interface is not a display device.</p></section><section><h2>Favorite current song button</h2><p>The Music Assistant integration creates a button entity for each player to favorite the current song. Pressing this button (manually or by automation) adds the current song to your Music Assistant favorites. This works for songs stored locally as well as for tracks from streaming providers. It also works with remote content such as Spotify Connect, AirPlay, or a radio station, as long as the external source provides an artist and title combination (and optionally the album).</p></section><section><h2>Player options</h2><p>If a player provider supports player options, the Music Assistant integration exposes additional entities. For example, you may have a number entity to adjust the media player&#x27;s bass or treble value. Refer to the Player documentation to see whether your player supports this.</p></section><section><h2>Supported devices</h2><p>This integration requires Music Assistant server version 2.4 or later. The integration can connect to Music Assistant servers hosted as an app or in a separate Docker container.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Music Assistant.</p><p>The <strong>auth manual</strong> configuration step lists <code>token</code>.</p><p>The <strong>manual</strong> configuration step lists <code>url</code>.</p><p>The <strong>on supervisor</strong> configuration step lists <code>use_app</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>url</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>media player</li><li>number</li><li>select</li><li>switch</li><li>text</li></ul><h3>Documented actions</h3><ul class="chips"><li>get library</li><li>get queue</li><li>play announcement</li><li>play media</li><li>search</li><li>transfer queue</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Notes</li><li>Supported devices</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/music_assistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/music_assistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/music_assistant</code></dd></dl></section><p><a href="../../integrations/music_assistant/">Return to the Music Assistant guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Music Assistant reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:2" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/music_assistant/">Music Assistant guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Music Assistant</h1><p>Instructions on how to integrate Music Assistant into Home Assistant.</p><div class="reader-body"><p>The <strong>Music Assistant</strong> (MA) integration allows you to connect Home Assistant to a <a>Music Assistant Server</a>. Once configured, all <a>MA Players</a> show up as Home Assistant <a href="../media_player/">media player entities</a>.  Media players will allow you to control media playback and see the currently playing item.</p>
+<h2>Prerequisites</h2>
+<p>This integration connects to a Music Assistant server.</p>
+<ul>
+<li>If you run Home Assistant Operating System, you don't need to prepare anything. Home Assistant can install and start the official Music Assistant app for you during setup.</li>
+<li>For other installation types, or if you want to run the Music Assistant server somewhere else, make sure you have a running Music Assistant server first. Instructions are available in the <a>Music Assistant documentation</a>.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Music Assistant</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Music Assistant</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h3>Setting up with the Music Assistant app</h3>
+<p>If you run Home Assistant Operating System, the setup asks whether you want to use the official Music Assistant app.</p>
+<ol>
+<li>Keep <strong>Use the official Music Assistant app</strong> selected and select <strong>Submit</strong>.<ul>
+<li>If the app is not installed yet, Home Assistant installs it. This can take several minutes.</li>
+<li>If the app is not running, Home Assistant starts it.</li>
+</ul>
+</li>
+<li>If this is a new Music Assistant installation, Music Assistant opens in a new browser tab. Finish its initial setup there.<ul>
+<li>Home Assistant continues automatically once the Music Assistant setup is done.</li>
+</ul>
+</li>
+</ol>
+<p>If you already run Music Assistant in another way, for example in a different app, in your own container, or on another machine, clear the <strong>Use the official Music Assistant app</strong> checkbox. You can then enter the URL of your Music Assistant server manually.</p>
+<h3>Manual configuration</h3>
+<p>Under normal circumstances, Home Assistant automatically discovers your running Music Assistant server. If there is something special about the Home Assistant or Music Assistant setup (for example, the Music Assistant server is running as a remote Docker container) or discovery is not working, you can manually specify the URL to your Music Assistant server.</p>
+<h2>Supported functionality</h2>
+<p>There is currently support for the following Home Assistant Platforms:</p>
+<ul>
+<li><a>Media player</a></li>
+<li><a>Dashboard displays</a></li>
+<li><a>Button</a></li>
+</ul>
+<p>Depending on the player provider, additional platforms are supported: <a>Number, Select, Sensor, Switch, Text</a>.</p>
+<p>Music Assistant player entities support all of the Home Assistant <a href="../media_player/">media player control actions</a>. Dashboard display entities support only media playback, media browsing, and turning off.</p>
+<p>If using <code>media_player.play_media</code>, then note the <code>media_content_id</code> payload can be any of the following:</p>
+<ul>
+<li>The name of a track, artist, or album. For example, <code>Queen</code>.</li>
+<li>A track or album combined with the artist's name. For example, <code>Queen - Innuendo</code>.</li>
+<li>A streaming provider URI. For example, <code>spotify://artist/12345</code>.</li>
+<li>A streaming provider URL. For example, <code>https://open.spotify.com/track/31cWPvM99ZHxMl3mdgiw4I</code>.</li>
+</ul>
+<p>The <code>media_player.play_media</code> action runs as the Home Assistant user who made the request if their username matches a Music Assistant user. This affects the playlog entry and any provider filtering configured for that user. The <code>media_player.play_media</code> action doesn't let you choose the user, so if you call it from a script or automation and want the request attributed to a specific user, use the Music Assistant <a>Play media</a> action instead and set its <strong>Username</strong> field.</p>
+<p>If using <code>media_player.browse_media</code>, then the <code>media_content_id</code> payload must be a URI of the form <code>library://artist/1</code>, <code>library://album/20</code>, or <code>spotify://album/5zj4Ej0FrlJQaSo0d6cttH</code>. The type of item that the URI refers to must be an album or artist.</p>
+<p>These URIs can, for example, be obtained from the output of the <a>Get library items</a> or <a>Search Music Assistant</a> actions, or the <code>media_player.browse_media</code> action from Home Assistant.</p>
+<p>Streaming provider URLs can be obtained from the web interface of the provider.</p>
+<h3>Media player entities</h3>
+<p>The Music Assistant integration creates media player entities for all players and groups available in MA, including those imported from Home Assistant. This is needed to provide the full functionality Music Assistant has to offer. This full functionality includes transfer of the playing queue of music from one player to another, automatic pausing of playback during announcements, and richer options for selecting the media for playback. These entities will display media information, playback progress, and playback controls.</p>
+<h3>Dashboards</h3>
+<p>Music Assistant can show dashboards, such as a party queue or a "Now playing" screen, on display devices like a Chromecast running the Music Assistant receiver, a Fully Kiosk browser, or an Apple TV. Each display becomes its own Home Assistant device (a "Dashboard display") with a single media player entity, using the <code>tv</code> device class. A display gets its entity while its provider is running, and the entity becomes <code>unavailable</code> whenever the display disconnects. A browser tab open on the Music Assistant web interface is not a display device.</p>
+<p>To show a dashboard from an automation or script, perform the <code>media_player.play_media</code> action on the display entity. The easiest way to set it up is to add the action in the editor and use <strong>Pick media</strong> to browse to the dashboard you want. Home Assistant then fills in the media content ID and type for you.</p>
+<p>The media content type is always <code>dashboard</code>. The media content ID is <code>party</code>, <code>music_quiz</code>, or <code>now_playing/&lt;player id&gt;</code> for the "Now playing" screen of a specific Music Assistant player. For example:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.kitchen_display
+data:
+  media_content_type: dashboard
+  media_content_id: now_playing/&lt;player id&gt;
+</code></pre>
+<p>You can also pick a dashboard from the entity's media browser. It lists the dashboards the display supports, with a "Now playing" folder to pick which Music Assistant player to show.</p>
+<p>To hide the dashboard again, call <code>media_player.turn_off</code>. This is safe to call even when nothing is shown, or when the display has disconnected.</p>
+<p>While a dashboard is shown, the entity's state is <code>playing</code>, with the dashboard's name and artwork as the media title and image. It returns to <code>idle</code> when nothing is shown, and becomes <code>unavailable</code> if the display disconnects.</p>
+<p>Showing an unknown or unsupported dashboard, or using <code>now_playing</code> without a player, returns a clear error message.</p>
+<p>The Music Assistant actions, such as <strong>Play media</strong>, <strong>Play announcement</strong>, <strong>Transfer queue</strong>, and <strong>Get queue</strong>, only work with speaker entities. To show a dashboard, use the standard <code>media_player.play_media</code> action described above.</p>
+<p>This feature requires Music Assistant server version 2.10 or later.</p>
+<h3>Favorite current song button</h3>
+<p>The Music Assistant integration creates a button entity for each player to favorite the current song. Pressing this button (manually or by automation) adds the current song to your Music Assistant favorites. This works for songs stored locally as well as for tracks from streaming providers. It also works with remote content such as Spotify Connect, AirPlay, or a radio station, as long as the external source provides an artist and title combination (and optionally the album).</p>
+<h3>Player options</h3>
+<p>If a player provider supports player options, the Music Assistant integration exposes additional entities. For example, you may have a number entity to adjust the media player's bass or treble value. Refer to the <a>Player documentation</a> to see whether your player supports this.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Notes</h2>
+<ul>
+<li>Any Home Assistant players added to Music Assistant will appear duplicated as the MA version of the player is created. The original HA player can be hidden if desired.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>This integration requires Music Assistant server version 2.4 or later. The integration can connect to Music Assistant servers hosted as an app or in a separate Docker container.</p>
+<p>Music Assistant supports a <a>wide range of devices</a> both natively and through the <a>Home Assistant provider</a>. The Home Assistant provider, when installed, allows any Home Assistant media player to appear as a player in Music Assistant and thereby benefit from the advanced playback functionality that Music Assistant provides. As a general note, if there is a native Music Assistant provider then devices should be added via that method instead of using the Home Assistant media player. Any limitations associated with the providers are described on the related Player Provider page in the <a>Music Assistant documentation</a>.</p>
+<h2>Known limitations</h2>
+<p>The data returned by the <code>get_queue</code> action will be partially limited if the item is not in the library (For example, if an item was selected for playback directly from Spotify). Metadata such as favorite status, explicit status, last played, played count, and disc art URL are only available for items that are in the MA library.</p>
+<p>Radio mode is only available with certain music providers, and an error will be shown if attempting to enable radio mode on an item that isn't linked to one of those providers. Review the <a>Music Assistant documentation</a> to identify which providers support this functionality.</p>
+<h2>Troubleshooting</h2>
+<h3>Can’t find the MA actions</h3>
+<h4>Symptom: No Music Assistant actions are shown in the editor</h4>
+<p>When trying to set up a script or automation via the GUI, no MA actions can be found.</p>
+<h5>Description</h5>
+<p>This means the app may have been installed, but the integration has not.</p>
+<h5>Resolution</h5>
+<p>Go to the <a href="../music_assistant/">Configuration section</a> and install the integration.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>After deleting the integration, go to the <strong>Settings</strong> &gt; <strong>Apps</strong> and remove the <strong>Music Assistant</strong> app from there as well (if installed).</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/music_assistant.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Music Assistant into Home Assistant.
+featured: true
+ha_release: 2024.12
+ha_domain: music_assistant
+---
+
+The **Music Assistant** (MA) {% term integration %} allows you to connect Home Assistant to a [Music Assistant Server](https://www.music-assistant.io/). Once configured, all [MA Players](https://www.music-assistant.io/player-support/) show up as Home Assistant [media player entities](/integrations/media_player/).  Media players will allow you to control media playback and see the currently playing item.
+
+## Prerequisites
+
+This integration connects to a Music Assistant server.
+
+- If you run {% term &quot;Home Assistant Operating System&quot; %}, you don&#x27;t need to prepare anything. Home Assistant can install and start the official Music Assistant app for you during setup.
+- For other installation types, or if you want to run the Music Assistant server somewhere else, make sure you have a running Music Assistant server first. Instructions are available in the [Music Assistant documentation](https://www.music-assistant.io/installation/).
+
+{% include integrations/config_flow.md %}
+
+### Setting up with the Music Assistant app
+
+If you run {% term &quot;Home Assistant Operating System&quot; %}, the setup asks whether you want to use the official Music Assistant app.
+
+1. Keep **Use the official Music Assistant app** selected and select **Submit**.
+   - If the app is not installed yet, Home Assistant installs it. This can take several minutes.
+   - If the app is not running, Home Assistant starts it.
+2. If this is a new Music Assistant installation, Music Assistant opens in a new browser tab. Finish its initial setup there.
+   - Home Assistant continues automatically once the Music Assistant setup is done.
+
+If you already run Music Assistant in another way, for example in a different app, in your own container, or on another machine, clear the **Use the official Music Assistant app** checkbox. You can then enter the URL of your Music Assistant server manually.
+
+### Manual configuration
+
+Under normal circumstances, Home Assistant automatically discovers your running Music Assistant server. If there is something special about the Home Assistant or Music Assistant setup (for example, the Music Assistant server is running as a remote Docker container) or discovery is not working, you can manually specify the URL to your Music Assistant server.
+
+## Supported functionality
+
+There is currently support for the following Home Assistant Platforms:
+
+- [Media player](#media-player-entities)
+- [Dashboard displays](#dashboards)
+- [Button](#favorite-current-song-button)
+
+Depending on the player provider, additional platforms are supported: [Number, Select, Sensor, Switch, Text](#player-options).
+
+
+Music Assistant player entities support all of the Home Assistant [media player control actions](/integrations/media_player/#media-control-actions). Dashboard display entities support only media playback, media browsing, and turning off.
+
+If using `media_player.play_media`, then note the `media_content_id` payload can be any of the following:
+
+- The name of a track, artist, or album. For example, `Queen`.
+- A track or album combined with the artist&#x27;s name. For example, `Queen - Innuendo`.
+- A streaming provider URI. For example, `spotify://artist/12345`.
+- A streaming provider URL. For example, `https://open.spotify.com/track/31cWPvM99ZHxMl3mdgiw4I`.
+
+The `media_player.play_media` action runs as the Home Assistant user who made the request if their username matches a Music Assistant user. This affects the playlog entry and any provider filtering configured for that user. The `media_player.play_media` action doesn&#x27;t let you choose the user, so if you call it from a script or automation and want the request attributed to a specific user, use the Music Assistant [Play media](/actions/music_assistant.play_media/) action instead and set its **Username** field.
+
+If using `media_player.browse_media`, then the `media_content_id` payload must be a URI of the form `library://artist/1`, `library://album/20`, or `spotify://album/5zj4Ej0FrlJQaSo0d6cttH`. The type of item that the URI refers to must be an album or artist.
+
+These URIs can, for example, be obtained from the output of the [Get library items](/actions/music_assistant.get_library/) or [Search Music Assistant](/actions/music_assistant.search/) actions, or the `media_player.browse_media` action from Home Assistant.
+
+Streaming provider URLs can be obtained from the web interface of the provider.
+
+### Media player entities
+
+The Music Assistant integration creates media player entities for all players and groups available in MA, including those imported from Home Assistant. This is needed to provide the full functionality Music Assistant has to offer. This full functionality includes transfer of the playing queue of music from one player to another, automatic pausing of playback during announcements, and richer options for selecting the media for playback. These entities will display media information, playback progress, and playback controls.
+
+### Dashboards
+
+Music Assistant can show dashboards, such as a party queue or a &quot;Now playing&quot; screen, on display devices like a Chromecast running the Music Assistant receiver, a Fully Kiosk browser, or an Apple TV. Each display becomes its own Home Assistant device (a &quot;Dashboard display&quot;) with a single media player entity, using the `tv` device class. A display gets its entity while its provider is running, and the entity becomes `unavailable` whenever the display disconnects. A browser tab open on the Music Assistant web interface is not a display device.
+
+To show a dashboard from an automation or script, perform the `media_player.play_media` action on the display entity. The easiest way to set it up is to add the action in the editor and use **Pick media** to browse to the dashboard you want. Home Assistant then fills in the media content ID and type for you.
+
+The media content type is always `dashboard`. The media content ID is `party`, `music_quiz`, or `now_playing/&lt;player id&gt;` for the &quot;Now playing&quot; screen of a specific Music Assistant player. For example:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.kitchen_display
+data:
+  media_content_type: dashboard
+  media_content_id: now_playing/&lt;player id&gt;
+```
+
+You can also pick a dashboard from the entity&#x27;s media browser. It lists the dashboards the display supports, with a &quot;Now playing&quot; folder to pick which Music Assistant player to show.
+
+To hide the dashboard again, call `media_player.turn_off`. This is safe to call even when nothing is shown, or when the display has disconnected.
+
+While a dashboard is shown, the entity&#x27;s state is `playing`, with the dashboard&#x27;s name and artwork as the media title and image. It returns to `idle` when nothing is shown, and becomes `unavailable` if the display disconnects.
+
+Showing an unknown or unsupported dashboard, or using `now_playing` without a player, returns a clear error message.
+
+The Music Assistant actions, such as **Play media**, **Play announcement**, **Transfer queue**, and **Get queue**, only work with speaker entities. To show a dashboard, use the standard `media_player.play_media` action described above.
+
+This feature requires Music Assistant server version 2.10 or later.
+
+### Favorite current song button
+
+The Music Assistant integration creates a button entity for each player to favorite the current song. Pressing this button (manually or by automation) adds the current song to your Music Assistant favorites. This works for songs stored locally as well as for tracks from streaming providers. It also works with remote content such as Spotify Connect, AirPlay, or a radio station, as long as the external source provides an artist and title combination (and optionally the album).&#32;
+
+### Player options
+
+If a player provider supports player options, the Music Assistant integration exposes additional entities. For example, you may have a number entity to adjust the media player&#x27;s bass or treble value. Refer to the [Player documentation](https://www.music-assistant.io/player-support/) to see whether your player supports this.
+
+{% include integrations/actions.md %}
+
+## Notes
+
+- Any Home Assistant players added to Music Assistant will appear duplicated as the MA version of the player is created. The original HA player can be hidden if desired.
+
+## Supported devices
+
+This integration requires Music Assistant server version 2.4 or later. The integration can connect to Music Assistant servers hosted as an app or in a separate Docker container.
+
+Music Assistant supports a [wide range of devices](https://www.music-assistant.io/player-support/) both natively and through the [Home Assistant provider](https://www.music-assistant.io/player-support/home-assistant/). The Home Assistant provider, when installed, allows any Home Assistant media player to appear as a player in Music Assistant and thereby benefit from the advanced playback functionality that Music Assistant provides. As a general note, if there is a native Music Assistant provider then devices should be added via that method instead of using the Home Assistant media player. Any limitations associated with the providers are described on the related Player Provider page in the [Music Assistant documentation](https://www.music-assistant.io/).
+
+## Known limitations
+
+The data returned by the `get_queue` action will be partially limited if the item is not in the library (For example, if an item was selected for playback directly from Spotify). Metadata such as favorite status, explicit status, last played, played count, and disc art URL are only available for items that are in the MA library.
+
+Radio mode is only available with certain music providers, and an error will be shown if attempting to enable radio mode on an item that isn&#x27;t linked to one of those providers. Review the [Music Assistant documentation](https://www.music-assistant.io/music-providers/#summary) to identify which providers support this functionality.
+
+## Troubleshooting
+
+### Can’t find the MA actions
+
+#### Symptom: No Music Assistant actions are shown in the editor
+
+When trying to set up a script or automation via the GUI, no MA actions can be found.
+
+##### Description
+
+This means the app may have been installed, but the integration has not.
+
+##### Resolution
+
+Go to the [Configuration section](/integrations/music_assistant/#configuration) and install the integration.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+
+After deleting the integration, go to the {% my supervisor_addon title=&quot;**Settings** &gt; **Apps**&quot; addon=&quot;music_assistant&quot; %} and remove the **Music Assistant** app from there as well (if installed).</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Music Assistant.</p><p>The <strong>auth manual</strong> configuration step lists <code>token</code>.</p><p>The <strong>manual</strong> configuration step lists <code>url</code>.</p><p>The <strong>on supervisor</strong> configuration step lists <code>use_app</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>url</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>media player</li><li>number</li><li>select</li><li>switch</li><li>text</li></ul><h3>Documented actions</h3><ul class="chips"><li>get library</li><li>get queue</li><li>play announcement</li><li>play media</li><li>search</li><li>transfer queue</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported functionality</li><li>Notes</li><li>Supported devices</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/music_assistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/music_assistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/music_assistant</code></dd></dl></section><p><a href="../../integrations/music_assistant/">Return to the Music Assistant guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

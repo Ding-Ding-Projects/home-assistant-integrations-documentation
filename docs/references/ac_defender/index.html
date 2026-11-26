@@ -1,1 +1,333 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AC Defender reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:90" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ac_defender/">AC Defender guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>AC Defender</h1><p></p><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for AC Defender.</p><p>The <strong>user</strong> configuration step lists <code>climate_entity_id</code>, <code>my_temperature</code>, <code>safety_temperature</code>.</p><p>The <strong>sensors</strong> configuration step lists <code>room_sensor</code>, <code>door_sensor</code>, <code>presence_entity</code>, <code>outdoor_entity</code>, <code>power_kw</code>.</p><p>The <strong>guards</strong> configuration step lists <code>enabled_guards</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>climate_entity_id</code>, <code>my_temperature</code>, <code>safety_temperature</code>.</p><p>The <strong>reconfigure sensors</strong> configuration step lists <code>room_sensor</code>, <code>door_sensor</code>, <code>presence_entity</code>, <code>outdoor_entity</code>, <code>power_kw</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>event</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>pause</li><li>stop everything</li><li>defend again</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/integrations/ac_defender</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ac_defender</code></dd></dl></section><p><a href="../../integrations/ac_defender/">Return to the AC Defender guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AC Defender reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:90" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ac_defender/">AC Defender guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>AC Defender</h1><p></p><div class="reader-body"><h2>AC Defender</h2>
+<p>AC Defender keeps cooling on the way it was set. When something turns the unit off or changes its
+setting, the defender puts it back, within guards that stop it from fighting people or wearing the
+unit out.</p>
+<h2>Setting it up</h2>
+<p>Settings, Devices and services, Add integration, AC Defender. The setup flow picks the units to
+look after. Setup pickers that listed nothing were fixed in <code>b62a3e0ef</code> so that they now list the
+units, and numbers are sliders.</p>
+<h2>What you get</h2>
+<ul>
+<li>One device, with a switch per guard.</li>
+<li>Its own page with four parts: Now, Guards, Cost and Log. The page says what it is doing and why,
+and shows the comfort band bar and, when a sister is looking after the same unit, that sibling on
+top (see <a><code>shared-band-and-handovers.md</code></a>).</li>
+<li>A link from each device to its page, and plain messages instead of raw errors when a band is
+wrong.</li>
+<li>Services for pausing and stopping everything, and buttons, numbers, selects, sensors and an
+event entity for the log.</li>
+</ul>
+<h2>The engine</h2>
+<ul>
+<li>51 guards, each a small class behind one interface, in <code>ac_defender/guards/</code>. Each has a one-line description, and the reason line is worded by the page in English and Cantonese from a reason code (see <a><code>guard-descriptions-and-reasons.md</code></a>).</li>
+<li>Direction-aware: the same engine holds cooling on or heating off.</li>
+<li>A cost model that shows time only unless the owner supplies a power figure.</li>
+<li>Numbers corrected from the reference program (<code>d78560d34</code>): direct cooling at target plus 2.0,
+touch and command pressure, the governor score, and parking at 28.0. Each number has a test; three
+were watched failing with the old values (<code>32949f117</code>).</li>
+</ul>
+<h2>Remembering across a restart</h2>
+<p>A pause, "stop everything", today's running time and cost, who holds the room and the last hundred
+log lines are saved and read back. After a restart the defenders keep their hands off the unit
+until a fresh reading arrives, so a burst of commands is not sent on startup. A pause given right
+after a restart was being lost and is saved since <code>b62a3e0ef</code>.</p>
+<h2>Failure modes (inferred from the design, not read from a commit record)</h2>
+<ul>
+<li>No fresh reading after a restart: the defender waits and does nothing.</li>
+<li>A guard that cannot read what it needs does not act.</li>
+<li>With no power figure supplied, the Cost tab shows time only and no money figure.</li>
+</ul>
+<h2>Security and safety</h2>
+<p>The defender only changes the units the owner chose in setup, and every guard has its own switch.</p>
+<h2>How it was verified</h2>
+<ul>
+<li>Engine: 76 tests (<code>a5bbfa5da</code>); a test for each number taken from the reference program.</li>
+<li>First run in a real Home Assistant instance (<code>b62a3e0ef</code>): the setup pickers, sliders, the pause
+after a restart, the settings rows and the band bar were seen working. The same run caught the
+sibling quarrel described in the shared band file.</li>
+<li>Not seen against a real air conditioner; the cost figures were not checked against real power use.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/defenders/ac-defender.md</code></p><details><summary>Original Markdown source</summary><pre># AC Defender
+
+AC Defender keeps cooling on the way it was set. When something turns the unit off or changes its
+setting, the defender puts it back, within guards that stop it from fighting people or wearing the
+unit out.
+
+## Setting it up
+
+Settings, Devices and services, Add integration, AC Defender. The setup flow picks the units to
+look after. Setup pickers that listed nothing were fixed in `b62a3e0ef` so that they now list the
+units, and numbers are sliders.
+
+## What you get
+
+- One device, with a switch per guard.
+- Its own page with four parts: Now, Guards, Cost and Log. The page says what it is doing and why,
+  and shows the comfort band bar and, when a sister is looking after the same unit, that sibling on
+  top (see [`shared-band-and-handovers.md`](shared-band-and-handovers.md)).
+- A link from each device to its page, and plain messages instead of raw errors when a band is
+  wrong.
+- Services for pausing and stopping everything, and buttons, numbers, selects, sensors and an
+  event entity for the log.
+
+## The engine
+
+- 51 guards, each a small class behind one interface, in `ac_defender/guards/`. Each has a one-line description, and the reason line is worded by the page in English and Cantonese from a reason code (see [`guard-descriptions-and-reasons.md`](guard-descriptions-and-reasons.md)).
+- Direction-aware: the same engine holds cooling on or heating off.
+- A cost model that shows time only unless the owner supplies a power figure.
+- Numbers corrected from the reference program (`d78560d34`): direct cooling at target plus 2.0,
+  touch and command pressure, the governor score, and parking at 28.0. Each number has a test; three
+  were watched failing with the old values (`32949f117`).
+
+## Remembering across a restart
+
+A pause, &quot;stop everything&quot;, today&#x27;s running time and cost, who holds the room and the last hundred
+log lines are saved and read back. After a restart the defenders keep their hands off the unit
+until a fresh reading arrives, so a burst of commands is not sent on startup. A pause given right
+after a restart was being lost and is saved since `b62a3e0ef`.
+
+## Failure modes (inferred from the design, not read from a commit record)
+
+- No fresh reading after a restart: the defender waits and does nothing.
+- A guard that cannot read what it needs does not act.
+- With no power figure supplied, the Cost tab shows time only and no money figure.
+
+## Security and safety
+
+The defender only changes the units the owner chose in setup, and every guard has its own switch.
+
+## How it was verified
+
+- Engine: 76 tests (`a5bbfa5da`); a test for each number taken from the reference program.
+- First run in a real Home Assistant instance (`b62a3e0ef`): the setup pickers, sliders, the pause
+  after a restart, the settings rows and the band bar were seen working. The same run caught the
+  sibling quarrel described in the shared band file.
+- Not seen against a real air conditioner; the cost figures were not checked against real power use.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for AC Defender.</p><p>The <strong>user</strong> configuration step lists <code>climate_entity_id</code>, <code>my_temperature</code>, <code>safety_temperature</code>.</p><p>The <strong>sensors</strong> configuration step lists <code>room_sensor</code>, <code>door_sensor</code>, <code>presence_entity</code>, <code>outdoor_entity</code>, <code>power_kw</code>.</p><p>The <strong>guards</strong> configuration step lists <code>enabled_guards</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>climate_entity_id</code>, <code>my_temperature</code>, <code>safety_temperature</code>.</p><p>The <strong>reconfigure sensors</strong> configuration step lists <code>room_sensor</code>, <code>door_sensor</code>, <code>presence_entity</code>, <code>outdoor_entity</code>, <code>power_kw</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>event</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>pause</li><li>stop everything</li><li>defend again</li></ul></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/integrations/ac_defender</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ac_defender</code></dd></dl></section><p><a href="../../integrations/ac_defender/">Return to the AC Defender guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

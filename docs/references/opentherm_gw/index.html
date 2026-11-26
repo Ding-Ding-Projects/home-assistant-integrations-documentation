@@ -1,1 +1,422 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenTherm Gateway reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:40" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/opentherm_gw/">OpenTherm Gateway guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenTherm Gateway</h1><p>Control your OpenTherm Gateway from Home Assistant.</p><section><h2>Overview</h2><p>The OpenTherm Gateway integration is used to control the OpenTherm Gateway from Home Assistant.</p></section><section><h2>Options</h2><p>The OpenTherm Gateway can be further configured through the integration settings in the web interface.</p></section><section><h2>Button</h2><p>The integration adds the following buttons to your Home Assistant instance:</p></section><section><h2>Cancel Room Setpoint Override</h2><p>Pressing this button, which can be found on the OpenTherm Thermostat device, cancels an active room setpoint override. Note that it does not change the target temperature, it only returns control to the thermostat.</p></section><section><h2>Heat hot water once</h2><p>Pressing this button, which can be found on the OpenTherm Boiler device, triggers a hot water push if this functionality is supported on your device (PIC16F1847 firmware only). The boiler will heat its hot water supply once.</p></section><section><h2>Restart</h2><p>The restart button on the OpenTherm Gateway device can be used to restart the OpenTherm Gateway.</p></section><section><h2>Control setpoint 1 override - Control setpoint 2 override</h2><p>The use of these entities involves a level of risk and is not recommended. Possible consequences of using these entities are uncontrolled heating of the boiler, inefficient and inaccurate heating of your home and disturbing your thermostat&#x27;s internal heating algorithm. This may have a long-term impact even after you stop using these entities.</p></section><section><h2>Select</h2><p>Several select configuration entities can be found on the OpenTherm Gateway device. These can be used to configure the LEDs and GPIO pins of the OpenTherm Gateway. More information about the available modes can be found in the sections LED modes and GPIO modes or in the commands documentation of the OpenTherm Gateway.</p></section><section><h2>GPIO modes</h2><p>Possible modes and their meaning for the GPIO pins are listed here:</p></section><section><h2>LED modes</h2><p>Possible LED modes and their meaning are listed here:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenTherm Gateway.</p><p>The <strong>init</strong> configuration step lists <code>device</code>, <code>id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reset gateway</li><li>send transparent command</li><li>set central heating ovrd</li><li>set clock</li><li>set control setpoint</li><li>set gpio mode</li><li>set hot water ovrd</li><li>set hot water setpoint</li><li>set led mode</li><li>set max modulation</li><li>set outside temperature</li><li>set setback temperature</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Entities</li><li>GPIO modes</li><li>LED modes</li><li>Disabled configuration entities</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/opentherm_gw/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/opentherm_gw</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/opentherm_gw</code></dd></dl></section><p><a href="../../integrations/opentherm_gw/">Return to the OpenTherm Gateway guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenTherm Gateway reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:40" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/opentherm_gw/">OpenTherm Gateway guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenTherm Gateway</h1><p>Control your OpenTherm Gateway from Home Assistant.</p><div class="reader-body"><p>The <strong>OpenTherm Gateway</strong> integration is used to control the <a>OpenTherm Gateway</a> from Home Assistant.</p>
+<p>This integration will add three devices to Home Assistant for each configured gateway. The main control of the integration is a single <code>climate</code> entity which can be found on the added <code>OpenTherm Thermostat</code> device. All added devices have a collection of <code>sensor</code> and <code>binary_sensor</code> entities, which are disabled by default. To enable them, follow the steps on <a>enabling entities</a>.</p>
+<p><strong>Note</strong></p>
+<p>The OpenTherm protocol is based on polling. The thermostat sends requests to the boiler at specific intervals. As a result, it may take some time for changes to propagate between Home Assistant and the thermostat.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>OpenTherm Gateway</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>OpenTherm Gateway</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>The following configuration options are available:</p>
+<pre><code>
+path or url:
+  description: "Path to the OpenTherm Gateway device as supported by [PySerial](https://pythonhosted.org/pyserial/url_handlers.html). This is usually either a path to a serial device in `/dev/` if the gateway is connected via serial or USB, or a URL in the form of `socket://[IP address]:[port]` if it is connected over the network.&lt;br/&gt;Examples: `/dev/ttyUSB0`, `socket://192.168.0.250:25238`"
+id:
+  description: "The `gateway_id` for this OpenTherm Gateway. This is used to identify this specific gateway in action and to generate the entity IDs for the entities related to this gateway. The entered value will be slugified, that is, all spaces and special characters will be converted to underscores, and any accents will be removed from their characters.&lt;br/&gt;Examples: `thermostat`, `living_room`"
+
+</code></pre>
+<p><strong>Important</strong></p>
+<p>Please make sure no other device or application is connected to the OpenTherm Gateway at the same time as Home Assistant. This is not a supported scenario and may lead to unexpected results.</p>
+<p><strong>Note</strong></p>
+<p>The precision and floor_temperature settings that were supported in configuration.yaml entries have been lost upon import of the <code>configuration.yaml</code> entry into the Integrations panel. You can now configure them as per the following Options paragraph.</p>
+<h2>Options</h2>
+<p>The OpenTherm Gateway can be further configured through the integration settings in the web interface.</p>
+<p>The following options are available:</p>
+<pre><code>
+Read Precision:
+  description: "The desired read precision for this device. Used to display the current temperature on the climate entity. Can be used to match your actual thermostat's precision. Set to `0` to use the default value for your unit preference."
+Set Precision:
+  description: "The desired set precision for this device. Used as step size for setting temperature setpoint from the climate entity. Can be used to match your actual thermostat's precision. Set to `0` to use the default value for your unit preference."
+Temporary Setpoint Override Mode:
+  description: "The desired setpoint override mode. When Temporary Setpoint Override Mode is set to on, the thermostat will be able to cancel the setpoint override after a program change. When the option is set to off, the Setpoint Override Mode will be ‘Constant’ and a manual temperature adjustment on the thermostat is needed to cancel the setpoint override."
+Floor Temperature:
+  description: "Some thermostats round all temperatures down to the lower value according to their precision. Default behavior for Home Assistant is to round temperatures to the nearest value. Enable this setting to override this behavior and round to the lower value according to the configured precision."
+
+</code></pre>
+<h2>Entities</h2>
+<h3>Button</h3>
+<p>The integration adds the following buttons to your Home Assistant instance:</p>
+<h4>Cancel Room Setpoint Override</h4>
+<p>Pressing this button, which can be found on the <code>OpenTherm Thermostat</code> device, cancels an active room setpoint override. Note that it does not change the target temperature, it only returns control to the thermostat.</p>
+<h4>Heat hot water once</h4>
+<p>Pressing this button, which can be found on the <code>OpenTherm Boiler</code> device, triggers a hot water <code>push</code> if this functionality is supported on your device (PIC16F1847 firmware only). The boiler will heat its hot water supply once.</p>
+<h4>Restart</h4>
+<p>The restart button on the <code>OpenTherm Gateway</code> device can be used to restart the OpenTherm Gateway.</p>
+<h3>Number</h3>
+<h4>Control setpoint 1 override - Control setpoint 2 override</h4>
+<p><strong>Warning</strong></p>
+<p>The use of these entities involves a level of risk and is not recommended. Possible consequences of using these entities are uncontrolled heating of the boiler, inefficient and inaccurate heating of your home and disturbing your thermostat's internal heating algorithm. This may have a long-term impact even after you stop using these entities.</p>
+<p>Read the <a>stand-alone operation notes</a> from the designer of the OpenTherm Gateway before considering using these entities.</p>
+<p>To reduce the risks involved as much as possible, use the following guidelines:</p>
+<ul>
+<li>Update your OpenTherm Gateway to firmware version 5.8/6.5 or greater.</li>
+<li>Send values of 8 °C (46.4 °F) or higher at intervals of at most 1 minute as long as there is a heating need.</li>
+<li>Keep values as low as possible.</li>
+</ul>
+<p>These number entities, which can be found on the <code>OpenTherm Gateway</code> device, allow you to override the control setpoint for the respective central heating circuit. When active, the OpenTherm Gateway overrides the control setpoint determined by the thermostat. Set the entity to 0 °C (32 °F) to return control to the thermostat.
+These entities are disabled by default.</p>
+<h3>Select</h3>
+<p>Several <code>select</code> configuration entities can be found on the <code>OpenTherm Gateway</code> device. These can be used to configure the LEDs and GPIO pins of the OpenTherm Gateway. More information about the available modes can be found in the sections <a>LED modes</a> and <a>GPIO modes</a> or in the <a>commands documentation</a> of the OpenTherm Gateway.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>GPIO modes</h2>
+<p>Possible modes and their meaning for the GPIO pins are listed here:
+{% comment %}
+Bulletpoints and numbers to match the LED mode layout below.
+{% endcomment %}</p>
+<ul>
+<li>0. Input - default for both ports on a freshly flashed chip.</li>
+<li>1. Ground - A permanently low output (0V). Could be used for a power LED.</li>
+<li>2. Vcc - A permanently high output (5V). Can be used as a short-proof power supply for some external circuitry used by the other GPIO port.</li>
+<li>3. LED E - An additional LED if you want to present more than 4 LED functions.</li>
+<li>4. LED F - An additional LED if you want to present more than 5 LED functions.</li>
+<li>5. Home - Set thermostat to setback temperature when pulled low.</li>
+<li>6. Away - Set thermostat to setback temperature when pulled high.</li>
+<li>7. DS1820 (GPIO port B only) - Data line for a DS18S20 or DS18B20 temperature sensor used to measure the outside temperature. A 4k7 resistor should be connected between GPIO port B and Vcc.</li>
+</ul>
+<h2>LED modes</h2>
+<p>Possible LED modes and their meaning are listed here:</p>
+<ul>
+<li>R. Receiving an OpenTherm message from the thermostat or boiler.</li>
+<li>X. Transmitting an OpenTherm message to the thermostat or boiler.</li>
+<li>T. Transmitting or receiving a message on the thermostat interface.</li>
+<li>B. Transmitting or receiving a message on the boiler interface.</li>
+<li>O. Remote setpoint override is active.</li>
+<li>F. Flame is on.</li>
+<li>H. Central heating is on.</li>
+<li>W. Hot water is on.</li>
+<li>C. Comfort mode (Domestic Hot Water Enable) is on.</li>
+<li>E. Transmission error has been detected.</li>
+<li>M. Boiler requires maintenance.</li>
+<li>P. Raised power mode active on thermostat interface.</li>
+</ul>
+<h2>Disabled configuration entities</h2>
+<p><strong>Warning</strong></p>
+<p>Please read <a>this information</a> from the designer of the OpenTherm Gateway before considering using the information in this section.</p>
+<p>For advanced control of your heating system, some <code>switch</code> configuration entities can be found on the added <code>OpenTherm Gateway</code> device.
+These entities are disabled by default, as they can cause your heating system to run continuously and/or increase your energy consumption significantly if used improperly. In most setups, these entities are not needed and should be left disabled.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/opentherm_gw.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Control your OpenTherm Gateway from Home Assistant.
+ha_release: 0.81
+ha_domain: opentherm_gw
+---
+
+The **OpenTherm Gateway** {% term integration %} is used to control the [OpenTherm Gateway](https://otgw.tclcode.com/) from Home Assistant.
+
+This integration will add three devices to Home Assistant for each configured gateway. The main control of the integration is a single `climate` entity which can be found on the added `OpenTherm Thermostat` device. All added devices have a collection of `sensor` and `binary_sensor` entities, which are disabled by default. To enable them, follow the steps on [enabling entities](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+
+{% note %}
+The OpenTherm protocol is based on polling. The thermostat sends requests to the boiler at specific intervals. As a result, it may take some time for changes to propagate between Home Assistant and the thermostat.
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+
+The following configuration options are available:
+
+{% configuration_basic %}
+path or url:
+  description: &quot;Path to the OpenTherm Gateway device as supported by [PySerial](https://pythonhosted.org/pyserial/url_handlers.html). This is usually either a path to a serial device in `/dev/` if the gateway is connected via serial or USB, or a URL in the form of `socket://[IP address]:[port]` if it is connected over the network.&lt;br/&gt;Examples: `/dev/ttyUSB0`, `socket://192.168.0.250:25238`&quot;
+id:
+  description: &quot;The `gateway_id` for this OpenTherm Gateway. This is used to identify this specific gateway in action and to generate the entity IDs for the entities related to this gateway. The entered value will be slugified, that is, all spaces and special characters will be converted to underscores, and any accents will be removed from their characters.&lt;br/&gt;Examples: `thermostat`, `living_room`&quot;
+{% endconfiguration_basic %}
+
+{% important %}
+Please make sure no other device or application is connected to the OpenTherm Gateway at the same time as Home Assistant. This is not a supported scenario and may lead to unexpected results.
+{% endimportant %}
+
+{% note %}
+The precision and floor_temperature settings that were supported in configuration.yaml entries have been lost upon import of the `configuration.yaml` entry into the Integrations panel. You can now configure them as per the following Options paragraph.
+{% endnote %}
+
+# Options
+
+The OpenTherm Gateway can be further configured through the integration settings in the web interface.
+
+The following options are available:
+{% configuration_basic %}
+Read Precision:
+  description: &quot;The desired read precision for this device. Used to display the current temperature on the climate entity. Can be used to match your actual thermostat&#x27;s precision. Set to `0` to use the default value for your unit preference.&quot;
+Set Precision:
+  description: &quot;The desired set precision for this device. Used as step size for setting temperature setpoint from the climate entity. Can be used to match your actual thermostat&#x27;s precision. Set to `0` to use the default value for your unit preference.&quot;
+Temporary Setpoint Override Mode:
+  description: &quot;The desired setpoint override mode. When Temporary Setpoint Override Mode is set to on, the thermostat will be able to cancel the setpoint override after a program change. When the option is set to off, the Setpoint Override Mode will be ‘Constant’ and a manual temperature adjustment on the thermostat is needed to cancel the setpoint override.&quot;
+Floor Temperature:
+  description: &quot;Some thermostats round all temperatures down to the lower value according to their precision. Default behavior for Home Assistant is to round temperatures to the nearest value. Enable this setting to override this behavior and round to the lower value according to the configured precision.&quot;
+{% endconfiguration_basic %}
+
+## Entities
+
+### Button
+
+The integration adds the following buttons to your Home Assistant instance:
+
+#### Cancel Room Setpoint Override
+
+Pressing this button, which can be found on the `OpenTherm Thermostat` device, cancels an active room setpoint override. Note that it does not change the target temperature, it only returns control to the thermostat.
+
+#### Heat hot water once
+
+Pressing this button, which can be found on the `OpenTherm Boiler` device, triggers a hot water `push` if this functionality is supported on your device (PIC16F1847 firmware only). The boiler will heat its hot water supply once.
+
+#### Restart
+
+The restart button on the `OpenTherm Gateway` device can be used to restart the OpenTherm Gateway.
+
+### Number
+
+#### Control setpoint 1 override - Control setpoint 2 override
+
+{% warning %}
+The use of these entities involves a level of risk and is not recommended. Possible consequences of using these entities are uncontrolled heating of the boiler, inefficient and inaccurate heating of your home and disturbing your thermostat&#x27;s internal heating algorithm. This may have a long-term impact even after you stop using these entities.
+
+Read the [stand-alone operation notes](https://otgw.tclcode.com/standalone.html) from the designer of the OpenTherm Gateway before considering using these entities.
+
+To reduce the risks involved as much as possible, use the following guidelines:
+
+- Update your OpenTherm Gateway to firmware version 5.8/6.5 or greater.
+- Send values of 8 °C (46.4 °F) or higher at intervals of at most 1 minute as long as there is a heating need.
+- Keep values as low as possible.
+
+{% endwarning %}
+
+These number entities, which can be found on the `OpenTherm Gateway` device, allow you to override the control setpoint for the respective central heating circuit. When active, the OpenTherm Gateway overrides the control setpoint determined by the thermostat. Set the entity to 0 °C (32 °F) to return control to the thermostat.
+These entities are disabled by default.
+
+### Select
+
+Several `select` configuration entities can be found on the `OpenTherm Gateway` device. These can be used to configure the LEDs and GPIO pins of the OpenTherm Gateway. More information about the available modes can be found in the sections [LED modes](#led-modes) and [GPIO modes](#gpio-modes) or in the [commands documentation](https://otgw.tclcode.com/firmware.html#configuration) of the OpenTherm Gateway.
+
+{% include integrations/actions.md %}
+
+## GPIO modes
+
+Possible modes and their meaning for the GPIO pins are listed here:
+{% comment %}
+    Bulletpoints and numbers to match the LED mode layout below.
+{% endcomment %}
+
+- 0\. Input - default for both ports on a freshly flashed chip.
+- 1\. Ground - A permanently low output (0V). Could be used for a power LED.
+- 2\. Vcc - A permanently high output (5V). Can be used as a short-proof power supply for some external circuitry used by the other GPIO port.
+- 3\. LED E - An additional LED if you want to present more than 4 LED functions.
+- 4\. LED F - An additional LED if you want to present more than 5 LED functions.
+- 5\. Home - Set thermostat to setback temperature when pulled low.
+- 6\. Away - Set thermostat to setback temperature when pulled high.
+- 7\. DS1820 (GPIO port B only) - Data line for a DS18S20 or DS18B20 temperature sensor used to measure the outside temperature. A 4k7 resistor should be connected between GPIO port B and Vcc.
+
+## LED modes
+
+Possible LED modes and their meaning are listed here:
+
+- R. Receiving an OpenTherm message from the thermostat or boiler.
+- X. Transmitting an OpenTherm message to the thermostat or boiler.
+- T. Transmitting or receiving a message on the thermostat interface.
+- B. Transmitting or receiving a message on the boiler interface.
+- O. Remote setpoint override is active.
+- F. Flame is on.
+- H. Central heating is on.
+- W. Hot water is on.
+- C. Comfort mode (Domestic Hot Water Enable) is on.
+- E. Transmission error has been detected.
+- M. Boiler requires maintenance.
+- P. Raised power mode active on thermostat interface.
+
+## Disabled configuration entities
+
+{% warning %}
+Please read [this information](http://otgw.tclcode.com/standalone.html) from the designer of the OpenTherm Gateway before considering using the information in this section.
+{% endwarning %}
+For advanced control of your heating system, some `switch` configuration entities can be found on the added `OpenTherm Gateway` device.
+These entities are disabled by default, as they can cause your heating system to run continuously and/or increase your energy consumption significantly if used improperly. In most setups, these entities are not needed and should be left disabled.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenTherm Gateway.</p><p>The <strong>init</strong> configuration step lists <code>device</code>, <code>id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>reset gateway</li><li>send transparent command</li><li>set central heating ovrd</li><li>set clock</li><li>set control setpoint</li><li>set gpio mode</li><li>set hot water ovrd</li><li>set hot water setpoint</li><li>set led mode</li><li>set max modulation</li><li>set outside temperature</li><li>set setback temperature</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Entities</li><li>GPIO modes</li><li>LED modes</li><li>Disabled configuration entities</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/opentherm_gw/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/opentherm_gw</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/opentherm_gw</code></dd></dl></section><p><a href="../../integrations/opentherm_gw/">Return to the OpenTherm Gateway guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

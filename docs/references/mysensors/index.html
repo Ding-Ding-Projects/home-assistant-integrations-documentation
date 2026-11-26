@@ -1,1 +1,2783 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySensors reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:13" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/mysensors/">MySensors guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>MySensors</h1><p>Instructions on how to integrate MySensors into Home Assistant.</p><section><h2>Overview</h2><p>Configuration depends on the type of Gateway you use:</p></section><section><h2>Serial gateway</h2><p>If you are using an original Arduino as a serial gateway, the port will be named ttyACM*. The exact number can be determined with the command shown below.</p></section><section><h2>MQTT gateway</h2><p>If you are using the MQTT gateway, you will need to enter topic prefixes for input and output. These need to be swapped with the settings of the gateway. I.e. the input topic for Home Assistant needs to be the output (publish) topic of the gateway.</p></section><section><h2>Ethernet gateway</h2><p>To use an Ethernet gateway, you need to configure the IP address and port of the gateway.</p></section><section><h2>General options</h2><p>A few options are available for all gateways:</p></section><section><h2>Presentation</h2><p>Present a MySensors sensor or actuator, by following these steps:</p></section><section><h2>SmartSleep</h2><p>Sending a heartbeat, I_HEARTBEAT_RESPONSE, from the MySensors device to Home Assistant, using MySensors version 2.0 - 2.1, activates the SmartSleep functionality in Home Assistant. This means that messages are buffered and only sent to the device upon receiving a heartbeat from the device. State changes are stored so that only the last requested state change is sent to the device. Other types of messages are queued in a FIFO queue. SmartSleep is useful for battery powered actuators that are waiting for commands. See the MySensors library API for information on how to send heartbeats and sleep the device.</p></section><section><h2>Message validation</h2><p>Messages sent to or from Home Assistant from or to a MySensors device will be validated according to the MySensors serial API. If a message doesn&#x27;t pass validation, it will be dropped and not be passed forward either to or from Home Assistant. Make sure you follow the serial API for your version of MySensors when writing your Arduino sketch.</p></section><section><h2>Debug logging</h2><p>If you experience dropped messages or that a device is not added to Home Assistant, please turn on debug logging for the mysensors integration and the mysensors package. This will help you see what is going on. Make sure you use these logging settings to collect a log sample if you report an issue about the mysensors integration in our GitHub issue tracker.</p></section><section><h2>Binary sensor</h2><p>The following binary sensor types are supported:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for MySensors.</p><p>The <strong>gw mqtt</strong> configuration step lists <code>persistence_file</code>, <code>retain</code>, <code>topic_in_prefix</code>, <code>topic_out_prefix</code>, <code>version</code>.</p><p>The <strong>gw serial</strong> configuration step lists <code>baud_rate</code>, <code>device</code>, <code>persistence_file</code>, <code>version</code>.</p><p>The <strong>gw tcp</strong> configuration step lists <code>device</code>, <code>persistence_file</code>, <code>tcp_port</code>, <code>version</code>.</p><p>The <strong>user</strong> configuration step lists <code>gateway_type</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>device tracker</li><li>light</li><li>remote</li><li>sensor</li><li>switch</li><li>text</li></ul><h3>Connection methods</h3><ul class="chips"><li>mqtt</li><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Presentation</li><li>SmartSleep</li><li>Message validation</li><li>Debug logging</li><li>Binary sensor</li><li>Climate</li><li>Cover</li><li>Device tracker</li><li>Light</li><li>Remote</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/mysensors/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/mysensors</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/mysensors</code></dd></dl></section><p><a href="../../integrations/mysensors/">Return to the MySensors guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySensors reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:13" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/mysensors/">MySensors guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>MySensors</h1><p>Instructions on how to integrate MySensors into Home Assistant.</p><div class="reader-body"><p>The <a>MySensors</a> project combines devices like Arduino, ESP8266, Raspberry Pi, NRF24L01+ and RFM69 to build affordable sensor networks. This integration will automatically add all available devices to Home Assistant, after <a>presentation</a> is done. That is, you do not need to add anything to your configuration for the devices for them to be added. Go to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>States</strong> to find the devices that have been identified.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>MySensors</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>MySensors</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Configuration depends on the type of Gateway you use:</p>
+<h3>Serial gateway</h3>
+<p>If you are using an original Arduino as a serial gateway, the port will be named <code>ttyACM*</code>. The exact number can be determined with the command shown below.</p>
+<pre><code>ls /dev/ttyACM*
+</code></pre>
+<p>In addition to the serial device you also need to enter the baud rate.</p>
+<h3>MQTT gateway</h3>
+<p>If you are using the MQTT gateway, you will need to enter topic prefixes for input and output. These need to be swapped
+with the settings of the gateway. I.e. the input topic for Home Assistant needs to be the output (publish) topic of the gateway.</p>
+<p><strong>Note</strong></p>
+<p>The MQTT gateway requires MySensors version 2.0+ and only the MQTT client gateway is supported.</p>
+<h3>Ethernet gateway</h3>
+<p>To use an Ethernet gateway, you need to configure the IP address and port of the gateway.</p>
+<h3>General options</h3>
+<p>A few options are available for all gateways:</p>
+<ul>
+<li><p>persistence file:
+Home Assistant will store detected nodes in a file. This means restarting Home Assistant will not require re-discovering of all the nodes. The persistence file option allows setting the path of the file. Leaving the option empty will make Home Assistant auto-generate a file name in the configuration directory.</p>
+</li>
+<li><p>version:
+Enter the version of MySensors that you use for your gateway.</p>
+</li>
+</ul>
+<h2>Presentation</h2>
+<p>Present a MySensors sensor or actuator, by following these steps:</p>
+<p>Enter the version of MySensors that you use</p>
+<ol>
+<li>Start Home Assistant and configure the MySensors integration</li>
+<li>Write and upload your MySensors sketch to the sensor. Make sure you:<ul>
+<li>Send sketch name.</li>
+<li>Present the sensor's <code>S_TYPE</code>.</li>
+<li>Send at least one initial value per <code>V_TYPE</code>. In version 2.x of MySensors, this has to be done in the loop function. See below for an example in 2.0 of how to make sure the initial value has been received by the controller.</li>
+</ul>
+</li>
+<li>Start the sensor.</li>
+</ol>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/relay
+ */
+
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+#define MY_REPEATER_FEATURE
+#define MY_NODE_ID 1
+#include &lt;SPI.h&gt;
+#include &lt;MySensors.h&gt;
+#include &lt;Bounce2.h&gt;
+
+#define RELAY_PIN  5
+#define BUTTON_PIN  3
+#define CHILD_ID 1
+#define RELAY_ON 1
+#define RELAY_OFF 0
+
+Bounce debouncer = Bounce();
+bool state = false;
+bool initialValueSent = false;
+
+MyMessage msg(CHILD_ID, V_STATUS);
+
+void setup()
+{
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  debouncer.attach(BUTTON_PIN);
+  debouncer.interval(10);
+
+  // Make sure relays are off when starting up
+  digitalWrite(RELAY_PIN, RELAY_OFF);
+  pinMode(RELAY_PIN, OUTPUT);
+}
+
+void presentation()  {
+  sendSketchInfo("Relay+button", "1.0");
+  present(CHILD_ID, S_BINARY);
+}
+
+void loop()
+{
+  if (!initialValueSent) {
+    Serial.println("Sending initial value");
+    send(msg.set(state?RELAY_ON:RELAY_OFF));
+    Serial.println("Requesting initial value from controller");
+    request(CHILD_ID, V_STATUS);
+    wait(2000, C_SET, V_STATUS);
+  }
+  if (debouncer.update()) {
+    if (debouncer.read()==LOW) {
+      state = !state;
+      // Send new state and request ack back
+      send(msg.set(state?RELAY_ON:RELAY_OFF), true);
+    }
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.isAck()) {
+     Serial.println("This is an ack from gateway");
+  }
+
+  if (message.type == V_STATUS) {
+    if (!initialValueSent) {
+      Serial.println("Receiving initial value from controller");
+      initialValueSent = true;
+    }
+    // Change relay state
+    state = (bool)message.getInt();
+    digitalWrite(RELAY_PIN, state?RELAY_ON:RELAY_OFF);
+    send(msg.set(state?RELAY_ON:RELAY_OFF));
+  }
+}
+</code></pre>
+<h2>SmartSleep</h2>
+<p>Sending a heartbeat, <code>I_HEARTBEAT_RESPONSE</code>, from the MySensors device to Home Assistant, using MySensors version 2.0 - 2.1, activates the SmartSleep functionality in Home Assistant. This means that messages are buffered and only sent to the device upon receiving a heartbeat from the device. State changes are stored so that only the last requested state change is sent to the device. Other types of messages are queued in a FIFO queue. SmartSleep is useful for battery powered actuators that are waiting for commands. See the MySensors library API for information on how to send heartbeats and sleep the device.</p>
+<p>In MySensors version 2.2 the serial API changed from using <code>I_HEARTBEAT_RESPONSE</code> to signal SmartSleep, to using <code>I_PRE_SLEEP_NOTIFICATION</code> and <code>I_POST_SLEEP_NOTIFICATION</code>. Home Assistant has been upgraded to support the new message types and will activate SmartSleep when receiving a message of type <code>I_PRE_SLEEP_NOTIFICATION</code>, if using MySensors version 2.2.x or higher. If Home Assistant is configured to use MySensors version 2.0 - 2.1 the old SmartSleep behavior is retained.</p>
+<h2>Message validation</h2>
+<p>Messages sent to or from Home Assistant from or to a MySensors device will be validated according to the MySensors <a>serial API</a>. If a message doesn't pass validation, it will be dropped and not be passed forward either to or from Home Assistant. Make sure you follow the serial API for your version of MySensors when writing your Arduino sketch.</p>
+<p>The log should warn you of messages that failed validation or if a child value is missing that is required for a certain child type. Home Assistant will log failed validations of child values at warning level if e.g.,  one required value type for a platform has been received, but other required value types are missing.</p>
+<p>Message validation was introduced in version 0.52 of Home Assistant.</p>
+<h2>Debug logging</h2>
+<p>If you experience dropped messages or that a device is not added to Home Assistant, please turn on debug logging for the <code>mysensors</code> integration and the <code>mysensors</code> package. This will help you see what is going on. Make sure you use these logging settings to collect a log sample if you report an issue about the <code>mysensors</code> integration in our GitHub issue tracker.</p>
+<pre><code>logger:
+  default: info
+  logs:
+    homeassistant.components.mysensors: debug
+    mysensors: debug
+</code></pre>
+<p>Visit the <a>library API</a> of MySensors for more information.</p>
+<h2>Binary sensor</h2>
+<p>The following binary sensor types are supported:</p>
+<h3>MySensors version 1.4 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_DOOR</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_MOTION</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_SMOKE</td>
+  <td>V_TRIPPED</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_SPRINKLER</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_WATER_LEAK</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_SOUND</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_VIBRATION</td>
+  <td>V_TRIPPED</td>
+</tr>
+<tr>
+  <td>S_MOISTURE</td>
+  <td>V_TRIPPED</td>
+</tr>
+</tbody>
+</table>
+<h3>Binary sensor example sketch</h3>
+<pre><code>/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/binary
+ */
+
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;Bounce2.h&gt;
+
+#define SN "BinarySensor"
+#define SV "1.0"
+#define CHILD_ID 1
+#define BUTTON_PIN 3  // Arduino Digital I/O pin for button/reed switch.
+
+MySensor gw;
+Bounce debouncer = Bounce();
+MyMessage msg(CHILD_ID, V_TRIPPED);
+
+void setup()
+{
+  gw.begin();
+  gw.sendSketchInfo(SN, SV);
+  // Setup the button.
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  // After setting up the button, setup debouncer.
+  debouncer.attach(BUTTON_PIN);
+  debouncer.interval(5);
+  gw.present(CHILD_ID, S_DOOR);
+  gw.send(msg.set(0));
+}
+
+void loop()
+{
+  if (debouncer.update()) {
+    // Get the update value.
+    int value = debouncer.read();
+    // Send in the new value.
+    gw.send(msg.set(value == LOW ? 1 : 0));
+  }
+}
+</code></pre>
+<h2>Climate</h2>
+<p>The following actuator types are supported:</p>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_HVAC</td>
+  <td>V_HVAC_FLOW_STATE*, V_HVAC_SETPOINT_HEAT, V_HVAC_SETPOINT_COOL, V_HVAC_SPEED, V_TEMP</td>
+</tr>
+</tbody>
+</table>
+<p>V_HVAC_FLOW_STATE is mapped to the state of the Climate integration in Home Assistant as follows:</p>
+<table>
+<thead>
+<tr>
+  <th>Home Assistant State</th>
+  <th>MySensors State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>HVAC_MODE_COOL</td>
+  <td>CoolOn</td>
+</tr>
+<tr>
+  <td>HVAC_MODE_HEAT</td>
+  <td>HeatOn</td>
+</tr>
+<tr>
+  <td>HVAC_MODE_AUTO</td>
+  <td>AutoChangeOver</td>
+</tr>
+<tr>
+  <td>HVAC_MODE_OFF</td>
+  <td>Off</td>
+</tr>
+</tbody>
+</table>
+<p>Currently humidity, away_mode, aux_heat, swing_mode is not supported. This will be included in later versions as feasible.</p>
+<p>Set the target temperature using V_HVAC_SETPOINT_HEAT in Heat mode, and V_HVAC_SETPOINT_COOL in Cool Mode. In case of any Auto Change Over mode you can use V_HVAC_SETPOINT_HEAT as well as V_HVAC_SETPOINT_COOL to set the both the low bound and the high bound temperature of the device.</p>
+<p>You can use V_HVAC_SPEED to control the Speed setting of the Fan in the HVAC.</p>
+<p>You can use V_TEMP to send the current temperature from the node to Home Assistant.</p>
+<h3>Climate example sketch for MySensors 2.x</h3>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt; // sketch tested with version 2.3.2
+
+#define SENSOR_NAME "Heatpump Sensor"
+#define SENSOR_VERSION "2.3"
+
+#define CHILD_ID_HVAC 0
+
+#define IR_PIN  3  // Arduino pin tied to the IR led using Arduino PWM
+
+
+// Uncomment your heatpump model
+//#include &lt;FujitsuHeatpumpIR.h&gt;
+//#include &lt;PanasonicCKPHeatpumpIR.h&gt;
+//#include &lt;PanasonicHeatpumpIR.h&gt;
+//#include &lt;CarrierHeatpumpIR.h&gt;
+//#include &lt;MideaHeatpumpIR.h&gt;
+//#include &lt;MitsubishiHeatpumpIR.h&gt;
+//#include &lt;SamsungHeatpumpIR.h&gt; // sketch tested with version 1.0.15, see http://librarymanager#HeatpumpIR by Toni Arte
+//#include &lt;SharpHeatpumpIR.h&gt;
+//#include &lt;DaikinHeatpumpIR.h&gt;
+
+//Some global variables to hold the numeric states sent to the airco unit
+int POWER_STATE;
+int TEMP_STATE;
+int FAN_STATE;
+int MODE_STATE;
+int VDIR_STATE;
+int HDIR_STATE;
+
+//Some global variables to hold the text states sent to the home assistant controller
+String FAN_STATE_TXT;  // possible values ("Min", "Normal", "Max", "Auto")
+String MODE_STATE_TXT; // possible values ("Off", "HeatOn", "CoolOn", or "AutoChangeOver")
+
+
+IRSenderPWM irSender(IR_PIN);
+
+//Change to your own Heatpump
+//HeatpumpIR *heatpumpIR = new SamsungAQV12MSANHeatpumpIR();
+/*
+new PanasonicDKEHeatpumpIR()
+new PanasonicJKEHeatpumpIR()
+new PanasonicNKEHeatpumpIR()
+new CarrierHeatpumpIR()
+new MideaHeatpumpIR()
+new FujitsuHeatpumpIR()
+new MitsubishiFDHeatpumpIR()
+new MitsubishiFEHeatpumpIR()
+new SamsungAQVHeatpumpIR()
+new SamsungFJMHeatpumpIR()
+// new SamsungHeatpumpIR() is a protected generic method, cannot be created directly
+new SharpHeatpumpIR()
+new DaikinHeatpumpIR()
+*/
+
+MyMessage msgHVACSetPointC(CHILD_ID_HVAC, V_HVAC_SETPOINT_COOL);
+MyMessage msgHVACSpeed(CHILD_ID_HVAC, V_HVAC_SPEED);
+MyMessage msgHVACFlowState(CHILD_ID_HVAC, V_HVAC_FLOW_STATE);
+
+bool initialValueSent = false;
+
+void presentation() {
+  // Send the sketch version information to the gateway and Controller
+  sendSketchInfo(SENSOR_NAME, SENSOR_VERSION);
+
+  // Register all sensors to gw (they will be created as child devices) by their ID and S_TYPE
+  present(CHILD_ID_HVAC, S_HVAC, "Thermostat");
+}
+
+void setup() {
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (!initialValueSent) {
+    FAN_STATE_TXT = "Auto"; // default fan start state
+    TEMP_STATE = 20; // default start temperature
+    MODE_STATE_TXT = "Off"; // default mode state
+
+    send(msgHVACSetPointC.set(TEMP_STATE));
+    send(msgHVACSpeed.set(FAN_STATE_TXT.c_str()));
+    send(msgHVACFlowState.set(MODE_STATE_TXT.c_str()));
+
+    initialValueSent = true;
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.isAck()) {
+     Serial.println("This is an ack from gateway");
+     return;
+  }
+
+  Serial.print("Incoming message for: ");
+  Serial.print(message.sensor);
+
+  String recvData = message.data;
+  recvData.trim();
+
+  Serial.print(", New status: ");
+  Serial.println(recvData);
+  switch (message.type) {
+    case V_HVAC_SPEED:
+      Serial.println("V_HVAC_SPEED");
+
+      if(recvData.equalsIgnoreCase("auto")) FAN_STATE = 0;
+      else if(recvData.equalsIgnoreCase("min")) FAN_STATE = 1;
+      else if(recvData.equalsIgnoreCase("normal")) FAN_STATE = 2;
+      else if(recvData.equalsIgnoreCase("max")) FAN_STATE = 3;
+      FAN_STATE_TXT = recvData;
+    break;
+
+    case V_HVAC_SETPOINT_COOL:
+      Serial.println("V_HVAC_SETPOINT_COOL");
+      TEMP_STATE = message.getFloat();
+      Serial.println(TEMP_STATE);
+    break;
+
+    case V_HVAC_FLOW_STATE:
+      Serial.println("V_HVAC_FLOW_STATE");
+      if (recvData.equalsIgnoreCase("coolon")) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_COOL;
+      }
+      else if (recvData.equalsIgnoreCase("heaton")) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_HEAT;
+      }
+      else if (recvData.equalsIgnoreCase("autochangeover")) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_AUTO;
+      }
+      else if (recvData.equalsIgnoreCase("off")){
+        POWER_STATE = 0;
+      }
+      MODE_STATE_TXT = recvData;
+      break;
+  }
+  sendHeatpumpCommand();
+  sendNewStateToGateway();
+}
+
+void sendNewStateToGateway() {
+  Serial.println("Status update send to HA:");
+  Serial.println("*************************");
+  Serial.println("Mode = " + MODE_STATE_TXT + "(" + (String)MODE_STATE + ")");
+  Serial.println("Fan = " + FAN_STATE_TXT + "(" + (String)FAN_STATE + ")");
+  Serial.println("Temp = " + (String)TEMP_STATE);
+  send(msgHVACFlowState.set(MODE_STATE_TXT.c_str()));
+  send(msgHVACSpeed.set(FAN_STATE_TXT.c_str()));
+  send(msgHVACSetPointC.set(TEMP_STATE));
+}
+
+void sendHeatpumpCommand() {
+  Serial.println("Heatpump commands send to airco:");
+  Serial.println("********************************");
+  Serial.println("Power = " + (String)POWER_STATE);
+  Serial.println("Mode = " + (String)MODE_STATE);
+  Serial.println("Fan = " + (String)FAN_STATE);
+  Serial.println("Temp = " + (String)TEMP_STATE);
+
+  heatpumpIR-&gt;send(irSender, POWER_STATE, MODE_STATE, FAN_STATE, TEMP_STATE, VDIR_AUTO, HDIR_AUTO);
+}
+</code></pre>
+<h2>Cover</h2>
+<p>The following actuator types are supported:</p>
+<h3>MySensors version 1.4</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_COVER</td>
+  <td>V_UP, V_DOWN, V_STOP, [V_DIMMER or V_LIGHT]</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_COVER</td>
+  <td>V_UP, V_DOWN, V_STOP, [V_PERCENTAGE or V_STATUS]</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 2.4 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_COVER</td>
+  <td>V_UP, V_DOWN, V_STOP, [V_PERCENTAGE or V_STATUS], [V_TILT]</td>
+</tr>
+</tbody>
+</table>
+<p>For MySensors version 2.4 and higher, <code>V_UP</code>, <code>V_DOWN</code>, <code>V_STOP</code>, and either <code>V_PERCENTAGE</code> or <code>V_STATUS</code> are required. <code>V_TILT</code> is optional for covers that support tilt position. Use V_PERCENTAGE (or V_DIMMER) if you know the exact position of the cover in percent. Use V_STATUS (or V_LIGHT) if you don't.</p>
+<h3>Cover example sketch</h3>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define SN "Cover"
+#define SV "1.1"
+
+// Actuators for moving the cover up and down respectively.
+#define COVER_UP_ACTUATOR_PIN 2
+#define COVER_DOWN_ACTUATOR_PIN 3
+// Sensors for finding out when the cover has reached its up/down position.
+// These could be simple buttons or linear hall sensors.
+#define COVER_UP_SENSOR_PIN 4
+#define COVER_DOWN_SENSOR_PIN 5
+
+#define CHILD_ID 0
+
+// Internal representation of the cover state.
+enum State {
+  IDLE,
+  UP, // Window covering. Up.
+  DOWN, // Window covering. Down.
+};
+
+static int state = IDLE;
+static int status = 0; // 0=cover is down, 1=cover is up
+static bool initial_state_sent = false;
+MyMessage upMessage(CHILD_ID, V_UP);
+MyMessage downMessage(CHILD_ID, V_DOWN);
+MyMessage stopMessage(CHILD_ID, V_STOP);
+MyMessage statusMessage(CHILD_ID, V_STATUS);
+
+void sendState() {
+  // Send current state and status to gateway.
+  send(upMessage.set(state == UP));
+  send(downMessage.set(state == DOWN));
+  send(stopMessage.set(state == IDLE));
+  send(statusMessage.set(status));
+}
+
+void setup() {
+  pinMode(COVER_UP_SENSOR_PIN, INPUT);
+  pinMode(COVER_DOWN_SENSOR_PIN, INPUT);
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+
+  present(CHILD_ID, S_COVER);
+}
+
+void loop() {
+  if (!initial_state_sent) {
+    sendState();
+    initial_state_sent = true;
+  }
+
+  if (state == IDLE) {
+    digitalWrite(COVER_UP_ACTUATOR_PIN, LOW);
+    digitalWrite(COVER_DOWN_ACTUATOR_PIN, LOW);
+  }
+
+  if (state == UP &amp;&amp; digitalRead(COVER_UP_SENSOR_PIN) == HIGH) {
+    Serial.println("Cover is up.");
+    // Update status and state; send it to the gateway.
+    status = 1;
+    state = IDLE;
+    sendState();
+    // Actuators will be disabled in next loop() iteration.
+  }
+
+  if (state == DOWN &amp;&amp; digitalRead(COVER_DOWN_SENSOR_PIN) == HIGH) {
+    Serial.println("Cover is down.");
+    // Update status and state; send it to the gateway.
+    status = 0;
+    state = IDLE;
+    sendState();
+    // Actuators will be disabled in next loop() iteration.
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_UP) {
+    // Set state to covering up and send it back to the gateway.
+    state = UP;
+    sendState();
+    Serial.println("Moving cover up.");
+
+    // Activate actuator until the sensor returns HIGH in loop().
+    digitalWrite(COVER_UP_ACTUATOR_PIN, HIGH);
+  }
+
+  if (message.type == V_DOWN) {
+    // Set state to covering up and send it back to the gateway.
+    state = DOWN;
+    sendState();
+    Serial.println("Moving cover down.");
+    // Activate actuator until the sensor returns HIGH in loop().
+    digitalWrite(COVER_DOWN_ACTUATOR_PIN, HIGH);
+  }
+
+  if (message.type == V_STOP) {
+    // Set state to idle and send it back to the gateway.
+    state = IDLE;
+    sendState();
+    Serial.println("Stopping cover.");
+
+    // Actuators will be switched off in loop().
+  }
+}
+</code></pre>
+<h4>Cover sketch example with position measurement based on motor running time</h4>
+<p>This sketch is ideally for star topology wiring. You can run up to 12 covers with a single Arduino Mega board and some relays. All you need to set is one line of parameters for one Cover. However, you can also use it for a single cover based on an Arduino Nano or even an ESP8266 board.</p>
+<p><a>Check out the code on GitHub.</a></p>
+<h2>Device tracker</h2>
+<p>The following sensor types are supported:</p>
+<h3>MySensors version 2.0 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_GPS</td>
+  <td>V_POSITION</td>
+</tr>
+</tbody>
+</table>
+<h3>Device tracker example sketch for MySensors 2.x</h3>
+<pre><code>/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/gps
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define SN "GPS Sensor"
+#define SV "1.0"
+
+// GPS position send interval (in milliseconds)
+#define GPS_SEND_INTERVAL 30000
+// The child id used for the gps sensor
+#define CHILD_ID_GPS 1
+
+MyMessage msg(CHILD_ID_GPS, V_POSITION);
+
+// Last time GPS position was sent to controller
+unsigned long lastGPSSent = -31000;
+
+// Some buffers
+char latBuf[11];
+char lngBuf[11];
+char altBuf[6];
+char payload[30];
+
+// Dummy values. Implementation of real GPS device is not done.
+float gpsLocationLat = 40.741895;
+float gpsLocationLng = -73.989308;
+float gpsAltitudeMeters = 12.0;
+
+void setup() {
+
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID_GPS, S_GPS);
+}
+
+void loop()
+{
+  unsigned long currentTime = millis();
+
+  // Evaluate if it is time to send a new position
+  bool timeToSend = currentTime - lastGPSSent &gt; GPS_SEND_INTERVAL;
+
+  if (timeToSend) {
+    // Send current gps location
+    // Build position and altitude string to send
+    dtostrf(gpsLocationLat, 1, 6, latBuf);
+    dtostrf(gpsLocationLng, 1, 6, lngBuf);
+    dtostrf(gpsAltitudeMeters, 1, 0, altBuf);
+    sprintf(payload, "%s,%s,%s", latBuf, lngBuf, altBuf);
+
+    Serial.print(F("Position: "));
+    Serial.println(payload);
+
+    send(msg.set(payload));
+    lastGPSSent = currentTime;
+  }
+}
+</code></pre>
+<h2>Light</h2>
+<p>The following actuator types are supported:</p>
+<h3>MySensors version 1.4</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_DIMMER</td>
+  <td>V_DIMMER*, V_LIGHT*</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_DIMMER</td>
+  <td>[V_DIMMER* or V_PERCENTAGE*], [V_LIGHT* or V_STATUS*]</td>
+</tr>
+<tr>
+  <td>S_RGB_LIGHT</td>
+  <td>V_RGB<em>, [V_LIGHT\</em> or V_STATUS*], [V_DIMMER or V_PERCENTAGE]</td>
+</tr>
+<tr>
+  <td>S_RGBW_LIGHT</td>
+  <td>V_RGBW<em>, [V_LIGHT\</em> or V_STATUS*], [V_DIMMER or V_PERCENTAGE]</td>
+</tr>
+</tbody>
+</table>
+<p>V_TYPES with a star (*) denote V_TYPES that should be sent at sketch startup. For an S_DIMMER, send both a V_DIMMER/V_PERCENTAGE and a V_LIGHT/V_STATUS message. For an S_RGB_LIGHT, send both a V_RGB and a V_LIGHT/V_STATUS message with a V_DIMMER/V_PERCENTAGE message being optional. Same principal applies for S_RGBW_LIGHT and V_RGBW.</p>
+<p>Sketch should acknowledge a command sent from controller with the same type. If command invokes a change to off state (including a V_PERCENTAGE, V_RGB, or V_RGBW message of zero), only a V_STATUS of zero message should be sent. See sketches below for examples.</p>
+<h4>Light example sketch for MySensors 2.x</h4>
+<pre><code>/*
+ * Example Dimmable Light
+ * Code adapted from https://github.com/mysensors/MySensors/tree/master/examples/DimmableLight
+ *
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ */
+
+// Enable debug prints
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define CHILD_ID_LIGHT 1
+
+#define LIGHT_OFF 0
+#define LIGHT_ON 1
+
+#define SN "Dimmable Light"
+#define SV "1.0"
+
+int16_t last_state = LIGHT_ON;
+int16_t last_dim = 100;
+
+MyMessage light_msg( CHILD_ID_LIGHT, V_STATUS );
+MyMessage dimmer_msg( CHILD_ID_LIGHT, V_PERCENTAGE );
+
+void setup()
+{
+  update_light();
+  Serial.println( "Node ready to receive messages..." );
+}
+
+void loop()
+{
+  //In MySensors2.x, first message must come from within loop()
+  static bool first_message_sent = false;
+  if ( first_message_sent == false ) {
+    Serial.println( "Sending initial state..." );
+    send_dimmer_message();
+    send_status_message();
+    first_message_sent = true;
+  }
+}
+
+void presentation()
+{
+  // Send the sketch version information to the gateway
+  sendSketchInfo( SN, SV );
+  present( CHILD_ID_LIGHT, S_DIMMER );
+}
+
+void receive(const MyMessage &amp;message)
+{
+  //When receiving a V_STATUS command, switch the light between OFF
+  //and the last received dimmer value
+  if ( message.type == V_STATUS ) {
+    Serial.println( "V_STATUS command received..." );
+
+    int lstate = message.getInt();
+    if (( lstate &lt; 0 ) || ( lstate &gt; 1 )) {
+      Serial.println( "V_STATUS data invalid (should be 0/1)" );
+      return;
+    }
+    last_state = lstate;
+
+    //If last dimmer state is zero, set dimmer to 100
+    if (( last_state == LIGHT_ON ) &amp;&amp; ( last_dim == 0 )) {
+      last_dim=100;
+    }
+
+    // Update controller status
+    send_status_message();
+
+  } else if ( message.type == V_PERCENTAGE ) {
+    Serial.println( "V_PERCENTAGE command received..." );
+    int dim_value = constrain( message.getInt(), 0, 100 );
+    if ( dim_value == 0 ) {
+      last_state = LIGHT_OFF;
+
+      // Update controller with dimmer value &amp; status
+      send_dimmer_message();
+      send_status_message();
+    } else {
+      last_state = LIGHT_ON;
+      last_dim = dim_value;
+
+      // Update controller with dimmer value
+      send_dimmer_message();
+    }
+
+  } else {
+    Serial.println( "Invalid command received..." );
+    return;
+  }
+
+  //Here you set the actual light state/level
+  update_light();
+}
+
+void update_light()
+{
+  //For this example, just print the light status to console.
+  if ( last_state == LIGHT_OFF ) {
+    Serial.println( "Light state: OFF" );
+  } else {
+    Serial.print( "Light state: ON, Level: " );
+    Serial.println( last_dim );
+  }
+}
+
+void send_dimmer_message()
+{
+  send( dimmer_msg.set( last_dim ) );
+}
+
+void send_status_message()
+{
+  if ( last_state == LIGHT_OFF ) {
+    send( light_msg.set( (int16_t)0) );
+  } else {
+    send( light_msg.set( (int16_t)1) );
+  }
+}
+</code></pre>
+<h2>Remote</h2>
+<p>The following type combinations are supported:</p>
+<h3>MySensors version 1.4 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_IR</td>
+  <td>V_IR_SEND, V_LIGHT</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_IR</td>
+  <td>V_IR_SEND, V_STATUS</td>
+</tr>
+</tbody>
+</table>
+<p>V_LIGHT or V_STATUS is required to report the on / off state of the remote. Use either V_LIGHT or V_STATUS depending on library version.</p>
+<h3>IR transceiver example sketch</h3>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/ir
+ */
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;IRLib.h&gt;
+
+#define SN "IR Sensor"
+#define SV "1.0"
+#define CHILD_ID 1
+
+MySensor gw;
+
+char code[10] = "abcd01234";
+char oldCode[10] = "abcd01234";
+MyMessage msgCodeRec(CHILD_ID, V_IR_RECEIVE);
+MyMessage msgCode(CHILD_ID, V_IR_SEND);
+MyMessage msgSendCode(CHILD_ID, V_LIGHT);
+
+void setup()
+{
+  gw.begin(incomingMessage);
+  gw.sendSketchInfo(SN, SV);
+  gw.present(CHILD_ID, S_IR);
+  // Send initial values.
+  gw.send(msgCodeRec.set(code));
+  gw.send(msgCode.set(code));
+  gw.send(msgSendCode.set(0));
+}
+
+void loop()
+{
+  gw.process();
+  // IR receiver not implemented, just a dummy report of code when it changes
+  if (String(code) != String(oldCode)) {
+    Serial.print("Code received ");
+    Serial.println(code);
+    gw.send(msgCodeRec.set(code));
+    strcpy(oldCode, code);
+  }
+}
+
+void incomingMessage(const MyMessage &amp;message) {
+  if (message.type==V_LIGHT) {
+    // IR sender not implemented, just a dummy print.
+    if (message.getBool()) {
+      Serial.print("Sending code ");
+      Serial.println(code);
+    }
+    gw.send(msgSendCode.set(message.getBool() ? 1 : 0));
+    // Always turn off device
+    gw.wait(100);
+    gw.send(msgSendCode.set(0));
+  }
+  if (message.type == V_IR_SEND) {
+    // Retrieve the IR code value from the incoming message.
+    String codestring = message.getString();
+    codestring.toCharArray(code, sizeof(code));
+    Serial.print("Changing code to ");
+    Serial.println(code);
+    gw.send(msgCode.set(code));
+  }
+}
+</code></pre>
+<h2>Sensor</h2>
+<p>The following sensor types are supported:</p>
+<h3>MySensors version 1.4 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_TEMP</td>
+  <td>V_TEMP</td>
+</tr>
+<tr>
+  <td>S_HUM</td>
+  <td>V_HUM</td>
+</tr>
+<tr>
+  <td>S_BARO</td>
+  <td>V_PRESSURE, V_FORECAST</td>
+</tr>
+<tr>
+  <td>S_WIND</td>
+  <td>V_WIND, V_GUST, V_DIRECTION</td>
+</tr>
+<tr>
+  <td>S_RAIN</td>
+  <td>V_RAIN, V_RAINRATE</td>
+</tr>
+<tr>
+  <td>S_UV</td>
+  <td>V_UV</td>
+</tr>
+<tr>
+  <td>S_WEIGHT</td>
+  <td>V_WEIGHT, V_IMPEDANCE</td>
+</tr>
+<tr>
+  <td>S_POWER</td>
+  <td>V_WATT, V_KWH</td>
+</tr>
+<tr>
+  <td>S_DISTANCE</td>
+  <td>V_DISTANCE</td>
+</tr>
+<tr>
+  <td>S_LIGHT_LEVEL</td>
+  <td>V_LIGHT_LEVEL</td>
+</tr>
+<tr>
+  <td>S_IR</td>
+  <td>V_IR_RECEIVE</td>
+</tr>
+<tr>
+  <td>S_WATER</td>
+  <td>V_FLOW, V_VOLUME</td>
+</tr>
+<tr>
+  <td>S_AIR_QUALITY</td>
+  <td>V_DUST_LEVEL</td>
+</tr>
+<tr>
+  <td>S_CUSTOM</td>
+  <td>V_VAR1, V_VAR2, V_VAR3, V_VAR4, V_VAR5</td>
+</tr>
+<tr>
+  <td>S_DUST</td>
+  <td>V_DUST_LEVEL</td>
+</tr>
+<tr>
+  <td>S_SCENE_CONTROLLER</td>
+  <td>V_SCENE_ON, V_SCENE_OFF</td>
+</tr>
+</tbody>
+</table>
+<h4>MySensors version 1.5 and higher</h4>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_COLOR_SENSOR</td>
+  <td>V_RGB</td>
+</tr>
+<tr>
+  <td>S_MULTIMETER</td>
+  <td>V_VOLTAGE, V_CURRENT, V_IMPEDANCE</td>
+</tr>
+<tr>
+  <td>S_SOUND</td>
+  <td>V_LEVEL</td>
+</tr>
+<tr>
+  <td>S_VIBRATION</td>
+  <td>V_LEVEL</td>
+</tr>
+<tr>
+  <td>S_MOISTURE</td>
+  <td>V_LEVEL</td>
+</tr>
+<tr>
+  <td>S_LIGHT_LEVEL</td>
+  <td>V_LEVEL</td>
+</tr>
+<tr>
+  <td>S_AIR_QUALITY</td>
+  <td>V_LEVEL (replaces V_DUST_LEVEL)</td>
+</tr>
+<tr>
+  <td>S_DUST</td>
+  <td>V_LEVEL (replaces V_DUST_LEVEL)</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 2.0 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_INFO</td>
+  <td>V_TEXT</td>
+</tr>
+<tr>
+  <td>S_GAS</td>
+  <td>V_FLOW, V_VOLUME</td>
+</tr>
+<tr>
+  <td>S_GPS</td>
+  <td>V_POSITION</td>
+</tr>
+<tr>
+  <td>S_IR</td>
+  <td>V_IR_RECORD</td>
+</tr>
+<tr>
+  <td>S_WATER_QUALITY</td>
+  <td>V_TEMP, V_PH, V_ORP, V_EC</td>
+</tr>
+</tbody>
+</table>
+<h3>Custom unit of measurement</h3>
+<p>Some sensor value types are not specific for a certain sensor type. These do not have a default unit of measurement in Home Assistant. For example, the V_LEVEL type can be used for different sensor types, such as dust, sound, or vibration.</p>
+<p>By using V_UNIT_PREFIX, it's possible to set a custom unit for any sensor. The string value that is sent for V_UNIT_PREFIX will be used in preference to any other unit of measurement, for the defined sensors. V_UNIT_PREFIX can't be used as a stand-alone sensor value type. Sending a supported value type and value from the tables above is also required. V_UNIT_PREFIX is available with MySensors version 1.5 and later.</p>
+<h3>Sensor example sketch for MySensors 2.x</h3>
+<pre><code>/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/light
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;BH1750.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;MySensors.h&gt;
+
+#define SN "LightLuxSensor"
+#define SV "1.0"
+#define CHILD_ID 1
+unsigned long SLEEP_TIME = 30000; // Sleep time between reads (in milliseconds)
+
+BH1750 lightSensor;
+MyMessage msg(CHILD_ID, V_LEVEL);
+MyMessage msgPrefix(CHILD_ID, V_UNIT_PREFIX);  // Custom unit message.
+uint16_t lastlux = 0;
+bool initialValueSent = false;
+
+void setup()
+{
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID, S_LIGHT_LEVEL);
+  lightSensor.begin();
+}
+
+void loop()
+{
+  if (!initialValueSent) {
+    Serial.println("Sending initial value");
+    send(msgPrefix.set("custom_lux"));  // Set custom unit.
+    send(msg.set(lastlux));
+    Serial.println("Requesting initial value from controller");
+    request(CHILD_ID, V_LEVEL);
+    wait(2000, C_SET, V_LEVEL);
+  }
+  uint16_t lux = lightSensor.readLightLevel();  // Get Lux value
+  if (lux != lastlux) {
+      send(msg.set(lux));
+      lastlux = lux;
+  }
+
+  sleep(SLEEP_TIME);
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_LEVEL) {
+    if (!initialValueSent) {
+      Serial.println("Receiving initial value from controller");
+      initialValueSent = true;
+    }
+  }
+}
+</code></pre>
+<h2>Switch</h2>
+<p>The following actuator types are supported:</p>
+<h3>MySensors version 1.4 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_DOOR</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_MOTION</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_SMOKE</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_LIGHT</td>
+  <td>V_LIGHT</td>
+</tr>
+<tr>
+  <td>S_LOCK</td>
+  <td>V_LOCK_STATUS</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 1.5 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_LIGHT</td>
+  <td>V_STATUS</td>
+</tr>
+<tr>
+  <td>S_BINARY</td>
+  <td>[V_STATUS or V_LIGHT]</td>
+</tr>
+<tr>
+  <td>S_SPRINKLER</td>
+  <td>V_STATUS</td>
+</tr>
+<tr>
+  <td>S_WATER_LEAK</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_SOUND</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_VIBRATION</td>
+  <td>V_ARMED</td>
+</tr>
+<tr>
+  <td>S_MOISTURE</td>
+  <td>V_ARMED</td>
+</tr>
+</tbody>
+</table>
+<h3>MySensors version 2.0 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_WATER_QUALITY</td>
+  <td>V_STATUS</td>
+</tr>
+</tbody>
+</table>
+<p>All V_TYPES for each S_TYPE above are required to activate the actuator for the platform. Use either V_LIGHT or V_STATUS depending on library version for cases where that V_TYPE is required.</p>
+<h3>Switch example sketch</h3>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/relay
+ */
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+
+#define SN "Relay"
+#define SV "1.0"
+#define CHILD_ID 1
+#define RELAY_PIN 3
+
+MySensor gw;
+MyMessage msgRelay(CHILD_ID, V_STATUS);
+
+void setup()
+{
+  gw.begin(incomingMessage);
+  gw.sendSketchInfo(SN, SV);
+  // Initialize the digital pin as an output.
+  pinMode(RELAY_PIN, OUTPUT);
+  gw.present(CHILD_ID, S_BINARY);
+  gw.send(msgRelay.set(0));
+}
+
+void loop()
+{
+  gw.process();
+}
+
+void incomingMessage(const MyMessage &amp;message)
+{
+  if (message.type == V_STATUS) {
+     // Change relay state.
+     digitalWrite(RELAY_PIN, message.getBool() ? 1 : 0);
+     gw.send(msgRelay.set(message.getBool() ? 1 : 0));
+  }
+}
+</code></pre>
+<h2>Text</h2>
+<p>The following sensor types are supported:</p>
+<h3>MySensors version 2.0 and higher</h3>
+<table>
+<thead>
+<tr>
+  <th>S_TYPE</th>
+  <th>V_TYPE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S_INFO</td>
+  <td>V_TEXT</td>
+</tr>
+</tbody>
+</table>
+<h3>Text example sketch</h3>
+<pre><code>/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+#include &lt;SPI.h&gt;
+
+#define SN "TextSensor"
+#define SV "1.0"
+#define CHILD_ID 1
+
+MyMessage textMsg(CHILD_ID, V_TEXT);
+bool initialValueSent = false;
+
+void setup(void) {
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID, S_INFO, "TextSensor1");
+}
+
+void loop() {
+  if (!initialValueSent) {
+    Serial.println("Sending initial value");
+    // Send initial values.
+    send(textMsg.set("-"));
+    Serial.println("Requesting initial value from controller");
+    request(CHILD_ID, V_TEXT);
+    wait(2000, C_SET, V_TEXT);
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_TEXT) {
+    if (!initialValueSent) {
+      Serial.println("Receiving initial value from controller");
+      initialValueSent = true;
+    }
+    // Dummy print
+    Serial.print("Message: ");
+    Serial.print(message.sensor);
+    Serial.print(", Message: ");
+    Serial.println(message.getString());
+    // Send message to controller
+    send(textMsg.set(message.getString()));
+  }
+}
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/mysensors.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate MySensors into Home Assistant.
+ha_release: 0.73
+ha_domain: mysensors
+---
+
+The [MySensors](https://www.mysensors.org) project combines devices like Arduino, ESP8266, Raspberry Pi, NRF24L01+ and RFM69 to build affordable sensor networks. This integration will automatically add all available devices to Home Assistant, after [presentation](#presentation) is done. That is, you do not need to add anything to your configuration for the devices for them to be added. Go to {% my tools_states title=&quot;**Settings** &gt; **Tools** &gt; **States**&quot; %} to find the devices that have been identified.
+
+{% include integrations/config_flow.md %}
+
+Configuration depends on the type of Gateway you use:
+
+### Serial gateway
+
+If you are using an original Arduino as a serial gateway, the port will be named `ttyACM*`. The exact number can be determined with the command shown below.
+
+```bash
+ls /dev/ttyACM*
+```
+
+In addition to the serial device you also need to enter the baud rate.
+
+### MQTT gateway
+
+If you are using the MQTT gateway, you will need to enter topic prefixes for input and output. These need to be swapped
+with the settings of the gateway. I.e. the input topic for Home Assistant needs to be the output (publish) topic of the gateway.
+
+{% note %}
+The MQTT gateway requires MySensors version 2.0+ and only the MQTT client gateway is supported.
+{% endnote %}
+
+### Ethernet gateway
+
+To use an Ethernet gateway, you need to configure the IP address and port of the gateway.
+
+### General options
+
+A few options are available for all gateways:
+
+- persistence file:
+  Home Assistant will store detected nodes in a file. This means restarting Home Assistant will not require re-discovering of all the nodes. The persistence file option allows setting the path of the file. Leaving the option empty will make Home Assistant auto-generate a file name in the configuration directory.
+
+- version:
+  Enter the version of MySensors that you use for your gateway.
+
+## Presentation
+
+Present a MySensors sensor or actuator, by following these steps:
+
+  Enter the version of MySensors that you use
+
+1. Start Home Assistant and configure the MySensors integration
+2. Write and upload your MySensors sketch to the sensor. Make sure you:
+    - Send sketch name.
+    - Present the sensor&#x27;s `S_TYPE`.
+    - Send at least one initial value per `V_TYPE`. In version 2.x of MySensors, this has to be done in the loop function. See below for an example in 2.0 of how to make sure the initial value has been received by the controller.
+3. Start the sensor.
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/relay
+ */
+
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+#define MY_REPEATER_FEATURE
+#define MY_NODE_ID 1
+#include &lt;SPI.h&gt;
+#include &lt;MySensors.h&gt;
+#include &lt;Bounce2.h&gt;
+
+#define RELAY_PIN  5
+#define BUTTON_PIN  3
+#define CHILD_ID 1
+#define RELAY_ON 1
+#define RELAY_OFF 0
+
+Bounce debouncer = Bounce();
+bool state = false;
+bool initialValueSent = false;
+
+MyMessage msg(CHILD_ID, V_STATUS);
+
+void setup()
+{
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  debouncer.attach(BUTTON_PIN);
+  debouncer.interval(10);
+
+  // Make sure relays are off when starting up
+  digitalWrite(RELAY_PIN, RELAY_OFF);
+  pinMode(RELAY_PIN, OUTPUT);
+}
+
+void presentation()  {
+  sendSketchInfo(&quot;Relay+button&quot;, &quot;1.0&quot;);
+  present(CHILD_ID, S_BINARY);
+}
+
+void loop()
+{
+  if (!initialValueSent) {
+    Serial.println(&quot;Sending initial value&quot;);
+    send(msg.set(state?RELAY_ON:RELAY_OFF));
+    Serial.println(&quot;Requesting initial value from controller&quot;);
+    request(CHILD_ID, V_STATUS);
+    wait(2000, C_SET, V_STATUS);
+  }
+  if (debouncer.update()) {
+    if (debouncer.read()==LOW) {
+      state = !state;
+      // Send new state and request ack back
+      send(msg.set(state?RELAY_ON:RELAY_OFF), true);
+    }
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.isAck()) {
+     Serial.println(&quot;This is an ack from gateway&quot;);
+  }
+
+  if (message.type == V_STATUS) {
+    if (!initialValueSent) {
+      Serial.println(&quot;Receiving initial value from controller&quot;);
+      initialValueSent = true;
+    }
+    // Change relay state
+    state = (bool)message.getInt();
+    digitalWrite(RELAY_PIN, state?RELAY_ON:RELAY_OFF);
+    send(msg.set(state?RELAY_ON:RELAY_OFF));
+  }
+}
+```
+
+## SmartSleep
+
+Sending a heartbeat, `I_HEARTBEAT_RESPONSE`, from the MySensors device to Home Assistant, using MySensors version 2.0 - 2.1, activates the SmartSleep functionality in Home Assistant. This means that messages are buffered and only sent to the device upon receiving a heartbeat from the device. State changes are stored so that only the last requested state change is sent to the device. Other types of messages are queued in a FIFO queue. SmartSleep is useful for battery powered actuators that are waiting for commands. See the MySensors library API for information on how to send heartbeats and sleep the device.
+
+In MySensors version 2.2 the serial API changed from using `I_HEARTBEAT_RESPONSE` to signal SmartSleep, to using `I_PRE_SLEEP_NOTIFICATION` and `I_POST_SLEEP_NOTIFICATION`. Home Assistant has been upgraded to support the new message types and will activate SmartSleep when receiving a message of type `I_PRE_SLEEP_NOTIFICATION`, if using MySensors version 2.2.x or higher. If Home Assistant is configured to use MySensors version 2.0 - 2.1 the old SmartSleep behavior is retained.
+
+## Message validation
+
+Messages sent to or from Home Assistant from or to a MySensors device will be validated according to the MySensors [serial API](https://www.mysensors.org/download/serial_api_20). If a message doesn&#x27;t pass validation, it will be dropped and not be passed forward either to or from Home Assistant. Make sure you follow the serial API for your version of MySensors when writing your Arduino sketch.
+
+The log should warn you of messages that failed validation or if a child value is missing that is required for a certain child type. Home Assistant will log failed validations of child values at warning level if e.g.,  one required value type for a platform has been received, but other required value types are missing.
+
+Message validation was introduced in version 0.52 of Home Assistant.
+
+## Debug logging
+
+If you experience dropped messages or that a device is not added to Home Assistant, please turn on debug logging for the `mysensors` integration and the `mysensors` package. This will help you see what is going on. Make sure you use these logging settings to collect a log sample if you report an issue about the `mysensors` integration in our GitHub issue tracker.
+
+```yaml
+logger:
+  default: info
+  logs:
+    homeassistant.components.mysensors: debug
+    mysensors: debug
+```
+
+Visit the [library API][MySensors library api] of MySensors for more information.
+
+[MySensors library API]: https://www.mysensors.org/download
+
+## Binary sensor
+
+The following binary sensor types are supported:
+
+### MySensors version 1.4 and higher
+
+| S_TYPE   | V_TYPE    |
+| -------- | --------- |
+| S_DOOR   | V_TRIPPED |
+| S_MOTION | V_TRIPPED |
+| S_SMOKE  | V_TRIPPED |
+
+### MySensors version 1.5 and higher
+
+| S_TYPE       | V_TYPE    |
+| ------------ | --------- |
+| S_SPRINKLER  | V_TRIPPED |
+| S_WATER_LEAK | V_TRIPPED |
+| S_SOUND      | V_TRIPPED |
+| S_VIBRATION  | V_TRIPPED |
+| S_MOISTURE   | V_TRIPPED |
+
+### Binary sensor example sketch
+
+```cpp
+/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/binary
+ */
+
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;Bounce2.h&gt;
+
+#define SN &quot;BinarySensor&quot;
+#define SV &quot;1.0&quot;
+#define CHILD_ID 1
+#define BUTTON_PIN 3  // Arduino Digital I/O pin for button/reed switch.
+
+MySensor gw;
+Bounce debouncer = Bounce();
+MyMessage msg(CHILD_ID, V_TRIPPED);
+
+void setup()
+{
+  gw.begin();
+  gw.sendSketchInfo(SN, SV);
+  // Setup the button.
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  // After setting up the button, setup debouncer.
+  debouncer.attach(BUTTON_PIN);
+  debouncer.interval(5);
+  gw.present(CHILD_ID, S_DOOR);
+  gw.send(msg.set(0));
+}
+
+void loop()
+{
+  if (debouncer.update()) {
+    // Get the update value.
+    int value = debouncer.read();
+    // Send in the new value.
+    gw.send(msg.set(value == LOW ? 1 : 0));
+  }
+}
+```
+
+## Climate
+
+The following actuator types are supported:
+
+### MySensors version 1.5 and higher
+
+| S_TYPE | V_TYPE                                                                               |
+| ------ | ------------------------------------------------------------------------------------ |
+| S_HVAC | V_HVAC_FLOW_STATE*, V_HVAC_SETPOINT_HEAT, V_HVAC_SETPOINT_COOL, V_HVAC_SPEED, V_TEMP |
+
+V_HVAC_FLOW_STATE is mapped to the state of the Climate integration in Home Assistant as follows:
+
+| Home Assistant State | MySensors State |
+| -------------------- | --------------- |
+| HVAC_MODE_COOL       | CoolOn          |
+| HVAC_MODE_HEAT       | HeatOn          |
+| HVAC_MODE_AUTO       | AutoChangeOver  |
+| HVAC_MODE_OFF        | Off             |
+
+Currently humidity, away_mode, aux_heat, swing_mode is not supported. This will be included in later versions as feasible.
+
+Set the target temperature using V_HVAC_SETPOINT_HEAT in Heat mode, and V_HVAC_SETPOINT_COOL in Cool Mode. In case of any Auto Change Over mode you can use V_HVAC_SETPOINT_HEAT as well as V_HVAC_SETPOINT_COOL to set the both the low bound and the high bound temperature of the device.
+
+You can use V_HVAC_SPEED to control the Speed setting of the Fan in the HVAC.
+
+You can use V_TEMP to send the current temperature from the node to Home Assistant.
+
+### Climate example sketch for MySensors 2.x
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt; // sketch tested with version 2.3.2
+
+#define SENSOR_NAME &quot;Heatpump Sensor&quot;
+#define SENSOR_VERSION &quot;2.3&quot;
+
+#define CHILD_ID_HVAC 0
+
+#define IR_PIN  3  // Arduino pin tied to the IR led using Arduino PWM
+
+
+// Uncomment your heatpump model
+//#include &lt;FujitsuHeatpumpIR.h&gt;
+//#include &lt;PanasonicCKPHeatpumpIR.h&gt;
+//#include &lt;PanasonicHeatpumpIR.h&gt;
+//#include &lt;CarrierHeatpumpIR.h&gt;
+//#include &lt;MideaHeatpumpIR.h&gt;
+//#include &lt;MitsubishiHeatpumpIR.h&gt;
+//#include &lt;SamsungHeatpumpIR.h&gt; // sketch tested with version 1.0.15, see http://librarymanager#HeatpumpIR by Toni Arte
+//#include &lt;SharpHeatpumpIR.h&gt;
+//#include &lt;DaikinHeatpumpIR.h&gt;
+
+//Some global variables to hold the numeric states sent to the airco unit
+int POWER_STATE;
+int TEMP_STATE;
+int FAN_STATE;
+int MODE_STATE;
+int VDIR_STATE;
+int HDIR_STATE;
+
+//Some global variables to hold the text states sent to the home assistant controller
+String FAN_STATE_TXT;  // possible values (&quot;Min&quot;, &quot;Normal&quot;, &quot;Max&quot;, &quot;Auto&quot;)
+String MODE_STATE_TXT; // possible values (&quot;Off&quot;, &quot;HeatOn&quot;, &quot;CoolOn&quot;, or &quot;AutoChangeOver&quot;)
+
+
+IRSenderPWM irSender(IR_PIN);
+
+//Change to your own Heatpump
+//HeatpumpIR *heatpumpIR = new SamsungAQV12MSANHeatpumpIR();
+/*
+new PanasonicDKEHeatpumpIR()
+new PanasonicJKEHeatpumpIR()
+new PanasonicNKEHeatpumpIR()
+new CarrierHeatpumpIR()
+new MideaHeatpumpIR()
+new FujitsuHeatpumpIR()
+new MitsubishiFDHeatpumpIR()
+new MitsubishiFEHeatpumpIR()
+new SamsungAQVHeatpumpIR()
+new SamsungFJMHeatpumpIR()
+// new SamsungHeatpumpIR() is a protected generic method, cannot be created directly
+new SharpHeatpumpIR()
+new DaikinHeatpumpIR()
+*/
+
+MyMessage msgHVACSetPointC(CHILD_ID_HVAC, V_HVAC_SETPOINT_COOL);
+MyMessage msgHVACSpeed(CHILD_ID_HVAC, V_HVAC_SPEED);
+MyMessage msgHVACFlowState(CHILD_ID_HVAC, V_HVAC_FLOW_STATE);
+
+bool initialValueSent = false;
+
+void presentation() {
+  // Send the sketch version information to the gateway and Controller
+  sendSketchInfo(SENSOR_NAME, SENSOR_VERSION);
+
+  // Register all sensors to gw (they will be created as child devices) by their ID and S_TYPE
+  present(CHILD_ID_HVAC, S_HVAC, &quot;Thermostat&quot;);
+}
+
+void setup() {
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (!initialValueSent) {
+    FAN_STATE_TXT = &quot;Auto&quot;; // default fan start state
+    TEMP_STATE = 20; // default start temperature
+    MODE_STATE_TXT = &quot;Off&quot;; // default mode state
+
+    send(msgHVACSetPointC.set(TEMP_STATE));
+    send(msgHVACSpeed.set(FAN_STATE_TXT.c_str()));
+    send(msgHVACFlowState.set(MODE_STATE_TXT.c_str()));
+
+    initialValueSent = true;
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.isAck()) {
+     Serial.println(&quot;This is an ack from gateway&quot;);
+     return;
+  }
+
+  Serial.print(&quot;Incoming message for: &quot;);
+  Serial.print(message.sensor);
+
+  String recvData = message.data;
+  recvData.trim();
+
+  Serial.print(&quot;, New status: &quot;);
+  Serial.println(recvData);
+  switch (message.type) {
+    case V_HVAC_SPEED:
+      Serial.println(&quot;V_HVAC_SPEED&quot;);
+
+      if(recvData.equalsIgnoreCase(&quot;auto&quot;)) FAN_STATE = 0;
+      else if(recvData.equalsIgnoreCase(&quot;min&quot;)) FAN_STATE = 1;
+      else if(recvData.equalsIgnoreCase(&quot;normal&quot;)) FAN_STATE = 2;
+      else if(recvData.equalsIgnoreCase(&quot;max&quot;)) FAN_STATE = 3;
+      FAN_STATE_TXT = recvData;
+    break;
+
+    case V_HVAC_SETPOINT_COOL:
+      Serial.println(&quot;V_HVAC_SETPOINT_COOL&quot;);
+      TEMP_STATE = message.getFloat();
+      Serial.println(TEMP_STATE);
+    break;
+
+    case V_HVAC_FLOW_STATE:
+      Serial.println(&quot;V_HVAC_FLOW_STATE&quot;);
+      if (recvData.equalsIgnoreCase(&quot;coolon&quot;)) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_COOL;
+      }
+      else if (recvData.equalsIgnoreCase(&quot;heaton&quot;)) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_HEAT;
+      }
+      else if (recvData.equalsIgnoreCase(&quot;autochangeover&quot;)) {
+        POWER_STATE = 1;
+        MODE_STATE = MODE_AUTO;
+      }
+      else if (recvData.equalsIgnoreCase(&quot;off&quot;)){
+        POWER_STATE = 0;
+      }
+      MODE_STATE_TXT = recvData;
+      break;
+  }
+  sendHeatpumpCommand();
+  sendNewStateToGateway();
+}
+
+void sendNewStateToGateway() {
+  Serial.println(&quot;Status update send to HA:&quot;);
+  Serial.println(&quot;*************************&quot;);
+  Serial.println(&quot;Mode = &quot; + MODE_STATE_TXT + &quot;(&quot; + (String)MODE_STATE + &quot;)&quot;);
+  Serial.println(&quot;Fan = &quot; + FAN_STATE_TXT + &quot;(&quot; + (String)FAN_STATE + &quot;)&quot;);
+  Serial.println(&quot;Temp = &quot; + (String)TEMP_STATE);
+  send(msgHVACFlowState.set(MODE_STATE_TXT.c_str()));
+  send(msgHVACSpeed.set(FAN_STATE_TXT.c_str()));
+  send(msgHVACSetPointC.set(TEMP_STATE));
+}
+
+void sendHeatpumpCommand() {
+  Serial.println(&quot;Heatpump commands send to airco:&quot;);
+  Serial.println(&quot;********************************&quot;);
+  Serial.println(&quot;Power = &quot; + (String)POWER_STATE);
+  Serial.println(&quot;Mode = &quot; + (String)MODE_STATE);
+  Serial.println(&quot;Fan = &quot; + (String)FAN_STATE);
+  Serial.println(&quot;Temp = &quot; + (String)TEMP_STATE);
+
+  heatpumpIR-&gt;send(irSender, POWER_STATE, MODE_STATE, FAN_STATE, TEMP_STATE, VDIR_AUTO, HDIR_AUTO);
+}
+```
+
+## Cover
+
+The following actuator types are supported:
+
+### MySensors version 1.4
+
+| S_TYPE  | V_TYPE                                      |
+| ------- | ------------------------------------------- |
+| S_COVER | V_UP, V_DOWN, V_STOP, [V_DIMMER or V_LIGHT] |
+
+### MySensors version 1.5 and higher
+
+| S_TYPE  | V_TYPE                                           |
+| ------- | ------------------------------------------------ |
+| S_COVER | V_UP, V_DOWN, V_STOP, [V_PERCENTAGE or V_STATUS] |
+
+### MySensors version 2.4 and higher
+
+| S_TYPE  | V_TYPE                                                      |
+| ------- | ----------------------------------------------------------- |
+| S_COVER | V_UP, V_DOWN, V_STOP, [V_PERCENTAGE or V_STATUS], [V_TILT] |
+
+For MySensors version 2.4 and higher, `V_UP`, `V_DOWN`, `V_STOP`, and either `V_PERCENTAGE` or `V_STATUS` are required. `V_TILT` is optional for covers that support tilt position. Use V_PERCENTAGE (or V_DIMMER) if you know the exact position of the cover in percent. Use V_STATUS (or V_LIGHT) if you don&#x27;t.
+
+### Cover example sketch
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define SN &quot;Cover&quot;
+#define SV &quot;1.1&quot;
+
+// Actuators for moving the cover up and down respectively.
+#define COVER_UP_ACTUATOR_PIN 2
+#define COVER_DOWN_ACTUATOR_PIN 3
+// Sensors for finding out when the cover has reached its up/down position.
+// These could be simple buttons or linear hall sensors.
+#define COVER_UP_SENSOR_PIN 4
+#define COVER_DOWN_SENSOR_PIN 5
+
+#define CHILD_ID 0
+
+// Internal representation of the cover state.
+enum State {
+  IDLE,
+  UP, // Window covering. Up.
+  DOWN, // Window covering. Down.
+};
+
+static int state = IDLE;
+static int status = 0; // 0=cover is down, 1=cover is up
+static bool initial_state_sent = false;
+MyMessage upMessage(CHILD_ID, V_UP);
+MyMessage downMessage(CHILD_ID, V_DOWN);
+MyMessage stopMessage(CHILD_ID, V_STOP);
+MyMessage statusMessage(CHILD_ID, V_STATUS);
+
+void sendState() {
+  // Send current state and status to gateway.
+  send(upMessage.set(state == UP));
+  send(downMessage.set(state == DOWN));
+  send(stopMessage.set(state == IDLE));
+  send(statusMessage.set(status));
+}
+
+void setup() {
+  pinMode(COVER_UP_SENSOR_PIN, INPUT);
+  pinMode(COVER_DOWN_SENSOR_PIN, INPUT);
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+
+  present(CHILD_ID, S_COVER);
+}
+
+void loop() {
+  if (!initial_state_sent) {
+    sendState();
+    initial_state_sent = true;
+  }
+
+  if (state == IDLE) {
+    digitalWrite(COVER_UP_ACTUATOR_PIN, LOW);
+    digitalWrite(COVER_DOWN_ACTUATOR_PIN, LOW);
+  }
+
+  if (state == UP &amp;&amp; digitalRead(COVER_UP_SENSOR_PIN) == HIGH) {
+    Serial.println(&quot;Cover is up.&quot;);
+    // Update status and state; send it to the gateway.
+    status = 1;
+    state = IDLE;
+    sendState();
+    // Actuators will be disabled in next loop() iteration.
+  }
+
+  if (state == DOWN &amp;&amp; digitalRead(COVER_DOWN_SENSOR_PIN) == HIGH) {
+    Serial.println(&quot;Cover is down.&quot;);
+    // Update status and state; send it to the gateway.
+    status = 0;
+    state = IDLE;
+    sendState();
+    // Actuators will be disabled in next loop() iteration.
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_UP) {
+    // Set state to covering up and send it back to the gateway.
+    state = UP;
+    sendState();
+    Serial.println(&quot;Moving cover up.&quot;);
+
+    // Activate actuator until the sensor returns HIGH in loop().
+    digitalWrite(COVER_UP_ACTUATOR_PIN, HIGH);
+  }
+
+  if (message.type == V_DOWN) {
+    // Set state to covering up and send it back to the gateway.
+    state = DOWN;
+    sendState();
+    Serial.println(&quot;Moving cover down.&quot;);
+    // Activate actuator until the sensor returns HIGH in loop().
+    digitalWrite(COVER_DOWN_ACTUATOR_PIN, HIGH);
+  }
+
+  if (message.type == V_STOP) {
+    // Set state to idle and send it back to the gateway.
+    state = IDLE;
+    sendState();
+    Serial.println(&quot;Stopping cover.&quot;);
+
+    // Actuators will be switched off in loop().
+  }
+}
+```
+
+#### Cover sketch example with position measurement based on motor running time
+
+This sketch is ideally for star topology wiring. You can run up to 12 covers with a single Arduino Mega board and some relays. All you need to set is one line of parameters for one Cover. However, you can also use it for a single cover based on an Arduino Nano or even an ESP8266 board.
+
+[Check out the code on GitHub.](https://github.com/gryzli133/RollerShutterSplit)
+
+## Device tracker
+
+The following sensor types are supported:
+
+### MySensors version 2.0 and higher
+
+| S_TYPE | V_TYPE     |
+| ------ | ---------- |
+| S_GPS  | V_POSITION |
+
+### Device tracker example sketch for MySensors 2.x
+
+```cpp
+/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/gps
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define SN &quot;GPS Sensor&quot;
+#define SV &quot;1.0&quot;
+
+// GPS position send interval (in milliseconds)
+#define GPS_SEND_INTERVAL 30000
+// The child id used for the gps sensor
+#define CHILD_ID_GPS 1
+
+MyMessage msg(CHILD_ID_GPS, V_POSITION);
+
+// Last time GPS position was sent to controller
+unsigned long lastGPSSent = -31000;
+
+// Some buffers
+char latBuf[11];
+char lngBuf[11];
+char altBuf[6];
+char payload[30];
+
+// Dummy values. Implementation of real GPS device is not done.
+float gpsLocationLat = 40.741895;
+float gpsLocationLng = -73.989308;
+float gpsAltitudeMeters = 12.0;
+
+void setup() {
+
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID_GPS, S_GPS);
+}
+
+void loop()
+{
+  unsigned long currentTime = millis();
+
+  // Evaluate if it is time to send a new position
+  bool timeToSend = currentTime - lastGPSSent &gt; GPS_SEND_INTERVAL;
+
+  if (timeToSend) {
+    // Send current gps location
+    // Build position and altitude string to send
+    dtostrf(gpsLocationLat, 1, 6, latBuf);
+    dtostrf(gpsLocationLng, 1, 6, lngBuf);
+    dtostrf(gpsAltitudeMeters, 1, 0, altBuf);
+    sprintf(payload, &quot;%s,%s,%s&quot;, latBuf, lngBuf, altBuf);
+
+    Serial.print(F(&quot;Position: &quot;));
+    Serial.println(payload);
+
+    send(msg.set(payload));
+    lastGPSSent = currentTime;
+  }
+}
+```
+
+## Light
+
+The following actuator types are supported:
+
+### MySensors version 1.4
+
+| S_TYPE   | V_TYPE                |
+| -------- | --------------------- |
+| S_DIMMER | V_DIMMER\*, V_LIGHT\* |
+
+### MySensors version 1.5 and higher
+
+| S_TYPE       | V_TYPE                                                         |
+| ------------ | -------------------------------------------------------------- |
+| S_DIMMER     | [V_DIMMER\* or V_PERCENTAGE\*], [V_LIGHT\* or V_STATUS\*]      |
+| S_RGB_LIGHT  | V_RGB*, [V_LIGHT\* or V_STATUS\*], [V_DIMMER or V_PERCENTAGE]  |
+| S_RGBW_LIGHT | V_RGBW*, [V_LIGHT\* or V_STATUS\*], [V_DIMMER or V_PERCENTAGE] |
+
+V_TYPES with a star (\*) denote V_TYPES that should be sent at sketch startup. For an S_DIMMER, send both a V_DIMMER/V_PERCENTAGE and a V_LIGHT/V_STATUS message. For an S_RGB_LIGHT, send both a V_RGB and a V_LIGHT/V_STATUS message with a V_DIMMER/V_PERCENTAGE message being optional. Same principal applies for S_RGBW_LIGHT and V_RGBW.
+
+Sketch should acknowledge a command sent from controller with the same type. If command invokes a change to off state (including a V_PERCENTAGE, V_RGB, or V_RGBW message of zero), only a V_STATUS of zero message should be sent. See sketches below for examples.
+
+#### Light example sketch for MySensors 2.x
+
+```cpp
+/*
+ * Example Dimmable Light
+ * Code adapted from https://github.com/mysensors/MySensors/tree/master/examples/DimmableLight
+ *
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ */
+
+// Enable debug prints
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+
+#define CHILD_ID_LIGHT 1
+
+#define LIGHT_OFF 0
+#define LIGHT_ON 1
+
+#define SN &quot;Dimmable Light&quot;
+#define SV &quot;1.0&quot;
+
+int16_t last_state = LIGHT_ON;
+int16_t last_dim = 100;
+
+MyMessage light_msg( CHILD_ID_LIGHT, V_STATUS );
+MyMessage dimmer_msg( CHILD_ID_LIGHT, V_PERCENTAGE );
+
+void setup()
+{
+  update_light();
+  Serial.println( &quot;Node ready to receive messages...&quot; );
+}
+
+void loop()
+{
+  //In MySensors2.x, first message must come from within loop()
+  static bool first_message_sent = false;
+  if ( first_message_sent == false ) {
+    Serial.println( &quot;Sending initial state...&quot; );
+    send_dimmer_message();
+    send_status_message();
+    first_message_sent = true;
+  }
+}
+
+void presentation()
+{
+  // Send the sketch version information to the gateway
+  sendSketchInfo( SN, SV );
+  present( CHILD_ID_LIGHT, S_DIMMER );
+}
+
+void receive(const MyMessage &amp;message)
+{
+  //When receiving a V_STATUS command, switch the light between OFF
+  //and the last received dimmer value
+  if ( message.type == V_STATUS ) {
+    Serial.println( &quot;V_STATUS command received...&quot; );
+
+    int lstate = message.getInt();
+    if (( lstate &lt; 0 ) || ( lstate &gt; 1 )) {
+      Serial.println( &quot;V_STATUS data invalid (should be 0/1)&quot; );
+      return;
+    }
+    last_state = lstate;
+
+    //If last dimmer state is zero, set dimmer to 100
+    if (( last_state == LIGHT_ON ) &amp;&amp; ( last_dim == 0 )) {
+      last_dim=100;
+    }
+
+    // Update controller status
+    send_status_message();
+
+  } else if ( message.type == V_PERCENTAGE ) {
+    Serial.println( &quot;V_PERCENTAGE command received...&quot; );
+    int dim_value = constrain( message.getInt(), 0, 100 );
+    if ( dim_value == 0 ) {
+      last_state = LIGHT_OFF;
+
+      // Update controller with dimmer value &amp; status
+      send_dimmer_message();
+      send_status_message();
+    } else {
+      last_state = LIGHT_ON;
+      last_dim = dim_value;
+
+      // Update controller with dimmer value
+      send_dimmer_message();
+    }
+
+  } else {
+    Serial.println( &quot;Invalid command received...&quot; );
+    return;
+  }
+
+  //Here you set the actual light state/level
+  update_light();
+}
+
+void update_light()
+{
+  //For this example, just print the light status to console.
+  if ( last_state == LIGHT_OFF ) {
+    Serial.println( &quot;Light state: OFF&quot; );
+  } else {
+    Serial.print( &quot;Light state: ON, Level: &quot; );
+    Serial.println( last_dim );
+  }
+}
+
+void send_dimmer_message()
+{
+  send( dimmer_msg.set( last_dim ) );
+}
+
+void send_status_message()
+{
+  if ( last_state == LIGHT_OFF ) {
+    send( light_msg.set( (int16_t)0) );
+  } else {
+    send( light_msg.set( (int16_t)1) );
+  }
+}
+```
+
+## Remote
+
+The following type combinations are supported:
+
+### MySensors version 1.4 and higher
+
+| S_TYPE | V_TYPE             |
+| ------ | ------------------ |
+| S_IR   | V_IR_SEND, V_LIGHT |
+
+### MySensors version 1.5 and higher
+
+| S_TYPE | V_TYPE              |
+| ------ | ------------------- |
+| S_IR   | V_IR_SEND, V_STATUS |
+
+V_LIGHT or V_STATUS is required to report the on / off state of the remote. Use either V_LIGHT or V_STATUS depending on library version.
+
+### IR transceiver example sketch
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/ir
+ */
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;IRLib.h&gt;
+
+#define SN &quot;IR Sensor&quot;
+#define SV &quot;1.0&quot;
+#define CHILD_ID 1
+
+MySensor gw;
+
+char code[10] = &quot;abcd01234&quot;;
+char oldCode[10] = &quot;abcd01234&quot;;
+MyMessage msgCodeRec(CHILD_ID, V_IR_RECEIVE);
+MyMessage msgCode(CHILD_ID, V_IR_SEND);
+MyMessage msgSendCode(CHILD_ID, V_LIGHT);
+
+void setup()
+{
+  gw.begin(incomingMessage);
+  gw.sendSketchInfo(SN, SV);
+  gw.present(CHILD_ID, S_IR);
+  // Send initial values.
+  gw.send(msgCodeRec.set(code));
+  gw.send(msgCode.set(code));
+  gw.send(msgSendCode.set(0));
+}
+
+void loop()
+{
+  gw.process();
+  // IR receiver not implemented, just a dummy report of code when it changes
+  if (String(code) != String(oldCode)) {
+    Serial.print(&quot;Code received &quot;);
+    Serial.println(code);
+    gw.send(msgCodeRec.set(code));
+    strcpy(oldCode, code);
+  }
+}
+
+void incomingMessage(const MyMessage &amp;message) {
+  if (message.type==V_LIGHT) {
+    // IR sender not implemented, just a dummy print.
+    if (message.getBool()) {
+      Serial.print(&quot;Sending code &quot;);
+      Serial.println(code);
+    }
+    gw.send(msgSendCode.set(message.getBool() ? 1 : 0));
+    // Always turn off device
+    gw.wait(100);
+    gw.send(msgSendCode.set(0));
+  }
+  if (message.type == V_IR_SEND) {
+    // Retrieve the IR code value from the incoming message.
+    String codestring = message.getString();
+    codestring.toCharArray(code, sizeof(code));
+    Serial.print(&quot;Changing code to &quot;);
+    Serial.println(code);
+    gw.send(msgCode.set(code));
+  }
+}
+```
+
+## Sensor
+
+The following sensor types are supported:
+
+### MySensors version 1.4 and higher
+
+| S_TYPE             | V_TYPE                                 |
+| ------------------ | -------------------------------------- |
+| S_TEMP             | V_TEMP                                 |
+| S_HUM              | V_HUM                                  |
+| S_BARO             | V_PRESSURE, V_FORECAST                 |
+| S_WIND             | V_WIND, V_GUST, V_DIRECTION            |
+| S_RAIN             | V_RAIN, V_RAINRATE                     |
+| S_UV               | V_UV                                   |
+| S_WEIGHT           | V_WEIGHT, V_IMPEDANCE                  |
+| S_POWER            | V_WATT, V_KWH                          |
+| S_DISTANCE         | V_DISTANCE                             |
+| S_LIGHT_LEVEL      | V_LIGHT_LEVEL                          |
+| S_IR               | V_IR_RECEIVE                           |
+| S_WATER            | V_FLOW, V_VOLUME                       |
+| S_AIR_QUALITY      | V_DUST_LEVEL                           |
+| S_CUSTOM           | V_VAR1, V_VAR2, V_VAR3, V_VAR4, V_VAR5 |
+| S_DUST             | V_DUST_LEVEL                           |
+| S_SCENE_CONTROLLER | V_SCENE_ON, V_SCENE_OFF                |
+
+#### MySensors version 1.5 and higher
+
+| S_TYPE         | V_TYPE                            |
+| -------------- | --------------------------------- |
+| S_COLOR_SENSOR | V_RGB                             |
+| S_MULTIMETER   | V_VOLTAGE, V_CURRENT, V_IMPEDANCE |
+| S_SOUND        | V_LEVEL                           |
+| S_VIBRATION    | V_LEVEL                           |
+| S_MOISTURE     | V_LEVEL                           |
+| S_LIGHT_LEVEL  | V_LEVEL                           |
+| S_AIR_QUALITY  | V_LEVEL (replaces V_DUST_LEVEL)   |
+| S_DUST         | V_LEVEL (replaces V_DUST_LEVEL)   |
+
+### MySensors version 2.0 and higher
+
+| S_TYPE          | V_TYPE                    |
+| --------------- | ------------------------- |
+| S_INFO          | V_TEXT                    |
+| S_GAS           | V_FLOW, V_VOLUME          |
+| S_GPS           | V_POSITION                |
+| S_IR            | V_IR_RECORD               |
+| S_WATER_QUALITY | V_TEMP, V_PH, V_ORP, V_EC |
+
+### Custom unit of measurement
+
+Some sensor value types are not specific for a certain sensor type. These do not have a default unit of measurement in Home Assistant. For example, the V_LEVEL type can be used for different sensor types, such as dust, sound, or vibration.
+
+By using V_UNIT_PREFIX, it&#x27;s possible to set a custom unit for any sensor. The string value that is sent for V_UNIT_PREFIX will be used in preference to any other unit of measurement, for the defined sensors. V_UNIT_PREFIX can&#x27;t be used as a stand-alone sensor value type. Sending a supported value type and value from the tables above is also required. V_UNIT_PREFIX is available with MySensors version 1.5 and later.
+
+### Sensor example sketch for MySensors 2.x
+
+```cpp
+/**
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/light
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;BH1750.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;MySensors.h&gt;
+
+#define SN &quot;LightLuxSensor&quot;
+#define SV &quot;1.0&quot;
+#define CHILD_ID 1
+unsigned long SLEEP_TIME = 30000; // Sleep time between reads (in milliseconds)
+
+BH1750 lightSensor;
+MyMessage msg(CHILD_ID, V_LEVEL);
+MyMessage msgPrefix(CHILD_ID, V_UNIT_PREFIX);  // Custom unit message.
+uint16_t lastlux = 0;
+bool initialValueSent = false;
+
+void setup()
+{
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID, S_LIGHT_LEVEL);
+  lightSensor.begin();
+}
+
+void loop()
+{
+  if (!initialValueSent) {
+    Serial.println(&quot;Sending initial value&quot;);
+    send(msgPrefix.set(&quot;custom_lux&quot;));  // Set custom unit.
+    send(msg.set(lastlux));
+    Serial.println(&quot;Requesting initial value from controller&quot;);
+    request(CHILD_ID, V_LEVEL);
+    wait(2000, C_SET, V_LEVEL);
+  }
+  uint16_t lux = lightSensor.readLightLevel();  // Get Lux value
+  if (lux != lastlux) {
+      send(msg.set(lux));
+      lastlux = lux;
+  }
+
+  sleep(SLEEP_TIME);
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_LEVEL) {
+    if (!initialValueSent) {
+      Serial.println(&quot;Receiving initial value from controller&quot;);
+      initialValueSent = true;
+    }
+  }
+}
+```
+
+## Switch
+
+The following actuator types are supported:
+
+### MySensors version 1.4 and higher
+
+| S_TYPE   | V_TYPE        |
+| -------- | ------------- |
+| S_DOOR   | V_ARMED       |
+| S_MOTION | V_ARMED       |
+| S_SMOKE  | V_ARMED       |
+| S_LIGHT  | V_LIGHT       |
+| S_LOCK   | V_LOCK_STATUS |
+
+### MySensors version 1.5 and higher
+
+| S_TYPE       | V_TYPE                |
+| ------------ | --------------------- |
+| S_LIGHT      | V_STATUS              |
+| S_BINARY     | [V_STATUS or V_LIGHT] |
+| S_SPRINKLER  | V_STATUS              |
+| S_WATER_LEAK | V_ARMED               |
+| S_SOUND      | V_ARMED               |
+| S_VIBRATION  | V_ARMED               |
+| S_MOISTURE   | V_ARMED               |
+
+### MySensors version 2.0 and higher
+
+| S_TYPE          | V_TYPE   |
+| --------------- | -------- |
+| S_WATER_QUALITY | V_STATUS |
+
+All V_TYPES for each S_TYPE above are required to activate the actuator for the platform. Use either V_LIGHT or V_STATUS depending on library version for cases where that V_TYPE is required.
+
+### Switch example sketch
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ *
+ * https://www.mysensors.org/build/relay
+ */
+
+#include &lt;MySensor.h&gt;
+#include &lt;SPI.h&gt;
+
+#define SN &quot;Relay&quot;
+#define SV &quot;1.0&quot;
+#define CHILD_ID 1
+#define RELAY_PIN 3
+
+MySensor gw;
+MyMessage msgRelay(CHILD_ID, V_STATUS);
+
+void setup()
+{
+  gw.begin(incomingMessage);
+  gw.sendSketchInfo(SN, SV);
+  // Initialize the digital pin as an output.
+  pinMode(RELAY_PIN, OUTPUT);
+  gw.present(CHILD_ID, S_BINARY);
+  gw.send(msgRelay.set(0));
+}
+
+void loop()
+{
+  gw.process();
+}
+
+void incomingMessage(const MyMessage &amp;message)
+{
+  if (message.type == V_STATUS) {
+     // Change relay state.
+     digitalWrite(RELAY_PIN, message.getBool() ? 1 : 0);
+     gw.send(msgRelay.set(message.getBool() ? 1 : 0));
+  }
+}
+```
+
+## Text
+
+The following sensor types are supported:
+
+### MySensors version 2.0 and higher
+
+| S_TYPE | V_TYPE |
+| ------ | ------ |
+| S_INFO | V_TEXT |
+
+### Text example sketch
+
+```cpp
+/*
+ * Documentation: https://www.mysensors.org
+ * Support Forum: https://forum.mysensors.org
+ */
+
+// Enable debug prints to serial monitor
+#define MY_DEBUG
+#define MY_RADIO_NRF24
+
+#include &lt;MySensors.h&gt;
+#include &lt;SPI.h&gt;
+
+#define SN &quot;TextSensor&quot;
+#define SV &quot;1.0&quot;
+#define CHILD_ID 1
+
+MyMessage textMsg(CHILD_ID, V_TEXT);
+bool initialValueSent = false;
+
+void setup(void) {
+}
+
+void presentation() {
+  sendSketchInfo(SN, SV);
+  present(CHILD_ID, S_INFO, &quot;TextSensor1&quot;);
+}
+
+void loop() {
+  if (!initialValueSent) {
+    Serial.println(&quot;Sending initial value&quot;);
+    // Send initial values.
+    send(textMsg.set(&quot;-&quot;));
+    Serial.println(&quot;Requesting initial value from controller&quot;);
+    request(CHILD_ID, V_TEXT);
+    wait(2000, C_SET, V_TEXT);
+  }
+}
+
+void receive(const MyMessage &amp;message) {
+  if (message.type == V_TEXT) {
+    if (!initialValueSent) {
+      Serial.println(&quot;Receiving initial value from controller&quot;);
+      initialValueSent = true;
+    }
+    // Dummy print
+    Serial.print(&quot;Message: &quot;);
+    Serial.print(message.sensor);
+    Serial.print(&quot;, Message: &quot;);
+    Serial.println(message.getString());
+    // Send message to controller
+    send(textMsg.set(message.getString()));
+  }
+}
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for MySensors.</p><p>The <strong>gw mqtt</strong> configuration step lists <code>persistence_file</code>, <code>retain</code>, <code>topic_in_prefix</code>, <code>topic_out_prefix</code>, <code>version</code>.</p><p>The <strong>gw serial</strong> configuration step lists <code>baud_rate</code>, <code>device</code>, <code>persistence_file</code>, <code>version</code>.</p><p>The <strong>gw tcp</strong> configuration step lists <code>device</code>, <code>persistence_file</code>, <code>tcp_port</code>, <code>version</code>.</p><p>The <strong>user</strong> configuration step lists <code>gateway_type</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>device tracker</li><li>light</li><li>remote</li><li>sensor</li><li>switch</li><li>text</li></ul><h3>Connection methods</h3><ul class="chips"><li>mqtt</li><li>network</li><li>serial</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Presentation</li><li>SmartSleep</li><li>Message validation</li><li>Debug logging</li><li>Binary sensor</li><li>Climate</li><li>Cover</li><li>Device tracker</li><li>Light</li><li>Remote</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/mysensors/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/mysensors</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/mysensors</code></dd></dl></section><p><a href="../../integrations/mysensors/">Return to the MySensors guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

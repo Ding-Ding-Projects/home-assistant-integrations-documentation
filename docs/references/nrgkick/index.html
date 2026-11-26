@@ -1,1 +1,736 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NRGkick reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:157" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/nrgkick/">NRGkick guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>NRGkick</h1><p>Integrate the NRGkick Gen2 mobile EV charger using the local REST JSON API.</p><section><h2>Overview</h2><p>The NRGkick integration allows you to monitor the NRGkick mobile EV charger (Wallbox) by DiniTech with Home Assistant. It enables real-time monitoring of charging status, tracking energy consumption, controlling charging behavior, and integrating EV charging data into the Home Assistant energy dashboard.</p></section><section><h2>Supported devices</h2><p>The following NRGkick chargers are supported by this integration:</p></section><section><h2>Prerequisites</h2><p>If you enabled authentication in the NRGkick app, enter the username and password during setup.</p></section><section><h2>Supported functionality</h2><p>Below is a complete overview of the entities this integration provides.</p></section><section><h2>Binary sensors</h2><p>This integration provides a single binary sensor:</p></section><section><h2>Sensors</h2><p>The integration creates the following sensors:</p></section><section><h2>Cellular (only if available)</h2><p>These sensors are only available on NRGkick SIM models.</p></section><section><h2>Temperatures</h2><p>The sensors marked with \*\* are disabled by default. If you want to use them, you need to enable them first. See the enabling or disabling entities documentation for information on how to do this.</p></section><section><h2>Device tracker</h2><p>The integration creates the following device tracker:</p></section><section><h2>Controls</h2><p>The integration creates the following controls.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for NRGkick.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>reconfigure auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><p>The <strong>user auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>device tracker</li><li>number</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>NRGkick automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/nrgkick/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/nrgkick</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/nrgkick</code></dd></dl></section><p><a href="../../integrations/nrgkick/">Return to the NRGkick guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NRGkick reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:157" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/nrgkick/">NRGkick guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>NRGkick</h1><p>Integrate the NRGkick Gen2 mobile EV charger using the local REST JSON API.</p><div class="reader-body"><p>The <strong>NRGkick</strong> integration allows you to monitor the <a>NRGkick</a> mobile EV charger (Wallbox) by DiniTech with Home Assistant. It enables real-time monitoring of charging status, tracking energy consumption, controlling charging behavior, and integrating EV charging data into the Home Assistant energy dashboard.</p>
+<p>The integration connects directly to the device on your local network using the local REST JSON API. No cloud connection is required.</p>
+<h2>Use cases</h2>
+<p>You can use the NRGkick integration to:</p>
+<ul>
+<li><strong>Monitor your EV charging in real time</strong> - Track charging status, current power draw, session energy, and per-phase values directly from your dashboard.</li>
+<li><strong>Optimize your home energy management</strong> - Add your charger to the Home Assistant energy dashboard to integrate EV charging into your overall energy monitoring system.</li>
+<li><strong>Create smart charging automations</strong> such as:<ul>
+<li>Receiving notifications when charging stops or reaches an energy target</li>
+<li>Controlling charging current based on solar surplus (see the <a>solar surplus charging example</a>)</li>
+<li>Pausing charging during expensive peak hours</li>
+<li>Reacting to warnings or errors reported by the charger</li>
+</ul>
+</li>
+<li><strong>Track charger location on SIM models</strong> - Use the GPS device tracker in map views and zone-based automations.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The following NRGkick chargers are supported by this integration:</p>
+<ul>
+<li>NRGkick Gen2 (Smart Cable / Flexible Wallbox)</li>
+</ul>
+<p>This includes the 16A and 32A variants, as well as models with cellular (SIM) and GPS capabilities.</p>
+<p><strong>Note</strong></p>
+<p>The NRGkick 16A light model requires the "NRGkick App incl. Bluetooth/Wi-Fi connectivity" one-time upgrade to use the local API.</p>
+<h2>Unsupported devices</h2>
+<ul>
+<li>NRGkick Gen1 (Bluetooth-only)</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>Home Assistant and the NRGkick device need to be on the same local network.</li>
+<li>Your NRGkick device needs to have SmartModule firmware 4.0.0.0 or newer.</li>
+<li>The REST JSON API needs to be enabled in the NRGkick app.</li>
+</ul>
+<p>To enable the API:</p>
+<ol>
+<li>Open the NRGkick app from the manufacturer on your smartphone.</li>
+<li>Go to <strong>Extended</strong> &gt; <strong>Local API</strong>.</li>
+<li>Enable <strong>JSON API</strong>.</li>
+<li>Optional: Enable authentication and set a username and password.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>NRGkick</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>NRGkick</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>If you enabled authentication in the NRGkick app, enter the username and password during setup.</p>
+<h2>Configuration options</h2>
+<pre><code>
+Host:
+  description: |
+    The hostname or IP address of your NRGkick device, for example, `nrgkick.local` or `192.0.2.10`.
+Username:
+  description: Username for HTTP Basic Authentication (optional).
+Password:
+  description: Password for HTTP Basic Authentication (optional).
+
+</code></pre>
+<p>The above configuration can also be adjusted later via <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>. On the <strong>NRGkick</strong> integration, select , then select <strong>Reconfigure</strong>.</p>
+<h2>Supported functionality</h2>
+<p>Below is a complete overview of the entities this integration provides.</p>
+<h3>Binary sensors</h3>
+<p>This integration provides a single binary sensor:</p>
+<ul>
+<li><strong>Charge permitted</strong>: Indicates whether the vehicle is currently allowed to charge. If this sensor is on (state: <code>on</code>), charging is permitted. If it is off (state: <code>off</code>), charging is not permitted.</li>
+</ul>
+<h3>Sensors</h3>
+<p>The integration creates the following sensors:</p>
+<p><strong>Tip</strong></p>
+<p>The ability to add your charger to the <a>Home Assistant energy dashboard</a> is one of the most useful features of this integration. It is recommended to add the <strong>Total charged energy</strong> sensor to the energy dashboard configuration.</p>
+<h4>Device information</h4>
+<h5>General</h5>
+<ul>
+<li><strong>Rated current</strong> (A): Max rated current of the NRGkick.</li>
+</ul>
+<h5>Connector</h5>
+<ul>
+<li><strong>Connector phase count</strong>: Phase count of the connected attachment.</li>
+<li><strong>Connector max current</strong> (A): Max current of the connected attachment.</li>
+<li><strong>Connector type</strong>: Attachment type (for example Type 2, CEE, domestic).</li>
+<li><strong>Connector serial</strong>**: Attachment serial number.</li>
+</ul>
+<h5>Grid</h5>
+<ul>
+<li><strong>Grid voltage</strong> (V): Detected grid voltage type.</li>
+<li><strong>Grid frequency</strong> (Hz): Detected grid frequency.</li>
+</ul>
+<h5>Network</h5>
+<ul>
+<li><strong>SSID</strong>**: Wi-Fi network name of the currently connected network.</li>
+<li><strong>Signal strength</strong> (dBm): Wi-Fi signal strength (RSSI).</li>
+</ul>
+<h5>Cellular (only if available)</h5>
+<p>These sensors are only available on NRGkick SIM models.</p>
+<ul>
+<li><strong>Cellular operator</strong>**: Cellular network operator.</li>
+<li><strong>Cellular signal strength</strong>** (dBm): Cellular signal strength (RSSI).</li>
+<li><strong>Cellular mode</strong>**: Cellular mode.</li>
+</ul>
+<h4>Device values</h4>
+<h5>Energy</h5>
+<ul>
+<li><strong>Total charged energy</strong> (kWh): Total charged energy overall. This is the recommended sensor to use in the Home Assistant energy dashboard.</li>
+<li><strong>Charged energy</strong> (kWh): Charged energy during the most recent charge session. While possible, it is not recommended to use this sensor in the Home Assistant energy dashboard because it resets each session.</li>
+</ul>
+<h5>Powerflow</h5>
+<ul>
+<li><strong>Charging current</strong> (A): Max current signaled to the EV.</li>
+<li><strong>Peak power</strong>** (W): Highest power during the most recent charge session.</li>
+<li><strong>Total active power</strong> (W): Total active power across all phases.</li>
+<li><strong>Total reactive power</strong>** (var): Total reactive power across all phases.</li>
+<li><strong>Total apparent power</strong>** (VA): Total apparent power across all phases.</li>
+<li><strong>Total power factor</strong>** (%): Power factor across all phases.</li>
+<li><strong>Charging voltage</strong> (V): Average charging voltage across phases.</li>
+<li><strong>Powerflow grid frequency</strong>** (Hz): Grid frequency reported in powerflow data.</li>
+<li><strong>L1 voltage</strong>** (V): Voltage on phase L1.</li>
+<li><strong>L1 current</strong> (A): Current on phase L1.</li>
+<li><strong>L1 active power</strong> (W): Active power on phase L1.</li>
+<li><strong>L1 reactive power</strong>** (var): Reactive power on phase L1.</li>
+<li><strong>L1 apparent power</strong>** (VA): Apparent power on phase L1.</li>
+<li><strong>L1 power factor</strong>** (%): Power factor on phase L1.</li>
+<li><strong>L2 voltage</strong>** (V): Voltage on phase L2.</li>
+<li><strong>L2 current</strong> (A): Current on phase L2.</li>
+<li><strong>L2 active power</strong> (W): Active power on phase L2.</li>
+<li><strong>L2 reactive power</strong>** (var): Reactive power on phase L2.</li>
+<li><strong>L2 apparent power</strong>** (VA): Apparent power on phase L2.</li>
+<li><strong>L2 power factor</strong>** (%): Power factor on phase L2.</li>
+<li><strong>L3 voltage</strong>** (V): Voltage on phase L3.</li>
+<li><strong>L3 current</strong> (A): Current on phase L3.</li>
+<li><strong>L3 active power</strong> (W): Active power on phase L3.</li>
+<li><strong>L3 reactive power</strong>** (var): Reactive power on phase L3.</li>
+<li><strong>L3 apparent power</strong>** (VA): Apparent power on phase L3.</li>
+<li><strong>L3 power factor</strong>** (%): Power factor on phase L3.</li>
+<li><strong>Neutral current</strong>** (A): Current on neutral conductor (N).</li>
+</ul>
+<h5>General</h5>
+<ul>
+<li><strong>Charging rate</strong>: Charging rate based on the user-defined average EV consumption in kilometers per hour.</li>
+<li><strong>Vehicle connected since</strong>: Timestamp derived from the device-reported connection time.</li>
+<li><strong>Vehicle charging time</strong> (s): Charging time of the most recent charge session.</li>
+<li><strong>Status</strong>: Charging status. The state can be one of the following:<ul>
+<li><em>Standby</em> (state: <code>standby</code>): No vehicle is connected and the charger is idle.</li>
+<li><em>Connected</em> (state: <code>connected</code>): A vehicle is connected and ready.</li>
+<li><em>Charging</em> (state: <code>charging</code>): The vehicle is currently charging.</li>
+<li><em>Error</em> (state: <code>error</code>): The charger reported an error.</li>
+<li><em>Wakeup</em> (state: <code>wakeup</code>): The charger is waking up or preparing a session.</li>
+</ul>
+</li>
+<li><strong>Charge count</strong>: Vehicle plug-in cycle count.</li>
+<li><strong>RCD trigger</strong>: Indicates if the RCD got triggered and which type.</li>
+<li><strong>Warning code</strong>: Current warning code reported by the device.</li>
+<li><strong>Error code</strong>: Current error code reported by the device.</li>
+</ul>
+<h5>Temperatures</h5>
+<ul>
+<li><strong>Housing temperature</strong> (°C): NRGkick housing temperature.</li>
+<li><strong>Connector L1 temperature</strong> (°C): Attachment phase 1 temperature.</li>
+<li><strong>Connector L2 temperature</strong> (°C): Attachment phase 2 temperature.</li>
+<li><strong>Connector L3 temperature</strong> (°C): Attachment phase 3 temperature.</li>
+<li><strong>Domestic plug 1 temperature</strong> (°C): Domestic attachment pin 1 temperature.</li>
+<li><strong>Domestic plug 2 temperature</strong> (°C): Domestic attachment pin 2 temperature.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>The sensors marked with ** are disabled by default. If you want to use them, you need to enable them first. See the <a>enabling or disabling entities</a> documentation for information on how to do this.</p>
+<h3>Device tracker</h3>
+<p>The integration creates the following device tracker:</p>
+<ul>
+<li><strong>GPS tracker</strong>: Current device location (latitude and longitude) and location accuracy.</li>
+</ul>
+<p>The device tracker is only available on NRGkick SIM models.</p>
+<h3>Controls</h3>
+<p>The integration creates the following controls.</p>
+<h4>Switches</h4>
+<ul>
+<li><strong>Charging enabled</strong>: Turn on to enable charging. Turn off to pause charging.</li>
+</ul>
+<h4>Numbers</h4>
+<ul>
+<li><strong>Charging current</strong> (A): Set the charging current (6 A to the maximum supported by your device and the connected attachment).</li>
+<li><strong>Phase count</strong>: Set the number of phases (1 to 3, depending on the connected attachment).</li>
+<li><strong>Energy limit</strong> (Wh): Set an energy limit for the current charging session (0 = no limit).</li>
+</ul>
+<h3>Key entities</h3>
+<p>Entity IDs depend on your device name in Home Assistant. The examples below assume the default device name of <code>NRGkick</code>.</p>
+<ul>
+<li><code>sensor.nrgkick_charging_current</code>: Charging current.</li>
+<li><code>sensor.nrgkick_charged_energy</code>: Charged energy.</li>
+<li><code>sensor.nrgkick_total_charged_energy</code>: Total charged energy. Recommended for the Home Assistant energy dashboard.</li>
+<li><code>sensor.nrgkick_status</code>: Charging status.</li>
+<li><code>binary_sensor.nrgkick_charge_permitted</code>: Indicates whether charging is currently permitted.</li>
+<li><code>device_tracker.nrgkick_gps_tracker</code>: Current location of the device (only on SIM models).</li>
+<li><code>number.nrgkick_charging_current</code>: Set the charging current.</li>
+<li><code>number.nrgkick_energy_limit</code>: Set an energy limit for the current charging session (0 = no limit).</li>
+<li><code>number.nrgkick_phase_count</code>: Set the number of phases.</li>
+<li><code>switch.nrgkick_charging_enabled</code>: Turn on to enable charging. Turn off to pause charging.</li>
+</ul>
+<h2>NRGkick automation examples</h2>
+<p>You can combine the NRGkick controls with other sensors in your home to build smart charging automations. Here is an idea to get you started.</p>
+<h3>Automation: Charge your EV from solar surplus</h3>
+<p>Charge your EV with solar power that would otherwise be exported to the grid. This blueprint adjusts the charging current to match the available surplus, can switch between 1 and 3 phases, and pauses charging when there isn't enough surplus power.</p>
+<p>Blueprint import</p>
+<p>To use this blueprint, you need a grid power sensor that measures the power at your grid connection point, including the power used by the NRGkick. The sensor must update at least every 10 seconds. A solar production sensor alone is not enough.</p>
+<p>The blueprint uses the following NRGkick entities:</p>
+<ul>
+<li><strong>Total active power</strong></li>
+<li><strong>Charging enabled</strong></li>
+<li><strong>Charging current</strong></li>
+<li><strong>Phase count</strong></li>
+</ul>
+<p>While the automation is turned on, it controls charging. To charge from the grid instead, turn off the automation. For the full list of settings, see the <a>blueprint discussion on the community forum</a>.</p>
+<h2>Data updates</h2>
+<p>The integration polling polls the device for updates.</p>
+<ul>
+<li>Polling interval: 30 seconds.</li>
+</ul>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration can only expose monitoring data and controls that are available through the NRGkick local JSON API. Settings and features that are only available in the NRGkick app and are not exposed through the local JSON API cannot be managed from Home Assistant (for example, time-controlled charging, solar charging). However, you can build similar functionality in Home Assistant using the available controls and automations. For solar charging, you can use the <a>solar surplus charging blueprint</a>.</li>
+<li>SIM-specific entities, such as cellular sensors and the GPS device tracker, are only available on SIM-capable models because only those devices provide that data.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Can't connect to the device</h3>
+<p>If setup fails with a connection error:</p>
+<ul>
+<li>Verify the device is reachable on your network (for example by starting the NRGkick app or entering the device IP in a web browser).</li>
+<li>Verify the REST JSON API is enabled in the NRGkick app.</li>
+<li>If you use authentication, verify the username and password.</li>
+</ul>
+<h3>Entities show unavailable</h3>
+<ul>
+<li>Verify the device is powered on and connected to the Wi-Fi network.</li>
+<li>Sometimes the NRGkick device is not reachable on your network. Restart the device by unplugging it from power, waiting 30 seconds, and plugging it back in.</li>
+<li>Under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>NRGkick</strong>, then reload the integration.</li>
+</ul>
+<h3>Some phase sensors are missing or show as unknown</h3>
+<p>This is expected when charging with a single-phase power source. Those sensors usually provide values only when a three-phase source is available and active.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/nrgkick.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Integrate the NRGkick Gen2 mobile EV charger using the local REST JSON API.
+ha_release: 2026.2
+ha_domain: nrgkick
+related:
+  - url: https://www.nrgkick.com/
+    title: NRGkick Website
+---
+
+The **NRGkick** {% term integration %} allows you to monitor the [NRGkick](https://www.nrgkick.com/) mobile EV charger (Wallbox) by DiniTech with Home Assistant. It enables real-time monitoring of charging status, tracking energy consumption, controlling charging behavior, and integrating EV charging data into the Home Assistant energy dashboard.
+
+The integration connects directly to the device on your local network using the local REST JSON API. No cloud connection is required.
+
+## Use cases
+
+You can use the NRGkick integration to:
+
+- **Monitor your EV charging in real time** - Track charging status, current power draw, session energy, and per-phase values directly from your dashboard.
+- **Optimize your home energy management** - Add your charger to the Home Assistant energy dashboard to integrate EV charging into your overall energy monitoring system.
+- **Create smart charging automations** such as:
+  - Receiving notifications when charging stops or reaches an energy target
+  - Controlling charging current based on solar surplus (see the [solar surplus charging example](#automation-charge-your-ev-from-solar-surplus))
+  - Pausing charging during expensive peak hours
+  - Reacting to warnings or errors reported by the charger
+- **Track charger location on SIM models** - Use the GPS device tracker in map views and zone-based automations.
+
+## Supported devices
+
+The following NRGkick chargers are supported by this integration:
+
+- NRGkick Gen2 (Smart Cable / Flexible Wallbox)
+
+This includes the 16A and 32A variants, as well as models with cellular (SIM) and GPS capabilities.
+
+{% note %}
+The NRGkick 16A light model requires the &quot;NRGkick App incl. Bluetooth/Wi-Fi connectivity&quot; one-time upgrade to use the local API.
+{% endnote %}
+
+## Unsupported devices
+
+- NRGkick Gen1 (Bluetooth-only)
+
+## Prerequisites
+
+- Home Assistant and the NRGkick device need to be on the same local network.
+- Your NRGkick device needs to have SmartModule firmware 4.0.0.0 or newer.
+- The REST JSON API needs to be enabled in the NRGkick app.
+
+To enable the API:
+
+1. Open the NRGkick app from the manufacturer on your smartphone.
+2. Go to **Extended** &gt; **Local API**.
+3. Enable **JSON API**.
+4. Optional: Enable authentication and set a username and password.
+
+{% include integrations/config_flow.md %}
+
+If you enabled authentication in the NRGkick app, enter the username and password during setup.
+
+## Configuration options
+
+{% configuration_basic %}
+Host:
+  description: |
+    The hostname or IP address of your NRGkick device, for example, `nrgkick.local` or `192.0.2.10`.
+Username:
+  description: Username for HTTP Basic Authentication (optional).
+Password:
+  description: Password for HTTP Basic Authentication (optional).
+{% endconfiguration_basic %}
+
+The above configuration can also be adjusted later via {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}. On the **NRGkick** integration, select {% icon &quot;mdi:dots-vertical&quot; %}, then select **Reconfigure**.
+
+## Supported functionality
+
+Below is a complete overview of the entities this integration provides.
+
+### Binary sensors
+
+This integration provides a single binary sensor:
+
+- **Charge permitted**: Indicates whether the vehicle is currently allowed to charge. If this sensor is on ({% term state %}: `on`), charging is permitted. If it is off ({% term state %}: `off`), charging is not permitted.
+
+### Sensors
+
+The integration creates the following sensors:
+
+{% tip %}
+The ability to add your charger to the [Home Assistant energy dashboard](/home-energy-management/) is one of the most useful features of this integration. It is recommended to add the **Total charged energy** sensor to the energy dashboard configuration.
+{% endtip %}
+
+#### Device information
+
+##### General
+
+- **Rated current** (A): Max rated current of the NRGkick.
+
+##### Connector
+
+- **Connector phase count**: Phase count of the connected attachment.
+- **Connector max current** (A): Max current of the connected attachment.
+- **Connector type**: Attachment type (for example Type 2, CEE, domestic).
+- **Connector serial**\*\*: Attachment serial number.
+
+##### Grid
+
+- **Grid voltage** (V): Detected grid voltage type.
+- **Grid frequency** (Hz): Detected grid frequency.
+
+##### Network
+
+- **SSID**\*\*: Wi-Fi network name of the currently connected network.
+- **Signal strength** (dBm): Wi-Fi signal strength (RSSI).
+
+##### Cellular (only if available)
+
+These sensors are only available on NRGkick SIM models.
+
+- **Cellular operator**\*\*: Cellular network operator.
+- **Cellular signal strength**\*\* (dBm): Cellular signal strength (RSSI).
+- **Cellular mode**\*\*: Cellular mode.
+
+#### Device values
+
+##### Energy
+
+- **Total charged energy** (kWh): Total charged energy overall. This is the recommended sensor to use in the Home Assistant energy dashboard.
+- **Charged energy** (kWh): Charged energy during the most recent charge session. While possible, it is not recommended to use this sensor in the Home Assistant energy dashboard because it resets each session.
+
+##### Powerflow
+
+- **Charging current** (A): Max current signaled to the EV.
+- **Peak power**\*\* (W): Highest power during the most recent charge session.
+- **Total active power** (W): Total active power across all phases.
+- **Total reactive power**\*\* (var): Total reactive power across all phases.
+- **Total apparent power**\*\* (VA): Total apparent power across all phases.
+- **Total power factor**\*\* (%): Power factor across all phases.
+- **Charging voltage** (V): Average charging voltage across phases.
+- **Powerflow grid frequency**\*\* (Hz): Grid frequency reported in powerflow data.
+- **L1 voltage**\*\* (V): Voltage on phase L1.
+- **L1 current** (A): Current on phase L1.
+- **L1 active power** (W): Active power on phase L1.
+- **L1 reactive power**\*\* (var): Reactive power on phase L1.
+- **L1 apparent power**\*\* (VA): Apparent power on phase L1.
+- **L1 power factor**\*\* (%): Power factor on phase L1.
+- **L2 voltage**\*\* (V): Voltage on phase L2.
+- **L2 current** (A): Current on phase L2.
+- **L2 active power** (W): Active power on phase L2.
+- **L2 reactive power**\*\* (var): Reactive power on phase L2.
+- **L2 apparent power**\*\* (VA): Apparent power on phase L2.
+- **L2 power factor**\*\* (%): Power factor on phase L2.
+- **L3 voltage**\*\* (V): Voltage on phase L3.
+- **L3 current** (A): Current on phase L3.
+- **L3 active power** (W): Active power on phase L3.
+- **L3 reactive power**\*\* (var): Reactive power on phase L3.
+- **L3 apparent power**\*\* (VA): Apparent power on phase L3.
+- **L3 power factor**\*\* (%): Power factor on phase L3.
+- **Neutral current**\*\* (A): Current on neutral conductor (N).
+
+##### General
+
+- **Charging rate**: Charging rate based on the user-defined average EV consumption in kilometers per hour.
+- **Vehicle connected since**: Timestamp derived from the device-reported connection time.
+- **Vehicle charging time** (s): Charging time of the most recent charge session.
+- **Status**: Charging status. The state can be one of the following:
+  - _Standby_ ({% term state %}: `standby`): No vehicle is connected and the charger is idle.
+  - _Connected_ ({% term state %}: `connected`): A vehicle is connected and ready.
+  - _Charging_ ({% term state %}: `charging`): The vehicle is currently charging.
+  - _Error_ ({% term state %}: `error`): The charger reported an error.
+  - _Wakeup_ ({% term state %}: `wakeup`): The charger is waking up or preparing a session.
+- **Charge count**: Vehicle plug-in cycle count.
+- **RCD trigger**: Indicates if the RCD got triggered and which type.
+- **Warning code**: Current warning code reported by the device.
+- **Error code**: Current error code reported by the device.
+
+##### Temperatures
+
+- **Housing temperature** (°C): NRGkick housing temperature.
+- **Connector L1 temperature** (°C): Attachment phase 1 temperature.
+- **Connector L2 temperature** (°C): Attachment phase 2 temperature.
+- **Connector L3 temperature** (°C): Attachment phase 3 temperature.
+- **Domestic plug 1 temperature** (°C): Domestic attachment pin 1 temperature.
+- **Domestic plug 2 temperature** (°C): Domestic attachment pin 2 temperature.
+
+{% important %}
+The sensors marked with \*\* are disabled by default. If you want to use them, you need to enable them first. See the [enabling or disabling entities](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) documentation for information on how to do this.
+{% endimportant %}
+
+### Device tracker
+
+The integration creates the following device tracker:
+
+- **GPS tracker**: Current device location (latitude and longitude) and location accuracy.
+
+The device tracker is only available on NRGkick SIM models.
+
+### Controls
+
+The integration creates the following controls.
+
+#### Switches
+
+- **Charging enabled**: Turn on to enable charging. Turn off to pause charging.
+
+#### Numbers
+
+- **Charging current** (A): Set the charging current (6 A to the maximum supported by your device and the connected attachment).
+- **Phase count**: Set the number of phases (1 to 3, depending on the connected attachment).
+- **Energy limit** (Wh): Set an energy limit for the current charging session (0 = no limit).
+
+### Key entities
+
+Entity IDs depend on your device name in Home Assistant. The examples below assume the default device name of `NRGkick`.
+
+- `sensor.nrgkick_charging_current`: Charging current.
+- `sensor.nrgkick_charged_energy`: Charged energy.
+- `sensor.nrgkick_total_charged_energy`: Total charged energy. Recommended for the Home Assistant energy dashboard.
+- `sensor.nrgkick_status`: Charging status.
+- `binary_sensor.nrgkick_charge_permitted`: Indicates whether charging is currently permitted.
+- `device_tracker.nrgkick_gps_tracker`: Current location of the device (only on SIM models).
+- `number.nrgkick_charging_current`: Set the charging current.
+- `number.nrgkick_energy_limit`: Set an energy limit for the current charging session (0 = no limit).
+- `number.nrgkick_phase_count`: Set the number of phases.
+- `switch.nrgkick_charging_enabled`: Turn on to enable charging. Turn off to pause charging.
+
+## NRGkick automation examples
+
+You can combine the NRGkick controls with other sensors in your home to build smart charging automations. Here is an idea to get you started.
+
+### Automation: Charge your EV from solar surplus
+
+Charge your EV with solar power that would otherwise be exported to the grid. This blueprint adjusts the charging current to match the available surplus, can switch between 1 and 3 phases, and pauses charging when there isn&#x27;t enough surplus power.
+
+{% my blueprint_import badge blueprint_url=&quot;https://community.home-assistant.io/t/nrgkick-charge-your-ev-from-solar-surplus-dynamic-current-1-3-phase-switching/1027907&quot; %}
+
+To use this blueprint, you need a grid power sensor that measures the power at your grid connection point, including the power used by the NRGkick. The sensor must update at least every 10 seconds. A solar production sensor alone is not enough.
+
+The blueprint uses the following NRGkick entities:
+
+- **Total active power**
+- **Charging enabled**
+- **Charging current**
+- **Phase count**
+
+While the automation is turned on, it controls charging. To charge from the grid instead, turn off the automation. For the full list of settings, see the [blueprint discussion on the community forum](https://community.home-assistant.io/t/nrgkick-charge-your-ev-from-solar-surplus-dynamic-current-1-3-phase-switching/1027907).
+
+## Data updates
+
+The integration {% term polling polls %} the device for updates.
+
+- Polling interval: 30 seconds.
+
+## Known limitations
+
+- The integration can only expose monitoring data and controls that are available through the NRGkick local JSON API. Settings and features that are only available in the NRGkick app and are not exposed through the local JSON API cannot be managed from Home Assistant (for example, time-controlled charging, solar charging). However, you can build similar functionality in Home Assistant using the available controls and automations. For solar charging, you can use the [solar surplus charging blueprint](#automation-charge-your-ev-from-solar-surplus).
+- SIM-specific entities, such as cellular sensors and the GPS device tracker, are only available on SIM-capable models because only those devices provide that data.
+
+## Troubleshooting
+
+### Can&#x27;t connect to the device
+
+If setup fails with a connection error:
+
+- Verify the device is reachable on your network (for example by starting the NRGkick app or entering the device IP in a web browser).
+- Verify the REST JSON API is enabled in the NRGkick app.
+- If you use authentication, verify the username and password.
+
+### Entities show unavailable
+
+- Verify the device is powered on and connected to the Wi-Fi network.
+- Sometimes the NRGkick device is not reachable on your network. Restart the device by unplugging it from power, waiting 30 seconds, and plugging it back in.
+- Under {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **NRGkick**, then reload the integration.
+
+### Some phase sensors are missing or show as unknown
+
+This is expected when charging with a single-phase power source. Those sensors usually provide values only when a three-phase source is available and active.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for NRGkick.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>reconfigure auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><p>The <strong>user auth</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>device tracker</li><li>number</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Prerequisites</li><li>Configuration options</li><li>Supported functionality</li><li>NRGkick automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/nrgkick/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/nrgkick</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/nrgkick</code></dd></dl></section><p><a href="../../integrations/nrgkick/">Return to the NRGkick guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

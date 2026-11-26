@@ -1,1 +1,412 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Buienradar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:103" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/buienradar/">Buienradar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Buienradar</h1><p>Instructions on how to integrate buienradar.nl weather within Home Assistant.</p><section><h2>Overview</h2><p>The Buienradar integration uses buienradar.nl as a source for current meteorological data for your location. The weather forecast is delivered by Buienradar, who provides a web service that provides detailed weather information for users in The Netherlands.</p></section><section><h2>Camera</h2><p>The buienradar camera platform uses buienradar.nl as a source for the last rain radar map. The overview image of the whole of the Netherlands is loaded and shown as a camera in Home Assistant. The Netherlands is the default country and can be changed to Belgium (see Options).</p></section><section><h2>Sensor</h2><p>The Buienradar integration will set up separate sensor entities with more detailed weather data. The selected weather station will provide all-weather data, with the exception of the forecasted precipitation. The forecasted precipitation data will be retrieved from Buienradar using your actual GPS location (and not the location of the nearest weather station). The sensor entities are disabled by default and should be enabled before they will be updated with data.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Buienradar.</p><p>The <strong>user</strong> configuration step lists <code>location</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>camera</li><li>sensor</li><li>weather</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Camera</li><li>Sensor</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/buienradar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/buienradar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/buienradar</code></dd></dl></section><p><a href="../../integrations/buienradar/">Return to the Buienradar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Buienradar reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:103" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/buienradar/">Buienradar guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Buienradar</h1><p>Instructions on how to integrate buienradar.nl weather within Home Assistant.</p><div class="reader-body"><p>The <strong>Buienradar</strong> integration uses <a>buienradar.nl</a> as a source for current meteorological data for your location. The weather forecast is delivered by Buienradar, who provides a web service that provides detailed weather information for users in The Netherlands.</p>
+<p>The relevant weather station used will be automatically selected based on the location specified in the Home Assistant configuration (or in the Buienradar weather/sensor integration). A map of all available weather stations can be found <a>here</a>.</p>
+<p>Besides the weather platform, there is currently support for the following additional device types:</p>
+<ul>
+<li><a>Camera</a>: Radar map</li>
+<li><a>Sensor</a>: Extended weather data</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Buienradar</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Buienradar</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Camera</h2>
+<p>The <code>buienradar</code> camera platform uses <a>buienradar.nl</a> as a source for the last rain radar map. The overview image of the whole of the Netherlands is loaded and shown as a camera in Home Assistant. The Netherlands is the default country and can be changed to Belgium (see <a>Options</a>).</p>
+<p>Internally, this integration uses the radar map image as <a>documented</a> on buienradar.nl.
+The downloaded image is cached to prevent Home Assistant from making a new request to buienradar.nl multiple times a minute when Home Assistant checks for new stills from the camera.</p>
+<p>The camera entity is disabled by default and should be <a>enabled</a> before it reads the camera images.</p>
+<h2>Sensor</h2>
+<p>The <strong>Buienradar</strong> integration will set up separate sensor entities with more detailed weather data. The selected weather station will provide all-weather data, with the exception of the forecasted precipitation. The forecasted precipitation data will be retrieved from Buienradar using your actual GPS location (and not the location of the nearest weather station). The sensor entities are disabled by default and should be enabled before they will be updated with data.</p>
+<p>The following entities will be created:</p>
+<ul>
+<li><strong>Station name</strong>: The name of the selected meteo-station</li>
+<li><strong>Barometer forecast</strong>: A numeric barometric forecast (1 to 7)</li>
+<li><strong>Barometer forecast name</strong>: A textual representation of the barometer forecast, such as Thunderstorms or Stable</li>
+<li><strong>Condition code</strong>: A symbol and a unique code identifying the current weather condition<ul>
+<li><code>a</code>: sunny/clear</li>
+<li><code>b</code>: Mix of clear and medium or low clouds</li>
+<li><code>j</code>: Mix of clear and high clouds</li>
+<li><code>o/r</code>: Partly cloudy (increasing character increases the condition)</li>
+<li><code>c</code>: Heavily clouded</li>
+<li><code>p</code>: Cloudy</li>
+<li><code>d</code>: Alternating cloudy with local fog</li>
+<li><code>n</code>: Clear and local mist or fog</li>
+<li><code>f</code>: Alternatingly cloudy with some light rain</li>
+<li><code>h/k/l</code>: rainy (increasing character increases the condition)</li>
+<li><code>q</code>: Heavily clouded with rain</li>
+<li><code>w</code>: Heavily clouded with rain and winter precipitation</li>
+<li><code>m</code>: Heavily clouded with some light rain</li>
+<li><code>u</code>: Cloudy with light snow</li>
+<li><code>i/v</code>: Heavily clouded with light snowfall (increasing character increases the condition)</li>
+<li><code>t</code>: (Heavy snowfall)</li>
+<li><code>g</code>: (Clear with (possibly) some heavy lightning)</li>
+<li><code>s</code>: (Cloudy with (possibly) some heavy (thunderstorms) showers)</li>
+</ul>
+</li>
+<li><strong>Condition</strong>: A symbol and the current weather condition (<code>clear</code>, <code>cloudy</code>, <code>fog</code>, <code>rainy</code>, <code>snowy</code> or <code>lightning</code>)</li>
+<li><strong>Condition detailed</strong>: A symbol and detailed current weather condition (<code>clear</code>, <code>partlycloudy</code>, <code>cloudy</code>, <code>partlycloudy-fog</code>, <code>partlycloudy-light-rain</code>, <code>partlycloudy-rain</code>, <code>light-rain</code>, <code>rainy</code>, <code>snowy-rainy</code>, <code>partlycloudy-light-snow</code>, <code>partlycloudy-snow</code>, <code>light-snow</code>, <code>snowy</code>, <code>partlycloudy-lightning</code> or <code>lightning</code>)</li>
+<li><strong>Condition exact</strong>: A symbol with the full current weather condition (in English)</li>
+<li><strong>Symbol</strong>: A symbol for the current weather with the full current condition (in Dutch)</li>
+<li><strong>Feel temperature</strong>: The current wind chill factor (in <a>°C</a>)</li>
+<li><strong>Humidity</strong>: The relative humidity (in %)</li>
+<li><strong>Temperature</strong>: The current temperature (in <a>°C</a>)</li>
+<li><strong>Ground temperature</strong>: The current ground temperature (in <a>°C</a>)</li>
+<li><strong>Wind speed</strong>: The wind speed (in <a>km/h</a>)</li>
+<li><strong>Wind force</strong>: The wind speed/force (in <a>Bft</a>)</li>
+<li><strong>Wind direction</strong>: Where the wind is coming from, such as N (North), Z (South), or NO (North-East)</li>
+<li><strong>Wind azimuth</strong>: Where the wind is coming from in degrees, with true north at 0° and progressing clockwise</li>
+<li><strong>Pressure</strong>: The sea-level air pressure (in <a>hPa</a>)</li>
+<li><strong>Visibility</strong>: Visibility (in <a>m</a>)</li>
+<li><strong>Wind gust</strong>: The wind speed of wind gusts (<a>km/h</a>)</li>
+<li><strong>Precipitation</strong>: The amount of precipitation/rain (in mm/h)</li>
+<li><strong>Precipitation forecast average</strong>: The average expected precipitation/rain within the given time-frame (in mm/h)</li>
+<li><strong>Precipitation forecast total</strong>: The total expected precipitation/rain in mm within the given time-frame. The total expected rain in the configured time-frame will be equal to <em>precipitation_forecast_total</em>/<em>timeframe</em> mm/min. So, with time-frame configured to 30 minutes and a value of 5, the expected rain is 5 mm in 30 minutes, which is the same as 10 mm/h. If time-frame is set to 90 minutes and a value of 5, the expected rain is 5 mm in 90 minutes, which is equal to 3.3 mm/h.</li>
+<li><strong>Irradiance</strong>: Sun intensity in Watt per square meter (<a>W/m2</a>)</li>
+<li><strong>Rain last 24h</strong>: The rain over the last 24 hours (in <a>mm</a>)</li>
+<li><strong>Rain last hour</strong>: The rain over the last hour (in <a>mm</a>)</li>
+<li><strong>Temperature n days ahead</strong>: The forecasted temperature n days ahead (in <a>°C</a>)</li>
+<li><strong>Minimum temperature n days ahead</strong>: The forecasted minimum temperature n days ahead (in <a>°C</a>)</li>
+<li><strong>Rain chance n days ahead</strong>: The forecasted chance for rain n days ahead (in %)</li>
+<li><strong>Sun chance n days ahead</strong>: The forecasted chance for sun n days ahead (in %)</li>
+<li><strong>Rain n days ahead</strong>: The forecasted amount of rain (in <a>mm</a>) n days ahead; the average of <code>Minimum rain n days ahead</code> and <code>Maximum rain n days ahead</code></li>
+<li><strong>Minimum rain n days ahead</strong>: The minimum forecasted amount of rain (in <a>mm</a>) n days ahead</li>
+<li><strong>Maximum rain n days ahead</strong>: The maximum forecasted amount of rain (in <a>mm</a>) n days ahead</li>
+<li><strong>Wind azimuth n days ahead</strong>: Where the wind is coming from in degrees, with true north at 0° and progressing clockwise for n days ahead (derived from <code>Wind direction n days ahead</code>)</li>
+<li><strong>Wind direction n days ahead</strong>: Where the wind will be coming from n days ahead. For example, N (North), Z (South), or NO (North-East).</li>
+<li><strong>Wind force n days ahead</strong>: The expected wind force (in <a>Bft</a>) n days ahead</li>
+<li><strong>Wind speed n days ahead</strong>: The expected wind speed (in <a>m/s</a>) n days ahead (derived from <code>Wind force n days ahead</code>)</li>
+<li><strong>Condition code n days ahead</strong>: Symbol and condition code of the expected condition n days ahead</li>
+<li><strong>Condition n days ahead</strong>: Symbol and expected condition n days ahead</li>
+<li><strong>Detailed condition n days ahead</strong>: Symbol and detailed expected condition n days ahead</li>
+<li><strong>Full condition n days ahead</strong>: Symbol and full expected condition n days ahead</li>
+</ul>
+<h2>Options</h2>
+<p>To define options for Buienradar, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Buienradar are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this service.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+country_code:
+  description: You can specify the country code (NL or BE) of the
+    country to display on the camera.
+delta:
+  description: Time interval in seconds between camera image updates
+timeframe:
+  description: Minutes to look ahead for precipitation forecast sensors (minimum 5, maximum 120).
+
+</code></pre>
+<p><strong>Note</strong></p>
+<p><strong>Usage statement</strong>
+Buienradar makes free weather data available for use by individuals and businesses (website/intranet). The use of the weather data is allowed for <strong>non-commercial purposes</strong>. Please refer to the <a>full usage statement</a> to confirm your use or to request permission.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/buienradar.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate buienradar.nl weather within Home Assistant.
+ha_release: 0.47
+ha_domain: buienradar
+---
+
+The **Buienradar** {% term integration %} uses [buienradar.nl](https://buienradar.nl/) as a source for current meteorological data for your location. The weather forecast is delivered by Buienradar, who provides a web service that provides detailed weather information for users in The Netherlands.
+
+The relevant weather station used will be automatically selected based on the location specified in the Home Assistant configuration (or in the Buienradar weather/sensor integration). A map of all available weather stations can be found [here](https://www.google.com/maps/d/embed?mid=1NivHkTGQUOs0dwQTnTMZi8Uatj0).
+
+Besides the weather platform, there is currently support for the following additional device types:
+
+- [Camera](#camera): Radar map
+- [Sensor](#sensor): Extended weather data
+
+{% include integrations/config_flow.md %}
+
+## Camera
+
+The `buienradar` camera platform uses [buienradar.nl](https://buienradar.nl/) as a source for the last rain radar map. The overview image of the whole of the Netherlands is loaded and shown as a camera in Home Assistant. The Netherlands is the default country and can be changed to Belgium (see [Options](#options)).
+
+Internally, this integration uses the radar map image as [documented](https://www.buienradar.nl/overbuienradar/gratis-weerdata) on buienradar.nl.
+The downloaded image is cached to prevent Home Assistant from making a new request to buienradar.nl multiple times a minute when Home Assistant checks for new stills from the camera.
+
+The camera {% term entity %} is disabled by default and should be [enabled](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) before it reads the camera images.
+
+## Sensor
+
+The **Buienradar** {% term integration %} will set up separate sensor {% term entities %} with more detailed weather data. The selected weather station will provide all-weather data, with the exception of the forecasted precipitation. The forecasted precipitation data will be retrieved from Buienradar using your actual GPS location (and not the location of the nearest weather station). The sensor entities are disabled by default and should be enabled before they will be updated with data.
+
+The following {% term entities %} will be created:
+
+- **Station name**: The name of the selected meteo-station
+- **Barometer forecast**: A numeric barometric forecast (1 to 7)
+- **Barometer forecast name**: A textual representation of the barometer forecast, such as Thunderstorms or Stable
+- **Condition code**: A symbol and a unique code identifying the current weather condition&#32;
+  - `a`: sunny/clear
+  - `b`: Mix of clear and medium or low clouds
+  - `j`: Mix of clear and high clouds
+  - `o/r`: Partly cloudy (increasing character increases the condition)
+  - `c`: Heavily clouded
+  - `p`: Cloudy
+  - `d`: Alternating cloudy with local fog
+  - `n`: Clear and local mist or fog
+  - `f`: Alternatingly cloudy with some light rain
+  - `h/k/l`: rainy (increasing character increases the condition)
+  - `q`: Heavily clouded with rain
+  - `w`: Heavily clouded with rain and winter precipitation
+  - `m`: Heavily clouded with some light rain
+  - `u`: Cloudy with light snow
+  - `i/v`: Heavily clouded with light snowfall (increasing character increases the condition)
+  - `t`: (Heavy snowfall)
+  - `g`: (Clear with (possibly) some heavy lightning)
+  - `s`: (Cloudy with (possibly) some heavy (thunderstorms) showers)
+- **Condition**: A symbol and the current weather condition (`clear`, `cloudy`, `fog`, `rainy`, `snowy` or `lightning`)
+- **Condition detailed**: A symbol and detailed current weather condition (`clear`, `partlycloudy`, `cloudy`, `partlycloudy-fog`, `partlycloudy-light-rain`, `partlycloudy-rain`, `light-rain`, `rainy`, `snowy-rainy`, `partlycloudy-light-snow`, `partlycloudy-snow`, `light-snow`, `snowy`, `partlycloudy-lightning` or `lightning`)
+- **Condition exact**: A symbol with the full current weather condition (in English)
+- **Symbol**: A symbol for the current weather with the full current condition (in Dutch)
+- **Feel temperature**: The current wind chill factor (in [°C](https://en.wikipedia.org/wiki/Celsius))
+- **Humidity**: The relative humidity (in %)
+- **Temperature**: The current temperature (in [°C](https://en.wikipedia.org/wiki/Celsius))
+- **Ground temperature**: The current ground temperature (in [°C](https://en.wikipedia.org/wiki/Celsius))
+- **Wind speed**: The wind speed (in [km/h](https://en.wikipedia.org/wiki/Kilometres_per_hour))
+- **Wind force**: The wind speed/force (in [Bft](https://en.wikipedia.org/wiki/Beaufort_scale))
+- **Wind direction**: Where the wind is coming from, such as N (North), Z (South), or NO (North-East)
+- **Wind azimuth**: Where the wind is coming from in degrees, with true north at 0° and progressing clockwise
+- **Pressure**: The sea-level air pressure (in [hPa](https://en.wikipedia.org/wiki/Hectopascal))
+- **Visibility**: Visibility (in [m](https://en.wikipedia.org/wiki/Metre))
+- **Wind gust**: The wind speed of wind gusts ([km/h](https://en.wikipedia.org/wiki/Kilometres_per_hour))
+- **Precipitation**: The amount of precipitation/rain (in mm/h)
+- **Precipitation forecast average**: The average expected precipitation/rain within the given time-frame (in mm/h)
+- **Precipitation forecast total**: The total expected precipitation/rain in mm within the given time-frame. The total expected rain in the configured time-frame will be equal to _precipitation_forecast_total_/_timeframe_ mm/min. So, with time-frame configured to 30 minutes and a value of 5, the expected rain is 5 mm in 30 minutes, which is the same as 10 mm/h. If time-frame is set to 90 minutes and a value of 5, the expected rain is 5 mm in 90 minutes, which is equal to 3.3 mm/h.
+- **Irradiance**: Sun intensity in Watt per square meter ([W/m2](https://en.wikipedia.org/wiki/W/m2))
+- **Rain last 24h**: The rain over the last 24 hours (in [mm](https://en.wikipedia.org/wiki/Millimeter))
+- **Rain last hour**: The rain over the last hour (in [mm](https://en.wikipedia.org/wiki/Millimeter))
+- **Temperature n days ahead**: The forecasted temperature n days ahead (in [°C](https://en.wikipedia.org/wiki/Celsius))
+- **Minimum temperature n days ahead**: The forecasted minimum temperature n days ahead (in [°C](https://en.wikipedia.org/wiki/Celsius))
+- **Rain chance n days ahead**: The forecasted chance for rain n days ahead (in %)
+- **Sun chance n days ahead**: The forecasted chance for sun n days ahead (in %)
+- **Rain n days ahead**: The forecasted amount of rain (in [mm](https://en.wikipedia.org/wiki/Millimeter)) n days ahead; the average of `Minimum rain n days ahead` and `Maximum rain n days ahead`
+- **Minimum rain n days ahead**: The minimum forecasted amount of rain (in [mm](https://en.wikipedia.org/wiki/Millimeter)) n days ahead
+- **Maximum rain n days ahead**: The maximum forecasted amount of rain (in [mm](https://en.wikipedia.org/wiki/Millimeter)) n days ahead
+- **Wind azimuth n days ahead**: Where the wind is coming from in degrees, with true north at 0° and progressing clockwise for n days ahead (derived from `Wind direction n days ahead`)
+- **Wind direction n days ahead**: Where the wind will be coming from n days ahead. For example, N (North), Z (South), or NO (North-East).
+- **Wind force n days ahead**: The expected wind force (in [Bft](https://en.wikipedia.org/wiki/Beaufort_scale)) n days ahead
+- **Wind speed n days ahead**: The expected wind speed (in [m/s](https://en.wikipedia.org/wiki/M/s)) n days ahead (derived from `Wind force n days ahead`)
+- **Condition code n days ahead**: Symbol and condition code of the expected condition n days ahead
+- **Condition n days ahead**: Symbol and expected condition n days ahead
+- **Detailed condition n days ahead**: Symbol and detailed expected condition n days ahead
+- **Full condition n days ahead**: Symbol and full expected condition n days ahead
+
+{% include integrations/option_flow.md %}
+
+{% configuration_basic %}
+country_code:
+  description: You can specify the country code (NL or BE) of the
+    country to display on the camera.
+delta:
+  description: Time interval in seconds between camera image updates
+timeframe:
+  description: Minutes to look ahead for precipitation forecast sensors (minimum 5, maximum 120).
+{% endconfiguration_basic %}
+
+{% note %}
+
+**Usage statement**
+Buienradar makes free weather data available for use by individuals and businesses (website/intranet). The use of the weather data is allowed for **non-commercial purposes**. Please refer to the [full usage statement](https://www.buienradar.nl/overbuienradar/gratis-weerdata) to confirm your use or to request permission.
+
+{% endnote %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Buienradar.</p><p>The <strong>user</strong> configuration step lists <code>location</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>camera</li><li>sensor</li><li>weather</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Camera</li><li>Sensor</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/buienradar/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/buienradar</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/buienradar</code></dd></dl></section><p><a href="../../integrations/buienradar/">Return to the Buienradar guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

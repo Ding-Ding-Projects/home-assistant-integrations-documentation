@@ -1,1 +1,426 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Withings reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:146" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/withings/">Withings guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Withings</h1><p>Instructions on how to integrate Withings health products within Home Assistant.</p><section><h2>Overview</h2><p>The Withings integration consumes data from various health products produced by Withings.</p></section><section><h2>Creating a Withings developer account</h2><p>You must have a developer account to distribute the data.</p></section><section><h2>Data updates</h2><p>The integration automatically detects if you can use webhooks. This enables the integration only to update when there is new data. The binary sensor for sleep will only work if the integration can establish webhooks with Withings.</p></section><section><h2>Webhook requirements</h2><p>For webhooks to work, your Home Assistant instance must be reachable by the Withings cloud service. The following requirements must be met:</p></section><section><h2>How the webhook URL is determined</h2><p>Home Assistant prefers the Internet URL and falls back to the Local Network URL. For Withings webhooks to register successfully, the URL that Home Assistant selects must be a public HTTPS URL on port 443 with a valid certificate.</p></section><section><h2>Changing the webhook URL</h2><p>If you see a warning like Webhook not registered - HTTPS is required or Webhook not registered - port 443 is required in your logs, the URL that Home Assistant selected is not a valid public HTTPS URL. This often happens when the Internet URL is empty and the Local Network URL points to a local HTTP address.</p></section><section><h2>Available data</h2><p>The integration provides several entities, some of which are dynamically enabled if data is available.</p></section><section><h2>Removing the integration</h2><p>This integration follows standard integration removal, no extra steps are required.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Withings.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Data updates</li><li>Available data</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/withings/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/withings</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/withings</code></dd></dl></section><p><a href="../../integrations/withings/">Return to the Withings guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Withings reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:146" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/withings/">Withings guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Withings</h1><p>Instructions on how to integrate Withings health products within Home Assistant.</p><div class="reader-body"><p>The <strong>Withings</strong> integration consumes data from various health products produced by <a>Withings</a>.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>Withings account<ul>
+<li>A <a>Withings+</a> subscription is required for accounts created after October 11, 2026.</li>
+</ul>
+</li>
+<li>Withings app installed</li>
+<li>Withings device setup in the app</li>
+<li><a>Withings developer account</a> to get a <em>ClientID</em> and <em>Secret</em> to connect to be able to get the data from the Withings cloud API</li>
+</ul>
+<h3>Creating a Withings developer account</h3>
+<p>You must have a developer account to distribute the data.</p>
+<p><strong>Note</strong></p>
+<p>You only need one developer account. The same account and credentials are used for each Withings configuration.</p>
+<ol>
+<li><a>Create a free developer account</a>.</li>
+<li>Make sure to select <strong>Withings public cloud</strong> (and not Withings US medical cloud or similar).</li>
+<li>Select <strong>Create an application</strong>.</li>
+<li>Under <strong>Application creation</strong>, select <strong>Public API integration</strong>.<ul>
+<li>Read and accept the terms and select <strong>Next</strong>.</li>
+</ul>
+</li>
+<li>Under <strong>Information</strong>:<ul>
+<li><strong>Target environment</strong>: <em>Development</em></li>
+<li><strong>Application name</strong>: [any name]</li>
+<li><strong>Application description</strong>: [any description]</li>
+<li><strong>Registered URLs</strong>: <code>https://my.home-assistant.io/redirect/oauth</code><ul>
+<li>Keep this URL when My Home Assistant is enabled, even if you access Home Assistant through a local IP address.</li>
+<li>Do not test this URL. It won't work at this stage. It will be set up once you install the integration in Home Assistant.</li>
+</ul>
+</li>
+<li><strong>Change logo</strong>: Optional</li>
+</ul>
+</li>
+<li><strong>Save</strong> your changes.<ul>
+<li>Once saved, the <em>ClientID</em> and <em>Secret</em> fields will be populated.</li>
+<li>Copy and store them in a save place. You will need these in the next step.</li>
+</ul>
+</li>
+</ol>
+<h4>I have manually disabled My Home Assistant</h4>
+<p>If you don't have <a href="../my/">My Home Assistant</a> on your installation,
+you can use <code>&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback</code> as the redirect URI
+instead.</p>
+<p>Before starting setup or reauthentication, open Home Assistant using <code>&lt;HOME_ASSISTANT_URL&gt;</code> in your browser. The address must match the one registered with Withings, including <code>https://</code>, the hostname, and any port number.</p>
+<p>For example, if you registered <code>https://home.example.com/auth/external/callback</code>, start setup from <code>https://home.example.com</code>.</p>
+<p>Home Assistant uses your browser address to generate this callback. Opening Home Assistant through a local IP address generates an IP-based callback instead. Changing the <strong>Internet</strong> or <strong>Local network</strong> URL under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong> does not change this sign-in callback. The <a>webhook URL</a> used for data updates is separate.</p>
+<p>Withings will validate (with HTTP HEAD) these requirements each time you save your Withings developer account. When these checks fail, the Withings UI is not always clear about why.</p>
+<ul>
+<li>Home Assistant (For create/update of Withings developer account):<ul>
+<li>Publicly accessible.</li>
+<li>Running on a fully qualified domain name.</li>
+<li>Running over HTTPS signed by a globally recognized Certificate Authority. Let's Encrypt will work.</li>
+</ul>
+</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Withings</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Withings</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Data updates</h2>
+<p>The integration automatically detects if you can use webhooks. This enables the integration only to update when there is new data.
+The binary sensor for sleep will only work if the integration can establish webhooks with Withings.</p>
+<h3>Webhook requirements</h3>
+<p>For webhooks to work, your Home Assistant instance must be reachable by the Withings cloud service. The following requirements must be met:</p>
+<ul>
+<li><strong>Publicly accessible</strong>: Your Home Assistant instance must be reachable from the internet.</li>
+<li><strong>HTTPS on port 443</strong>: Withings requires HTTPS specifically on port 443. Using HTTPS on a non-standard port (such as 8443) will not work.</li>
+<li><strong>Valid SSL certificate</strong>: The certificate must be signed by a globally recognized Certificate Authority, for example, Let's Encrypt. Self-signed certificates will not work.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>If webhooks cannot be established, some sensors will not be available. In particular, the sleep binary sensor has no polling fallback and requires working webhooks to function.</p>
+<h4>How the webhook URL is determined</h4>
+<p>You do not enter the webhook URL anywhere in the integration. Home Assistant builds it automatically from the URLs configured under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong>, followed by an internal webhook path.</p>
+<p>Home Assistant prefers the <strong>Internet</strong> URL and falls back to the <strong>Local Network</strong> URL. For Withings webhooks to register successfully, the URL that Home Assistant selects must be a public HTTPS URL on port 443 with a valid certificate.</p>
+<p>If you use Home Assistant Cloud from <a>Nabu Casa</a>, a cloudhook is registered instead. Cloudhooks meet all requirements above automatically and do not need any network configuration.</p>
+<h4>Changing the webhook URL</h4>
+<p>If you see a warning like <code>Webhook not registered - HTTPS is required</code> or <code>Webhook not registered - port 443 is required</code> in your logs, the URL that Home Assistant selected is not a valid public HTTPS URL. This often happens when the <strong>Internet</strong> URL is empty and the <strong>Local Network</strong> URL points to a local HTTP address.</p>
+<p>To resolve this:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong>.</li>
+<li>Under <strong>Internet</strong>, enter the public HTTPS URL that Withings should use to reach your instance, for example, <code>https://home.example.com</code>.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<p>You can keep the <strong>Local Network</strong> URL set to your internal HTTP address. Home Assistant uses the <strong>Internet</strong> URL for webhooks, while integrations that prefer local communication continue to use the <strong>Local Network</strong> URL.</p>
+<h2>Available data</h2>
+<p>The integration provides several entities, some of which are dynamically enabled if data is available.</p>
+<p>For example, measurement sensors like weight only work when data has been registered in the last 14 days. So if you start using a new device, for example, to measure your temperature or you manually update a value in the app, the sensor automatically appears.</p>
+<p>Sleep sensors are only created if the integration can find sleep data for you within the last day.</p>
+<p>Workout calendar and the workout and activity sensors show if the latest available data point is no older than 14 days.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal, no extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/withings.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Withings health products within Home Assistant.
+ha_release: 0.99
+ha_domain: withings
+---
+
+The **Withings** {% term integration %} consumes data from various health products produced by [Withings](https://www.withings.com).
+
+## Prerequisites
+
+- Withings account
+  - A [Withings+](https://www.withings.com/en-us/pages/withings-plus) subscription is required for accounts created after October 11, 2026.
+- Withings app installed
+- Withings device setup in the app
+- [Withings developer account](#creating-a-withings-developer-account) to get a *ClientID* and *Secret* to connect to be able to get the data from the Withings cloud API
+
+### Creating a Withings developer account
+
+You must have a developer account to distribute the data.
+
+{% note %}
+  You only need one developer account. The same account and credentials are used for each Withings configuration.
+{% endnote %}
+
+1. [Create a free developer account](https://account.withings.com/partner/add_oauth2).
+2. Make sure to select **Withings public cloud** (and not Withings US medical cloud or similar).
+3. Select **Create an application**.
+4. Under **Application creation**, select **Public API integration**.
+   - Read and accept the terms and select **Next**.
+5. Under **Information**:
+   - **Target environment**: *Development*
+   - **Application name**: [any name]
+   - **Application description**: [any description]
+   - **Registered URLs**: `https://my.home-assistant.io/redirect/oauth`
+     - Keep this URL when My Home Assistant is enabled, even if you access Home Assistant through a local IP address.
+     - Do not test this URL. It won&#x27;t work at this stage. It will be set up once you install the integration in Home Assistant.
+   - **Change logo**: Optional
+6. **Save** your changes.
+   - Once saved, the *ClientID* and *Secret* fields will be populated.
+   - Copy and store them in a save place. You will need these in the next step.
+
+{% details &quot;I have manually disabled My Home Assistant&quot; %}
+
+If you don&#x27;t have [My Home Assistant](/integrations/my) on your installation,
+you can use `&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback` as the redirect URI
+instead.
+
+Before starting setup or reauthentication, open Home Assistant using `&lt;HOME_ASSISTANT_URL&gt;` in your browser. The address must match the one registered with Withings, including `https://`, the hostname, and any port number.
+
+For example, if you registered `https://home.example.com/auth/external/callback`, start setup from `https://home.example.com`.
+
+Home Assistant uses your browser address to generate this callback. Opening Home Assistant through a local IP address generates an IP-based callback instead. Changing the **Internet** or **Local network** URL under {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %} does not change this sign-in callback. The [webhook URL](#how-the-webhook-url-is-determined) used for data updates is separate.
+
+Withings will validate (with HTTP HEAD) these requirements each time you save your Withings developer account. When these checks fail, the Withings UI is not always clear about why.
+
+- Home Assistant (For create/update of Withings developer account):
+  - Publicly accessible.
+  - Running on a fully qualified domain name.
+  - Running over HTTPS signed by a globally recognized Certificate Authority. Let&#x27;s Encrypt will work.
+
+{% enddetails %}
+
+{% include integrations/config_flow.md %}
+
+## Data updates
+
+The {% term integration %} automatically detects if you can use webhooks. This enables the {% term integration %} only to update when there is new data.
+The binary sensor for sleep will only work if the {% term integration %} can establish webhooks with Withings.
+
+### Webhook requirements
+
+For webhooks to work, your Home Assistant instance must be reachable by the Withings cloud service. The following requirements must be met:
+
+- **Publicly accessible**: Your Home Assistant instance must be reachable from the internet.
+- **HTTPS on port 443**: Withings requires HTTPS specifically on port 443. Using HTTPS on a non-standard port (such as 8443) will not work.
+- **Valid SSL certificate**: The certificate must be signed by a globally recognized Certificate Authority, for example, Let&#x27;s Encrypt. Self-signed certificates will not work.
+
+{% important %}
+If webhooks cannot be established, some sensors will not be available. In particular, the sleep binary sensor has no polling fallback and requires working webhooks to function.
+{% endimportant %}
+
+#### How the webhook URL is determined
+
+You do not enter the webhook URL anywhere in the integration. Home Assistant builds it automatically from the URLs configured under {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %}, followed by an internal webhook path.
+
+Home Assistant prefers the **Internet** URL and falls back to the **Local Network** URL. For Withings webhooks to register successfully, the URL that Home Assistant selects must be a public HTTPS URL on port 443 with a valid certificate.
+
+If you use Home Assistant Cloud from [Nabu Casa](https://www.nabucasa.com/), a cloudhook is registered instead. Cloudhooks meet all requirements above automatically and do not need any network configuration.
+
+#### Changing the webhook URL
+
+If you see a warning like `Webhook not registered - HTTPS is required` or `Webhook not registered - port 443 is required` in your logs, the URL that Home Assistant selected is not a valid public HTTPS URL. This often happens when the **Internet** URL is empty and the **Local Network** URL points to a local HTTP address.
+
+To resolve this:
+
+1. Go to {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %}.
+2. Under **Internet**, enter the public HTTPS URL that Withings should use to reach your instance, for example, `https://home.example.com`.
+3. Select **Save**.
+
+You can keep the **Local Network** URL set to your internal HTTP address. Home Assistant uses the **Internet** URL for webhooks, while integrations that prefer local communication continue to use the **Local Network** URL.
+
+## Available data
+
+The {% term integration %} provides several entities, some of which are dynamically enabled if data is available.
+
+For example, measurement sensors like weight only work when data has been registered in the last 14 days. So if you start using a new device, for example, to measure your temperature or you manually update a value in the app, the sensor automatically appears.
+
+Sleep sensors are only created if the {% term integration %} can find sleep data for you within the last day.
+
+Workout {% term calendar %} and the workout and activity sensors show if the latest available data point is no older than 14 days.
+
+## Removing the integration
+
+This integration follows standard integration removal, no extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Withings.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Data updates</li><li>Available data</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/withings/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/withings</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/withings</code></dd></dl></section><p><a href="../../integrations/withings/">Return to the Withings guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,6 +1,9 @@
 """Render offline readers from the catalog's article excerpts and manifest data."""
 from html import escape
 from pathlib import Path
+import re
+
+from article_reader import article
 
 
 def readable(value):
@@ -18,7 +21,10 @@ def render_reference(row, shell, theme, style):
         crumbs,
         f'<article class="reading"><small>Integration reference</small><h1>{name}</h1><p>{summary}</p>',
     ]
-    for heading, paragraph in row.get('article_text', []):
+    primary = article(row)
+    if primary:
+        content.append(primary)
+    for heading, paragraph in ([] if primary else row.get('article_text', [])):
         content.append(f'<section><h2>{escape(heading)}</h2><p>{escape(paragraph)}</p></section>')
 
     content.append('<section><h2>Configuration details</h2>')
@@ -55,4 +61,7 @@ def render_reference(row, shell, theme, style):
     path = Path('docs/references') / domain
     path.mkdir(parents=True, exist_ok=True)
     page = shell(f'{row["name"]} reference', ''.join(content), base, style, theme)
+    # Keep rendered code and original source exact without trailing blanks in Git.
+    page = re.sub(r'[ \t]+(?=\r?$)', lambda m: ''.join(f'&#{ord(c)};' for c in m[0]), page, flags=re.M)
+    page = re.sub(r'^[ \t]+', lambda m: m[0].replace('\t', '&#9;'), page, flags=re.M)
     (path / 'index.html').write_text(page, encoding='utf-8')

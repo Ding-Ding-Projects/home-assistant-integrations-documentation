@@ -1,1 +1,686 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Minecraft server manager reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:95" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/minecraft_manager/">Minecraft server manager guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Minecraft server manager</h1><p></p><section><h2>Configuration details</h2><p>The domain used to identify Minecraft server manager in Home Assistant is <code>minecraft_manager</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/docs/configuration/</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/minecraft_manager</code></dd></dl></section><p><a href="../../integrations/minecraft_manager/">Return to the Minecraft server manager guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Minecraft server manager reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:95" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/minecraft_manager/">Minecraft server manager guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Minecraft server manager</h1><p></p><div class="reader-body"><h2>Minecraft server manager</h2>
+<p>Status: second slice built, with the per-server page in four tabs. Server definitions, target detection, SSH hosts, version discovery, and the first real target, a Docker host over SSH (Java servers only). The other four targets are defined and detected but nothing starts on them yet.</p>
+<p>The manager lets a person create and run Minecraft servers from Settings. This document is the design and the record of what exists.</p>
+<h2>The problem: this product usually runs in a container</h2>
+<p>Most installs run inside a container, and a container cannot start a sibling container by itself. The manager therefore offers five targets, listed in order of preference. The first available one is the default.</p>
+<table>
+<thead>
+<tr>
+  <th>Order</th>
+  <th>Target id</th>
+  <th>What it does</th>
+  <th>How it is detected</th>
+  <th>Needs</th>
+  <th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td><code>ssh_docker</code></td>
+  <td>Signs in over SSH to a machine that has Docker and runs the server in a container there.</td>
+  <td>Always possible to define.</td>
+  <td>An SSH host with a key this instance generated.</td>
+  <td>Built (Java).</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>supervisor</code></td>
+  <td>The Home Assistant supervisor runs the server as a managed container.</td>
+  <td>The <code>hassio</code> component is loaded.</td>
+  <td>Home Assistant OS or Supervised install.</td>
+  <td>Not built.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>docker_socket</code></td>
+  <td>Uses the Docker engine of the host this app runs on.</td>
+  <td><code>/var/run/docker.sock</code> exists and is readable and writable.</td>
+  <td>The person mounted the socket on purpose. Opt-in.</td>
+  <td>Not built.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>local_process</code></td>
+  <td>Runs Java inside this container.</td>
+  <td><code>java</code> is found on <code>PATH</code>.</td>
+  <td>Java installed here.</td>
+  <td>Not built.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>ssh_process</code></td>
+  <td>Runs Java directly on a remote machine over SSH.</td>
+  <td>Always possible to define.</td>
+  <td>A remote machine with Java.</td>
+  <td>Not built.</td>
+</tr>
+</tbody>
+</table>
+<p>A target that is not available stays visible with the reason and cannot be selected. A server on a target that cannot start yet can be saved; its page says it cannot be started here yet. Bedrock servers on the SSH Docker target are refused with a clear message, because the Java image does not run Bedrock.</p>
+<h2>Data model</h2>
+<p>A server definition has these fields.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>id</code></td>
+  <td>Generated, opaque.</td>
+</tr>
+<tr>
+  <td><code>name</code></td>
+  <td>1 to 48 characters, letters, digits, spaces, dots, dashes and underscores, starting with a letter or digit. Unique, ignoring case. Two names that give the same container name are also treated as a duplicate.</td>
+</tr>
+<tr>
+  <td><code>edition</code></td>
+  <td><code>java</code> or <code>bedrock</code>.</td>
+</tr>
+<tr>
+  <td><code>flavour</code></td>
+  <td>Java: <code>vanilla</code>, <code>paper</code>, <code>purpur</code>, <code>spigot</code>, <code>fabric</code>, <code>forge</code>, <code>neoforge</code>. Bedrock: <code>vanilla</code>.</td>
+</tr>
+<tr>
+  <td><code>version</code></td>
+  <td><code>latest</code> or a version string of 1 to 40 characters from letters, digits, dots, dashes, plus signs and underscores.</td>
+</tr>
+<tr>
+  <td><code>port</code></td>
+  <td>Whole number from 1024 to 65535. Two servers cannot share a port on the same target.</td>
+</tr>
+<tr>
+  <td><code>memory_mb</code></td>
+  <td>Whole number from 512 to 65536.</td>
+</tr>
+<tr>
+  <td><code>target</code></td>
+  <td>One of the five target ids.</td>
+</tr>
+<tr>
+  <td><code>host_id</code></td>
+  <td>Optional. The SSH host that runs the server (the SSH Docker target).</td>
+</tr>
+<tr>
+  <td><code>eula_accepted</code></td>
+  <td>Set only by the person ticking "I accept the Minecraft EULA" on the server page. Starting is refused until it is true.</td>
+</tr>
+<tr>
+  <td><code>state</code></td>
+  <td><code>defined</code>. The live state (<code>running</code>, <code>starting</code>, <code>stopped</code>, <code>absent</code>) is read from the host on request.</td>
+</tr>
+</tbody>
+</table>
+<p>The validation rules live in <code>validation.py</code> and <code>host_validation.py</code> on the server and are mirrored in <code>frontend/src/data/minecraft_manager.ts</code>; the server is the authority.</p>
+<h2>SSH hosts</h2>
+<p>A host has a name, an address (a dotted decimal IPv4 address, a plain IPv6 literal or a real host name), a port, and a user. Authentication is by key only. There is no password path. Scoped addresses (<code>%</code>), hexadecimal and other numeric forms such as <code>0x7f.1</code>, and addresses that point at this machine or its own link (loopback, link-local, unspecified, and the name <code>localhost</code>) are refused when a host is created and again before a stored host is probed, trusted or tested. A host name that resolves to such an address is not detected.</p>
+<ol>
+<li>Creating a host makes an ed25519 key pair for it. The private key is written to <code>&lt;config&gt;/minecraft_manager/keys/&lt;host id&gt;.key</code> with permissions <code>0600</code> (the folder is <code>0700</code>), is never stored in the host record, never returned by any command, and never logged. The private key lives in the configuration folder, so it is included in any backup of that folder; keep those backups private. If the folder cannot hold owner-only permissions (a mount where <code>chmod</code> does nothing) the key is removed again and creating the host fails with <code>key_permissions</code>; reading a key that cannot be tightened fails the same way. The record is saved after the key file is written, and the key file is removed again when the save fails. The page shows the public key, a copy button, and one command for the host: it creates <code>~/.ssh</code> with mode 700, adds the key on a new line of <code>authorized_keys</code> with the <code>restrict</code> option (no port or agent forwarding and no terminal, commands still run), and sets the file to mode 600. The page warns that an account allowed to run Docker is equal to root on that host, so use a dedicated user.</li>
+<li>Host key trust on first use: the person presses "Read the host key", sees its SHA-256 fingerprint, compares it with what the host shows, and confirms. The key is read again on confirmation and stored only if it still matches the confirmed fingerprint.</li>
+<li>Every later connection accepts only the stored key. A changed key is refused with <code>host_key_changed</code>; so is a host that now offers only a different key type than the trusted one (the failed key exchange is followed by a read of what the host offers). A stored key line that cannot be read fails with <code>host_key_invalid</code>. The probe shows the key type that was presented and names the matching <code>/etc/ssh/ssh_host_&lt;type&gt;_key.pub</code> file to compare with. The person can replace the stored key with a deliberate, separate action that names the host, shows both fingerprints, says what replacing means, and asks for confirmation.</li>
+<li>Changing a host's address or port drops its stored key, so trust is never carried to a different machine.</li>
+<li>"Test connection" signs in and reports the Docker version and whether this user can run Docker.</li>
+<li>Deleting a host deletes its key pair here only. Nothing on the host changes, so the person must remove the line from <code>authorized_keys</code> on the host; the confirmation says so.</li>
+</ol>
+<p>The SSH library is <code>asyncssh</code>, which core already ships. Both the connection and the host key probe pass <code>config=[]</code>, so the instance user's own <code>~/.ssh/config</code> is never read (no <code>Hostname</code> redirect, <code>ProxyCommand</code> or <code>ProxyJump</code>), and agent forwarding, X11 forwarding, environment sending and agents are off, as are passwords and keyboard-interactive sign-in. Remote output is read in 16 KiB chunks and the channel is closed when a stream reaches the cap, so a command that prints without end costs a bounded amount of memory; the log command is also cut on the host with <code>head -c 65536</code>.</p>
+<h2>Server container</h2>
+<ul>
+<li>Image: release <code>itzg/minecraft-server:2026.11.0</code>, fixed in <code>const.py</code>, in the Java variant the game version needs (<code>image_for_version</code> in <code>commands.py</code>): <code>-java25</code> for 26.1 and newer and for <code>latest</code>, <code>-java21</code> for 1.20.5 to 1.21.x, <code>-java17</code> for 1.17 to 1.20.4, <code>-java8</code> for older versions. The chosen image is shown on the server page. The tag is never <code>latest</code>. Until build 109 every server used the Java 21 variant, and a real run showed 26.3 crash-looping on it; the Java 25 variant was then run by hand on the same host and started vanilla 26.3 and Paper 26.3. In build 111 all four variants were run through the manager: vanilla 26.3 and Paper 26.3 on Java 25, 1.21.8 on Java 21, 1.20.1 on Java 17 and 1.16.5 on Java 8, each to the server's own "Done" line.</li>
+<li>The tag pins the image; it is not a digest, and no digest is recorded.</li>
+<li>Container name <code>mc-&lt;slug of the name&gt;</code>; data in the named volume <code>mc-&lt;slug&gt;-data</code> mounted at <code>/data</code>. The container and the volume both carry the label <code>minecraft_manager.server_id=&lt;server id&gt;</code>. The volume is created first with <code>docker volume create --label</code>. Before any start, stop, restart, remove, status or data delete, the label is read (<code>docker inspect --type container</code>, <code>docker volume inspect</code>); an object whose label is missing or names another server is never adopted, stopped, removed or deleted, and the operation fails with <code>not_managed</code> ("not created by this manager"). A volume made without the label by an earlier build is treated the same way.</li>
+<li>The container is started with <code>--security-opt no-new-privileges</code>, <code>--pids-limit 1024</code>, and the <code>json-file</code> log driver limited to three files of 10 MB.</li>
+<li>The game port is published on the host's local network address only: the address this instance reached the host at, and only if it is a private, loopback or link-local unicast address. Unspecified, multicast, broadcast, reserved, documentation and benchmarking ranges and scoped addresses are refused both by the start operation (<code>host_not_lan</code>) and by the command builder itself. If the address this instance reaches is not an address of the host itself (for example through NAT), Docker refuses the bind and the person sees <code>bind_failed</code>.</li>
+<li>Memory: the game heap is the configured memory; the container limit adds a quarter (at least 512 MB) for the Java runtime.</li>
+<li>The EULA is passed to the container only after the person accepted it for that server.</li>
+<li>Changing a server's settings takes effect after the container is removed and started again; world data is kept in the volume.</li>
+</ul>
+<p>Every remote command is an argument list quoted with <code>shlex.join</code>. Every value that reaches a command (name, version, port, memory, bind address, id, log line count) is validated again in <code>commands.py</code> before the command exists, so a hostile value raises an error and no command is built. Nothing from the browser is passed through as text. Error text from the remote side is never returned: failures are mapped to stable codes such as <code>docker_missing</code>, <code>docker_permission</code>, <code>port_in_use</code>.</p>
+<h2>Operations</h2>
+<p>Start (checks the image, pulls it if missing, creates the labelled volume if needed, runs or starts the container, then checks the game port from this instance for up to 15 seconds), stop, restart, status, last N log lines (1 to 500, size capped, terminal codes removed), remove container (keeps the data; refused while running), and delete data (a separate action that requires the container to be gone, the volume label to match, and the server name typed back). A container state this manager does not know is <code>command_failed</code>, never "stopped". Every command has a timeout. Commands for one server are serialized.</p>
+<p>Changing a server's name, host or target is refused while its container exists on the old host, or while that cannot be verified, so a running container is never orphaned. Deleting a definition is refused with <code>container_exists</code> while its container exists; when the host cannot be reached to check, the person is asked, and the delete can be repeated with <code>force</code>, which only skips an unreachable host.</p>
+<p>The status call opens a TCP connection to the game port from this instance and reports whether it answered. The server page shows the local network address, the port, and the full address to type into Minecraft, and says plainly when the check failed.</p>
+<h2>Version discovery</h2>
+<p>Only when the person presses "Refresh versions", never in the background.</p>
+<ul>
+<li>Java vanilla: Mojang's version manifest at <code>https://piston-meta.mojang.com/mc/game/version_manifest_v2.json</code> (releases and snapshots).</li>
+<li>Paper: <code>https://fill.papermc.io/v3/projects/paper</code> (the earlier address was retired by the service).</li>
+<li>Fixed hosts over HTTPS, redirects are never followed, a 4 MB size cap and a 20 second timeout apply, every id is checked against the version pattern, and both lists are cached with the time they were fetched. If either lookup fails nothing is cached and the error code is shown.</li>
+<li>The wizard's version field is a typed field with a list below it, filtered by Releases, Snapshots or All and narrowed by what is typed. A typed version is always accepted. Other flavours have no list yet and say so.</li>
+<li>Downloads and hash checks of server jars are not done by this manager: the container image downloads the jar. Other flavours and Bedrock sources are still to do.</li>
+</ul>
+<h2>Storage</h2>
+<p>Definitions are kept in <code>minecraft_manager.servers</code>, hosts and their trusted host keys in <code>minecraft_manager.hosts</code>, and the version cache in <code>minecraft_manager.versions</code>, all private stores. World data stays on the target, never in the configuration folder.</p>
+<h2>Websocket commands</h2>
+<p>All commands require an administrator.</p>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>minecraft_manager/targets</code>, <code>list</code>, <code>create</code>, <code>update</code>, <code>delete</code></td>
+  <td>Targets and definitions. <code>create</code> and <code>update</code> also check <code>host_id</code>. <code>update</code> and <code>delete</code> hold the server's lock and check the container as described under Operations; <code>delete</code> answers <code>{ok: true}</code> or <code>{ok: false, code}</code> and takes an optional <code>force</code>.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/hosts/list</code>, <code>create</code>, <code>update</code>, <code>delete</code></td>
+  <td>Manage hosts. <code>create</code> returns the public key. <code>delete</code> is refused while a server uses the host.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/hosts/probe</code></td>
+  <td>Read the host key and compare it with the stored one (<code>new</code>, <code>match</code>, <code>changed</code>), with its algorithm and the matching key file type. Stores nothing.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/hosts/trust</code></td>
+  <td>Store the host key whose fingerprint was confirmed; replacing a different stored key needs <code>replace</code>.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/hosts/test</code></td>
+  <td>Sign in and report the Docker version.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/versions/list</code>, <code>refresh</code></td>
+  <td>Cached lists, and the fetch the person asked for.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/set_eula</code></td>
+  <td>Record the EULA choice for a server.</td>
+</tr>
+<tr>
+  <td><code>minecraft_manager/status</code>, <code>start</code>, <code>stop</code>, <code>restart</code>, <code>logs</code>, <code>remove_container</code>, <code>delete_data</code></td>
+  <td>Operate a server. Results are <code>{ok: true, ...}</code> or <code>{ok: false, code}</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2>Pages</h2>
+<p>Settings, Minecraft servers (<code>/config/minecraft</code>):</p>
+<ul>
+<li>The server list: each row opens the server page, shows the live state read from the status command (Unknown for servers on targets that cannot start yet), and has a delete action. A link to SSH hosts, and an empty state with the wizard.</li>
+<li>A create wizard (Basics, Type and version, Where it runs, Review) with live validation, the searchable version picker with its refresh button, target cards, and a Docker host choice for the SSH Docker target.</li>
+<li>SSH hosts: the list with trust state, and an add-host wizard (Details, Sign-in key, Host key, Test).</li>
+<li>A server page with four tabs and the state and Start, Stop and Restart controls above them (busy states and localized error codes):<ul>
+<li>Overview: version, memory, host, port, the EULA tick, the address to join with a copy button and the reachability result. Uses <code>status</code>, <code>start</code>, <code>stop</code>, <code>restart</code>, <code>set_eula</code>.</li>
+<li>Logs: the last 150 lines from <code>logs</code>, refresh, pause, wrap toggle, copy, and a note that only the last part is shown. It polls every 5 seconds only while the Logs tab and the browser page are visible and it is not paused.</li>
+<li>Settings: name, port, memory and the version picker, saved through <code>update</code>. The server type, edition and host are fixed here. When the server refuses a rename because the container exists, the message sits next to the field and says to remove the container first.</li>
+<li>Danger zone: remove container, delete world data (the name typed back), and delete the definition, including the repeated delete with <code>force</code> that is offered with its own confirmation when the host cannot be reached.</li>
+</ul>
+</li>
+</ul>
+<h2>Not built yet</h2>
+<p>The board shows more tabs and controls than the commands support. None of these is faked.</p>
+<ul>
+<li>Console (commands through RCON): needs RCON enabled in the container with a generated password kept private, and a command that sends one line and returns bounded output.</li>
+<li>Players (online list, allow list, operators): needs RCON or the server query for the online list, and a way to read and write the allow list and operator files in the data volume.</li>
+<li>Plugins: needs a command that copies a file the person provides into the data volume of a stopped server, with size and name checks.</li>
+<li>World generator: needs per-version jar extraction and a bounded generation command, with folder or archive output.</li>
+<li>Backups of worlds: needs a command that archives the data volume to a size-capped file and a place to keep and restore it.</li>
+<li>Difficulty, game mode, view distance, player limit and the other server properties: need a command that reads and writes server.properties through the container environment, then applies on restart.</li>
+<li>Bedrock and the other targets (supervisor, Docker socket, local process, SSH process): need their own start, stop, status and log commands; their server pages only offer deleting the definition.</li>
+<li>Join address as a QR code: a Minecraft address has no standard QR form that the game scans, so it is not drawn.</li>
+</ul>
+<h2>Out of scope</h2>
+<ul>
+<li>Hosting a server for the public internet, port forwarding, or any tunnel.</li>
+<li>Mod and plugin marketplaces beyond installing a file the person provides.</li>
+<li>Replacing the existing <code>minecraft_server</code> integration, which watches a server as a client. It is untouched.</li>
+</ul>
+<h2>What was and was not verified</h2>
+<h3>Run against a real SSH and Docker host on 11 November 2026</h3>
+<p>The manager in build 2026.11.1.106 was run against a real host: a throwaway container running
+its own Docker engine and an SSH server, on a private container network, with a throwaway copy
+of the product beside it. Nothing was pointed at a real machine. What was seen working:</p>
+<ul>
+<li>Adding a host, the generated key pair, and the copyable <code>authorized_keys</code> command run in the
+host's own shell (it created <code>~/.ssh</code> with mode 700 and the file with mode 600, with a
+<code>restrict</code> line).</li>
+<li>Probe, the fingerprint hint naming the right host key file, a wrong fingerprint refused, the
+right one stored, and the host test reporting the Docker version.</li>
+<li>Creating a Java server, the licence refusal, a real start (the pinned image was pulled on the
+host, 862 MB), the container's limits and label, the port published on the host's network
+address only and reachable from another machine on that network, status, real log lines
+including the server's "Done" line, stop, restart, and start while already running.</li>
+<li>Every refusal: rename while the container exists, remove while running, delete data with the
+wrong name, and delete of a definition whose name collides with a container the manager did
+not create.</li>
+<li>A container and a volume created by hand with the manager's naming but without its label were
+never touched: every operation answered <code>not_managed</code>, and the container's uptime was unbroken.</li>
+<li>After the host's key was regenerated, every command answered <code>host_key_changed</code> and did not
+connect, until the new key was trusted with <code>replace</code>.</li>
+</ul>
+<p>One defect was found and fixed by that run: the Paper version list address had been retired by
+its service (it answered HTTP 410), so refreshing versions always failed. The list now comes
+from the service's current address, and its grouped answer is flattened.</p>
+<p>A second run the same day, on build 109, refreshed both version lists for real (850 vanilla
+entries, 68 Paper entries), started vanilla 1.21.8, and found that vanilla 26.3 and Paper 26.3
+could not start on the Java 21 image. The image now follows the game version, and a third run on build
+111 started all five through the manager.</p>
+<p>Not covered: the other four targets, and Bedrock. A
+server whose container keeps restarting is still reported as running, with reachable false.</p>
+<h3>Earlier checks</h3>
+<ul>
+<li>Run: type checks, lint, formatting and the unit tests of the validation and version helpers in the interface; the Python files compile; and a real SSH round trip with the repository's own code against a throwaway <code>asyncssh</code> server (key sign-in, trust on first use, changed key refused, a host offering only another key type, a damaged stored key, unknown key refused, a user <code>~/.ssh/config</code> with a <code>Hostname</code> redirect ignored, never-ending output bounded, a one-line 5 MB log bounded, start, status, logs, stop, remove container, delete data, foreign containers and volumes left alone, the private key never appearing in a result). The Docker side of that round trip is a stand-in that answers the commands, including <code>rm</code> and <code>volume create</code>, <code>inspect</code> and <code>rm</code>, so the real Docker behaviour, the label templates, the pinned image and the <code>itzg</code> environment variables were not exercised.</li>
+<li>The websocket handlers (host trust flows, the rename, host change and delete refusals, the key permission failure) were driven directly with in-memory fakes of the websocket layer and storage, because the Home Assistant test harness could not be installed on the machine used. The tests in <code>test_websocket_flows.py</code> that use the real fixtures (each of the 22 commands refusing a non-administrator, and the same flows) were written but not run, and neither were the version-fetch tests with a mocked HTTP client.</li>
+<li>At the time of those earlier checks nothing had been run against a real Docker host, the real Mojang and Paper services, or a browser; the section above records the later run that did.</li>
+</ul>
+<h2>Next slice</h2>
+<ol>
+<li>Settings of a running server (difficulty, game mode, view distance, players), the Players, Console and Backups tabs.</li>
+<li>Other flavours' version sources and the remaining targets (supervisor, Docker socket, local process, SSH process).</li>
+<li>Bedrock on its own image.</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/minecraft-server/README.md</code></p><details><summary>Original Markdown source</summary><pre># Minecraft server manager
+
+Status: second slice built, with the per-server page in four tabs. Server definitions, target detection, SSH hosts, version discovery, and the first real target, a Docker host over SSH (Java servers only). The other four targets are defined and detected but nothing starts on them yet.
+
+The manager lets a person create and run Minecraft servers from Settings. This document is the design and the record of what exists.
+
+## The problem: this product usually runs in a container
+
+Most installs run inside a container, and a container cannot start a sibling container by itself. The manager therefore offers five targets, listed in order of preference. The first available one is the default.
+
+| Order | Target id | What it does | How it is detected | Needs | State |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `ssh_docker` | Signs in over SSH to a machine that has Docker and runs the server in a container there. | Always possible to define. | An SSH host with a key this instance generated. | Built (Java). |
+| 2 | `supervisor` | The Home Assistant supervisor runs the server as a managed container. | The `hassio` component is loaded. | Home Assistant OS or Supervised install. | Not built. |
+| 3 | `docker_socket` | Uses the Docker engine of the host this app runs on. | `/var/run/docker.sock` exists and is readable and writable. | The person mounted the socket on purpose. Opt-in. | Not built. |
+| 4 | `local_process` | Runs Java inside this container. | `java` is found on `PATH`. | Java installed here. | Not built. |
+| 5 | `ssh_process` | Runs Java directly on a remote machine over SSH. | Always possible to define. | A remote machine with Java. | Not built. |
+
+A target that is not available stays visible with the reason and cannot be selected. A server on a target that cannot start yet can be saved; its page says it cannot be started here yet. Bedrock servers on the SSH Docker target are refused with a clear message, because the Java image does not run Bedrock.
+
+## Data model
+
+A server definition has these fields.
+
+| Field | Rule |
+| --- | --- |
+| `id` | Generated, opaque. |
+| `name` | 1 to 48 characters, letters, digits, spaces, dots, dashes and underscores, starting with a letter or digit. Unique, ignoring case. Two names that give the same container name are also treated as a duplicate. |
+| `edition` | `java` or `bedrock`. |
+| `flavour` | Java: `vanilla`, `paper`, `purpur`, `spigot`, `fabric`, `forge`, `neoforge`. Bedrock: `vanilla`. |
+| `version` | `latest` or a version string of 1 to 40 characters from letters, digits, dots, dashes, plus signs and underscores. |
+| `port` | Whole number from 1024 to 65535. Two servers cannot share a port on the same target. |
+| `memory_mb` | Whole number from 512 to 65536. |
+| `target` | One of the five target ids. |
+| `host_id` | Optional. The SSH host that runs the server (the SSH Docker target). |
+| `eula_accepted` | Set only by the person ticking &quot;I accept the Minecraft EULA&quot; on the server page. Starting is refused until it is true. |
+| `state` | `defined`. The live state (`running`, `starting`, `stopped`, `absent`) is read from the host on request. |
+
+The validation rules live in `validation.py` and `host_validation.py` on the server and are mirrored in `frontend/src/data/minecraft_manager.ts`; the server is the authority.
+
+## SSH hosts
+
+A host has a name, an address (a dotted decimal IPv4 address, a plain IPv6 literal or a real host name), a port, and a user. Authentication is by key only. There is no password path. Scoped addresses (`%`), hexadecimal and other numeric forms such as `0x7f.1`, and addresses that point at this machine or its own link (loopback, link-local, unspecified, and the name `localhost`) are refused when a host is created and again before a stored host is probed, trusted or tested. A host name that resolves to such an address is not detected.
+
+1. Creating a host makes an ed25519 key pair for it. The private key is written to `&lt;config&gt;/minecraft_manager/keys/&lt;host id&gt;.key` with permissions `0600` (the folder is `0700`), is never stored in the host record, never returned by any command, and never logged. The private key lives in the configuration folder, so it is included in any backup of that folder; keep those backups private. If the folder cannot hold owner-only permissions (a mount where `chmod` does nothing) the key is removed again and creating the host fails with `key_permissions`; reading a key that cannot be tightened fails the same way. The record is saved after the key file is written, and the key file is removed again when the save fails. The page shows the public key, a copy button, and one command for the host: it creates `~/.ssh` with mode 700, adds the key on a new line of `authorized_keys` with the `restrict` option (no port or agent forwarding and no terminal, commands still run), and sets the file to mode 600. The page warns that an account allowed to run Docker is equal to root on that host, so use a dedicated user.
+2. Host key trust on first use: the person presses &quot;Read the host key&quot;, sees its SHA-256 fingerprint, compares it with what the host shows, and confirms. The key is read again on confirmation and stored only if it still matches the confirmed fingerprint.
+3. Every later connection accepts only the stored key. A changed key is refused with `host_key_changed`; so is a host that now offers only a different key type than the trusted one (the failed key exchange is followed by a read of what the host offers). A stored key line that cannot be read fails with `host_key_invalid`. The probe shows the key type that was presented and names the matching `/etc/ssh/ssh_host_&lt;type&gt;_key.pub` file to compare with. The person can replace the stored key with a deliberate, separate action that names the host, shows both fingerprints, says what replacing means, and asks for confirmation.
+4. Changing a host&#x27;s address or port drops its stored key, so trust is never carried to a different machine.
+5. &quot;Test connection&quot; signs in and reports the Docker version and whether this user can run Docker.
+6. Deleting a host deletes its key pair here only. Nothing on the host changes, so the person must remove the line from `authorized_keys` on the host; the confirmation says so.
+
+The SSH library is `asyncssh`, which core already ships. Both the connection and the host key probe pass `config=[]`, so the instance user&#x27;s own `~/.ssh/config` is never read (no `Hostname` redirect, `ProxyCommand` or `ProxyJump`), and agent forwarding, X11 forwarding, environment sending and agents are off, as are passwords and keyboard-interactive sign-in. Remote output is read in 16 KiB chunks and the channel is closed when a stream reaches the cap, so a command that prints without end costs a bounded amount of memory; the log command is also cut on the host with `head -c 65536`.
+
+## Server container
+
+- Image: release `itzg/minecraft-server:2026.11.0`, fixed in `const.py`, in the Java variant the game version needs (`image_for_version` in `commands.py`): `-java25` for 26.1 and newer and for `latest`, `-java21` for 1.20.5 to 1.21.x, `-java17` for 1.17 to 1.20.4, `-java8` for older versions. The chosen image is shown on the server page. The tag is never `latest`. Until build 109 every server used the Java 21 variant, and a real run showed 26.3 crash-looping on it; the Java 25 variant was then run by hand on the same host and started vanilla 26.3 and Paper 26.3. In build 111 all four variants were run through the manager: vanilla 26.3 and Paper 26.3 on Java 25, 1.21.8 on Java 21, 1.20.1 on Java 17 and 1.16.5 on Java 8, each to the server&#x27;s own &quot;Done&quot; line.
+- The tag pins the image; it is not a digest, and no digest is recorded.
+- Container name `mc-&lt;slug of the name&gt;`; data in the named volume `mc-&lt;slug&gt;-data` mounted at `/data`. The container and the volume both carry the label `minecraft_manager.server_id=&lt;server id&gt;`. The volume is created first with `docker volume create --label`. Before any start, stop, restart, remove, status or data delete, the label is read (`docker inspect --type container`, `docker volume inspect`); an object whose label is missing or names another server is never adopted, stopped, removed or deleted, and the operation fails with `not_managed` (&quot;not created by this manager&quot;). A volume made without the label by an earlier build is treated the same way.
+- The container is started with `--security-opt no-new-privileges`, `--pids-limit 1024`, and the `json-file` log driver limited to three files of 10 MB.
+- The game port is published on the host&#x27;s local network address only: the address this instance reached the host at, and only if it is a private, loopback or link-local unicast address. Unspecified, multicast, broadcast, reserved, documentation and benchmarking ranges and scoped addresses are refused both by the start operation (`host_not_lan`) and by the command builder itself. If the address this instance reaches is not an address of the host itself (for example through NAT), Docker refuses the bind and the person sees `bind_failed`.
+- Memory: the game heap is the configured memory; the container limit adds a quarter (at least 512 MB) for the Java runtime.
+- The EULA is passed to the container only after the person accepted it for that server.
+- Changing a server&#x27;s settings takes effect after the container is removed and started again; world data is kept in the volume.
+
+Every remote command is an argument list quoted with `shlex.join`. Every value that reaches a command (name, version, port, memory, bind address, id, log line count) is validated again in `commands.py` before the command exists, so a hostile value raises an error and no command is built. Nothing from the browser is passed through as text. Error text from the remote side is never returned: failures are mapped to stable codes such as `docker_missing`, `docker_permission`, `port_in_use`.
+
+## Operations
+
+Start (checks the image, pulls it if missing, creates the labelled volume if needed, runs or starts the container, then checks the game port from this instance for up to 15 seconds), stop, restart, status, last N log lines (1 to 500, size capped, terminal codes removed), remove container (keeps the data; refused while running), and delete data (a separate action that requires the container to be gone, the volume label to match, and the server name typed back). A container state this manager does not know is `command_failed`, never &quot;stopped&quot;. Every command has a timeout. Commands for one server are serialized.
+
+Changing a server&#x27;s name, host or target is refused while its container exists on the old host, or while that cannot be verified, so a running container is never orphaned. Deleting a definition is refused with `container_exists` while its container exists; when the host cannot be reached to check, the person is asked, and the delete can be repeated with `force`, which only skips an unreachable host.
+
+The status call opens a TCP connection to the game port from this instance and reports whether it answered. The server page shows the local network address, the port, and the full address to type into Minecraft, and says plainly when the check failed.
+
+## Version discovery
+
+Only when the person presses &quot;Refresh versions&quot;, never in the background.
+
+- Java vanilla: Mojang&#x27;s version manifest at `https://piston-meta.mojang.com/mc/game/version_manifest_v2.json` (releases and snapshots).
+- Paper: `https://fill.papermc.io/v3/projects/paper` (the earlier address was retired by the service).
+- Fixed hosts over HTTPS, redirects are never followed, a 4 MB size cap and a 20 second timeout apply, every id is checked against the version pattern, and both lists are cached with the time they were fetched. If either lookup fails nothing is cached and the error code is shown.
+- The wizard&#x27;s version field is a typed field with a list below it, filtered by Releases, Snapshots or All and narrowed by what is typed. A typed version is always accepted. Other flavours have no list yet and say so.
+- Downloads and hash checks of server jars are not done by this manager: the container image downloads the jar. Other flavours and Bedrock sources are still to do.
+
+## Storage
+
+Definitions are kept in `minecraft_manager.servers`, hosts and their trusted host keys in `minecraft_manager.hosts`, and the version cache in `minecraft_manager.versions`, all private stores. World data stays on the target, never in the configuration folder.
+
+## Websocket commands
+
+All commands require an administrator.
+
+| Command | Purpose |
+| --- | --- |
+| `minecraft_manager/targets`, `list`, `create`, `update`, `delete` | Targets and definitions. `create` and `update` also check `host_id`. `update` and `delete` hold the server&#x27;s lock and check the container as described under Operations; `delete` answers `{ok: true}` or `{ok: false, code}` and takes an optional `force`. |
+| `minecraft_manager/hosts/list`, `create`, `update`, `delete` | Manage hosts. `create` returns the public key. `delete` is refused while a server uses the host. |
+| `minecraft_manager/hosts/probe` | Read the host key and compare it with the stored one (`new`, `match`, `changed`), with its algorithm and the matching key file type. Stores nothing. |
+| `minecraft_manager/hosts/trust` | Store the host key whose fingerprint was confirmed; replacing a different stored key needs `replace`. |
+| `minecraft_manager/hosts/test` | Sign in and report the Docker version. |
+| `minecraft_manager/versions/list`, `refresh` | Cached lists, and the fetch the person asked for. |
+| `minecraft_manager/set_eula` | Record the EULA choice for a server. |
+| `minecraft_manager/status`, `start`, `stop`, `restart`, `logs`, `remove_container`, `delete_data` | Operate a server. Results are `{ok: true, ...}` or `{ok: false, code}`. |
+
+## Pages
+
+Settings, Minecraft servers (`/config/minecraft`):
+
+- The server list: each row opens the server page, shows the live state read from the status command (Unknown for servers on targets that cannot start yet), and has a delete action. A link to SSH hosts, and an empty state with the wizard.
+- A create wizard (Basics, Type and version, Where it runs, Review) with live validation, the searchable version picker with its refresh button, target cards, and a Docker host choice for the SSH Docker target.
+- SSH hosts: the list with trust state, and an add-host wizard (Details, Sign-in key, Host key, Test).
+- A server page with four tabs and the state and Start, Stop and Restart controls above them (busy states and localized error codes):
+  - Overview: version, memory, host, port, the EULA tick, the address to join with a copy button and the reachability result. Uses `status`, `start`, `stop`, `restart`, `set_eula`.
+  - Logs: the last 150 lines from `logs`, refresh, pause, wrap toggle, copy, and a note that only the last part is shown. It polls every 5 seconds only while the Logs tab and the browser page are visible and it is not paused.
+  - Settings: name, port, memory and the version picker, saved through `update`. The server type, edition and host are fixed here. When the server refuses a rename because the container exists, the message sits next to the field and says to remove the container first.
+  - Danger zone: remove container, delete world data (the name typed back), and delete the definition, including the repeated delete with `force` that is offered with its own confirmation when the host cannot be reached.
+
+## Not built yet
+
+The board shows more tabs and controls than the commands support. None of these is faked.
+
+- Console (commands through RCON): needs RCON enabled in the container with a generated password kept private, and a command that sends one line and returns bounded output.
+- Players (online list, allow list, operators): needs RCON or the server query for the online list, and a way to read and write the allow list and operator files in the data volume.
+- Plugins: needs a command that copies a file the person provides into the data volume of a stopped server, with size and name checks.
+- World generator: needs per-version jar extraction and a bounded generation command, with folder or archive output.
+- Backups of worlds: needs a command that archives the data volume to a size-capped file and a place to keep and restore it.
+- Difficulty, game mode, view distance, player limit and the other server properties: need a command that reads and writes server.properties through the container environment, then applies on restart.
+- Bedrock and the other targets (supervisor, Docker socket, local process, SSH process): need their own start, stop, status and log commands; their server pages only offer deleting the definition.
+- Join address as a QR code: a Minecraft address has no standard QR form that the game scans, so it is not drawn.
+
+## Out of scope
+
+- Hosting a server for the public internet, port forwarding, or any tunnel.
+- Mod and plugin marketplaces beyond installing a file the person provides.
+- Replacing the existing `minecraft_server` integration, which watches a server as a client. It is untouched.
+
+## What was and was not verified
+
+### Run against a real SSH and Docker host on 11 November 2026
+
+The manager in build 2026.11.1.106 was run against a real host: a throwaway container running
+its own Docker engine and an SSH server, on a private container network, with a throwaway copy
+of the product beside it. Nothing was pointed at a real machine. What was seen working:
+
+- Adding a host, the generated key pair, and the copyable `authorized_keys` command run in the
+  host&#x27;s own shell (it created `~/.ssh` with mode 700 and the file with mode 600, with a
+  `restrict` line).
+- Probe, the fingerprint hint naming the right host key file, a wrong fingerprint refused, the
+  right one stored, and the host test reporting the Docker version.
+- Creating a Java server, the licence refusal, a real start (the pinned image was pulled on the
+  host, 862 MB), the container&#x27;s limits and label, the port published on the host&#x27;s network
+  address only and reachable from another machine on that network, status, real log lines
+  including the server&#x27;s &quot;Done&quot; line, stop, restart, and start while already running.
+- Every refusal: rename while the container exists, remove while running, delete data with the
+  wrong name, and delete of a definition whose name collides with a container the manager did
+  not create.
+- A container and a volume created by hand with the manager&#x27;s naming but without its label were
+  never touched: every operation answered `not_managed`, and the container&#x27;s uptime was unbroken.
+- After the host&#x27;s key was regenerated, every command answered `host_key_changed` and did not
+  connect, until the new key was trusted with `replace`.
+
+One defect was found and fixed by that run: the Paper version list address had been retired by
+its service (it answered HTTP 410), so refreshing versions always failed. The list now comes
+from the service&#x27;s current address, and its grouped answer is flattened.
+
+A second run the same day, on build 109, refreshed both version lists for real (850 vanilla
+entries, 68 Paper entries), started vanilla 1.21.8, and found that vanilla 26.3 and Paper 26.3
+could not start on the Java 21 image. The image now follows the game version, and a third run on build
+111 started all five through the manager.
+
+Not covered: the other four targets, and Bedrock. A
+server whose container keeps restarting is still reported as running, with reachable false.
+
+### Earlier checks
+
+- Run: type checks, lint, formatting and the unit tests of the validation and version helpers in the interface; the Python files compile; and a real SSH round trip with the repository&#x27;s own code against a throwaway `asyncssh` server (key sign-in, trust on first use, changed key refused, a host offering only another key type, a damaged stored key, unknown key refused, a user `~/.ssh/config` with a `Hostname` redirect ignored, never-ending output bounded, a one-line 5 MB log bounded, start, status, logs, stop, remove container, delete data, foreign containers and volumes left alone, the private key never appearing in a result). The Docker side of that round trip is a stand-in that answers the commands, including `rm` and `volume create`, `inspect` and `rm`, so the real Docker behaviour, the label templates, the pinned image and the `itzg` environment variables were not exercised.
+- The websocket handlers (host trust flows, the rename, host change and delete refusals, the key permission failure) were driven directly with in-memory fakes of the websocket layer and storage, because the Home Assistant test harness could not be installed on the machine used. The tests in `test_websocket_flows.py` that use the real fixtures (each of the 22 commands refusing a non-administrator, and the same flows) were written but not run, and neither were the version-fetch tests with a mocked HTTP client.
+- At the time of those earlier checks nothing had been run against a real Docker host, the real Mojang and Paper services, or a browser; the section above records the later run that did.
+
+## Next slice
+
+1. Settings of a running server (difficulty, game mode, view distance, players), the Players, Console and Backups tabs.
+2. Other flavours&#x27; version sources and the remaining targets (supervisor, Docker socket, local process, SSH process).
+3. Bedrock on its own image.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Minecraft server manager in Home Assistant is <code>minecraft_manager</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://www.home-assistant.io/docs/configuration/</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/minecraft_manager</code></dd></dl></section><p><a href="../../integrations/minecraft_manager/">Return to the Minecraft server manager guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

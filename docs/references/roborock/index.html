@@ -1,1 +1,1366 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roborock reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:314" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/roborock/">Roborock guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Roborock</h1><p>Instructions on how to integrate Roborock vacuums into Home Assistant</p><section><h2>Overview</h2><p>The Roborock integration allows you to connect your Roborock robotic vacuums to your Home Assistant. Roborock vacuums are intelligent home cleaning robots and, depending on the specific device, may have features like mopping capabilities, laser navigation, and options for changing cleaning performance or location in the home. This integration enables you to control and monitor your Roborock vacuum directly from Home Assistant.</p></section><section><h2>Supported devices</h2><p>This integration communicates with devices paired to the official Roborock app. While it was originally developed for robot vacuums, it also supports other smart home appliances in the Roborock ecosystem.</p></section><section><h2>Robot vacuums (local polling with cloud fallback)</h2><p>Most robotic vacuums use a hybrid communication model. Home Assistant uses local communication for commands and polling but relies on the cloud for setup and fallback control.</p></section><section><h2>Non-vacuum appliances (cloud-dependent)</h2><p>Non-vacuum products paired with the Roborock app communicate strictly by using an outbound MQTT connection. These devices do not support local communication with Home Assistant and are entirely cloud-dependent:</p></section><section><h2>Prerequisites</h2><p>1. Download the Roborock App for iOS or Android. 2. Create an account and log in. 3. Add your Roborock device to the Roborock App (for example, by scanning a QR code).</p></section><section><h2>Data Updates</h2><p>This integration uses both local and cloud polling and also receives cloud push events using MQTT. Local communication is preferred when possible. Map data and routines are always fetched through the cloud, and Dyad and Zeo devices are cloud only.</p></section><section><h2>Supported functionality</h2><p>Roborock devices have a variety of features that are supported on some devices but not on others. Only entities that your device supports will be added to your integration.</p></section><section><h2>Vacuum</h2><p>The vacuum entity holds the ability to control most things the vacuum can do, such as start a clean, return to the dock, or set the fan speed.</p></section><section><h2>Button</h2><p>The following maintenance buttons allow you to reset the various maintenance items on your vacuum. Pressing a maintenance button cannot be undone. For this reason, the maintenance buttons are disabled by default to make sure they are not pressed unintentionally.</p></section><section><h2>Dyad devices</h2><p>Roborock wet/dry vacuums currently expose some entities through an MQTT connection - it is currently cloud dependent.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Roborock.</p><p>The <strong>code</strong> configuration step lists <code>code</code>.</p><p>The <strong>custom url</strong> configuration step lists <code>roborock_server_url</code>.</p><p>The <strong>user</strong> configuration step lists <code>region</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>get maps</li><li>get vacuum current position</li><li>set vacuum goto position</li><li>set vacuum zoned cleaning</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Data Updates</li><li>Supported functionality</li><li>Removing the integration</li><li>FAQ</li><li>Known limitations</li><li>Troubleshooting</li><li>Roborock integration automations</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/roborock/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/roborock</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/roborock</code></dd></dl></section><p><a href="../../integrations/roborock/">Return to the Roborock guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Roborock reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:314" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/roborock/">Roborock guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Roborock</h1><p>Instructions on how to integrate Roborock vacuums into Home Assistant</p><div class="reader-body"><p>The <strong>Roborock</strong> integration allows you to connect your <a>Roborock</a> robotic vacuums to your Home Assistant. Roborock vacuums are
+intelligent home cleaning robots and, depending on the specific device, may have features
+like mopping capabilities, laser navigation, and options for changing cleaning
+performance or location in the home. This integration enables you to control and
+monitor your Roborock vacuum directly from Home Assistant.</p>
+<p>The integration also allows for automation and integration with other smart home
+devices. For example, you could send a notification when the vacuum is stuck, or
+pause the vacuum when a media player starts playing music.</p>
+<h2>Supported devices</h2>
+<p>This integration communicates with devices paired to the official Roborock app. While it was originally developed for robot vacuums, it also supports other smart home appliances in the Roborock ecosystem.</p>
+<h3>Robot vacuums (local polling with cloud fallback)</h3>
+<p>Most robotic vacuums use a hybrid communication model. Home Assistant uses local communication for commands and polling but relies on the cloud for setup and fallback control.</p>
+<ul>
+<li><strong>S, QV, Qrevo, and Saros series:</strong> Fully supported.</li>
+<li><strong>Q-Series:</strong> Compatibility varies. While many Q-series models are supported, newer variants may have a different protocol that may fail to connect properly. If your model is unsupported, it may feature partial local control using the native <a href="../matter/">Matter</a> integration.</li>
+</ul>
+<h3>Non-vacuum appliances (cloud-dependent)</h3>
+<p>Non-vacuum products paired with the Roborock app communicate strictly by using an outbound MQTT connection. These devices do <strong>not</strong> support local communication with Home Assistant and are entirely cloud-dependent:</p>
+<ul>
+<li><strong>Roborock wet/dry vacuums (Dyad Series):</strong> Currently exposes a select number of telemetry and cleaning sensors.</li>
+<li><strong>Roborock Zeo One (smart washer/dryer):</strong> Exposes cycle states, remaining times, and specific appliance entities.</li>
+</ul>
+<h2>Prerequisites</h2>
+<ol>
+<li>Download the Roborock App for iOS or Android.</li>
+<li>Create an account and log in.</li>
+<li>Add your Roborock device to the Roborock App (for example, by scanning a QR code).</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Roborock</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Roborock</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Email address:
+    description: "The email address used to sign in to the Roborock app. A verification code will be sent to this email address when adding the Roborock integration."
+Roborock server Region:
+    description: "The region that your Roborock account was created in. Leave this set to **Auto** unless you are having issues. See troubleshooting steps below."
+Verification code:
+    description: "The verification code that is sent to your email address when adding the Roborock integration."
+
+</code></pre>
+<h2>Options</h2>
+<p>To define options for Roborock, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Roborock are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<p>The integration can be configured to specify which Roborock App features are drawn
+on the map.</p>
+<pre><code>
+Charger:
+  description: Show the charger on the map.
+Cleaned area:
+  description: Show the area cleaned on the map.
+Go-to path:
+  description: Show the go-to path on the map.
+Ignored obstacles:
+  description: Show ignored obstacles on the map.
+Ignored obstacles with photo:
+  description: Show ignored obstacles with photos on the map.
+Mop path:
+  description: Show the mop path on the map.
+No carpet zones:
+  description: Show the no carpet zones on the map.
+No-go zones:
+  description: Show the no-go zones on the map
+No mopping zones:
+  description: Show the no-mop zones on the map.
+Obstacles:
+  description: Show obstacles on the map.
+Obstacles with photo:
+  description: Show obstacles with photos on the map.
+Path:
+  description: Show the path on the map.
+Predicted path:
+  description: Show the predicted path on the map.
+Vacuum position:
+  description: Show the vacuum position on the map.
+Virtual walls:
+  description: Show virtual walls on the map.
+Zones:
+  description: Show zones on the map.
+Show background:
+  description: Show a blue background behind the map instead of a transparent background.
+Show walls:
+  description: Show the walls on the map.
+Show rooms:
+  description: Show the rooms on the map.
+
+</code></pre>
+<h2>Data Updates</h2>
+<p>This integration uses both local and cloud polling and also receives
+cloud push events using MQTT. Local communication is preferred when possible.
+Map data and routines are always fetched through the cloud, and Dyad and Zeo devices are cloud only.</p>
+<p>The integration will automatically discover your Roborock devices using the cloud APIs and get
+the needed information to communicate locally with them, if supported. Please ensure your Home Assistant
+instance can communicate with the local IP of your device. We recommend setting a static IP
+for your Roborock Vacuum to help prevent future issues. The device communicates on port 58867.
+Depending on your firewall, you may need to allow communication from Home Assistant to your vacuum on that port.</p>
+<h2>Supported functionality</h2>
+<p>Roborock devices have a variety of features that are supported on some devices but not on others. Only entities that your device supports will be added to your integration.</p>
+<h3>Robovac devices</h3>
+<h4>Vacuum</h4>
+<p>The vacuum entity holds the ability to control most things the vacuum can do, such as start a clean, return to the dock, or set the fan speed.</p>
+<h4>Image</h4>
+<ul>
+<li><strong>Map</strong><ul>
+<li><strong>Description</strong>: Displays a live map of your Roborock vacuum's cleaning area.</li>
+</ul>
+</li>
+</ul>
+<h4>Select</h4>
+<ul>
+<li><p><strong>Mop mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Describes how to mop the floor. On some firmware, it is called 'mop route'.</li>
+</ul>
+</li>
+<li><p><strong>Mop intensity</strong></p>
+<ul>
+<li><strong>Description</strong>: How hard you would like your vacuum to mop.</li>
+</ul>
+</li>
+<li><p><strong>Selected map</strong></p>
+<ul>
+<li><strong>Description</strong>: Choose the map that is loaded on the vacuum.</li>
+</ul>
+</li>
+<li><p><strong>Cleaning cycles</strong></p>
+<ul>
+<li><strong>Description</strong>: Sets how many times the vacuum cleans each area (1x or 2x).</li>
+<li><strong>Availability</strong>: For Q7 series vacuums.</li>
+</ul>
+</li>
+<li><p><strong>Empty mode</strong></p>
+<ul>
+<li><strong>Description</strong>: You can set the "empty mode" setting including Max, Light, Balanced, and Smart.</li>
+<li><strong>Availability</strong>: For vacuum equipped with an auto-empty dock</li>
+</ul>
+</li>
+</ul>
+<h4>Binary sensor</h4>
+<ul>
+<li><p><strong>Charging</strong></p>
+<ul>
+<li><strong>Description</strong>: States if the vacuum is currently charging or not.</li>
+</ul>
+</li>
+<li><p><strong>Cleaning</strong></p>
+<ul>
+<li><strong>Description</strong>: States if the vacuum is currently cleaning or not. This is on when the robot is actively moving around or when the robot returns to the dock when the battery is low but a clean is still active and will resume later.</li>
+</ul>
+</li>
+<li><p><strong>Mop attached</strong></p>
+<ul>
+<li><strong>Description</strong>: States if the mop is currently attached.</li>
+</ul>
+</li>
+<li><p><strong>Mop drying status</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with drying capabilities. Indicates whether the mop is currently being dried.</li>
+</ul>
+</li>
+<li><p><strong>Water box attached</strong></p>
+<ul>
+<li><strong>Description</strong>: States if the water box is currently attached.</li>
+</ul>
+</li>
+<li><p><strong>Water shortage</strong></p>
+<ul>
+<li><strong>Description</strong>: States if the water box is low on water - 'Ok' if it has not detected a water shortage.</li>
+</ul>
+</li>
+<li><p><strong>Cleaning fluid</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with cleaning fluid capabilities - States if the dock is low on cleaning fluid, or the cleaning fluid container is not installed.</li>
+</ul>
+</li>
+<li><p><strong>Clean water box</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with water tanks built-in. States if the dock is out of clean water, or if the clean water box is not installed.</li>
+</ul>
+</li>
+<li><p><strong>Dirty water box</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with dirty water tanks built-in. States if the dirty water tank is full, or if the dirty water box is not installed.</li>
+</ul>
+</li>
+</ul>
+<h4>Sensor</h4>
+<ul>
+<li><p><strong>Cleaning area</strong></p>
+<ul>
+<li><strong>Description</strong>: How much area the vacuum has cleaned in its current run. If the vacuum is not currently cleaning, how much area it has cleaned during its last run.</li>
+</ul>
+</li>
+<li><p><strong>Cleaning time</strong></p>
+<ul>
+<li><strong>Description</strong>: How long the vacuum has been cleaning for. If the vacuum is not currently cleaning, how long it cleaned for in its last run.</li>
+</ul>
+</li>
+<li><p><strong>Cleaning progress</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on some newer devices - what percent of the current cleaning is completed.</li>
+</ul>
+</li>
+<li><p><strong>Dock error</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on the non-basic docks - The current error of the vacuum or 'Ok' if none exists.</li>
+</ul>
+</li>
+<li><p><strong>Main brush time left</strong></p>
+<ul>
+<li><strong>Description</strong>: How much time is left before Roborock recommends you replace your main brush.</li>
+</ul>
+</li>
+<li><p><strong>Mop drying remaining time</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on the non-basic docks - How much time is left until the mop is dry and ready to continue cleaning.</li>
+</ul>
+</li>
+<li><p><strong>Side brush time left</strong></p>
+<ul>
+<li><strong>Description</strong>: How much time is left before Roborock recommends you replace your side brush.</li>
+</ul>
+</li>
+<li><p><strong>Filter time left</strong></p>
+<ul>
+<li><strong>Description</strong>: How much time is left before Roborock recommends you replace your vacuum's air filter.</li>
+</ul>
+</li>
+<li><p><strong>Maintenance brush time left</strong></p>
+<ul>
+<li><strong>Description</strong>: How much time is left before Roborock recommends you replace your dock's maintenance brush.</li>
+</ul>
+</li>
+<li><p><strong>Strainer time left</strong></p>
+<ul>
+<li><strong>Description</strong>: How much time is left before Roborock recommends you replace your dock's strainer. This can refer to the water filter or the cleaning tray depending on your device.</li>
+</ul>
+</li>
+<li><p><strong>Status</strong></p>
+<ul>
+<li><strong>Description</strong>: The current status of your vacuum. This typically describes the action that is currently being run. For example, 'spot_cleaning' or 'docking'.</li>
+</ul>
+</li>
+<li><p><strong>Last clean begin</strong></p>
+<ul>
+<li><strong>Description</strong>: the last time that your vacuum started cleaning.</li>
+</ul>
+</li>
+<li><p><strong>Last clean end</strong></p>
+<ul>
+<li><strong>Description</strong>: The last time that your vacuum finished cleaning.</li>
+</ul>
+</li>
+<li><p><strong>Total cleaning time</strong></p>
+<ul>
+<li><strong>Description</strong>: The lifetime cleaning duration of your vacuum.</li>
+</ul>
+</li>
+<li><p><strong>Total cleaning area</strong></p>
+<ul>
+<li><strong>Description</strong>: The lifetime cleaning area of your vacuum.</li>
+</ul>
+</li>
+<li><p><strong>Total cleaning count</strong></p>
+<ul>
+<li><strong>Description</strong>: The lifetime cleaning count of your vacuum.</li>
+</ul>
+</li>
+<li><p><strong>Vacuum error</strong></p>
+<ul>
+<li><strong>Description</strong>: The current error with your vacuum, if there is one.</li>
+</ul>
+</li>
+</ul>
+<h4>Time</h4>
+<ul>
+<li><p><strong>Do not disturb begin</strong></p>
+<ul>
+<li><strong>Description</strong>: When <em>Do not disturb</em> is enabled, the vacuum does not run or speak after this point.</li>
+</ul>
+</li>
+<li><p><strong>Do not disturb end</strong></p>
+<ul>
+<li><strong>Description</strong>: When <em>Do not disturb</em> is enabled, the vacuum does not run or speak before this point.</li>
+</ul>
+</li>
+</ul>
+<h4>Switch</h4>
+<ul>
+<li><p><strong>Child lock</strong></p>
+<ul>
+<li><strong>Description</strong>: This disables the buttons on the vacuum. Nothing happens when the buttons are pushed.</li>
+</ul>
+</li>
+<li><p><strong>Status indicator light</strong></p>
+<ul>
+<li><strong>Description</strong>: This is the LED on the top of your vacuum. The color changes depending on the status of your vacuum.</li>
+</ul>
+</li>
+<li><p><strong>Do not disturb</strong></p>
+<ul>
+<li><strong>Description</strong>: This enables <em>Do not disturb</em> during the time frame you have set in the app or on the time entity. When <em>Do not disturb</em> is enabled, the vacuum does not run or speak.</li>
+</ul>
+</li>
+<li><p><strong>Dust emptying</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks that support automatic dust collection. States if the dock is currently emptying the vacuum's dust bin, and lets you start or stop emptying.</li>
+</ul>
+</li>
+<li><p><strong>Mop washing</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with mop washing capabilities. States if the mop is currently being washed, and lets you start or stop washing.</li>
+</ul>
+</li>
+<li><p><strong>Mop drying</strong></p>
+<ul>
+<li><strong>Description</strong>: Only available on docks with mop drying capabilities. States if the mop is currently being dried, and lets you start or stop drying.</li>
+</ul>
+</li>
+</ul>
+<h4>Number</h4>
+<ul>
+<li><strong>Volume</strong><ul>
+<li><strong>Description</strong>: This allows you to control the volume of the robot's voice. For example, when it states "Starting cleaning". This allows you to set the volume to 0%, while the app limits it to 20%.</li>
+</ul>
+</li>
+</ul>
+<h4>Button</h4>
+<ul>
+<li><strong>Resolve dock error</strong><ul>
+<li><strong>Availability</strong>: Enabled by default on supported docks that provide a <strong>Dock error</strong> sensor.</li>
+<li><strong>Description</strong>: After fixing the cause of a dock error, such as refilling an empty clean water tank, press this button to acknowledge the current dock error. Home Assistant then refreshes the dock status. If no dock error is reported, pressing the button shows an error and sends no command. Whether an interrupted cleaning job resumes depends on the device. The button only acknowledges dock errors.</li>
+</ul>
+</li>
+</ul>
+<p>The following maintenance buttons allow you to reset the various maintenance items on your vacuum. Pressing a maintenance button cannot be undone. For this reason, the maintenance buttons are <a>disabled by default</a> to make sure they are not pressed unintentionally.</p>
+<ul>
+<li><p><strong>Reset sensor consumable</strong></p>
+<ul>
+<li><strong>Description</strong>: The sensors on your vacuum are expected to be cleaned after 30 hours of use.</li>
+</ul>
+</li>
+<li><p><strong>Reset side brush consumable</strong></p>
+<ul>
+<li><strong>Description</strong>: The side brush is expected to be replaced every 200 hours.</li>
+</ul>
+</li>
+<li><p><strong>Reset main brush consumable</strong></p>
+<ul>
+<li><strong>Description</strong>: The main brush/ roller is expected to be replaced every 300 hours.</li>
+</ul>
+</li>
+<li><p><strong>Reset air filter</strong></p>
+<ul>
+<li><strong>Description</strong>: The air filter is expected to be replaced every 150 hours.</li>
+</ul>
+</li>
+</ul>
+<p>In addition, some vacuums allow routines to be set up in the app. For each of those routines, a button entity will be created, allowing you to trigger it.</p>
+<h3>Dyad devices</h3>
+<p>Roborock wet/dry vacuums currently expose some entities through an MQTT connection - it is currently cloud dependent.</p>
+<h4>Sensor</h4>
+<ul>
+<li><p><strong>Status</strong></p>
+<ul>
+<li><strong>Description</strong>: The current status of your vacuum. This typically describes the action that is currently being run. For example, 'drying' or 'charging'.</li>
+</ul>
+</li>
+<li><p><strong>Battery</strong></p>
+<ul>
+<li><strong>Description</strong>: The current charge of your device.</li>
+</ul>
+</li>
+<li><p><strong>Filter time left</strong></p>
+<ul>
+<li><strong>Description</strong>: how long until Roborock recommends cleaning/replacing your filter.</li>
+</ul>
+</li>
+<li><p><strong>Brush time left</strong></p>
+<ul>
+<li><strong>Description</strong>: how long until Roborock recommends cleaning/replacing your brush.</li>
+</ul>
+</li>
+<li><p><strong>Error</strong></p>
+<ul>
+<li><strong>Description</strong>: the current error of the device - if one exists - "None" otherwise.</li>
+</ul>
+</li>
+<li><p><strong>Total cleaning time</strong></p>
+<ul>
+<li><strong>Description</strong>: how long you have cleaned with your wet/dry vacuum.</li>
+</ul>
+</li>
+</ul>
+<h3>Zeo Entities</h3>
+<p>Roborock Zeo One currently exposes some entities through an MQTT connection - it is currently cloud dependent.</p>
+<h4>Sensor</h4>
+<ul>
+<li><p><strong>State</strong></p>
+<ul>
+<li><strong>Description</strong>: The current state of your washing machine. For example, 'washing' or 'rinsing'.</li>
+</ul>
+</li>
+<li><p><strong>Countdown</strong></p>
+<ul>
+<li><strong>Description</strong>: Countdown for how long until the machine starts.</li>
+</ul>
+</li>
+<li><p><strong>Washing left</strong></p>
+<ul>
+<li><strong>Description</strong>: The amount of time until your machine is done washing.</li>
+</ul>
+</li>
+<li><p><strong>Error</strong></p>
+<ul>
+<li><strong>Description</strong>: The current error of the Zeo, if one exists.</li>
+</ul>
+</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h2>FAQ</h2>
+<h3>Can I use the Mi home app with this integration?</h3>
+<p>No. This integration requires information from your Roborock app to set up and uses Roborock's protocols to communicate with your device. You must have your vacuum synced to the Roborock app.</p>
+<h3>Can I block internet access for this device?</h3>
+<p>No. When the vacuum is disconnected from the internet, it blocks its local API until it can reach the Roborock servers. However, when connected by using Matter, the vacuum can work fully offline, but the controls and sensors are limited.</p>
+<h3>What devices are supported?</h3>
+<p>If you can add your device to the Roborock app - it is supported. However, some older vacuums like the Roborock S5 must be connected using the Mi Home app and can be set up in Home Assistant through the <a href="../xiaomi_miio/">Xiaomi Miio</a> integration.</p>
+<h3>What features will you support?</h3>
+<p>We are working on adding a lot of features to the core integration. We have reverse-engineered over <a>100 commands</a>. The documentation is currently very bare-bones, and we are looking for users to help us make it more complete. The following are some of the functionalities we plan to add to Home Assistant Core. We ask that you are patient with us as we add them.</p>
+<ul>
+<li>Dock controls</li>
+<li>Manual vacuum remote control</li>
+<li>Viewing the camera</li>
+</ul>
+<h3>How can I clean a specific room?</h3>
+<ol>
+<li>Go to the vacuum entity of your Roborock device.</li>
+<li>Select the gear icon button.</li>
+<li>Select <strong>Map vacuum segments to areas</strong>.</li>
+<li>Map the Roborock areas to your Home Assistant areas and select <strong>Save</strong>.</li>
+<li>Go back to the vacuum entity and select <strong>Cleaning by area</strong>.</li>
+<li>Select your areas and select <strong>Clean</strong>.</li>
+</ol>
+<p><strong>Note</strong></p>
+<p>Roborock vacuums do not support cleaning in a specific room order.</p>
+<p>To clean rooms more than once, see <a>Automation: clean rooms more than once</a>.</p>
+<h2>Known limitations</h2>
+<h3>The vacuum supports polling only</h3>
+<p>The Roborock integration polls your robot vacuum every 30 seconds with no push-based updates from the vacuum itself. The app also polls the robot vacuum approximately every 2 seconds. This means that push-based updates are not possible. If you want pushed based updates from your robot vacuum you can connect it using Matter, however only a few entities are supported.</p>
+<h3>The vacuum requires cloud access</h3>
+<p>Despite this integration's IoT class being local polling, cloud access is required for it to work just like any other cloud based integration.</p>
+<h3>Area cleaning has no option for the number of passes</h3>
+<p>The <a>Clean area with vacuum cleaner</a> action and <strong>Cleaning by area</strong> do not let you choose how many times the vacuum cleans each room. To clean rooms more than once, send the <code>app_segment_clean</code> command with its <code>repeat</code> option instead. See <a>Automation: clean rooms more than once</a>.</p>
+<h3>Rate limiting on the cloud API</h3>
+<p>The Roborock cloud allows a certain number of requests to its cloud, until it decides to ban your IP address. To counter this, there is rate limiting built into the Python package that this integration is built on. This is to try to help prevent your instance from overwhelming the Roborock servers and resulting in any kind of IP ban.</p>
+<h4>Causes</h4>
+<p>If your vacuum runs out of battery, hibernates or shutsdown, then Home Assistant may contact the cloud API. If you have a script that automatically reloads the integration if it goes unavailable, then you are frequently reloading and that causes rate limits.</p>
+<p>Home Assistant actions like <a><code>get vacuum current position</code></a> use the cloud API and may trigger a rate limit if used frequently</p>
+<h4>Symptoms</h4>
+<p>Home Assistant will notify you about this as a <strong>repair issue</strong> unless if you decide to ignore it, and will give information about rate limiting in your logs. After enough polls the rate limiting will kick in and will stop polling the cloud which will cause all the entities to go unavailable.</p>
+<p>For info on how to fix <a>this</a></p>
+<h2>Troubleshooting</h2>
+<h3>I get a invalid or no user agreement error - but nothing shows up in my app</h3>
+<p>Roborock servers require accepting a user agreement before using the API, which may block Home Assistant during setup. Additionally, the Roborock may ask you to re-enter the user agreement, even if you have entered it before. To allow Home Assistant to use the Roborock API, you need to take the following steps:</p>
+<ol>
+<li>Open your Roborock app.</li>
+<li>Open <strong>Profile</strong> &gt; <strong>About Us</strong> &gt; <strong>User Agreement &amp; Privacy Policy</strong>.</li>
+<li>Hit <strong>Revoke authorization</strong>.</li>
+<li>Log back in and accept the policy.</li>
+<li>Reload the Roborock integration!</li>
+</ol>
+<h3>The integration tells me it cannot reach my vacuum and is using the cloud API and that this is not supported or I am having any networking issues</h3>
+<p>Info about the causes and symptoms of <a>this issue</a></p>
+<p>The steps needed to fix this issue are specific to your networking setup. Here are some general troubleshooting steps:</p>
+<ol>
+<li>Ensure your vacuum has outbound access via port 8883 (MQTT) to communicate with the cloud servers.</li>
+<li>Ensure your vacuum is allowed to communicate directly with your Home Assistant instance's internal IP address over TCP 58867 and UDP 58866.</li>
+<li>If you use a network-wide ad or DNS-blockers (such as Pi-hole, AdGuard Home, or NextDNS), ensure that your Roborock vacuum's IP address is entirely exempted from filtering. Overly aggressive ad-blocking lists can inadvertently break the local handshake protocol, forcing Home Assistant to connect to it over the cloud.</li>
+<li>Roborock vacuums heavily rely on stable local handshakes. It is recommended to log into your router's admin interface and assign a Static IP / DHCP reservation to your vacuum to prevent connection drops when DHCP leases renew.</li>
+<li>Check your router's webpage. If the device is losing connection, you need to focus on increasing your Wi-Fi network's performance.
+If you cannot log into your router's webpage, in the Roborock app, go to <strong>Settings</strong> &gt; <strong>Product Info</strong> &gt; <strong>Wi-Fi Name</strong>, and you should see its signal strength.</li>
+</ol>
+<h3>My Device goes unavailable for a short period of time randomly - how can I fix this?</h3>
+<p>The vacuum randomly disconnects from the internet for about one minute and automatically reconnects. This causes the integration to go unavailable until the vacuum is reachable again. This is not an issue with the integration but rather the integration is reacting to the device's status.</p>
+<h3>The integration tells me no devices were found even though I have devices on my account.</h3>
+<p>Some devices are not supported yet as they use a different protocol than other devices. Make sure you are on the latest version of Home Assistant.</p>
+<h3>When I try to add the integration - it says my region is incorrect</h3>
+<p>We recommend using the "Auto" setting for your region. If that doesn't work because you have accounts in multiple regions, try the following steps:</p>
+<ol>
+<li>If you ever accidentally created a Roborock account in the wrong Roborock server region, delete it using the Roborock App.</li>
+<li>The Roborock server region for your account may not always be associated with your actual country. While setting up the integration, you may select the Roborock server region that you want to sign in with, with four available options: US, EU, RU, or CN, and you may need to try a different region than the one you expect. Most users outside of Russia or China are in the US and EU Roborock server regions.</li>
+<li>The "Region" that is shown in the app is actually the country your account is registered to. It does not always match the region the integration is looking for.</li>
+</ol>
+<h2>Roborock integration automations</h2>
+<p>The Roborock integration allows for direct control of your vacuum, but its true potential is unlocked when connected to the broader Home Assistant ecosystem.</p>
+<h3>Automation: clean when leaving the house</h3>
+<p>Instead of scheduling your vacuum to run at a fixed time when you might be home or on a work call, you can trigger a full clean automatically the moment your alarm system is armed to "Away."</p>
+<p><strong>Warning</strong></p>
+<p>Running a robot vacuum while your alarm system is armed can falsely trigger motion sensors (PIRs) and cause accidental alarms. Only use this automation if your motion sensors are pet-immune, positioned out of the vacuum's path, or if you can reliably verify your home's security remotely (e.g., via security cameras) to confirm if a burglary is occurring before emergency services are dispatched.</p>
+<ul>
+<li><strong>Trigger</strong>: <code>alarm_control_panel.home_alarm</code> gets set to <code>"armed_away"</code>.</li>
+<li><strong>Conditions</strong>: <code>vacuum.roborock_s8</code> is <code>"docked"</code>.</li>
+<li><strong>Actions</strong>: <code>vacuum.start</code> to start the robot vacuum to clean the house while everyone is away.</li>
+</ul>
+<h4>YAML example for cleaning the house after the alarm is set to armed away</h4>
+<pre><code>alias: "Vacuum: Clean when house is empty"
+description: "Triggers a full clean when the house alarm is armed to away."
+trigger:
+  - trigger: state
+    entity_id: alarm_control_panel.home_alarm
+    to: "armed_away"
+condition:
+  - condition: state
+    entity_id: vacuum.roborock_s8
+    state: "docked"
+action:
+  - action: vacuum.start
+    target:
+      entity_id: vacuum.roborock_s8
+mode: single
+</code></pre>
+<h3>Automation: post-cooking kitchen cleanup</h3>
+<p>Cooking often leaves crumbs or spills near the stove. You can automate your Roborock to head straight to the kitchen to tidy up when your smart stove or oven is turned off.</p>
+<ul>
+<li><strong>Trigger</strong>: <code>switch.smart_hob_power</code> gets switched to <code>"off"</code> for a minute.</li>
+<li><strong>Conditions</strong>: <code>vacuum.roborock_s8</code> is <code>"docked"</code>.</li>
+<li><strong>Actions</strong>: <code>vacuum.clean_area</code> with <code>cleaning_area_id: kitchen</code> to start the robot vacuum to clean kitchen after cooking is done.</li>
+</ul>
+<h4>YAML example for cleaning the kitchen after the hob is turned off for a minute</h4>
+<pre><code>alias: "Vacuum: Clean kitchen after cooking"
+description: "Sends the vacuum to the kitchen zone 1 minute after the stovetop turns off."
+mode: single
+trigger:
+  - trigger: state
+    entity_id: switch.smart_hob_power
+    from: "on"
+    to: "off"
+    for:
+      minutes: 1 minute
+condition:
+  - condition: state
+    entity_id: vacuum.roborock_s8
+    state: "docked"
+action:
+  - action: vacuum.clean_area
+    target:
+      entity_id: vacuum.roborock_s8
+    data:
+      cleaning_area_id: kitchen
+</code></pre>
+<h3>Automation: clean rooms more than once</h3>
+<p>Send the vacuum to clean some rooms three times every day at 10:00. To find the ID numbers of your rooms, use the <a>Get maps</a> action.</p>
+<ul>
+<li><strong>Trigger</strong>: Time<ul>
+<li><strong>At time</strong>: <code>10:00:00</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Send command to vacuum cleaner<ul>
+<li><strong>Target</strong>: Your Roborock vacuum</li>
+<li><strong>Command</strong>: <code>app_segment_clean</code></li>
+<li><strong>Parameters</strong>: A list with one item. Enter it in YAML mode, as shown in the example. The item has two keys:<ul>
+<li><code>segments</code>: The ID numbers of the rooms to clean.</li>
+<li><code>repeat</code>: The number of passes, from 1 to 3.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for cleaning two rooms three times</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Vacuum: Clean rooms three times"
+triggers:
+- trigger: time
+at: "10:00:00"
+actions:
+- action: vacuum.send_command
+target:
+entity_id: vacuum.roborock_s8
+data:
+command: app_segment_clean
+params:
+# Replace these IDs with the room IDs from the Get maps action
+- segments:
+- 16
+- 17
+repeat: 3</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/roborock.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Roborock vacuums into Home Assistant
+ha_release: 2023.5
+ha_domain: roborock
+---
+
+The **Roborock** {% term integration %} allows you to connect your [Roborock](https://us.roborock.com/pages/robot-vacuum-cleaner) robotic vacuums to your Home Assistant. Roborock vacuums are
+intelligent home cleaning robots and, depending on the specific device, may have features
+like mopping capabilities, laser navigation, and options for changing cleaning
+performance or location in the home. This integration enables you to control and
+monitor your Roborock vacuum directly from Home Assistant.
+
+The integration also allows for automation and integration with other smart home
+devices. For example, you could send a notification when the vacuum is stuck, or
+pause the vacuum when a media player starts playing music.
+
+## Supported devices
+
+This integration communicates with devices paired to the official Roborock app. While it was originally developed for robot vacuums, it also supports other smart home appliances in the Roborock ecosystem.&#32;
+
+### Robot vacuums (local polling with cloud fallback)
+
+Most robotic vacuums use a hybrid communication model. Home Assistant uses local communication for commands and polling but relies on the cloud for setup and fallback control.
+
+- **S, QV, Qrevo, and Saros series:** Fully supported.
+- **Q-Series:** Compatibility varies. While many Q-series models are supported, newer variants may have a different protocol that may fail to connect properly. If your model is unsupported, it may feature partial local control using the native [Matter](/integrations/matter/) integration.
+
+### Non-vacuum appliances (cloud-dependent)
+
+Non-vacuum products paired with the Roborock app communicate strictly by using an outbound MQTT connection. These devices do **not** support local communication with Home Assistant and are entirely cloud-dependent:
+
+- **Roborock wet/dry vacuums (Dyad Series):** Currently exposes a select number of telemetry and cleaning sensors.
+- **Roborock Zeo One (smart washer/dryer):** Exposes cycle states, remaining times, and specific appliance entities.
+
+## Prerequisites
+
+1. Download the Roborock App for iOS or Android.
+2. Create an account and log in.
+3. Add your Roborock device to the Roborock App (for example, by scanning a QR code).
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Email address:
+    description: &quot;The email address used to sign in to the Roborock app. A verification code will be sent to this email address when adding the Roborock integration.&quot;
+Roborock server Region:
+    description: &quot;The region that your Roborock account was created in. Leave this set to **Auto** unless you are having issues. See troubleshooting steps below.&quot;
+Verification code:
+    description: &quot;The verification code that is sent to your email address when adding the Roborock integration.&quot;
+{% endconfiguration_basic %}
+
+{% include integrations/option_flow.md %}
+
+The integration can be configured to specify which Roborock App features are drawn
+on the map.
+
+{% configuration_basic %}
+Charger:
+  description: Show the charger on the map.
+Cleaned area:
+  description: Show the area cleaned on the map.
+Go-to path:
+  description: Show the go-to path on the map.
+Ignored obstacles:
+  description: Show ignored obstacles on the map.
+Ignored obstacles with photo:
+  description: Show ignored obstacles with photos on the map.
+Mop path:
+  description: Show the mop path on the map.
+No carpet zones:
+  description: Show the no carpet zones on the map.
+No-go zones:
+  description: Show the no-go zones on the map
+No mopping zones:
+  description: Show the no-mop zones on the map.
+Obstacles:
+  description: Show obstacles on the map.
+Obstacles with photo:
+  description: Show obstacles with photos on the map.
+Path:
+  description: Show the path on the map.
+Predicted path:
+  description: Show the predicted path on the map.
+Vacuum position:
+  description: Show the vacuum position on the map.
+Virtual walls:
+  description: Show virtual walls on the map.
+Zones:
+  description: Show zones on the map.
+Show background:
+  description: Show a blue background behind the map instead of a transparent background.
+Show walls:
+  description: Show the walls on the map.
+Show rooms:
+  description: Show the rooms on the map.
+{% endconfiguration_basic %}
+
+## Data Updates
+
+This integration uses both local and cloud {% term polling %} and also receives
+cloud push events using MQTT. Local communication is preferred when possible.
+Map data and routines are always fetched through the cloud, and Dyad and Zeo devices are cloud only.
+
+The integration will automatically discover your Roborock devices using the cloud APIs and get
+the needed information to communicate locally with them, if supported. Please ensure your Home Assistant
+instance can communicate with the local IP of your device. We recommend setting a static IP
+for your Roborock Vacuum to help prevent future issues. The device communicates on port 58867.
+Depending on your firewall, you may need to allow communication from Home Assistant to your vacuum on that port.
+
+
+## Supported functionality
+
+Roborock devices have a variety of features that are supported on some devices but not on others. Only entities that your device supports will be added to your integration.
+
+### Robovac devices
+
+#### Vacuum
+
+The vacuum entity holds the ability to control most things the vacuum can do, such as start a clean, return to the dock, or set the fan speed.
+
+#### Image
+
+- **Map**
+  - **Description**: Displays a live map of your Roborock vacuum&#x27;s cleaning area.
+
+#### Select
+
+- **Mop mode**
+  - **Description**: Describes how to mop the floor. On some firmware, it is called &#x27;mop route&#x27;.
+
+- **Mop intensity**
+  - **Description**: How hard you would like your vacuum to mop.
+
+- **Selected map**
+  - **Description**: Choose the map that is loaded on the vacuum.
+
+- **Cleaning cycles**
+  - **Description**: Sets how many times the vacuum cleans each area (1x or 2x).
+  - **Availability**: For Q7 series vacuums.
+
+- **Empty mode**
+  - **Description**: You can set the &quot;empty mode&quot; setting including Max, Light, Balanced, and Smart.
+  - **Availability**: For vacuum equipped with an auto-empty dock
+
+#### Binary sensor
+
+- **Charging**
+  - **Description**: States if the vacuum is currently charging or not.
+
+- **Cleaning**
+  - **Description**: States if the vacuum is currently cleaning or not. This is on when the robot is actively moving around or when the robot returns to the dock when the battery is low but a clean is still active and will resume later.
+
+- **Mop attached**
+  - **Description**: States if the mop is currently attached.
+
+- **Mop drying status**
+  - **Description**: Only available on docks with drying capabilities. Indicates whether the mop is currently being dried.
+
+- **Water box attached**
+  - **Description**: States if the water box is currently attached.
+
+- **Water shortage**
+  - **Description**: States if the water box is low on water - &#x27;Ok&#x27; if it has not detected a water shortage.
+
+- **Cleaning fluid**
+  - **Description**: Only available on docks with cleaning fluid capabilities - States if the dock is low on cleaning fluid, or the cleaning fluid container is not installed.
+
+- **Clean water box**
+  - **Description**: Only available on docks with water tanks built-in. States if the dock is out of clean water, or if the clean water box is not installed.
+
+- **Dirty water box**
+  - **Description**: Only available on docks with dirty water tanks built-in. States if the dirty water tank is full, or if the dirty water box is not installed.
+
+
+#### Sensor
+
+- **Cleaning area**
+  - **Description**: How much area the vacuum has cleaned in its current run. If the vacuum is not currently cleaning, how much area it has cleaned during its last run.
+
+- **Cleaning time**
+  - **Description**: How long the vacuum has been cleaning for. If the vacuum is not currently cleaning, how long it cleaned for in its last run.
+
+- **Cleaning progress**
+  - **Description**: Only available on some newer devices - what percent of the current cleaning is completed.
+
+- **Dock error**
+  - **Description**: Only available on the non-basic docks - The current error of the vacuum or &#x27;Ok&#x27; if none exists.
+
+- **Main brush time left**
+  - **Description**: How much time is left before Roborock recommends you replace your main brush.
+
+- **Mop drying remaining time**
+  - **Description**: Only available on the non-basic docks - How much time is left until the mop is dry and ready to continue cleaning.
+
+- **Side brush time left**
+  - **Description**: How much time is left before Roborock recommends you replace your side brush.
+
+- **Filter time left**
+  - **Description**: How much time is left before Roborock recommends you replace your vacuum&#x27;s air filter.
+
+- **Maintenance brush time left**
+  - **Description**: How much time is left before Roborock recommends you replace your dock&#x27;s maintenance brush.
+
+- **Strainer time left**
+  - **Description**: How much time is left before Roborock recommends you replace your dock&#x27;s strainer. This can refer to the water filter or the cleaning tray depending on your device.
+
+- **Status**
+  - **Description**: The current status of your vacuum. This typically describes the action that is currently being run. For example, &#x27;spot_cleaning&#x27; or &#x27;docking&#x27;.
+
+- **Last clean begin**
+  - **Description**: the last time that your vacuum started cleaning.
+
+- **Last clean end**
+  - **Description**: The last time that your vacuum finished cleaning.
+
+- **Total cleaning time**
+  - **Description**: The lifetime cleaning duration of your vacuum.
+
+- **Total cleaning area**
+  - **Description**: The lifetime cleaning area of your vacuum.
+
+- **Total cleaning count**
+  - **Description**: The lifetime cleaning count of your vacuum.
+
+- **Vacuum error**
+  - **Description**: The current error with your vacuum, if there is one.
+
+#### Time
+
+- **Do not disturb begin**
+  - **Description**: When _Do not disturb_ is enabled, the vacuum does not run or speak after this point.
+
+- **Do not disturb end**
+  - **Description**: When _Do not disturb_ is enabled, the vacuum does not run or speak before this point.
+
+#### Switch
+
+- **Child lock**
+  - **Description**: This disables the buttons on the vacuum. Nothing happens when the buttons are pushed.
+
+- **Status indicator light**
+  - **Description**: This is the LED on the top of your vacuum. The color changes depending on the status of your vacuum.
+
+- **Do not disturb**
+  - **Description**: This enables _Do not disturb_ during the time frame you have set in the app or on the time entity. When _Do not disturb_ is enabled, the vacuum does not run or speak.
+
+- **Dust emptying**
+  - **Description**: Only available on docks that support automatic dust collection. States if the dock is currently emptying the vacuum&#x27;s dust bin, and lets you start or stop emptying.
+
+- **Mop washing**
+  - **Description**: Only available on docks with mop washing capabilities. States if the mop is currently being washed, and lets you start or stop washing.
+
+- **Mop drying**
+  - **Description**: Only available on docks with mop drying capabilities. States if the mop is currently being dried, and lets you start or stop drying.
+
+#### Number
+
+- **Volume**
+  - **Description**: This allows you to control the volume of the robot&#x27;s voice. For example, when it states &quot;Starting cleaning&quot;. This allows you to set the volume to 0%, while the app limits it to 20%.
+
+#### Button
+
+- **Resolve dock error**
+  - **Availability**: Enabled by default on supported docks that provide a **Dock error** sensor.
+  - **Description**: After fixing the cause of a dock error, such as refilling an empty clean water tank, press this button to acknowledge the current dock error. Home Assistant then refreshes the dock status. If no dock error is reported, pressing the button shows an error and sends no command. Whether an interrupted cleaning job resumes depends on the device. The button only acknowledges dock errors.
+
+The following maintenance buttons allow you to reset the various maintenance items on your vacuum. Pressing a maintenance button cannot be undone. For this reason, the maintenance buttons are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) to make sure they are not pressed unintentionally.
+
+- **Reset sensor consumable**
+  - **Description**: The sensors on your vacuum are expected to be cleaned after 30 hours of use.
+
+- **Reset side brush consumable**
+  - **Description**: The side brush is expected to be replaced every 200 hours.
+
+- **Reset main brush consumable**
+  - **Description**: The main brush/ roller is expected to be replaced every 300 hours.
+
+- **Reset air filter**
+  - **Description**: The air filter is expected to be replaced every 150 hours.
+
+In addition, some vacuums allow routines to be set up in the app. For each of those routines, a button entity will be created, allowing you to trigger it.
+
+### Dyad devices
+
+Roborock wet/dry vacuums currently expose some entities through an MQTT connection - it is currently cloud dependent.
+
+#### Sensor
+
+- **Status**
+  - **Description**: The current status of your vacuum. This typically describes the action that is currently being run. For example, &#x27;drying&#x27; or &#x27;charging&#x27;.
+
+- **Battery**
+  - **Description**: The current charge of your device.
+
+- **Filter time left**
+  - **Description**: how long until Roborock recommends cleaning/replacing your filter.
+
+- **Brush time left**
+  - **Description**: how long until Roborock recommends cleaning/replacing your brush.
+
+- **Error**
+  - **Description**: the current error of the device - if one exists - &quot;None&quot; otherwise.
+
+- **Total cleaning time**
+  - **Description**: how long you have cleaned with your wet/dry vacuum.
+
+
+### Zeo Entities
+
+Roborock Zeo One currently exposes some entities through an MQTT connection - it is currently cloud dependent.
+
+#### Sensor
+
+- **State**
+  - **Description**: The current state of your washing machine. For example, &#x27;washing&#x27; or &#x27;rinsing&#x27;.
+
+- **Countdown**
+  - **Description**: Countdown for how long until the machine starts.
+
+- **Washing left**
+  - **Description**: The amount of time until your machine is done washing.
+
+- **Error**
+  - **Description**: The current error of the Zeo, if one exists.
+
+{% include integrations/actions.md %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+
+## FAQ
+
+### Can I use the Mi home app with this integration?
+No. This integration requires information from your Roborock app to set up and uses Roborock&#x27;s protocols to communicate with your device. You must have your vacuum synced to the Roborock app.
+
+### Can I block internet access for this device?
+
+No. When the vacuum is disconnected from the internet, it blocks its local API until it can reach the Roborock servers. However, when connected by using Matter, the vacuum can work fully offline, but the controls and sensors are limited.
+
+### What devices are supported?
+If you can add your device to the Roborock app - it is supported. However, some older vacuums like the Roborock S5 must be connected using the Mi Home app and can be set up in Home Assistant through the [Xiaomi Miio](/integrations/xiaomi_miio/) integration.
+
+### What features will you support?
+We are working on adding a lot of features to the core integration. We have reverse-engineered over [100 commands](https://python-roborock.readthedocs.io/en/latest/api_commands.html). The documentation is currently very bare-bones, and we are looking for users to help us make it more complete. The following are some of the functionalities we plan to add to Home Assistant Core. We ask that you are patient with us as we add them.
+- Dock controls
+- Manual vacuum remote control
+- Viewing the camera
+
+### How can I clean a specific room?
+
+1. Go to the vacuum entity of your Roborock device.
+2. Select the gear icon button.
+3. Select **Map vacuum segments to areas**.
+4. Map the Roborock areas to your Home Assistant areas and select **Save**.
+5. Go back to the vacuum entity and select **Cleaning by area**.
+6. Select your areas and select **Clean**.
+
+{% note %}
+Roborock vacuums do not support cleaning in a specific room order.
+{% endnote %}
+
+To clean rooms more than once, see [Automation: clean rooms more than once](#automation-clean-rooms-more-than-once).
+
+## Known limitations
+
+### The vacuum supports polling only
+
+The Roborock integration polls your robot vacuum every 30 seconds with no push-based updates from the vacuum itself. The app also polls the robot vacuum approximately every 2 seconds. This means that push-based updates are not possible. If you want pushed based updates from your robot vacuum you can connect it using Matter, however only a few entities are supported.
+
+### The vacuum requires cloud access
+
+Despite this integration&#x27;s IoT class being local polling, cloud access is required for it to work just like any other cloud based integration.
+
+### Area cleaning has no option for the number of passes
+
+The [Clean area with vacuum cleaner](/actions/vacuum.clean_area/) action and **Cleaning by area** do not let you choose how many times the vacuum cleans each room. To clean rooms more than once, send the `app_segment_clean` command with its `repeat` option instead. See [Automation: clean rooms more than once](#automation-clean-rooms-more-than-once).
+
+### Rate limiting on the cloud API
+
+The Roborock cloud allows a certain number of requests to its cloud, until it decides to ban your IP address. To counter this, there is rate limiting built into the Python package that this integration is built on. This is to try to help prevent your instance from overwhelming the Roborock servers and resulting in any kind of IP ban.
+
+#### Causes
+
+If your vacuum runs out of battery, hibernates or shutsdown, then Home Assistant may contact the cloud API. If you have a script that automatically reloads the integration if it goes unavailable, then you are frequently reloading and that causes rate limits.
+
+Home Assistant actions like [`get vacuum current position`](#action-get-vacuum-current-position) use the cloud API and may trigger a rate limit if used frequently
+
+#### Symptoms
+
+Home Assistant will notify you about this as a **repair issue** unless if you decide to ignore it, and will give information about rate limiting in your logs. After enough polls the rate limiting will kick in and will stop polling the cloud which will cause all the entities to go unavailable.
+
+For info on how to fix [this](#the-integration-tells-me-it-cannot-reach-my-vacuum-and-is-using-the-cloud-api-and-that-this-is-not-supported-or-i-am-having-any-networking-issues)
+
+## Troubleshooting
+
+### I get a invalid or no user agreement error - but nothing shows up in my app
+
+Roborock servers require accepting a user agreement before using the API, which may block Home Assistant during setup. Additionally, the Roborock may ask you to re-enter the user agreement, even if you have entered it before. To allow Home Assistant to use the Roborock API, you need to take the following steps:
+1. Open your Roborock app.
+2. Open **Profile** &gt; **About Us** &gt; **User Agreement &amp; Privacy Policy**.
+3. Hit **Revoke authorization**.
+4. Log back in and accept the policy.
+5. Reload the Roborock integration!
+
+### The integration tells me it cannot reach my vacuum and is using the cloud API and that this is not supported or I am having any networking issues
+
+Info about the causes and symptoms of [this issue](#rate-limiting-on-the-cloud-api)
+
+The steps needed to fix this issue are specific to your networking setup. Here are some general troubleshooting steps:
+
+1. Ensure your vacuum has outbound access via port 8883 (MQTT) to communicate with the cloud servers.
+2. Ensure your vacuum is allowed to communicate directly with your Home Assistant instance&#x27;s internal IP address over TCP 58867 and UDP 58866.
+3. If you use a network-wide ad or DNS-blockers (such as Pi-hole, AdGuard Home, or NextDNS), ensure that your Roborock vacuum&#x27;s IP address is entirely exempted from filtering. Overly aggressive ad-blocking lists can inadvertently break the local handshake protocol, forcing Home Assistant to connect to it over the cloud.
+4. Roborock vacuums heavily rely on stable local handshakes. It is recommended to log into your router&#x27;s admin interface and assign a Static IP / DHCP reservation to your vacuum to prevent connection drops when DHCP leases renew.
+5. Check your router&#x27;s webpage. If the device is losing connection, you need to focus on increasing your Wi-Fi network&#x27;s performance.
+   If you cannot log into your router&#x27;s webpage, in the Roborock app, go to **Settings** &gt; **Product Info** &gt; **Wi-Fi Name**, and you should see its signal strength.
+
+### My Device goes unavailable for a short period of time randomly - how can I fix this?
+
+The vacuum randomly disconnects from the internet for about one minute and automatically reconnects. This causes the integration to go unavailable until the vacuum is reachable again. This is not an issue with the integration but rather the integration is reacting to the device&#x27;s status.
+
+### The integration tells me no devices were found even though I have devices on my account.
+
+Some devices are not supported yet as they use a different protocol than other devices. Make sure you are on the latest version of Home Assistant.
+
+### When I try to add the integration - it says my region is incorrect
+
+We recommend using the &quot;Auto&quot; setting for your region. If that doesn&#x27;t work because you have accounts in multiple regions, try the following steps:
+
+1. If you ever accidentally created a Roborock account in the wrong Roborock server region, delete it using the Roborock App.
+2. The Roborock server region for your account may not always be associated with your actual country. While setting up the integration, you may select the Roborock server region that you want to sign in with, with four available options: US, EU, RU, or CN, and you may need to try a different region than the one you expect. Most users outside of Russia or China are in the US and EU Roborock server regions.
+3. The &quot;Region&quot; that is shown in the app is actually the country your account is registered to. It does not always match the region the integration is looking for.
+
+## Roborock integration automations
+
+The Roborock integration allows for direct control of your vacuum, but its true potential is unlocked when connected to the broader Home Assistant ecosystem.
+
+### Automation: clean when leaving the house
+
+Instead of scheduling your vacuum to run at a fixed time when you might be home or on a work call, you can trigger a full clean automatically the moment your alarm system is armed to &quot;Away.&quot;
+
+{% warning %}
+Running a robot vacuum while your alarm system is armed can falsely trigger motion sensors (PIRs) and cause accidental alarms. Only use this automation if your motion sensors are pet-immune, positioned out of the vacuum&#x27;s path, or if you can reliably verify your home&#x27;s security remotely (e.g., via security cameras) to confirm if a burglary is occurring before emergency services are dispatched.
+{% endwarning %}
+
+- **Trigger**: `alarm_control_panel.home_alarm` gets set to `&quot;armed_away&quot;`.
+- **Conditions**: `vacuum.roborock_s8` is `&quot;docked&quot;`.
+- **Actions**: `vacuum.start` to start the robot vacuum to clean the house while everyone is away.
+
+{% details &quot;YAML example for cleaning the house after the alarm is set to armed away&quot; %}
+
+```yaml
+alias: &quot;Vacuum: Clean when house is empty&quot;
+description: &quot;Triggers a full clean when the house alarm is armed to away.&quot;
+trigger:
+  - trigger: state
+    entity_id: alarm_control_panel.home_alarm
+    to: &quot;armed_away&quot;
+condition:
+  - condition: state
+    entity_id: vacuum.roborock_s8
+    state: &quot;docked&quot;
+action:
+  - action: vacuum.start
+    target:
+      entity_id: vacuum.roborock_s8
+mode: single
+```
+
+{% enddetails %}
+
+### Automation: post-cooking kitchen cleanup
+
+Cooking often leaves crumbs or spills near the stove. You can automate your Roborock to head straight to the kitchen to tidy up when your smart stove or oven is turned off.
+
+- **Trigger**: `switch.smart_hob_power` gets switched to `&quot;off&quot;` for a minute.
+- **Conditions**: `vacuum.roborock_s8` is `&quot;docked&quot;`.
+- **Actions**: `vacuum.clean_area` with `cleaning_area_id: kitchen` to start the robot vacuum to clean kitchen after cooking is done.
+
+{% details &quot;YAML example for cleaning the kitchen after the hob is turned off for a minute&quot; %}
+
+```yaml
+alias: &quot;Vacuum: Clean kitchen after cooking&quot;
+description: &quot;Sends the vacuum to the kitchen zone 1 minute after the stovetop turns off.&quot;
+mode: single
+trigger:
+  - trigger: state
+    entity_id: switch.smart_hob_power
+    from: &quot;on&quot;
+    to: &quot;off&quot;
+    for:
+      minutes: 1 minute
+condition:
+  - condition: state
+    entity_id: vacuum.roborock_s8
+    state: &quot;docked&quot;
+action:
+  - action: vacuum.clean_area
+    target:
+      entity_id: vacuum.roborock_s8
+    data:
+      cleaning_area_id: kitchen
+```
+
+{% enddetails %}
+
+### Automation: clean rooms more than once
+
+Send the vacuum to clean some rooms three times every day at 10:00. To find the ID numbers of your rooms, use the [Get maps](/actions/roborock.get_maps/) action.
+
+- **Trigger**: Time
+  - **At time**: `10:00:00`
+- **Action**: Send command to vacuum cleaner
+  - **Target**: Your Roborock vacuum
+  - **Command**: `app_segment_clean`
+  - **Parameters**: A list with one item. Enter it in YAML mode, as shown in the example. The item has two keys:
+    - `segments`: The ID numbers of the rooms to clean.
+    - `repeat`: The number of passes, from 1 to 3.
+
+{% details &quot;YAML example for cleaning two rooms three times&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Vacuum: Clean rooms three times&quot;
+  triggers:
+    - trigger: time
+      at: &quot;10:00:00&quot;
+  actions:
+    - action: vacuum.send_command
+      target:
+        entity_id: vacuum.roborock_s8
+      data:
+        command: app_segment_clean
+        params:
+        # Replace these IDs with the room IDs from the Get maps action
+          - segments:
+              - 16
+              - 17
+            repeat: 3
+{% endexample %}
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Roborock.</p><p>The <strong>code</strong> configuration step lists <code>code</code>.</p><p>The <strong>custom url</strong> configuration step lists <code>roborock_server_url</code>.</p><p>The <strong>user</strong> configuration step lists <code>region</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>vacuum</li></ul><h3>Documented actions</h3><ul class="chips"><li>get maps</li><li>get vacuum current position</li><li>set vacuum goto position</li><li>set vacuum zoned cleaning</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Data Updates</li><li>Supported functionality</li><li>Removing the integration</li><li>FAQ</li><li>Known limitations</li><li>Troubleshooting</li><li>Roborock integration automations</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/roborock/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/roborock</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/roborock</code></dd></dl></section><p><a href="../../integrations/roborock/">Return to the Roborock guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

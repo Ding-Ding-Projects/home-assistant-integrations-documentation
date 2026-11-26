@@ -1,1 +1,578 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Watergate reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:6" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/watergate/">Watergate guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Watergate</h1><p>Instructions on how to integrate Watergate with Home Assistant.</p><section><h2>Overview</h2><p>The Watergate integration integrates your Watergate Devices (currently Sonic Wi-Fi) with your Home Assistant. With this integration, you can:</p></section><section><h2>Supported devices</h2><p>The following devices are known to be supported by the integration:</p></section><section><h2>Unsupported devices</h2><p>The following devices are not supported by the integration:</p></section><section><h2>Entities</h2><p>The Watergate integration provides the following entities.</p></section><section><h2>Data updates</h2><p>The Watergate integration fetches data from the Sonic device every 2 minutes. Thanks to the webhook option, Sonic will provide live telemetry every second when water is flowing directly to Home Assistant.</p></section><section><h2>Known limitations</h2><p>The integration does not provide the ability to control the device buzzer, reboot the device, or change the device&#x27;s Wi-Fi configuration.</p></section><section><h2>Monitor water usage in the Energy Dashboard</h2><p>The water meter volume entity can be added to the Energy Dashboard, allowing you to monitor water usage.</p></section><section><h2>Description</h2><p>Since Home Assistant 2026.11, Water meter volume and Water meter duration report only water that flows in the normal direction. Before, they reported the normal reading minus the reverse reading. If your Sonic device had recorded reverse flow, both values rose once by that amount, and Home Assistant counted the rise as water use.</p></section><section><h2>Resolution</h2><p>To remove the spike, adjust the statistic of Water meter volume for the hour in which the spike happened.</p></section><section><h2>Removing the integration</h2><p>This integration follows standard integration removal procedures. No extra steps are required.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Watergate.</p><p>The <strong>user</strong> configuration step lists <code>ip_address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>number</li><li>sensor</li><li>switch</li><li>valve</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported devices</li><li>Unsupported devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Examples</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/watergate/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/watergate</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/watergate</code></dd></dl></section><p><a href="../../integrations/watergate/">Return to the Watergate guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Watergate reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:6" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/watergate/">Watergate guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Watergate</h1><p>Instructions on how to integrate Watergate with Home Assistant.</p><div class="reader-body"><p>The <strong>Watergate</strong> integration integrates your Watergate Devices (currently Sonic Wi-Fi) with your Home Assistant.
+With this integration, you can:</p>
+<ul>
+<li>Control your valve</li>
+<li>Monitor live telemetry (water flow, water pressure, water temperature)</li>
+<li>Monitor water usage</li>
+<li>Receive information when Sonic shuts off the valve due to potential leak</li>
+<li>Turn the automatic leak shut-off on or off</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>You need to have a Sonic device.</li>
+<li>The Local API feature must be enabled in the Watergate application.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The following devices are known to be supported by the integration:</p>
+<ul>
+<li>Watergate Sonic Wi-Fi</li>
+</ul>
+<h2>Unsupported devices</h2>
+<p>The following devices are not supported by the integration:</p>
+<ul>
+<li>Watergate Sonic Pro</li>
+</ul>
+<h2>Supported functionality</h2>
+<h3>Entities</h3>
+<p>The Watergate integration provides the following entities.</p>
+<h4>Binary sensors</h4>
+<ul>
+<li><p><strong>Water flowing</strong></p>
+<ul>
+<li><strong>Description</strong>: Whether water is currently flowing through the device.</li>
+<li><strong>Remarks</strong>: It is updated when the device is polled (see <a>Data updates</a>), so it can lag behind the real state by up to 2 minutes. Use the <strong>Water flow rate</strong> sensor for live flow information.</li>
+</ul>
+</li>
+<li><p><strong>MQTT connected</strong></p>
+<ul>
+<li><strong>Description</strong>: Whether the device is connected to its MQTT broker.</li>
+<li><strong>Remarks</strong>: This is a diagnostic entity and is <a>disabled by default</a>.</li>
+</ul>
+</li>
+<li><p><strong>Wi-Fi connected</strong></p>
+<ul>
+<li><strong>Description</strong>: Whether the device is connected to Wi-Fi.</li>
+<li><strong>Remarks</strong>: This is a diagnostic entity and is disabled by default.</li>
+</ul>
+</li>
+</ul>
+<h4>Sensors</h4>
+<ul>
+<li><p><strong>Water meter volume</strong></p>
+<ul>
+<li><strong>Description</strong>: Water volume that flowed through this device in the normal flow direction, for the entire lifetime of a Sonic device.</li>
+<li><strong>Remarks</strong>: It can be used in the Energy Dashboard.</li>
+</ul>
+</li>
+<li><p><strong>Water meter duration</strong></p>
+<ul>
+<li><strong>Description</strong>: Time that water flowed through this device in the normal flow direction, for the entire lifetime of a Sonic device.</li>
+</ul>
+</li>
+<li><p><strong>Water meter negative volume</strong></p>
+<ul>
+<li><strong>Description</strong>: Water volume that flowed through this device in the reverse direction, for the entire lifetime of a Sonic device.</li>
+<li><strong>Remarks</strong>: Reverse flow is uncommon in a healthy installation, so a rising value can point to a backflow problem. Requires a Sonic firmware version that reports directional readings.</li>
+</ul>
+</li>
+<li><p><strong>Water meter negative duration</strong></p>
+<ul>
+<li><strong>Description</strong>: Time that water flowed through this device in the reverse direction, for the entire lifetime of a Sonic device.</li>
+<li><strong>Remarks</strong>: Requires a Sonic firmware version that reports directional readings.</li>
+</ul>
+</li>
+<li><p><strong>Water flow rate</strong></p>
+<ul>
+<li><strong>Description</strong>: The current flow rate of water through the device.</li>
+<li><strong>Remarks</strong>: Useful for monitoring real-time water usage.</li>
+</ul>
+</li>
+<li><p><strong>Water pressure</strong></p>
+<ul>
+<li><strong>Description</strong>: The current water pressure in the system.</li>
+<li><strong>Remarks</strong>: Can be used to detect potential issues in the water supply.</li>
+</ul>
+</li>
+<li><p><strong>Water temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: The current temperature of the water.</li>
+<li><strong>Remarks</strong>: Useful for monitoring and ensuring safe water temperatures.</li>
+</ul>
+</li>
+</ul>
+<h4>Valves</h4>
+<ul>
+<li><strong>Water valve state</strong><ul>
+<li><strong>Description</strong>: The current state of the water valve (open/closed).</li>
+<li><strong>Remarks</strong>: It is automatically updated when the valve state is changed.</li>
+</ul>
+</li>
+</ul>
+<h4>Switches</h4>
+<ul>
+<li><strong>Auto shut-off</strong><ul>
+<li><strong>Description</strong>: Turns automatic leak shut-off on or off. When enabled, Sonic automatically closes the valve if it detects a potential leak.</li>
+<li><strong>Remarks</strong>: This is a configuration switch. When disabled, Sonic no longer closes the valve automatically on a detected leak. Leak detection and monitoring are not affected.</li>
+</ul>
+</li>
+</ul>
+<h4>Numbers</h4>
+<ul>
+<li><p><strong>Auto shut-off volume threshold</strong></p>
+<ul>
+<li><strong>Description</strong>: The volume of water, in liters, that triggers the automatic shut-off.</li>
+<li><strong>Remarks</strong>: This is a configuration entity. It has no effect while the <strong>Auto shut-off</strong> switch is turned off.</li>
+</ul>
+</li>
+<li><p><strong>Auto shut-off duration threshold</strong></p>
+<ul>
+<li><strong>Description</strong>: The duration of continuous water flow, in minutes, that triggers the automatic shut-off.</li>
+<li><strong>Remarks</strong>: This is a configuration entity. It has no effect while the <strong>Auto shut-off</strong> switch is turned off.</li>
+</ul>
+</li>
+</ul>
+<h4>Events</h4>
+<ul>
+<li><strong>Auto Shut-Off</strong><ul>
+<li><strong>Description</strong>: Event triggered when the valve automatically shuts off due to detected leak.</li>
+<li><strong>Event Type</strong>: Either <code>volume_threshold</code> or <code>duration_threshold</code></li>
+<li><strong>Event Data</strong>:<ul>
+<li><code>volume</code>: The volume of water that triggered the shut-off</li>
+<li><code>duration</code>: The duration of leak that triggered the shut-off</li>
+</ul>
+</li>
+<li><strong>Remarks</strong>: Historical events are not preserved across Home Assistant restarts.</li>
+</ul>
+</li>
+</ul>
+<h2>Data updates</h2>
+<p>The Watergate integration fetches data from the Sonic device every 2 minutes.
+Thanks to the webhook option, Sonic will provide live telemetry every second when water is flowing directly to Home Assistant.</p>
+<h2>Known limitations</h2>
+<p>The integration does not provide the ability to control the device buzzer, reboot the device, or change the device's Wi-Fi configuration.</p>
+<p>Sonic firmware 2.11 and older does not report the two flow directions separately. On such a device, the <strong>Water meter negative volume</strong> and <strong>Water meter negative duration</strong> entities stay unavailable, and <strong>Water meter volume</strong> and <strong>Water meter duration</strong> report the difference between the normal and reverse readings rather than the normal direction alone.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Watergate</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Watergate</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+IP address:
+    description: "The IP address of your Sonic device."
+
+</code></pre>
+<h2>Examples</h2>
+<h3>Monitor water usage in the Energy Dashboard</h3>
+<p>The water meter volume entity can be added to the Energy Dashboard, allowing you to monitor water usage.</p>
+<h3>Automation ideas</h3>
+<ul>
+<li>Turn off the water when no one is at home.</li>
+<li>Turn on the water when someone arrives home.</li>
+<li>Send a notification when the water is too hot.</li>
+<li>Send a notification when the water is too cold.</li>
+<li>Send a notification when water is flowing for too long.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>The Energy dashboard shows a one-time spike in water use</h3>
+<h4>Symptom: A large, one-time increase in water use after updating Home Assistant or the Sonic firmware</h4>
+<h4>Description</h4>
+<p>Since Home Assistant 2026.11, <strong>Water meter volume</strong> and <strong>Water meter duration</strong> report only water that flows in the normal direction. Before, they reported the normal reading minus the reverse reading. If your Sonic device had recorded reverse flow, both values rose once by that amount, and Home Assistant counted the rise as water use.</p>
+<h4>Resolution</h4>
+<p>To remove the spike, <a>adjust the statistic</a> of <strong>Water meter volume</strong> for the hour in which the spike happened.</p>
+<h3>The water meter negative entities are unavailable</h3>
+<h4>Symptom: The <strong>Water meter negative volume</strong> and <strong>Water meter negative duration</strong> entities are unavailable</h4>
+<h4>Description</h4>
+<p>These entities need Sonic firmware newer than 2.11. A Sonic connected to the Watergate cloud is kept up to date by Watergate, so it already has this firmware. A Sonic that has been offline may still run an older version.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Connect the Sonic to your network. The device updates itself within 24 hours.</li>
+<li>After the update, reload the integration: go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>Watergate</strong>, select the three dots  menu next to the entry, and select <strong>Reload</strong>. Restarting Home Assistant works too.</li>
+<li>If your Sonic had recorded reverse flow, <strong>Water meter volume</strong> and <strong>Water meter duration</strong> rise once after the reload. To remove the spike, refer to <a>The Energy dashboard shows a one-time spike in water use</a>.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal procedures. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/watergate.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Watergate with Home Assistant.
+ha_release: &#x27;2025.1&#x27;
+ha_domain: watergate
+---
+
+The **Watergate** {% term integration %} integrates your Watergate Devices (currently Sonic Wi-Fi) with your Home Assistant.
+With this integration, you can:
+
+- Control your valve
+- Monitor live telemetry (water flow, water pressure, water temperature)
+- Monitor water usage
+- Receive information when Sonic shuts off the valve due to potential leak
+- Turn the automatic leak shut-off on or off
+
+## Prerequisites
+
+- You need to have a Sonic device.
+- The Local API feature must be enabled in the Watergate application.
+
+## Supported devices
+
+The following devices are known to be supported by the integration:
+
+- Watergate Sonic Wi-Fi
+
+## Unsupported devices
+
+The following devices are not supported by the integration:
+
+- Watergate Sonic Pro
+
+## Supported functionality
+
+### Entities
+
+The Watergate integration provides the following entities.
+
+#### Binary sensors
+
+- **Water flowing**
+  - **Description**: Whether water is currently flowing through the device.
+  - **Remarks**: It is updated when the device is polled (see [Data updates](#data-updates)), so it can lag behind the real state by up to 2 minutes. Use the **Water flow rate** sensor for live flow information.
+
+- **MQTT connected**
+  - **Description**: Whether the device is connected to its MQTT broker.
+  - **Remarks**: This is a diagnostic entity and is [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+
+- **Wi-Fi connected**
+  - **Description**: Whether the device is connected to Wi-Fi.
+  - **Remarks**: This is a diagnostic entity and is disabled by default.
+
+#### Sensors
+
+
+- **Water meter volume**
+  - **Description**: Water volume that flowed through this device in the normal flow direction, for the entire lifetime of a Sonic device.
+  - **Remarks**: It can be used in the Energy Dashboard.
+
+- **Water meter duration**
+  - **Description**: Time that water flowed through this device in the normal flow direction, for the entire lifetime of a Sonic device.
+
+- **Water meter negative volume**
+  - **Description**: Water volume that flowed through this device in the reverse direction, for the entire lifetime of a Sonic device.
+  - **Remarks**: Reverse flow is uncommon in a healthy installation, so a rising value can point to a backflow problem. Requires a Sonic firmware version that reports directional readings.
+
+- **Water meter negative duration**
+  - **Description**: Time that water flowed through this device in the reverse direction, for the entire lifetime of a Sonic device.
+  - **Remarks**: Requires a Sonic firmware version that reports directional readings.
+
+- **Water flow rate**
+  - **Description**: The current flow rate of water through the device.
+  - **Remarks**: Useful for monitoring real-time water usage.
+
+- **Water pressure**
+  - **Description**: The current water pressure in the system.
+  - **Remarks**: Can be used to detect potential issues in the water supply.
+
+- **Water temperature**
+  - **Description**: The current temperature of the water.
+  - **Remarks**: Useful for monitoring and ensuring safe water temperatures.
+
+#### Valves
+
+- **Water valve state**
+  - **Description**: The current state of the water valve (open/closed).
+  - **Remarks**: It is automatically updated when the valve state is changed.
+&#32;&#32;
+#### Switches
+
+- **Auto shut-off**
+  - **Description**: Turns automatic leak shut-off on or off. When enabled, Sonic automatically closes the valve if it detects a potential leak.
+  - **Remarks**: This is a configuration switch. When disabled, Sonic no longer closes the valve automatically on a detected leak. Leak detection and monitoring are not affected.
+
+#### Numbers
+
+- **Auto shut-off volume threshold**
+  - **Description**: The volume of water, in liters, that triggers the automatic shut-off.
+  - **Remarks**: This is a configuration entity. It has no effect while the **Auto shut-off** switch is turned off.
+
+- **Auto shut-off duration threshold**
+  - **Description**: The duration of continuous water flow, in minutes, that triggers the automatic shut-off.
+  - **Remarks**: This is a configuration entity. It has no effect while the **Auto shut-off** switch is turned off.
+
+#### Events
+
+- **Auto Shut-Off**
+  - **Description**: Event triggered when the valve automatically shuts off due to detected leak.
+  - **Event Type**: Either `volume_threshold` or `duration_threshold`
+  - **Event Data**:
+    - `volume`: The volume of water that triggered the shut-off
+    - `duration`: The duration of leak that triggered the shut-off
+  - **Remarks**: Historical events are not preserved across Home Assistant restarts.
+
+## Data updates
+
+The Watergate integration fetches data from the Sonic device every 2 minutes.
+Thanks to the webhook option, Sonic will provide live telemetry every second when water is flowing directly to Home Assistant.
+
+## Known limitations
+
+The integration does not provide the ability to control the device buzzer, reboot the device, or change the device&#x27;s Wi-Fi configuration.
+
+Sonic firmware 2.11 and older does not report the two flow directions separately. On such a device, the **Water meter negative volume** and **Water meter negative duration** entities stay unavailable, and **Water meter volume** and **Water meter duration** report the difference between the normal and reverse readings rather than the normal direction alone.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+IP address:
+    description: &quot;The IP address of your Sonic device.&quot;
+{% endconfiguration_basic %}
+
+## Examples
+
+### Monitor water usage in the Energy Dashboard
+
+The water meter volume entity can be added to the Energy Dashboard, allowing you to monitor water usage.
+
+### Automation ideas
+
+- Turn off the water when no one is at home.
+- Turn on the water when someone arrives home.
+- Send a notification when the water is too hot.
+- Send a notification when the water is too cold.
+- Send a notification when water is flowing for too long.
+
+## Troubleshooting
+
+### The Energy dashboard shows a one-time spike in water use
+
+#### Symptom: A large, one-time increase in water use after updating Home Assistant or the Sonic firmware
+
+#### Description
+
+Since Home Assistant 2026.11, **Water meter volume** and **Water meter duration** report only water that flows in the normal direction. Before, they reported the normal reading minus the reverse reading. If your Sonic device had recorded reverse flow, both values rose once by that amount, and Home Assistant counted the rise as water use.
+
+#### Resolution
+
+To remove the spike, [adjust the statistic](/docs/tools/dev-tools/#adjusting-a-statistic) of **Water meter volume** for the hour in which the spike happened.
+
+### The water meter negative entities are unavailable
+
+#### Symptom: The **Water meter negative volume** and **Water meter negative duration** entities are unavailable
+
+#### Description
+
+These entities need Sonic firmware newer than 2.11. A Sonic connected to the Watergate cloud is kept up to date by Watergate, so it already has this firmware. A Sonic that has been offline may still run an older version.
+
+#### Resolution
+
+1. Connect the Sonic to your network. The device updates itself within 24 hours.
+2. After the update, reload the integration: go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **Watergate**, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu next to the entry, and select **Reload**. Restarting Home Assistant works too.
+3. If your Sonic had recorded reverse flow, **Water meter volume** and **Water meter duration** rise once after the reload. To remove the spike, refer to [The Energy dashboard shows a one-time spike in water use](#the-energy-dashboard-shows-a-one-time-spike-in-water-use).
+
+## Removing the integration
+
+This integration follows standard integration removal procedures. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Watergate.</p><p>The <strong>user</strong> configuration step lists <code>ip_address</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>number</li><li>sensor</li><li>switch</li><li>valve</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported devices</li><li>Unsupported devices</li><li>Supported functionality</li><li>Data updates</li><li>Known limitations</li><li>Examples</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/watergate/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/watergate</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/watergate</code></dd></dl></section><p><a href="../../integrations/watergate/">Return to the Watergate guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

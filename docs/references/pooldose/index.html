@@ -1,1 +1,1174 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SEKO PoolDose reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:186" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/pooldose/">SEKO PoolDose guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SEKO PoolDose</h1><p>Connect your SEKO PoolDose water treatment system to Home Assistant.</p><section><h2>Overview</h2><p>The SEKO PoolDose integration connects a SEKO water treatment system with Home Assistant. SEKO is a manufacturer of various monitoring and control devices for pools and spas.</p></section><section><h2>Prerequisites</h2><p>1. Install and set up the PoolDose device according to its user manual.</p></section><section><h2>Removing the integration</h2><p>This integration follows standard integration removal. No extra steps are required.</p></section><section><h2>Data updates</h2><p>This integration polling polls data from the device every 10 minutes (600 seconds) by default. This polling interval is configured to balance data freshness with device stability:</p></section><section><h2>Update and write behavior</h2><p>Parallel reads for read-only values are avoided and write operations are serialized (one value at a time). This reduces load on the device&#x27;s limited hardware and prevents race conditions.</p></section><section><h2>Supported devices</h2><p>The following devices are known to be supported by the integration:</p></section><section><h2>Supported functionality</h2><p>This integration provides the following entities.</p></section><section><h2>Monitor ORP levels and send alerts</h2><p>This automation monitors your pool&#x27;s ORP level and sends a notification when it goes outside the recommended range.</p></section><section><h2>Monitor pH levels and send alerts</h2><p>This automation monitors your pool&#x27;s pH level and sends a notification when it goes outside the recommended range.</p></section><section><h2>Pause dosing when pH is extreme</h2><p>This automation pauses the dosing system when the pH level reaches dangerously high or low values, preventing excessive chemical dosing.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SEKO PoolDose.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Removing the integration</li><li>Data updates</li><li>Supported devices</li><li>Supported functionality</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Diagnostics</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/pooldose/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/pooldose</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/pooldose</code></dd></dl></section><p><a href="../../integrations/pooldose/">Return to the SEKO PoolDose guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SEKO PoolDose reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:186" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/pooldose/">SEKO PoolDose guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>SEKO PoolDose</h1><p>Connect your SEKO PoolDose water treatment system to Home Assistant.</p><div class="reader-body"><p>The <strong>SEKO PoolDose</strong> integration connects a <a>SEKO</a> water treatment system with Home Assistant. SEKO is a manufacturer of various monitoring and control devices for pools and spas.</p>
+<p>This integration uses an undocumented local HTTP API. It provides live readings for pool sensors such as temperature, pH, ORP/Redox, alarm status, relay states, as well as configuration parameters.</p>
+<h2>Prerequisites</h2>
+<ol>
+<li>Install and set up the PoolDose device according to its user manual.<ol>
+<li>In particular, connect the device to your Wi-Fi network.</li>
+<li>Identify the IP address or hostname of the device.</li>
+</ol>
+</li>
+<li>Browse to the IP address or hostname. Use HTTP and port 80.<ol>
+<li>Log in to the web interface.</li>
+<li>Verify that sensor data is displayed, such as water temperature or pH values shown as gauges.</li>
+<li>Deactivate the device password, that is, set it to 0000.</li>
+</ol>
+</li>
+<li>Optional: Block the device’s internet access to guarantee fully local operation and prevent potentially breaking firmware updates.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>SEKO PoolDose</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>SEKO PoolDose</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: The IP address or hostname of your device. Identify this in the web interface of the device or of your router.
+
+</code></pre>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<h2>Data updates</h2>
+<p>This integration polling polls data from the device every 10 minutes (600 seconds) by default. This polling interval is configured to balance data freshness with device stability:</p>
+<ul>
+<li>The device does not support frequent requests and may become unstable with shorter intervals</li>
+<li>Physical water treatment values typically change slowly and do not require frequent monitoring</li>
+<li>This interval provides adequate monitoring for pool water management while maintaining device reliability</li>
+</ul>
+<h3>Update and write behavior</h3>
+<p>Parallel reads for read-only values are avoided and write operations are serialized (one value at a time). This reduces load on the device's limited hardware and prevents race conditions.</p>
+<h2>Supported devices</h2>
+<p>The following devices are known to be supported by the integration:</p>
+<ul>
+<li>SEKO PoolDose Double</li>
+<li>SEKO PoolDose Double Spa</li>
+<li>SEKO PoolDose pH+ORP CF Group Wi-Fi</li>
+<li>SEKO PoolDose pH</li>
+<li>BWT MEDO CONNECT Wi-Fi</li>
+<li>BWT Manager Connect Duo</li>
+<li>VÁGNER POOL VA DOS BASIC</li>
+<li>VÁGNER POOL VA DOS EXACT</li>
+<li>KEMI DOSE AQUAVIVA pH-ORP</li>
+<li>KEMI DOSE AQUAVIVA pH-ORP-CL</li>
+</ul>
+<h2>Supported functionality</h2>
+<p>This integration provides the following entities.</p>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Recirculation pump alarm</strong>: Recirculation pump issue.</li>
+<li><strong>pH tank level alarm</strong>: Low pH dosing solution level.</li>
+<li><strong>ORP tank level alarm</strong>: Low ORP dosing solution level.</li>
+<li><strong>Chlorine tank level alarm</strong>: Low chlorine dosing solution level.</li>
+<li><strong>Flow rate alarm</strong>: Water flow issues.</li>
+<li><strong>pH overfeed alarm</strong>: Excessive pH dosing detected.</li>
+<li><strong>pH overfeed alarm alternative</strong>: Alternative pH overfeed alarm.</li>
+<li><strong>pH too low</strong>: pH level too low.</li>
+<li><strong>pH too high</strong>: pH level too high.</li>
+<li><strong>ORP overfeed alarm</strong>: Excessive ORP dosing detected.</li>
+<li><strong>ORP overfeed alarm alternative</strong>: Alternative ORP overfeed alarm.</li>
+<li><strong>Chlorine overfeed alarm</strong>: Excessive chlorine dosing detected.</li>
+<li><strong>Chlorine overfeed alarm alternative</strong>: Alternative chlorine overfeed alarm.</li>
+<li><strong>Chlorine too low (ORP)</strong>: Chlorine concentration too low based on ORP readings.</li>
+<li><strong>Chlorine too high (ORP)</strong>: Chlorine concentration too high based on ORP readings.</li>
+<li><strong>Chlorine too high</strong>: Chlorine concentration too high.</li>
+<li><strong>Alarm relay</strong>: Main alarm relay state.</li>
+<li><strong>Auxiliary relay 1</strong>: Auxiliary relay 1 output state.</li>
+<li><strong>Auxiliary relay 2</strong>: Auxiliary relay 2 output state.</li>
+<li><strong>Auxiliary relay 3</strong>: Auxiliary relay 3 output state.</li>
+<li><strong>Water too cold</strong>: Water temperature too cold.</li>
+<li><strong>Water too hot</strong>: Water temperature too hot.</li>
+<li><strong>System standby</strong>: System in standby mode.</li>
+<li><strong>Circulation pump monitoring</strong>: Whether the controller monitors the pool circulation pump while dosing.</li>
+<li><strong>Power-on delay</strong>: Whether to apply a safety delay after the device powers on before enabling pumps and dosing control.</li>
+<li><strong>Flow delay</strong>: Whether to apply a delay after water flow is detected before starting dosing, to let circulation stabilize.</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li><strong>Temperature</strong>: Water temperature.<ul>
+<li><strong>Unit</strong>: °C, °F</li>
+</ul>
+</li>
+<li><strong>pH</strong>: pH value.</li>
+<li><strong>ORP</strong>: Current ORP (Redox) value.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>Chlorine</strong>: Chlorine concentration.<ul>
+<li><strong>Unit</strong>: ppm</li>
+</ul>
+</li>
+<li><strong>Flow rate</strong>: Water flow rate.<ul>
+<li><strong>Unit</strong>: L/s, m³/h</li>
+</ul>
+</li>
+<li><strong>pH type dosing</strong>: Type of pH dosing being used.<ul>
+<li><strong>Values</strong>: pH+, pH-</li>
+</ul>
+</li>
+<li><strong>Peristaltic pH dosing</strong>: pH peristaltic dosing mode.<ul>
+<li><strong>Values</strong>: Off, Proportional, On/Off, Timed</li>
+</ul>
+</li>
+<li><strong>Overfeed alert pH time</strong>: Time threshold for pH overfeed alerts.<ul>
+<li><strong>Unit</strong>: min</li>
+</ul>
+</li>
+<li><strong>ORP type dosing</strong>: Type of ORP dosing being used.<ul>
+<li><strong>Values</strong>: Low, High</li>
+</ul>
+</li>
+<li><strong>Peristaltic ORP dosing</strong>: ORP peristaltic dosing mode.<ul>
+<li><strong>Values</strong>: Off, Proportional, On/Off, Timed</li>
+</ul>
+</li>
+<li><strong>Chlorine type dosing</strong>: Type of chlorine dosing being used.<ul>
+<li><strong>Values</strong>: Low, High</li>
+</ul>
+</li>
+<li><strong>Peristaltic chlorine dosing</strong>: Chlorine peristaltic dosing mode.<ul>
+<li><strong>Values</strong>: Off, Proportional, On/Off, Timed, Cycle</li>
+</ul>
+</li>
+<li><strong>Overfeed alert ORP time</strong>: Time threshold for ORP overfeed alerts.<ul>
+<li><strong>Unit</strong>: min</li>
+</ul>
+</li>
+<li><strong>pH calibration type</strong>: Type of pH calibration being used.<ul>
+<li><strong>Values</strong>: Off, Reference, 1 point, 2 points</li>
+</ul>
+</li>
+<li><strong>pH calibration offset</strong>: pH calibration offset value.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>pH calibration slope</strong>: pH calibration slope value.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>ORP calibration type</strong>: Type of ORP calibration being used.<ul>
+<li><strong>Values</strong>: Off, Reference, 1 point</li>
+</ul>
+</li>
+<li><strong>ORP calibration offset</strong>: ORP calibration offset value.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>ORP calibration slope</strong>: ORP calibration slope value.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>Totalizer</strong>: Total water volume accumulated.<ul>
+<li><strong>Unit</strong>: L, m³</li>
+</ul>
+</li>
+<li><strong>Device configuration</strong>: Overall water treatment configuration that defines which measurements and dosing channels are active.<ul>
+<li><strong>Values</strong>: pH+ORP (control pH and ORP only), pH+ORP+Chlorine (control pH, ORP, and an additional chlorine dosing channel)</li>
+</ul>
+</li>
+<li><strong>Temperature unit</strong>: Temperature measurement unit.<ul>
+<li><strong>Values</strong>: Celsius, Fahrenheit</li>
+</ul>
+</li>
+</ul>
+<h3>Numbers</h3>
+<ul>
+<li><strong>pH target</strong>: Target pH value for automatic dosing control.</li>
+<li><strong>ORP target</strong>: Target ORP (Redox) value for automatic dosing control.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>Chlorine target</strong>: Target chlorine concentration for automatic dosing control.<ul>
+<li><strong>Unit</strong>: ppm</li>
+</ul>
+</li>
+<li><strong>pH overfeed alarm lower limit</strong>: Lower threshold for pH overfeed detection.</li>
+<li><strong>pH overfeed alarm upper limit</strong>: Upper threshold for pH overfeed detection.</li>
+<li><strong>ORP overfeed alarm lower limit</strong>: Lower threshold for ORP overfeed detection.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>ORP overfeed alarm upper limit</strong>: Upper threshold for ORP overfeed detection.<ul>
+<li><strong>Unit</strong>: mV</li>
+</ul>
+</li>
+<li><strong>Chlorine overfeed alarm lower limit</strong>: Lower threshold for chlorine overfeed detection.<ul>
+<li><strong>Unit</strong>: ppm</li>
+</ul>
+</li>
+<li><strong>Chlorine overfeed alarm upper limit</strong>: Upper threshold for chlorine overfeed detection.<ul>
+<li><strong>Unit</strong>: ppm</li>
+</ul>
+</li>
+<li><strong>pH dosing off-time</strong>: Pause duration between pH dosing cycles.<ul>
+<li><strong>Unit</strong>: s</li>
+</ul>
+</li>
+<li><strong>ORP dosing off-time</strong>: Pause duration between ORP dosing cycles.<ul>
+<li><strong>Unit</strong>: s</li>
+</ul>
+</li>
+<li><strong>Chlorine dosing off-time</strong>: Pause duration between chlorine dosing cycles.<ul>
+<li><strong>Unit</strong>: s</li>
+</ul>
+</li>
+<li><strong>Power-on delay timer</strong>: Delay after power-on before dosing starts.<ul>
+<li><strong>Unit</strong>: s</li>
+</ul>
+</li>
+<li><strong>Flow delay timer</strong>: Delay after flow detection before dosing starts.<ul>
+<li><strong>Unit</strong>: s</li>
+</ul>
+</li>
+</ul>
+<h3>Switches</h3>
+<ul>
+<li><strong>Pause dosing</strong>: Pauses or resumes the dosing process.</li>
+<li><strong>Pump monitoring</strong>: Enables or disables pump monitoring.</li>
+<li><strong>Frequency input</strong>: Enables or disables frequency input for a water meter.</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><strong>Water meter unit</strong>: Water meter measurement unit.<ul>
+<li><strong>Options</strong>: Liters, Cubic meters</li>
+</ul>
+</li>
+<li><strong>Flow rate unit</strong>: Flow rate measurement unit.<ul>
+<li><strong>Options</strong>: Cubic meters per hour, Liters per second</li>
+</ul>
+</li>
+<li><strong>pH dosing type</strong>: pH dosing type.<ul>
+<li><strong>Options</strong>: pH+ / alcalyne, pH- / acid</li>
+</ul>
+</li>
+<li><strong>pH dosing method</strong>: pH dosing control method.<ul>
+<li><strong>Options</strong>: Disabled, Proportional control, On/Off control, Timed dosing</li>
+</ul>
+</li>
+<li><strong>ORP dosing type</strong>: ORP/Redox dosing type.<ul>
+<li><strong>Options</strong>: Low intensity, High intensity</li>
+</ul>
+</li>
+<li><strong>ORP dosing method</strong>: ORP/Redox dosing control method.<ul>
+<li><strong>Options</strong>: Disabled, Proportional control, On/Off control, Timed dosing</li>
+</ul>
+</li>
+<li><strong>Chlorine dosing type</strong>: Chlorine dosing type.<ul>
+<li><strong>Options</strong>: Low intensity, High intensity</li>
+</ul>
+</li>
+<li><strong>Chlorine dosing method</strong>: Chlorine dosing control method.<ul>
+<li><strong>Options</strong>: Disabled, Proportional control, On/Off control, Timed dosing</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<h3>Monitor ORP levels and send alerts</h3>
+<p>This automation monitors your pool's ORP level and sends a notification when it goes outside the recommended range.</p>
+<pre><code>automation:
+  - alias: "Pool ORP out of range"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_orp
+        below: 650
+        id: "low"
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_orp
+        above: 750
+        id: "high"
+    actions:
+      - action: notify.notify
+        data:
+          title: "Pool ORP alert"
+          message: "ORP level is {{ trigger.id }}: {{ states('sensor.pool_device_orp') }} mV"
+</code></pre>
+<h3>Monitor pH levels and send alerts</h3>
+<p>This automation monitors your pool's pH level and sends a notification when it goes outside the recommended range.</p>
+<pre><code>automation:
+  - alias: "Pool pH out of range"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        below: 6.8
+        id: "low"
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        above: 7.6
+        id: "high"
+    actions:
+      - action: notify.notify
+        data:
+          title: "Pool pH alert"
+          message: "pH level is {{ trigger.id }}: {{ states('sensor.pool_device_ph') }}"
+</code></pre>
+<h3>Pause dosing when pH is extreme</h3>
+<p>This automation pauses the dosing system when the pH level reaches dangerously high or low values, preventing excessive chemical dosing.</p>
+<pre><code>automation:
+  - alias: "Pause dosing on extreme pH"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        below: 6.5
+        id: "too_low"
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        above: 8.0
+        id: "too_high"
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.pool_device_pause_dosing
+      - action: notify.notify
+        data:
+          title: "Pool dosing paused"
+          message: "Dosing paused - pH is {{ trigger.id }}: {{ states('sensor.pool_device_ph') }}"
+</code></pre>
+<h3>Pool monitoring dashboard</h3>
+<p>This example combines multiple card types to create a comprehensive pool monitoring view.</p>
+<pre><code>type: vertical-stack
+cards:
+  - type: entities
+    title: Pool status
+    entities:
+      - entity: sensor.pool_device_temperature
+        name: Temperature
+      - entity: sensor.pool_device_ph
+        name: pH level
+      - entity: sensor.pool_device_orp
+        name: ORP level
+      - entity: switch.pool_device_pause_dosing
+        name: Dosing control
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.pool_device_ph
+        name: pH
+        min: 6.5
+        max: 8.0
+        needle: true
+        segments:
+          - from: 6.5
+            color: var(--error-color)
+          - from: 6.8
+            color: var(--warning-color)
+          - from: 7.2
+            color: var(--success-color)
+          - from: 7.6
+            color: var(--warning-color)
+          - from: 7.8
+            color: var(--error-color)
+      - type: gauge
+        entity: sensor.pool_device_orp
+        name: ORP
+        unit: mV
+        min: 600
+        max: 800
+        needle: true
+        segments:
+          - from: 600
+            color: var(--error-color)
+          - from: 650
+            color: var(--success-color)
+          - from: 750
+            color: var(--error-color)
+  - type: history-graph
+    title: 24 hour trends
+    hours_to_show: 24
+    entities:
+      - entity: sensor.pool_device_ph
+      - entity: sensor.pool_device_orp
+      - entity: sensor.pool_device_temperature
+  - type: entities
+    title: Alarms
+    state_color: true
+    entities:
+      - entity: binary_sensor.pool_device_ph_tank_level_alarm
+        name: pH tank level
+      - entity: binary_sensor.pool_device_orp_tank_level_alarm
+        name: ORP tank level
+      - entity: binary_sensor.pool_device_ph_overfeed_alarm
+        name: pH overfeed
+      - entity: binary_sensor.pool_device_orp_overfeed_alarm
+        name: ORP overfeed
+      - entity: binary_sensor.pool_device_flow_rate_alarm
+        name: Flow rate
+</code></pre>
+<h2>Data updates</h2>
+<p>This integration polling polls data from the device every 10 minutes (600 seconds) by default. This polling interval is configured to balance data freshness with device stability:</p>
+<ul>
+<li>The device does not support frequent requests and may become unstable with shorter intervals.</li>
+<li>Physical water treatment values typically change slowly and do not require frequent monitoring.</li>
+<li>This interval provides adequate monitoring for pool water management while maintaining device reliability.</li>
+</ul>
+<h3>Update and write behavior</h3>
+<p>Parallel reads for read-only values are avoided and write operations are serialized (one value at a time). This reduces load on the device's limited hardware and prevents race conditions.</p>
+<h2>Known limitations</h2>
+<h3>Hardware and connectivity issues</h3>
+<p>The PoolDose devices have two characteristics that can affect their network connectivity:</p>
+<ul>
+<li><p><strong>Hardware limitations</strong>: The devices use a small-scale controller that is heavily loaded by web server and data processing tasks. This can occasionally cause brief connection interruptions, though devices typically recover quickly.</p>
+</li>
+<li><p><strong>Energy-saving mode</strong>: When the pump monitoring feature is activated in the device settings, the device often enters an energy-saving mode if no pump operation is detected. During this time, the device may be less responsive or temporarily unavailable on the network, for example, at night.</p>
+</li>
+</ul>
+<h3>Cached data behavior</h3>
+<p>These limitations are normal behavior for the device and not issues with the integration itself. To handle these connectivity issues, the integration caches values for a maximum of 300 seconds (5 minutes) when the device is temporarily unresponsive. After this cache period expires, entities will show as "unavailable" until the device provides new data again.</p>
+<h2>Troubleshooting</h2>
+<h3>Device not found</h3>
+<h4>Symptom: "Device could not be found on the network"</h4>
+<p>When trying to set up the integration, you receive an error that the device cannot be found.</p>
+<h5>Description</h5>
+<p>The device may not be properly connected to your network, or it may be using a different IP address or hostname than expected.</p>
+<h5>Resolution</h5>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Check that your device is powered on and connected to your Wi-Fi network.</li>
+<li>Look for a device called "kommspot" in your router's device list or DHCP client table.</li>
+<li>Use the IP address shown for "kommspot" in the integration setup.</li>
+<li>Ensure the device and Home Assistant are on the same network segment.</li>
+</ol>
+<h3>Connection refused</h3>
+<h4>Symptom: "Connection refused" or authentication errors</h4>
+<p>The integration cannot connect to the device even though it's found on the network.</p>
+<h5>Description</h5>
+<p>This typically occurs when the device's web interface password is not set to the default value (0000) or not properly deactivated.</p>
+<h5>Resolution</h5>
+<p>To resolve this issue:</p>
+<ol>
+<li>Browse to the device's IP address using a web browser.</li>
+<li>Log in to the web interface.</li>
+<li>Set the password to the default value (0000) or deactivate password protection.</li>
+<li>Try setting up the integration again.</li>
+</ol>
+<h3>Unstable connection</h3>
+<h4>Symptom: Entities frequently become unavailable</h4>
+<p>Sensor entities show as "unavailable" intermittently, especially during certain times of day.</p>
+<h5>Description</h5>
+<p>This is normal behavior for the PoolDose device. When the circulation pump is not running, the device enters a kind of sleep mode and becomes less responsive to network requests.</p>
+<h5>Resolution</h5>
+<p>This behavior is expected and does not indicate a problem with the integration:</p>
+<ol>
+<li>The integration uses cached values when the device is temporarily unresponsive.</li>
+<li>Entities will return to normal once the device becomes responsive again.</li>
+<li>Consider this behavior when creating automations that depend on these sensors.</li>
+</ol>
+<h3>Missing peristaltic pump status</h3>
+<h4>Symptom: No peristaltic pump status data is available</h4>
+<p>Peristaltic pump status sensors don't show any data or appear as unavailable.</p>
+<h5>Description</h5>
+<p>The PoolDose device only propagates the status of peristaltic dosing pumps when the external relays for these pumps are enabled in the device settings.</p>
+<h5>Resolution</h5>
+<p>To get peristaltic pump status data:</p>
+<ol>
+<li>Browse to your PoolDose device's settings.</li>
+<li>Find the external relay configuration for the pH and ORP pumps.</li>
+<li>Enable the external relays for the pumps you want to monitor.</li>
+<li>Save the settings and restart the device if required.</li>
+</ol>
+<h2>Diagnostics</h2>
+<p>This integration provides diagnostics to help with debugging and troubleshooting. The diagnostics output includes:</p>
+<ul>
+<li>The device information reported by the coordinator with sensitive values redacted.</li>
+<li>The most recent data fetched from the device by the coordinator.</li>
+</ul>
+<p>To collect diagnostics, go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, open the PoolDose integration,
+click the three-dot menu on the integration entry and choose <strong>Download diagnostics</strong>. Attach the downloaded file when reporting issues to help maintainers investigate.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/pooldose.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Connect your SEKO PoolDose water treatment system to Home Assistant.
+ha_release: &#x27;2025.9&#x27;
+ha_domain: pooldose
+---
+
+The **SEKO PoolDose** {% term integration %} connects a [SEKO](https://www.seko.com/) water treatment system with Home Assistant. SEKO is a manufacturer of various monitoring and control devices for pools and spas.
+
+This integration uses an undocumented local HTTP API. It provides live readings for pool sensors such as temperature, pH, ORP/Redox, alarm status, relay states, as well as configuration parameters.
+
+## Prerequisites
+
+1. Install and set up the PoolDose device according to its user manual.
+   1. In particular, connect the device to your Wi-Fi network.
+   2. Identify the IP address or hostname of the device.
+2. Browse to the IP address or hostname. Use HTTP and port 80.
+   1. Log in to the web interface.
+   2. Verify that sensor data is displayed, such as water temperature or pH values shown as gauges.
+   3. Deactivate the device password, that is, set it to 0000.
+3. Optional: Block the device’s internet access to guarantee fully local operation and prevent potentially breaking firmware updates.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: The IP address or hostname of your device. Identify this in the web interface of the device or of your router.
+{% endconfiguration_basic %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+
+## Data updates
+
+This integration {% term polling polls %} data from the device every 10 minutes (600 seconds) by default. This polling interval is configured to balance data freshness with device stability:
+
+- The device does not support frequent requests and may become unstable with shorter intervals
+- Physical water treatment values typically change slowly and do not require frequent monitoring
+- This interval provides adequate monitoring for pool water management while maintaining device reliability
+
+### Update and write behavior
+
+Parallel reads for read-only values are avoided and write operations are serialized (one value at a time). This reduces load on the device&#x27;s limited hardware and prevents race conditions.
+
+## Supported devices
+
+The following devices are known to be supported by the integration:
+
+- SEKO PoolDose Double
+- SEKO PoolDose Double Spa
+- SEKO PoolDose pH+ORP CF Group Wi-Fi
+- SEKO PoolDose pH
+- BWT MEDO CONNECT Wi-Fi
+- BWT Manager Connect Duo
+- VÁGNER POOL VA DOS BASIC
+- VÁGNER POOL VA DOS EXACT
+- KEMI DOSE AQUAVIVA pH-ORP
+- KEMI DOSE AQUAVIVA pH-ORP-CL
+
+## Supported functionality
+
+This integration provides the following entities.
+
+### Binary sensors
+
+- **Recirculation pump alarm**: Recirculation pump issue.
+- **pH tank level alarm**: Low pH dosing solution level.
+- **ORP tank level alarm**: Low ORP dosing solution level.
+- **Chlorine tank level alarm**: Low chlorine dosing solution level.
+- **Flow rate alarm**: Water flow issues.
+- **pH overfeed alarm**: Excessive pH dosing detected.
+- **pH overfeed alarm alternative**: Alternative pH overfeed alarm.
+- **pH too low**: pH level too low.
+- **pH too high**: pH level too high.
+- **ORP overfeed alarm**: Excessive ORP dosing detected.
+- **ORP overfeed alarm alternative**: Alternative ORP overfeed alarm.
+- **Chlorine overfeed alarm**: Excessive chlorine dosing detected.
+- **Chlorine overfeed alarm alternative**: Alternative chlorine overfeed alarm.
+- **Chlorine too low (ORP)**: Chlorine concentration too low based on ORP readings.
+- **Chlorine too high (ORP)**: Chlorine concentration too high based on ORP readings.
+- **Chlorine too high**: Chlorine concentration too high.
+- **Alarm relay**: Main alarm relay state.
+- **Auxiliary relay 1**: Auxiliary relay 1 output state.
+- **Auxiliary relay 2**: Auxiliary relay 2 output state.
+- **Auxiliary relay 3**: Auxiliary relay 3 output state.
+- **Water too cold**: Water temperature too cold.
+- **Water too hot**: Water temperature too hot.
+- **System standby**: System in standby mode.
+- **Circulation pump monitoring**: Whether the controller monitors the pool circulation pump while dosing.
+- **Power-on delay**: Whether to apply a safety delay after the device powers on before enabling pumps and dosing control.
+- **Flow delay**: Whether to apply a delay after water flow is detected before starting dosing, to let circulation stabilize.
+
+### Sensors
+
+- **Temperature**: Water temperature.
+  - **Unit**: °C, °F
+- **pH**: pH value.
+- **ORP**: Current ORP (Redox) value.
+  - **Unit**: mV
+- **Chlorine**: Chlorine concentration.
+  - **Unit**: ppm
+- **Flow rate**: Water flow rate.
+  - **Unit**: L/s, m³/h
+- **pH type dosing**: Type of pH dosing being used.
+  - **Values**: pH+, pH-
+- **Peristaltic pH dosing**: pH peristaltic dosing mode.
+  - **Values**: Off, Proportional, On/Off, Timed
+- **Overfeed alert pH time**: Time threshold for pH overfeed alerts.
+  - **Unit**: min
+- **ORP type dosing**: Type of ORP dosing being used.
+  - **Values**: Low, High
+- **Peristaltic ORP dosing**: ORP peristaltic dosing mode.
+  - **Values**: Off, Proportional, On/Off, Timed
+- **Chlorine type dosing**: Type of chlorine dosing being used.
+  - **Values**: Low, High
+- **Peristaltic chlorine dosing**: Chlorine peristaltic dosing mode.
+  - **Values**: Off, Proportional, On/Off, Timed, Cycle
+- **Overfeed alert ORP time**: Time threshold for ORP overfeed alerts.
+  - **Unit**: min
+- **pH calibration type**: Type of pH calibration being used.
+  - **Values**: Off, Reference, 1 point, 2 points
+- **pH calibration offset**: pH calibration offset value.
+  - **Unit**: mV
+- **pH calibration slope**: pH calibration slope value.
+  - **Unit**: mV
+- **ORP calibration type**: Type of ORP calibration being used.
+  - **Values**: Off, Reference, 1 point
+- **ORP calibration offset**: ORP calibration offset value.
+  - **Unit**: mV
+- **ORP calibration slope**: ORP calibration slope value.
+  - **Unit**: mV
+- **Totalizer**: Total water volume accumulated.
+  - **Unit**: L, m³
+- **Device configuration**: Overall water treatment configuration that defines which measurements and dosing channels are active.
+  - **Values**: pH+ORP (control pH and ORP only), pH+ORP+Chlorine (control pH, ORP, and an additional chlorine dosing channel)
+- **Temperature unit**: Temperature measurement unit.
+  - **Values**: Celsius, Fahrenheit
+
+### Numbers
+
+- **pH target**: Target pH value for automatic dosing control.
+- **ORP target**: Target ORP (Redox) value for automatic dosing control.
+  - **Unit**: mV
+- **Chlorine target**: Target chlorine concentration for automatic dosing control.
+  - **Unit**: ppm
+- **pH overfeed alarm lower limit**: Lower threshold for pH overfeed detection.
+- **pH overfeed alarm upper limit**: Upper threshold for pH overfeed detection.
+- **ORP overfeed alarm lower limit**: Lower threshold for ORP overfeed detection.
+  - **Unit**: mV
+- **ORP overfeed alarm upper limit**: Upper threshold for ORP overfeed detection.
+  - **Unit**: mV
+- **Chlorine overfeed alarm lower limit**: Lower threshold for chlorine overfeed detection.
+  - **Unit**: ppm
+- **Chlorine overfeed alarm upper limit**: Upper threshold for chlorine overfeed detection.
+  - **Unit**: ppm
+- **pH dosing off-time**: Pause duration between pH dosing cycles.
+  - **Unit**: s
+- **ORP dosing off-time**: Pause duration between ORP dosing cycles.
+  - **Unit**: s
+- **Chlorine dosing off-time**: Pause duration between chlorine dosing cycles.
+  - **Unit**: s
+- **Power-on delay timer**: Delay after power-on before dosing starts.
+  - **Unit**: s
+- **Flow delay timer**: Delay after flow detection before dosing starts.
+  - **Unit**: s
+
+### Switches
+
+- **Pause dosing**: Pauses or resumes the dosing process.
+- **Pump monitoring**: Enables or disables pump monitoring.
+- **Frequency input**: Enables or disables frequency input for a water meter.
+
+### Selects
+
+- **Water meter unit**: Water meter measurement unit.
+  - **Options**: Liters, Cubic meters
+- **Flow rate unit**: Flow rate measurement unit.
+  - **Options**: Cubic meters per hour, Liters per second
+- **pH dosing type**: pH dosing type.
+  - **Options**: pH+ / alcalyne, pH- / acid
+- **pH dosing method**: pH dosing control method.
+  - **Options**: Disabled, Proportional control, On/Off control, Timed dosing
+- **ORP dosing type**: ORP/Redox dosing type.
+  - **Options**: Low intensity, High intensity
+- **ORP dosing method**: ORP/Redox dosing control method.
+  - **Options**: Disabled, Proportional control, On/Off control, Timed dosing
+- **Chlorine dosing type**: Chlorine dosing type.
+  - **Options**: Low intensity, High intensity
+- **Chlorine dosing method**: Chlorine dosing control method.
+  - **Options**: Disabled, Proportional control, On/Off control, Timed dosing
+
+## Examples
+
+### Monitor ORP levels and send alerts
+
+This automation monitors your pool&#x27;s ORP level and sends a notification when it goes outside the recommended range.
+
+```yaml
+automation:
+  - alias: &quot;Pool ORP out of range&quot;
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_orp
+        below: 650
+        id: &quot;low&quot;
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_orp
+        above: 750
+        id: &quot;high&quot;
+    actions:
+      - action: notify.notify
+        data:
+          title: &quot;Pool ORP alert&quot;
+          message: &quot;ORP level is {{ trigger.id }}: {{ states(&#x27;sensor.pool_device_orp&#x27;) }} mV&quot;
+```
+
+### Monitor pH levels and send alerts
+
+This automation monitors your pool&#x27;s pH level and sends a notification when it goes outside the recommended range.
+
+```yaml
+automation:
+  - alias: &quot;Pool pH out of range&quot;
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        below: 6.8
+        id: &quot;low&quot;
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        above: 7.6
+        id: &quot;high&quot;
+    actions:
+      - action: notify.notify
+        data:
+          title: &quot;Pool pH alert&quot;
+          message: &quot;pH level is {{ trigger.id }}: {{ states(&#x27;sensor.pool_device_ph&#x27;) }}&quot;
+```
+
+### Pause dosing when pH is extreme
+
+This automation pauses the dosing system when the pH level reaches dangerously high or low values, preventing excessive chemical dosing.
+
+```yaml
+automation:
+  - alias: &quot;Pause dosing on extreme pH&quot;
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        below: 6.5
+        id: &quot;too_low&quot;
+      - trigger: numeric_state
+        entity_id: sensor.pool_device_ph
+        above: 8.0
+        id: &quot;too_high&quot;
+    actions:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.pool_device_pause_dosing
+      - action: notify.notify
+        data:
+          title: &quot;Pool dosing paused&quot;
+          message: &quot;Dosing paused - pH is {{ trigger.id }}: {{ states(&#x27;sensor.pool_device_ph&#x27;) }}&quot;
+```
+
+### Pool monitoring dashboard
+
+This example combines multiple card types to create a comprehensive pool monitoring view.
+
+```yaml
+type: vertical-stack
+cards:
+  - type: entities
+    title: Pool status
+    entities:
+      - entity: sensor.pool_device_temperature
+        name: Temperature
+      - entity: sensor.pool_device_ph
+        name: pH level
+      - entity: sensor.pool_device_orp
+        name: ORP level
+      - entity: switch.pool_device_pause_dosing
+        name: Dosing control
+  - type: horizontal-stack
+    cards:
+      - type: gauge
+        entity: sensor.pool_device_ph
+        name: pH
+        min: 6.5
+        max: 8.0
+        needle: true
+        segments:
+          - from: 6.5
+            color: var(--error-color)
+          - from: 6.8
+            color: var(--warning-color)
+          - from: 7.2
+            color: var(--success-color)
+          - from: 7.6
+            color: var(--warning-color)
+          - from: 7.8
+            color: var(--error-color)
+      - type: gauge
+        entity: sensor.pool_device_orp
+        name: ORP
+        unit: mV
+        min: 600
+        max: 800
+        needle: true
+        segments:
+          - from: 600
+            color: var(--error-color)
+          - from: 650
+            color: var(--success-color)
+          - from: 750
+            color: var(--error-color)
+  - type: history-graph
+    title: 24 hour trends
+    hours_to_show: 24
+    entities:
+      - entity: sensor.pool_device_ph
+      - entity: sensor.pool_device_orp
+      - entity: sensor.pool_device_temperature
+  - type: entities
+    title: Alarms
+    state_color: true
+    entities:
+      - entity: binary_sensor.pool_device_ph_tank_level_alarm
+        name: pH tank level
+      - entity: binary_sensor.pool_device_orp_tank_level_alarm
+        name: ORP tank level
+      - entity: binary_sensor.pool_device_ph_overfeed_alarm
+        name: pH overfeed
+      - entity: binary_sensor.pool_device_orp_overfeed_alarm
+        name: ORP overfeed
+      - entity: binary_sensor.pool_device_flow_rate_alarm
+        name: Flow rate
+```
+
+## Data updates
+
+This integration {% term polling polls %} data from the device every 10 minutes (600 seconds) by default. This polling interval is configured to balance data freshness with device stability:
+
+- The device does not support frequent requests and may become unstable with shorter intervals.
+- Physical water treatment values typically change slowly and do not require frequent monitoring.
+- This interval provides adequate monitoring for pool water management while maintaining device reliability.
+
+### Update and write behavior
+
+Parallel reads for read-only values are avoided and write operations are serialized (one value at a time). This reduces load on the device&#x27;s limited hardware and prevents race conditions.
+
+## Known limitations
+
+### Hardware and connectivity issues
+
+The PoolDose devices have two characteristics that can affect their network connectivity:
+
+- **Hardware limitations**: The devices use a small-scale controller that is heavily loaded by web server and data processing tasks. This can occasionally cause brief connection interruptions, though devices typically recover quickly.
+
+- **Energy-saving mode**: When the pump monitoring feature is activated in the device settings, the device often enters an energy-saving mode if no pump operation is detected. During this time, the device may be less responsive or temporarily unavailable on the network, for example, at night.
+
+### Cached data behavior
+
+These limitations are normal behavior for the device and not issues with the integration itself. To handle these connectivity issues, the integration caches values for a maximum of 300 seconds (5 minutes) when the device is temporarily unresponsive. After this cache period expires, entities will show as &quot;unavailable&quot; until the device provides new data again.
+
+## Troubleshooting
+
+### Device not found
+
+#### Symptom: &quot;Device could not be found on the network&quot;
+
+When trying to set up the integration, you receive an error that the device cannot be found.
+
+##### Description
+
+The device may not be properly connected to your network, or it may be using a different IP address or hostname than expected.
+
+##### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Check that your device is powered on and connected to your Wi-Fi network.
+2. Look for a device called &quot;kommspot&quot; in your router&#x27;s device list or DHCP client table.
+3. Use the IP address shown for &quot;kommspot&quot; in the integration setup.
+4. Ensure the device and Home Assistant are on the same network segment.
+
+### Connection refused
+
+#### Symptom: &quot;Connection refused&quot; or authentication errors
+
+The integration cannot connect to the device even though it&#x27;s found on the network.
+
+##### Description
+
+This typically occurs when the device&#x27;s web interface password is not set to the default value (0000) or not properly deactivated.
+
+##### Resolution
+
+To resolve this issue:
+
+1. Browse to the device&#x27;s IP address using a web browser.
+2. Log in to the web interface.
+3. Set the password to the default value (0000) or deactivate password protection.
+4. Try setting up the integration again.
+
+### Unstable connection
+
+#### Symptom: Entities frequently become unavailable
+
+Sensor entities show as &quot;unavailable&quot; intermittently, especially during certain times of day.
+
+##### Description
+
+This is normal behavior for the PoolDose device. When the circulation pump is not running, the device enters a kind of sleep mode and becomes less responsive to network requests.
+
+##### Resolution
+
+This behavior is expected and does not indicate a problem with the integration:
+
+1. The integration uses cached values when the device is temporarily unresponsive.
+2. Entities will return to normal once the device becomes responsive again.
+3. Consider this behavior when creating automations that depend on these sensors.
+
+### Missing peristaltic pump status
+
+#### Symptom: No peristaltic pump status data is available
+
+Peristaltic pump status sensors don&#x27;t show any data or appear as unavailable.
+
+##### Description
+
+The PoolDose device only propagates the status of peristaltic dosing pumps when the external relays for these pumps are enabled in the device settings.
+
+##### Resolution
+
+To get peristaltic pump status data:
+
+1. Browse to your PoolDose device&#x27;s settings.
+2. Find the external relay configuration for the pH and ORP pumps.
+3. Enable the external relays for the pumps you want to monitor.
+4. Save the settings and restart the device if required.
+
+## Diagnostics
+
+This integration provides diagnostics to help with debugging and troubleshooting. The diagnostics output includes:
+
+- The device information reported by the coordinator with sensitive values redacted.
+- The most recent data fetched from the device by the coordinator.
+
+To collect diagnostics, go to **Settings** &gt; **Devices &amp; services**, open the PoolDose integration,
+click the three-dot menu on the integration entry and choose **Download diagnostics**. Attach the downloaded file when reporting issues to help maintainers investigate.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for SEKO PoolDose.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Removing the integration</li><li>Data updates</li><li>Supported devices</li><li>Supported functionality</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Diagnostics</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/pooldose/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/pooldose</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/pooldose</code></dd></dl></section><p><a href="../../integrations/pooldose/">Return to the SEKO PoolDose guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

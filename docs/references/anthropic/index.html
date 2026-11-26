@@ -1,1 +1,767 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Anthropic reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:130" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/anthropic/">Anthropic guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Anthropic</h1><p>Instructions on how to integrate Anthropic Claude with Home Assistant</p><section><h2>Overview</h2><p>The Anthropic integrations adds conversation agents and AI task entities powered by Anthropic&#x27;s Claude models to Home Assistant.</p></section><section><h2>Generating an API Key</h2><p>The Anthropic API key is used to authenticate requests to the Anthropic API. To generate an API key, take the following steps:</p></section><section><h2>Models</h2><p>The integration uses the capabilities and token limits reported by Anthropic to offer settings for the selected model. Newly released models may require a Home Assistant update if they introduce backwards-incompatible API changes.</p></section><section><h2>Feature matrix</h2><p>The following table describes which API features are supported and which are not. In general, we don&#x27;t support beta features.</p></section><section><h2>Availability</h2><p>On start, the integration verifies the connection and validity of the API key, a config entry will not be loaded until this connectivity test succeeds. Additionally, there are periodic connectivity checks after startup. When the connection is considered to be broken, the conversation and ai_task entities will be shown as Unavailable until the connection is successful again. This does not prevent execution of the actions.</p></section><section><h2>Use cases</h2><p>The integration provides conversation and ai_task entities powered by Anthropic API. Please refer to the corresponding integrations for more details and examples:</p></section><section><h2>Assist pipeline</h2><p>Set up and configure Claude as a conversation agent in an Assist pipeline as described in the voice guide. You can then use this pipeline to chat through the Home Assistant web interface, on Android or Apple devices using the Home Assistant Companion App, or by voice using an Assist satellite.</p></section><section><h2>Automation</h2><p>You can use conversation.process and ai_task.generate_data actions in your scripts and automations. Here is a simple automation that implements a Claude Telegram chatbot using Telegram bot integration:</p></section><section><h2>The response is truncated mid-sentence, or the model said it would do an action to control a device but didn&#x27;t do it</h2><p>This may happen when the Maximum Tokens to Return in Response integration option value is too small. A small conservative limit is good to keep the cost lower, but it may be suboptimal in certain cases.</p></section><section><h2>Integration fails to set up, the logs show ImportError or AttributeError</h2><p>This may happen if the Python anthropic client had failed to upgrade to the correct version. If you know how to log into the Home Assistant container and manually reinstall the client, try that. Otherwise, downgrading and re-upgrading Home Assistant should help.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Anthropic.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported features</li><li>Use cases</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/anthropic/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/anthropic</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/anthropic</code></dd></dl></section><p><a href="../../integrations/anthropic/">Return to the Anthropic guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Anthropic reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:130" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/anthropic/">Anthropic guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Anthropic</h1><p>Instructions on how to integrate Anthropic Claude with Home Assistant</p><div class="reader-body"><p>The <strong>Anthropic</strong> integrations adds conversation agents and AI task entities powered by <a>Anthropic</a>'s Claude models to Home Assistant.</p>
+<p>Controlling Home Assistant is done by providing the AI access to the <strong>Device control</strong> set of tools. You can control what devices and entities it can access from the exposed entities page. The AI can provide you information about your devices and control them.</p>
+<p>When you talk to an Anthropic conversation agent through an assistant, Home Assistant first checks your <a>sentence triggers</a>. If one of them matches, the sentence trigger answers, and the conversation agent doesn't get the sentence. Sentence triggers don't run when you call the conversation agent directly, for example with the <code>conversation.process</code> action. They also don't run when you answer a follow-up question from the conversation agent.</p>
+<p>Legal note: Individuals and hobbyists are welcome to use the Anthropic API <a>for personal use</a>, however, the use of the API is subject to their <a>Commercial Terms of Service</a>, regardless of whether you are an individual or representing a company.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>This integration requires an API key to use, <a>which you can generate here</a>.</li>
+<li>This is a paid service, we advise you to monitor your costs in the <a>Anthropic portal</a> closely.</li>
+</ul>
+<h3>Generating an API Key</h3>
+<p>The Anthropic API key is used to authenticate requests to the Anthropic API. To generate an API key, take the following steps:</p>
+<ol>
+<li>Log in to the <a>Anthropic portal</a> or sign up for an account.</li>
+<li>Enable billing with a valid credit card on the <a>plans page</a>.</li>
+<li>Visit the <a>API Keys page</a> to retrieve the API key you'll use to configure the integration.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Anthropic</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Anthropic</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+API key:
+  description: "API key from Anthropic for authentication."
+
+</code></pre>
+<h2>Options</h2>
+<p>To define options for Anthropic, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Anthropic are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this service.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<p>The integration provides the following types of subentries:</p>
+<ul>
+<li><a href="../conversation/">Conversation</a></li>
+<li><a href="../ai_task/">AI Task</a></li>
+</ul>
+<pre><code>
+Instructions:
+  description: Instructions for the AI on how it should respond to your requests. It is written using [Home Assistant Templating](/docs/templating/).
+AI tools:
+  description: "**Device control** only accesses the entities you [expose](/voice_control/voice_remote_expose_devices/) to voice assistants. **Home Assistant** accesses everything and only works for administrators, not voice assistant devices."
+Recommended settings:
+  description: If enabled, the recommended model and settings are chosen.
+
+</code></pre>
+<p>If you choose not to use the recommended settings, you can configure the following options:</p>
+<pre><code>
+Model:
+  description: The model that will complete your prompt. See [models overview](https://platform.claude.com/docs/en/models/overview) for additional details and options.
+Maximum tokens to return in response:
+  description: The maximum number of output tokens to generate, including thinking tokens and the final response. Claude may stop before reaching this limit. Leave enough room for both reasoning and the answer when thinking is enabled. The upper limit depends on the selected model; see the [models overview](https://platform.claude.com/docs/en/models/overview) for details.
+Caching strategy:
+  description: Optimize your API usage by allowing resuming from specific prefixes in your prompts. This significantly reduces processing time and costs in multi-turn conversations, but may increase cost for single-turn conversations. The cache duration is 5 minutes, the cache writes are [billed](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) at 1.25 times the base input tokens price, and cache read tokens are 0.1 times the base input tokens price. This means that the cache can reduce your costs and latency if you are likely to either call a tool to control your home, which also counts as a multi-turn conversation, or reply to the model with a follow-up. There are 3 caching strategies available, `Disabled` (if you often ask general-knowledge questions without follow-up), `System prompt` (caches system prompt and tools, useful if you often have short conversations like asking time or turning on lights), and `Full` (caches every user message, useful if you often have long conversations).
+Thinking type:
+  description: Controls when Claude spends additional tokens reasoning through requests or tool results. **Disabled** turns thinking off, **Enabled** uses a thinking budget, and **Adaptive** lets Claude decide when and how much to think. **Between tool calls** turns off up-front thinking, so Claude doesn't think before it answers and only writes short notes between tool calls. It is the lowest setting on models that can't turn thinking off, such as Claude Sonnet 5.5. The default is **Adaptive** on models that support it. If the selected model supports only one type, this option is not displayed. See [thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) for details.
+Thinking budget:
+  description: The tokens available for [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) when **Thinking type** is **Enabled**. The budget must be less than **Maximum Tokens to Return in Response**. Larger budgets can improve reasoning on complex requests but may increase response time and cost. This option is available on models that support manual extended thinking and is unused with other thinking types. To turn thinking off, select **Disabled** under **Thinking type**, if the model supports it.
+Effort:
+  description: Controls how much work Claude puts into a response, balancing thoroughness, response time, and token usage. Depending on the model, the available levels are **Low**, **Medium**, **High**, **X-High**, and **Max**. The default is **Low**. Effort applies independently of **Thinking type**, including with thinking disabled or with a manual thinking budget on models that support both. Some models require thinking for higher effort levels. **X-High** and **Max** don't work with **Between tool calls**. See [effort](https://platform.claude.com/docs/en/build-with-claude/effort) for details.
+Code execution:
+  description: Enable the server-side [Code execution tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool). With this tool, the model can analyze data, perform complex calculations, run system commands, including writing code, in a secure, sandboxed environment.
+Enable web search:
+  description: Enable the server-side [Web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) for direct access to real-time web content, allowing it to answer questions with up-to-date information beyond its knowledge cutoff. Please note that this tool has its own [pricing](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool#usage-and-pricing). On models that support [dynamic filtering](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool#dynamic-filtering), also enable **Code execution** to filter search results before adding them to the conversation.
+Maximum web searches:
+  description: Limits the number of web searches that can be performed per user request. Once the limit is reached, no additional searches will be executed during that conversation.
+Include home location:
+  description: The parameter allows you to localize search results based on the Home Assistant location.
+Enable web fetch:
+  description: Enable the server-side [Web fetch tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool) to augment Claude's context with live web content. The tool allows Claude to retrieve full content from specified web pages and PDF documents. Note that for security reasons, the web fetch tool can only fetch URLs that have previously appeared in the conversation context. This includes URLs in user messages, URLs in client-side tool results, and URLs from previous web search or web fetch results. This tool has its own [pricing](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool#usage-and-pricing). On models that support dynamic filtering, also enable **Code execution** to filter fetched content before adding it to the conversation.
+Maximum web fetches:
+  description: Limits the number of web fetches that can be performed per user request.
+Enable tool search tool:
+  description: With [this tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool), instead of loading all tool definitions into the context window upfront, Claude searches the tool catalog and loads only the tools it needs. This may improve performance if you don't need to control devices every time, or if you have a long prompt or many additional tools.
+
+</code></pre>
+<h2>Supported features</h2>
+<h3>Models</h3>
+<p>The integration uses the capabilities and token limits reported by Anthropic to offer settings for the selected model. Newly released models may require a Home Assistant update if they introduce backwards-incompatible API changes.</p>
+<p>Anthropic <a>deprecates and retires models</a> over time. Deprecated models remain usable until retirement, but you should replace them before their retirement date. Retired models are no longer available and cannot be selected in the integration.</p>
+<p>When a configured model becomes deprecated or retired, Home Assistant creates a repair issue. Open <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong> and choose an active replacement for each affected conversation or AI task configuration.</p>
+<h3>Feature matrix</h3>
+<p>The following table describes which <a>API features</a> are supported and which are not. In general, we don't support beta features.</p>
+<h4>Model capabilities</h4>
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Description</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a>Context windows</a></td>
+  <td>Up to 1M tokens for processing large documents, extensive codebases, and long conversations.</td>
+  <td>Supported</td>
+  <td>This is a basic feature, supported by default</td>
+</tr>
+<tr>
+  <td><a>Adaptive thinking</a></td>
+  <td>Let Claude decide when and how much to think based on the request.</td>
+  <td>Supported</td>
+  <td>Select <strong>Adaptive</strong> under <strong>Thinking type</strong>, where available, and use <strong>Effort</strong> to adjust how much work Claude puts into the response</td>
+</tr>
+<tr>
+  <td><a>Batch processing</a></td>
+  <td>Process large volumes of requests asynchronously for cost savings. Send batches with many queries per batch. Batch API calls cost 50% less than standard API calls.</td>
+  <td>Not supported</td>
+  <td>This feature does not apply to Home Assistant. There is currently no clear smart home use case for batch processing.</td>
+</tr>
+<tr>
+  <td><a>Citations</a></td>
+  <td>Ground Claude's responses in source documents. With Citations, Claude can provide detailed references to the exact sentences and passages it uses to generate responses, leading to more verifiable, trustworthy outputs.</td>
+  <td>Not supported</td>
+  <td>We support receiving the citations but don't currently display them in the interface</td>
+</tr>
+<tr>
+  <td><a>Data residency</a></td>
+  <td>Control where model inference runs using geographic controls. Specify <code>"global"</code> or <code>"us"</code> routing per request via the <code>inference_geo</code> parameter.</td>
+  <td>Not supported</td>
+  <td>We might add support later, but it is not clear why you would need this in Home Assistant</td>
+</tr>
+<tr>
+  <td><a>Effort</a></td>
+  <td>Control how many tokens Claude uses when responding with the effort parameter, trading off between response thoroughness and token efficiency.</td>
+  <td>Supported</td>
+  <td>Use <strong>Effort</strong> on models that support it, including when thinking is disabled</td>
+</tr>
+<tr>
+  <td><a>Extended thinking</a></td>
+  <td>Enhanced reasoning capabilities for complex tasks, providing transparency into Claude's step-by-step thought process before delivering its final answer.</td>
+  <td>Supported</td>
+  <td>Select <strong>Enabled</strong> under <strong>Thinking type</strong> and set <strong>Thinking budget</strong>, where supported. The thinking summaries are displayed in the Assist interface</td>
+</tr>
+<tr>
+  <td><a>PDF support</a></td>
+  <td>Process and analyze text and visual content from PDF documents.</td>
+  <td>Supported</td>
+  <td>Use <code>ai_task.generate_data</code> action with attachments to use this feature</td>
+</tr>
+<tr>
+  <td><a>Search results</a></td>
+  <td>Enable natural citations for RAG applications by providing search results with proper source attribution. Achieve web search-quality citations for custom knowledge bases and tools.</td>
+  <td>Not supported</td>
+  <td>We receive the citations but they are not currently displayed in the interface. The response text itself usually provides sufficient information.</td>
+</tr>
+<tr>
+  <td><a>Structured outputs</a></td>
+  <td>Guarantee schema conformance with two approaches: JSON outputs for structured data responses, and strict tool use for validated tool inputs.</td>
+  <td>Supported</td>
+  <td>Use <code>ai_task.generate_data</code> action with response schema to use this feature</td>
+</tr>
+</tbody>
+</table>
+<h4>Tools</h4>
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Description</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a>Code execution</a></td>
+  <td>Run code in a sandboxed environment for advanced data analysis, calculations, and file processing.</td>
+  <td>Supported</td>
+  <td>Use the <strong>Code execution</strong> parameter to enable</td>
+</tr>
+<tr>
+  <td><a>Web fetch</a></td>
+  <td>Retrieve full content from specified web pages and PDF documents for in-depth analysis.</td>
+  <td>Supported</td>
+  <td>Use the <strong>Enable web fetch</strong> parameter to enable</td>
+</tr>
+<tr>
+  <td><a>Web search</a></td>
+  <td>Augment Claude's comprehensive knowledge with current, real-world data from across the web.</td>
+  <td>Supported</td>
+  <td>Use the <strong>Enable web search</strong> parameter to enable</td>
+</tr>
+<tr>
+  <td><a>Bash</a></td>
+  <td>Execute bash commands and scripts to interact with the system shell and perform command-line operations.</td>
+  <td>Not supported</td>
+  <td>This is a client-side tool, the bash is implied to be on the Home Assistant side, this could compromise the security and provides no real benefit over Code execution feature that uses a sandboxed environment instead.</td>
+</tr>
+<tr>
+  <td><a>Computer use</a></td>
+  <td>Control computer interfaces by taking screenshots and issuing mouse and keyboard commands.</td>
+  <td>Not supported</td>
+  <td>This is probably not applicable to Home Assistant use cases</td>
+</tr>
+<tr>
+  <td><a>Memory</a></td>
+  <td>Enable Claude to store and retrieve information across conversations. Build knowledge bases over time, maintain project context, and learn from past interactions.</td>
+  <td>Not supported</td>
+  <td>This is more like an SDK feature rather than an API feature. As such, it can be implemented as a third-party LLM API.</td>
+</tr>
+<tr>
+  <td><a>Text editor</a></td>
+  <td>Create and edit text files with a built-in text editor interface for file manipulation tasks.</td>
+  <td>Not supported</td>
+  <td>This is probably not applicable to Home Assistant use cases</td>
+</tr>
+<tr>
+  <td><a>Agent Skills</a></td>
+  <td>Extend Claude's capabilities with Skills. Use pre-built Skills (PowerPoint, Excel, Word, PDF) or create custom Skills with instructions and scripts. Skills use progressive disclosure to efficiently manage context.</td>
+  <td>Not supported</td>
+  <td>This feature is still in beta</td>
+</tr>
+<tr>
+  <td><a>MCP connector</a></td>
+  <td>Connect to remote MCP servers directly from the Messages API without a separate MCP client.</td>
+  <td>Not supported</td>
+  <td>This feature is still in beta</td>
+</tr>
+<tr>
+  <td><a>Tool search</a></td>
+  <td>Scale to thousands of tools by dynamically discovering and loading tools on-demand using regex-based search, optimizing context usage and improving tool selection accuracy.</td>
+  <td>Supported</td>
+  <td>Use the <strong>Enable tool search tool</strong> parameter to use this feature</td>
+</tr>
+<tr>
+  <td><a>Files API</a></td>
+  <td>Upload and manage files to use with Claude without re-uploading content with each request. Supports PDFs, images, and text files.</td>
+  <td>Not supported</td>
+  <td>This feature is still in beta</td>
+</tr>
+</tbody>
+</table>
+<h4>Context management</h4>
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Description</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a>Compaction</a></td>
+  <td>Server-side context summarization for long-running conversations. When context approaches the window limit, the API automatically summarizes earlier parts of the conversation.</td>
+  <td>Not supported</td>
+  <td>This feature is still in beta</td>
+</tr>
+<tr>
+  <td><a>Context editing</a></td>
+  <td>Automatically manage conversation context with configurable strategies. Supports clearing tool results when approaching token limits and managing thinking blocks in extended thinking conversations.</td>
+  <td>Not supported</td>
+  <td>This feature is still in beta</td>
+</tr>
+<tr>
+  <td><a>Automatic prompt caching</a></td>
+  <td>Simplify prompt caching to a single API parameter. The system automatically caches the last cacheable block in your request, moving the cache point forward as conversations grow.</td>
+  <td>Supported</td>
+  <td>Set <strong>Caching strategy</strong> to <strong>Full</strong> to use this feature</td>
+</tr>
+<tr>
+  <td><a>Prompt caching (5m)</a></td>
+  <td>Provide Claude with more background knowledge and example outputs to reduce costs and latency.</td>
+  <td>Supported</td>
+  <td>Set <strong>Caching strategy</strong> to <strong>System prompt</strong> to enable caching for the system prompt and tools, but not for individual conversation messages, to keep Anthropic API costs low for typical Home Assistant smart home use cases</td>
+</tr>
+<tr>
+  <td><a>Prompt caching (1hr)</a></td>
+  <td>Extended 1-hour cache duration for less frequently accessed but important context, complementing the standard 5-minute cache.</td>
+  <td>Not supported</td>
+  <td>This is a more expensive version of prompt caching; it is probably not worth it for a smart home, but we might add this option in the future. Also, the chat session in Home Assistant expires in 5 minutes</td>
+</tr>
+<tr>
+  <td><a>Token counting</a></td>
+  <td>Token counting enables you to determine the number of tokens in a message before sending it to Claude, helping you make informed decisions about your prompts and usage.</td>
+  <td>Not supported</td>
+  <td>This is probably not applicable to Home Assistant use cases</td>
+</tr>
+</tbody>
+</table>
+<h3>Availability</h3>
+<p>On start, the integration verifies the connection and validity of the API key, a config entry will not be loaded until this connectivity test succeeds. Additionally, there are periodic connectivity checks after startup. When the connection is considered to be broken, the <code>conversation</code> and <code>ai_task</code> entities will be shown as <code>Unavailable</code> until the connection is successful again. This does not prevent execution of the actions.</p>
+<h2>Use cases</h2>
+<p>The integration provides <code>conversation</code> and <code>ai_task</code> entities powered by Anthropic API. Please refer to the corresponding integrations for more details and examples:</p>
+<ul>
+<li><a href="../conversation/">Conversation</a></li>
+<li><a href="../ai_task/">AI Task</a></li>
+</ul>
+<p>A few examples:</p>
+<h3>Assist pipeline</h3>
+<p>Set up and configure Claude as a conversation agent in an <a href="../assist_pipeline/">Assist pipeline</a> as described in the <a>voice guide</a>. You can then use this pipeline to chat through the Home Assistant web interface, on <a>Android</a> or <a>Apple</a> devices using the <a>Home Assistant Companion App</a>, or by voice using an <a href="../assist_satellite/">Assist satellite</a>.</p>
+<p><a>Expose entities</a> and configure aliases for the entities you want the model to control.</p>
+<h3>Home Assistant interface</h3>
+<p>You can set the Claude AI Task entity as the default AI Task entity. To do this, go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>AI</strong> and select the Claude AI Task entity. This makes the Claude AI Task entity the default for blueprints, and for the <strong>Suggest with AI</strong> button in various places in the interface.</p>
+<h3>Automation</h3>
+<p>You can use <code>conversation.process</code> and <code>ai_task.generate_data</code> actions in your scripts and automations.
+Here is a simple automation that implements a Claude Telegram chatbot using <a href="../telegram_bot/">Telegram bot integration</a>:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your Telegram bot event entity
+conditions: "{{ trigger.to_state.attributes.event_type == 'telegram_text' }}"
+actions:
+  - action: conversation.process
+    data:
+      agent_id: conversation.claude_conversation # Replace with your Claude conversation entity
+      conversation_id: "telegram_{{ trigger.to_state.attributes.chat_id }}"
+      text: "{{ trigger.to_state.attributes.text }}"
+    response_variable: response
+  - action: telegram_bot.send_message
+    data:
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      message: "{{ response.response.speech.plain.speech }}"
+      parse_mode: plain_text
+      config_entry_id: "{{ trigger.to_state.attributes.bot.config_entry_id }}"
+</code></pre>
+<h2>Troubleshooting</h2>
+<h3>The response is truncated mid-sentence, or the model said it would do an action to control a device but didn't do it</h3>
+<p>This may happen when the <strong>Maximum Tokens to Return in Response</strong> integration option value is too small. A small conservative limit is good to keep the cost lower, but it may be suboptimal in certain cases.</p>
+<h3>Integration fails to set up, the logs show ImportError or AttributeError</h3>
+<p>This may happen if the Python anthropic client had failed to upgrade to the correct version. If you know how to log into the Home Assistant container and manually reinstall the client, try that. Otherwise, downgrading and re-upgrading Home Assistant should help.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/anthropic.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Anthropic Claude with Home Assistant
+ha_release: 2024.9
+ha_domain: anthropic
+related:
+  - docs: /voice_control/voice_remote_expose_devices/
+    title: Exposing entities to voice assistants
+  - docs: /voice_control/assist_create_open_ai_personality/
+    title: Create an AI personality
+  - url: https://console.anthropic.com/settings/keys
+    title: Anthropic API key
+  - url: https://www.anthropic.com
+    title: Anthropic
+  - url: https://claude.ai
+    title: Claude
+---
+
+The **Anthropic** {% term integrations %} adds conversation agents and AI task entities powered by [Anthropic](https://www.anthropic.com)&#x27;s Claude models to Home Assistant.
+
+Controlling Home Assistant is done by providing the AI access to the **Device control** set of tools. You can control what devices and entities it can access from the {% my voice_assistants title=&quot;exposed entities page&quot; %}. The AI can provide you information about your devices and control them.
+
+When you talk to an Anthropic conversation agent through an {% term assistant %}, Home Assistant first checks your [sentence triggers](/triggers/conversation/). If one of them matches, the sentence trigger answers, and the conversation agent doesn&#x27;t get the sentence. Sentence triggers don&#x27;t run when you call the conversation agent directly, for example with the `conversation.process` action. They also don&#x27;t run when you answer a follow-up question from the conversation agent.
+
+Legal note: Individuals and hobbyists are welcome to use the Anthropic API [for personal use](https://support.anthropic.com/en/articles/8987200-can-i-use-the-claude-api-for-individual-use), however, the use of the API is subject to their [Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms), regardless of whether you are an individual or representing a company.
+
+## Prerequisites
+
+- This integration requires an API key to use, [which you can generate here](https://console.anthropic.com/settings/keys).
+- This is a paid service, we advise you to monitor your costs in the [Anthropic portal](https://console.anthropic.com/settings/cost) closely.
+
+### Generating an API Key
+
+The Anthropic API key is used to authenticate requests to the Anthropic API. To generate an API key, take the following steps:
+
+1. Log in to the [Anthropic portal](https://console.anthropic.com) or sign up for an account.
+2. Enable billing with a valid credit card on the [plans page](https://console.anthropic.com/settings/plans).
+3. Visit the [API Keys page](https://console.anthropic.com/settings/keys) to retrieve the API key you&#x27;ll use to configure the integration.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+API key:
+  description: &quot;API key from Anthropic for authentication.&quot;
+{% endconfiguration_basic %}
+
+{% include integrations/option_flow.md %}
+
+The integration provides the following types of subentries:
+
+- [Conversation](/integrations/conversation/)
+- [AI Task](/integrations/ai_task/)
+
+{% configuration_basic %}
+Instructions:
+  description: Instructions for the AI on how it should respond to your requests. It is written using [Home Assistant Templating](/docs/templating/).
+AI tools:
+  description: &quot;**Device control** only accesses the entities you [expose](/voice_control/voice_remote_expose_devices/) to voice assistants. **Home Assistant** accesses everything and only works for administrators, not voice assistant devices.&quot;
+Recommended settings:
+  description: If enabled, the recommended model and settings are chosen.
+{% endconfiguration_basic %}
+
+If you choose not to use the recommended settings, you can configure the following options:
+
+{% configuration_basic %}
+Model:
+  description: The model that will complete your prompt. See [models overview](https://platform.claude.com/docs/en/models/overview) for additional details and options.
+Maximum tokens to return in response:
+  description: The maximum number of output tokens to generate, including thinking tokens and the final response. Claude may stop before reaching this limit. Leave enough room for both reasoning and the answer when thinking is enabled. The upper limit depends on the selected model; see the [models overview](https://platform.claude.com/docs/en/models/overview) for details.
+Caching strategy:
+  description: Optimize your API usage by allowing resuming from specific prefixes in your prompts. This significantly reduces processing time and costs in multi-turn conversations, but may increase cost for single-turn conversations. The cache duration is 5 minutes, the cache writes are [billed](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing) at 1.25 times the base input tokens price, and cache read tokens are 0.1 times the base input tokens price. This means that the cache can reduce your costs and latency if you are likely to either call a tool to control your home, which also counts as a multi-turn conversation, or reply to the model with a follow-up. There are 3 caching strategies available, `Disabled` (if you often ask general-knowledge questions without follow-up), `System prompt` (caches system prompt and tools, useful if you often have short conversations like asking time or turning on lights), and `Full` (caches every user message, useful if you often have long conversations).
+Thinking type:
+  description: Controls when Claude spends additional tokens reasoning through requests or tool results. **Disabled** turns thinking off, **Enabled** uses a thinking budget, and **Adaptive** lets Claude decide when and how much to think. **Between tool calls** turns off up-front thinking, so Claude doesn&#x27;t think before it answers and only writes short notes between tool calls. It is the lowest setting on models that can&#x27;t turn thinking off, such as Claude Sonnet 5.5. The default is **Adaptive** on models that support it. If the selected model supports only one type, this option is not displayed. See [thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) for details.
+Thinking budget:
+  description: The tokens available for [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) when **Thinking type** is **Enabled**. The budget must be less than **Maximum Tokens to Return in Response**. Larger budgets can improve reasoning on complex requests but may increase response time and cost. This option is available on models that support manual extended thinking and is unused with other thinking types. To turn thinking off, select **Disabled** under **Thinking type**, if the model supports it.
+Effort:
+  description: Controls how much work Claude puts into a response, balancing thoroughness, response time, and token usage. Depending on the model, the available levels are **Low**, **Medium**, **High**, **X-High**, and **Max**. The default is **Low**. Effort applies independently of **Thinking type**, including with thinking disabled or with a manual thinking budget on models that support both. Some models require thinking for higher effort levels. **X-High** and **Max** don&#x27;t work with **Between tool calls**. See [effort](https://platform.claude.com/docs/en/build-with-claude/effort) for details.
+Code execution:
+  description: Enable the server-side [Code execution tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool). With this tool, the model can analyze data, perform complex calculations, run system commands, including writing code, in a secure, sandboxed environment.
+Enable web search:
+  description: Enable the server-side [Web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) for direct access to real-time web content, allowing it to answer questions with up-to-date information beyond its knowledge cutoff. Please note that this tool has its own [pricing](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool#usage-and-pricing). On models that support [dynamic filtering](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool#dynamic-filtering), also enable **Code execution** to filter search results before adding them to the conversation.
+Maximum web searches:
+  description: Limits the number of web searches that can be performed per user request. Once the limit is reached, no additional searches will be executed during that conversation.
+Include home location:
+  description: The parameter allows you to localize search results based on the Home Assistant location.
+Enable web fetch:
+  description: Enable the server-side [Web fetch tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool) to augment Claude&#x27;s context with live web content. The tool allows Claude to retrieve full content from specified web pages and PDF documents. Note that for security reasons, the web fetch tool can only fetch URLs that have previously appeared in the conversation context. This includes URLs in user messages, URLs in client-side tool results, and URLs from previous web search or web fetch results. This tool has its own [pricing](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool#usage-and-pricing). On models that support dynamic filtering, also enable **Code execution** to filter fetched content before adding it to the conversation.
+Maximum web fetches:
+  description: Limits the number of web fetches that can be performed per user request.
+Enable tool search tool:
+  description: With [this tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool), instead of loading all tool definitions into the context window upfront, Claude searches the tool catalog and loads only the tools it needs. This may improve performance if you don&#x27;t need to control devices every time, or if you have a long prompt or many additional tools.
+{% endconfiguration_basic %}
+
+## Supported features
+
+### Models
+
+The integration uses the capabilities and token limits reported by Anthropic to offer settings for the selected model. Newly released models may require a Home Assistant update if they introduce backwards-incompatible API changes.
+
+Anthropic [deprecates and retires models](https://platform.claude.com/docs/en/about-claude/model-deprecations) over time. Deprecated models remain usable until retirement, but you should replace them before their retirement date. Retired models are no longer available and cannot be selected in the integration.
+
+When a configured model becomes deprecated or retired, Home Assistant creates a repair issue. Open **Settings** &gt; **System** &gt; **Repairs** and choose an active replacement for each affected conversation or AI task configuration.
+
+### Feature matrix
+
+The following table describes which [API features](https://platform.claude.com/docs/en/build-with-claude/overview) are supported and which are not. In general, we don&#x27;t support beta features.
+
+#### Model capabilities
+
+| Feature | Description | Status | Notes |
+|---|---|---|---|
+| [Context windows](https://platform.claude.com/docs/en/build-with-claude/context-windows) | Up to 1M tokens for processing large documents, extensive codebases, and long conversations. | Supported | This is a basic feature, supported by default |
+| [Adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/thinking) | Let Claude decide when and how much to think based on the request. | Supported | Select **Adaptive** under **Thinking type**, where available, and use **Effort** to adjust how much work Claude puts into the response |
+| [Batch processing](https://platform.claude.com/docs/en/build-with-claude/batch-processing) | Process large volumes of requests asynchronously for cost savings. Send batches with many queries per batch. Batch API calls cost 50% less than standard API calls. | Not supported | This feature does not apply to Home Assistant. There is currently no clear smart home use case for batch processing. |
+| [Citations](https://platform.claude.com/docs/en/build-with-claude/citations) | Ground Claude&#x27;s responses in source documents. With Citations, Claude can provide detailed references to the exact sentences and passages it uses to generate responses, leading to more verifiable, trustworthy outputs. | Not supported | We support receiving the citations but don&#x27;t currently display them in the interface |
+| [Data residency](https://platform.claude.com/docs/en/build-with-claude/data-residency) | Control where model inference runs using geographic controls. Specify `&quot;global&quot;` or `&quot;us&quot;` routing per request via the `inference_geo` parameter. | Not supported | We might add support later, but it is not clear why you would need this in Home Assistant |
+| [Effort](https://platform.claude.com/docs/en/build-with-claude/effort) | Control how many tokens Claude uses when responding with the effort parameter, trading off between response thoroughness and token efficiency. | Supported | Use **Effort** on models that support it, including when thinking is disabled |
+| [Extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking) | Enhanced reasoning capabilities for complex tasks, providing transparency into Claude&#x27;s step-by-step thought process before delivering its final answer. | Supported | Select **Enabled** under **Thinking type** and set **Thinking budget**, where supported. The thinking summaries are displayed in the Assist interface |
+| [PDF support](https://platform.claude.com/docs/en/build-with-claude/pdf-support) | Process and analyze text and visual content from PDF documents. | Supported | Use `ai_task.generate_data` action with attachments to use this feature |
+| [Search results](https://platform.claude.com/docs/en/build-with-claude/search-results) | Enable natural citations for RAG applications by providing search results with proper source attribution. Achieve web search-quality citations for custom knowledge bases and tools. | Not supported | We receive the citations but they are not currently displayed in the interface. The response text itself usually provides sufficient information. |
+| [Structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs) | Guarantee schema conformance with two approaches: JSON outputs for structured data responses, and strict tool use for validated tool inputs. | Supported | Use `ai_task.generate_data` action with response schema to use this feature |
+
+#### Tools
+
+| Feature | Description | Status | Notes |
+|---|---|---|---|
+| [Code execution](https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool) | Run code in a sandboxed environment for advanced data analysis, calculations, and file processing. | Supported | Use the **Code execution** parameter to enable |
+| [Web fetch](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool) | Retrieve full content from specified web pages and PDF documents for in-depth analysis. | Supported | Use the **Enable web fetch** parameter to enable |
+| [Web search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool) | Augment Claude&#x27;s comprehensive knowledge with current, real-world data from across the web. | Supported | Use the **Enable web search** parameter to enable |
+| [Bash](https://platform.claude.com/docs/en/agents-and-tools/tool-use/bash-tool) | Execute bash commands and scripts to interact with the system shell and perform command-line operations. | Not supported | This is a client-side tool, the bash is implied to be on the Home Assistant side, this could compromise the security and provides no real benefit over Code execution feature that uses a sandboxed environment instead. |
+| [Computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool) | Control computer interfaces by taking screenshots and issuing mouse and keyboard commands. | Not supported | This is probably not applicable to Home Assistant use cases |
+| [Memory](https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool) | Enable Claude to store and retrieve information across conversations. Build knowledge bases over time, maintain project context, and learn from past interactions. | Not supported | This is more like an SDK feature rather than an API feature. As such, it can be implemented as a third-party LLM API. |
+| [Text editor](https://platform.claude.com/docs/en/agents-and-tools/tool-use/text-editor-tool) | Create and edit text files with a built-in text editor interface for file manipulation tasks. | Not supported | This is probably not applicable to Home Assistant use cases |
+| [Agent Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) | Extend Claude&#x27;s capabilities with Skills. Use pre-built Skills (PowerPoint, Excel, Word, PDF) or create custom Skills with instructions and scripts. Skills use progressive disclosure to efficiently manage context. | Not supported | This feature is still in beta |
+| [MCP connector](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector) | Connect to remote MCP servers directly from the Messages API without a separate MCP client. | Not supported | This feature is still in beta |
+| [Tool search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool) | Scale to thousands of tools by dynamically discovering and loading tools on-demand using regex-based search, optimizing context usage and improving tool selection accuracy. | Supported | Use the **Enable tool search tool** parameter to use this feature |
+| [Files API](https://platform.claude.com/docs/en/build-with-claude/files) | Upload and manage files to use with Claude without re-uploading content with each request. Supports PDFs, images, and text files. | Not supported | This feature is still in beta |
+
+#### Context management
+
+| Feature | Description | Status | Notes |
+|---|---|---|---|
+| [Compaction](https://platform.claude.com/docs/en/build-with-claude/compaction) | Server-side context summarization for long-running conversations. When context approaches the window limit, the API automatically summarizes earlier parts of the conversation. | Not supported | This feature is still in beta |
+| [Context editing](https://platform.claude.com/docs/en/build-with-claude/context-editing) | Automatically manage conversation context with configurable strategies. Supports clearing tool results when approaching token limits and managing thinking blocks in extended thinking conversations. | Not supported | This feature is still in beta |
+| [Automatic prompt caching](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#automatic-caching) | Simplify prompt caching to a single API parameter. The system automatically caches the last cacheable block in your request, moving the cache point forward as conversations grow. | Supported | Set **Caching strategy** to **Full** to use this feature |
+| [Prompt caching (5m)](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) | Provide Claude with more background knowledge and example outputs to reduce costs and latency. | Supported | Set **Caching strategy** to **System prompt** to enable caching for the system prompt and tools, but not for individual conversation messages, to keep Anthropic API costs low for typical Home Assistant smart home use cases |
+| [Prompt caching (1hr)](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#1-hour-cache-duration) | Extended 1-hour cache duration for less frequently accessed but important context, complementing the standard 5-minute cache. | Not supported | This is a more expensive version of prompt caching; it is probably not worth it for a smart home, but we might add this option in the future. Also, the chat session in Home Assistant expires in 5 minutes |
+| [Token counting](https://platform.claude.com/docs/en/api/messages-count-tokens) | Token counting enables you to determine the number of tokens in a message before sending it to Claude, helping you make informed decisions about your prompts and usage. | Not supported | This is probably not applicable to Home Assistant use cases |
+
+### Availability
+
+On start, the integration verifies the connection and validity of the API key, a config entry will not be loaded until this connectivity test succeeds. Additionally, there are periodic connectivity checks after startup. When the connection is considered to be broken, the `conversation` and `ai_task` entities will be shown as `Unavailable` until the connection is successful again. This does not prevent execution of the actions.
+
+## Use cases
+
+The integration provides `conversation` and `ai_task` entities powered by Anthropic API. Please refer to the corresponding integrations for more details and examples:
+
+- [Conversation](/integrations/conversation/)
+- [AI Task](/integrations/ai_task/)
+
+A few examples:
+
+### Assist pipeline
+
+Set up and configure Claude as a conversation agent in an [Assist pipeline](/integrations/assist_pipeline/) as described in the [voice guide](/voice_control/assist_create_open_ai_personality/). You can then use this pipeline to chat through the Home Assistant web interface, on [Android](/voice_control/android/) or [Apple](/voice_control/apple/) devices using the [Home Assistant Companion App](https://companion.home-assistant.io/docs/getting_started/), or by voice using an [Assist satellite](/integrations/assist_satellite/).
+
+[Expose entities](/voice_control/voice_remote_expose_devices/) and configure aliases for the entities you want the model to control.
+
+### Home Assistant interface
+
+You can set the Claude AI Task entity as the default AI Task entity. To do this, go to {% my config_ai title=&quot;**Settings** &gt; **System** &gt; **AI**&quot; %} and select the Claude AI Task entity. This makes the Claude AI Task entity the default for blueprints, and for the **Suggest with AI** button in various places in the interface.
+
+### Automation
+
+You can use `conversation.process` and `ai_task.generate_data` actions in your scripts and automations.
+Here is a simple automation that implements a Claude Telegram chatbot using [Telegram bot integration](/integrations/telegram_bot):
+
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your Telegram bot event entity
+conditions: &quot;{{ trigger.to_state.attributes.event_type == &#x27;telegram_text&#x27; }}&quot;
+actions:
+  - action: conversation.process
+    data:
+      agent_id: conversation.claude_conversation # Replace with your Claude conversation entity
+      conversation_id: &quot;telegram_{{ trigger.to_state.attributes.chat_id }}&quot;
+      text: &quot;{{ trigger.to_state.attributes.text }}&quot;
+    response_variable: response
+  - action: telegram_bot.send_message
+    data:
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      message: &quot;{{ response.response.speech.plain.speech }}&quot;
+      parse_mode: plain_text
+      config_entry_id: &quot;{{ trigger.to_state.attributes.bot.config_entry_id }}&quot;
+```
+
+
+## Troubleshooting
+
+### The response is truncated mid-sentence, or the model said it would do an action to control a device but didn&#x27;t do it
+
+This may happen when the **Maximum Tokens to Return in Response** integration option value is too small. A small conservative limit is good to keep the cost lower, but it may be suboptimal in certain cases.
+
+### Integration fails to set up, the logs show ImportError or AttributeError
+
+This may happen if the Python anthropic client had failed to upgrade to the correct version. If you know how to log into the Home Assistant container and manually reinstall the client, try that. Otherwise, downgrading and re-upgrading Home Assistant should help.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Anthropic.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported features</li><li>Use cases</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/anthropic/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/anthropic</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/anthropic</code></dd></dl></section><p><a href="../../integrations/anthropic/">Return to the Anthropic guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

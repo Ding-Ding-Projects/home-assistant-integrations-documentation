@@ -1,1 +1,492 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hyperion reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:6" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/hyperion/">Hyperion guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Hyperion</h1><p>Instructions on how to integrate Hyperion into Home Assistant.</p><section><h2>Overview</h2><p>The Hyperion integration allows you to integrate your</p></section><section><h2>Extra configuration of the integration</h2><p>All configuration options are offered from the frontend. Choose Options under the relevant entry on the Integrations page.</p></section><section><h2>Hyperion instances</h2><p>This integration supports multiple Hyperion instances running on a single Hyperion server. As instances are added/removed on the Hyperion UI, they will automatically be added/removed from Home Assistant.</p></section><section><h2>Light entity</h2><p>The default light entity will send data to Hyperion on the priority you have configured during integration setup. When turned off, it will clear the configured priority again. Other light sources independent of Home Assistant configured in Hyperion might still be active and cause light to be emitted. To turn the light output off entirely regardless of active light sources, you can enable the LED device entity that acts as a global switch (see Entities for higher extensibility and interoperability).</p></section><section><h2>Effects</h2><p>The effect list is dynamically pulled from the Hyperion server. Additionally, there will be a &#x27;Solid&#x27; effect to switch (back) to showing a solid color only.</p></section><section><h2>Hyperion camera</h2><p>A Hyperion camera entity is created that shows a stream of the input to Hyperion (e.g., a USB Capture device). This could be used to show a small &quot;preview window&quot; next to TV controls, for example.</p></section><section><h2>Sensors</h2><p>A sensor (Visible Priority) provides the effect currently displayed by the Hyperion server for the selected instance. Attributes of this sensor provide more details on the nature of the effect. For a detailed description, refer to the Hyperion API.</p></section><section><h2>Entities for higher extensibility and interoperability</h2><p>The Hyperion integration comes with a series of disabled-by-default entities for particular use cases. These entities expose &#x27;raw&#x27; underlying Hyperion API components for improved extensibility and interoperability which are particularly useful in cases where there are multiple Hyperion server clients (of which Home Assistant is one).</p></section><section><h2>Control over external sources: Screen capture and USB capture</h2><p>Provided entities for controlling external sources:</p></section><section><h2>Control over Hyperion functionality</h2><p>Further entities to control Hyperion functionality:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Hyperion.</p><p>The <strong>auth</strong> configuration step lists <code>create_token</code>, <code>token</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>camera</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Hyperion instances</li><li>Light entity</li><li>Effects</li><li>Hyperion camera</li><li>Sensors</li><li>Entities for higher extensibility and interoperability</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/hyperion/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/hyperion</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/hyperion</code></dd></dl></section><p><a href="../../integrations/hyperion/">Return to the Hyperion guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hyperion reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:6" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/hyperion/">Hyperion guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Hyperion</h1><p>Instructions on how to integrate Hyperion into Home Assistant.</p><div class="reader-body"><p>The <strong>Hyperion</strong> integration allows you to integrate your
+<a>Hyperion</a> into Home Assistant. Hyperion is
+an open source Ambilight implementation which runs on many platforms.</p>
+<p><strong>NOTE</strong>: <a>Hyperion-NG</a> is
+supported, the original <a>discontinued Hyperion</a> is not supported by
+this integration.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Hyperion</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Hyperion</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h3>Extra configuration of the integration</h3>
+<p>All configuration options are offered from the frontend. Choose <code>Options</code> under the
+relevant entry on the <code>Integrations</code> page.</p>
+<p>Options supported:</p>
+<ul>
+<li><strong>Priority</strong>: The priority for color and effects. Hyperion will choose the source
+with the lowest priority number as active input. If you have other sources (not
+originating from Home Assistant) configured, make sure this option is lower than
+those sources priority in Hyperion itself (typically lower than 200 is appropriate).</li>
+<li><strong>Effects to hide</strong>: An optional selection of effects to hide from the light effects
+list. New effects added to the Hyperion server will be shown by default.</li>
+</ul>
+<h2>Hyperion instances</h2>
+<p>This integration supports multiple Hyperion instances running on a single Hyperion
+server. As instances are added/removed on the Hyperion UI, they will automatically be
+added/removed from Home Assistant.</p>
+<h2>Light entity</h2>
+<p>The default light entity will send data to Hyperion on the priority you have configured
+during integration setup. When turned off, it will clear the configured priority again.
+Other light sources independent of Home Assistant configured in Hyperion might still be
+active and cause light to be emitted. To turn the light output off entirely
+regardless of active light sources, you can enable the LED device entity that acts as
+a global switch (see <a href="../hyperion/">Entities for higher extensibility and interoperability</a>).</p>
+<h2>Effects</h2>
+<p>The effect list is dynamically pulled from the Hyperion server. Additionally, there
+will be a 'Solid' effect to switch (back) to showing a solid color only.</p>
+<h2>Hyperion camera</h2>
+<p>A Hyperion camera entity is created that shows a stream of the input to Hyperion (e.g., a
+USB Capture device). This could be used to show a small "preview window" next to TV
+controls, for example.</p>
+<p>Only the currently live Hyperion priority can be streamed, and only
+streamable sources will actually stream content (e.g., USB Capture Devices will work, but
+static colors will not).</p>
+<h2>Sensors</h2>
+<p>A sensor (Visible Priority) provides the effect currently displayed by the Hyperion server for the selected instance. Attributes of this sensor provide more details on the nature of the effect. For a detailed description, refer to the <a>Hyperion API</a>.</p>
+<h2>Entities for higher extensibility and interoperability</h2>
+<p>The Hyperion integration comes with a series of disabled-by-default entities for
+particular use cases. These entities expose 'raw' underlying Hyperion API components for
+improved extensibility and interoperability which are particularly useful in cases where
+there are multiple Hyperion server clients (of which Home Assistant is one).</p>
+<p>These entities may be enabled by visiting the <code>Integrations</code> page, choosing the relevant
+entity and toggling <code>Enable entity</code>, followed by <code>Update</code>.</p>
+<h3>Control over external sources: Screen capture and USB capture</h3>
+<p>Provided entities for controlling external sources:</p>
+<ul>
+<li><code>switch.[instance]_component_platform_capture</code>: Toggles the <code>Screen Capture</code> source</li>
+<li><code>switch.[instance]_component_usb_capture</code>: Toggles the <code>USB Capture</code> source</li>
+<li><code>switch.[instance]_component_audio_capture</code>: Toggles the <code>Audio Capture</code> source</li>
+</ul>
+<h3>Control over Hyperion functionality</h3>
+<p>Further entities to control Hyperion functionality:</p>
+<ul>
+<li>There will be additional <code>switch.[instance]_component_[component]</code> entities that can
+be used to toggle the relevant underlying Hyperion component as shown on the Hyperion
+server <code>Remote Control</code> page under <code>Components Control</code>. This allows fine grained
+control over Hyperion functionality (e.g. <code>Blackbar Detection</code>) or device
+state (<code>LED Device</code>).</li>
+<li><code>switch.[instance]_component_all</code>: refers to the entire Hyperion instance state that
+controls the toggle on the Hyperion server <code>Dashboard</code> page.</li>
+</ul>
+<h2>Examples</h2>
+<p>To start Hyperion with an effect, use the following automation:</p>
+<pre><code>automation:
+- alias: "Turn Hyperion effect on when light goes on"
+  triggers:
+    - trigger: state
+      entity_id: light.hyperion
+      to: "on"
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.hyperion
+      data:
+        effect: "Full color mood blobs"
+</code></pre>
+<p>To have the lights playing an effect when pausing, idle or turn off a media player like Plex you can use this example:</p>
+<pre><code>- alias: "Set hyperion effect after playback"
+  triggers:
+    - trigger: state
+      entity_id: media_player.plex
+      to: "off"
+    - trigger: state
+      entity_id: media_player.plex.plex
+      to: "paused"
+    - trigger: state
+      entity_id: media_player.plex.plex
+      to: "idle"
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.hyperion
+      data:
+        effect: "Full color mood blobs"
+</code></pre>
+<p>To capture the screen on a USB capture device, when playing something on a media_player, you can use this example:</p>
+<pre><code>- alias: "Set hyperion when playback starts"
+  triggers:
+    - trigger: state
+      entity_id: media_player.plex
+      to: "playing"
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.[instance]_component_usb_capture
+</code></pre>
+<p>To toggle the LED device together with the light entity to turn light output on or off for all sources. In this example both entities are turned on together, create another automation with the values reversed for turning both off:</p>
+<pre><code>- alias: "Turn LED device on when Hyperion light is activated"
+  triggers:
+    - trigger: state
+      entity_id:
+        - light.hyperion
+      from: "off"
+      to: "on"
+  conditions:
+    - condition: state
+      entity_id: switch.[instance]_component_led_device
+      state: "off"
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.[instance]_component_led_device
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/hyperion.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Hyperion into Home Assistant.
+ha_release: 0.7.6
+ha_domain: hyperion
+---
+
+The **Hyperion** {% term integration %} allows you to integrate your
+[Hyperion](https://docs.hyperion-project.org/) into Home Assistant. Hyperion is
+an open source Ambilight implementation which runs on many platforms.
+
+**NOTE**: [Hyperion-NG](https://github.com/hyperion-project/hyperion.ng) is
+supported, the original [discontinued Hyperion](https://github.com/hyperion-project/hyperion) is not supported by
+this integration.
+
+{% include integrations/config_flow.md %}
+
+### Extra configuration of the integration
+
+All configuration options are offered from the frontend. Choose `Options` under the
+relevant entry on the `Integrations` page.
+
+Options supported:
+- **Priority**: The priority for color and effects. Hyperion will choose the source&#32;
+  with the lowest priority number as active input. If you have other sources (not&#32;
+  originating from Home Assistant) configured, make sure this option is lower than&#32;
+  those sources priority in Hyperion itself (typically lower than 200 is appropriate).
+- **Effects to hide**: An optional selection of effects to hide from the light effects
+  list. New effects added to the Hyperion server will be shown by default.
+
+## Hyperion instances
+
+This integration supports multiple Hyperion instances running on a single Hyperion
+server. As instances are added/removed on the Hyperion UI, they will automatically be
+added/removed from Home Assistant.
+
+## Light entity
+
+The default light entity will send data to Hyperion on the priority you have configured&#32;
+during integration setup. When turned off, it will clear the configured priority again.&#32;
+Other light sources independent of Home Assistant configured in Hyperion might still be&#32;
+active and cause light to be emitted. To turn the light output off entirely&#32;
+regardless of active light sources, you can enable the LED device entity that acts as&#32;
+a global switch (see [Entities for higher extensibility and interoperability](/integrations/hyperion/#entities-for-higher-extensibility-and-interoperability)).
+
+## Effects
+
+The effect list is dynamically pulled from the Hyperion server. Additionally, there
+will be a &#x27;Solid&#x27; effect to switch (back) to showing a solid color only.
+
+## Hyperion camera
+
+A Hyperion camera entity is created that shows a stream of the input to Hyperion (e.g., a
+USB Capture device). This could be used to show a small &quot;preview window&quot; next to TV
+controls, for example.
+
+Only the currently live Hyperion priority can be streamed, and only
+streamable sources will actually stream content (e.g., USB Capture Devices will work, but
+static colors will not).
+
+## Sensors
+
+A sensor (Visible Priority) provides the effect currently displayed by the Hyperion server for the selected instance. Attributes of this sensor provide more details on the nature of the effect. For a detailed description, refer to the [Hyperion API](https://docs.hyperion-project.org/en/json/ServerInfo.html#priorities).
+
+## Entities for higher extensibility and interoperability
+
+The Hyperion integration comes with a series of disabled-by-default entities for
+particular use cases. These entities expose &#x27;raw&#x27; underlying Hyperion API components for
+improved extensibility and interoperability which are particularly useful in cases where
+there are multiple Hyperion server clients (of which Home Assistant is one).
+
+These entities may be enabled by visiting the `Integrations` page, choosing the relevant
+entity and toggling `Enable entity`, followed by `Update`.
+
+### Control over external sources: Screen capture and USB capture
+
+Provided entities for controlling external sources:
+
+- `switch.[instance]_component_platform_capture`: Toggles the `Screen Capture` source
+- `switch.[instance]_component_usb_capture`: Toggles the `USB Capture` source
+- `switch.[instance]_component_audio_capture`: Toggles the `Audio Capture` source
+
+### Control over Hyperion functionality
+
+Further entities to control Hyperion functionality:
+
+- There will be additional `switch.[instance]_component_[component]` entities that can
+  be used to toggle the relevant underlying Hyperion component as shown on the Hyperion
+  server `Remote Control` page under `Components Control`. This allows fine grained&#32;
+  control over Hyperion functionality (e.g. `Blackbar Detection`) or device
+  state (`LED Device`).
+- `switch.[instance]_component_all`: refers to the entire Hyperion instance state that
+  controls the toggle on the Hyperion server `Dashboard` page.
+
+## Examples
+
+To start Hyperion with an effect, use the following automation:
+
+```yaml
+automation:
+- alias: &quot;Turn Hyperion effect on when light goes on&quot;
+  triggers:
+    - trigger: state
+      entity_id: light.hyperion
+      to: &quot;on&quot;
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.hyperion
+      data:
+        effect: &quot;Full color mood blobs&quot;
+```
+
+To have the lights playing an effect when pausing, idle or turn off a media player like Plex you can use this example:
+
+```yaml
+- alias: &quot;Set hyperion effect after playback&quot;
+  triggers:
+    - trigger: state
+      entity_id: media_player.plex
+      to: &quot;off&quot;
+    - trigger: state
+      entity_id: media_player.plex.plex
+      to: &quot;paused&quot;
+    - trigger: state
+      entity_id: media_player.plex.plex
+      to: &quot;idle&quot;
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.hyperion
+      data:
+        effect: &quot;Full color mood blobs&quot;
+```
+
+To capture the screen on a USB capture device, when playing something on a media_player, you can use this example:
+
+```yaml
+- alias: &quot;Set hyperion when playback starts&quot;
+  triggers:
+    - trigger: state
+      entity_id: media_player.plex
+      to: &quot;playing&quot;
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.[instance]_component_usb_capture
+```
+
+To toggle the LED device together with the light entity to turn light output on or off for all sources. In this example both entities are turned on together, create another automation with the values reversed for turning both off:
+
+```yaml
+- alias: &quot;Turn LED device on when Hyperion light is activated&quot;
+  triggers:
+    - trigger: state
+      entity_id:
+        - light.hyperion
+      from: &quot;off&quot;
+      to: &quot;on&quot;
+  conditions:
+    - condition: state
+      entity_id: switch.[instance]_component_led_device
+      state: &quot;off&quot;
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.[instance]_component_led_device
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Hyperion.</p><p>The <strong>auth</strong> configuration step lists <code>create_token</code>, <code>token</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>camera</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Hyperion instances</li><li>Light entity</li><li>Effects</li><li>Hyperion camera</li><li>Sensors</li><li>Entities for higher extensibility and interoperability</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/hyperion/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/hyperion</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/hyperion</code></dd></dl></section><p><a href="../../integrations/hyperion/">Return to the Hyperion guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

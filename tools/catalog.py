@@ -47,6 +47,8 @@ def collect(stock, material, packages, articles):
         domain = meta.get('ha_domain') or path.stem
         row = catalog.setdefault(domain, {'domain': domain, 'sources': {}})
         row.setdefault('name', meta.get('title') or domain.replace('_', ' ').title())
+        if row.get('article') and path.stem != domain:
+            continue
         row['article_text'] = paragraphs(body)
         row['article'] = 'https://www.home-assistant.io/integrations/' + path.stem + '/'
         row['summary'] = str(meta.get('description') or row.get('summary') or '')

@@ -1,1 +1,728 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard repositories reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:133" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/dashboard_repos/">Dashboard repositories guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Dashboard repositories</h1><p></p><section><h2>Configuration details</h2><p>The domain used to identify Dashboard repositories in Home Assistant is <code>dashboard_repos</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/main/docs/features/dashboard-history/README.md</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/dashboard_repos</code></dd></dl></section><p><a href="../../integrations/dashboard_repos/">Return to the Dashboard repositories guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard repositories reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:133" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/dashboard_repos/">Dashboard repositories guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Dashboard repositories</h1><p></p><div class="reader-body"><h2>Dashboard history</h2>
+<p>Every dashboard kept in storage has its own Git repository, every tab (view) of
+a dashboard has its own repository, and every dashboard and every tab has its
+own history manager page.</p>
+<h2>Design</h2>
+<h3>Layout on disk</h3>
+<p>Under the configuration folder, next to <code>automation_repos</code>:</p>
+<pre><code>dashboard_repos/&lt;dashboard id&gt;/.git          the dashboard repository
+dashboard_repos/&lt;dashboard id&gt;/dashboard.yaml  settings, and the keys of the views in order
+dashboard_repos/&lt;dashboard id&gt;/meta.json     key, title and path of each view
+dashboard_repos/&lt;dashboard id&gt;/views.lock    the commit each view repository is at
+dashboard_repos/&lt;dashboard id&gt;/views/&lt;key&gt;/view.yaml   one view, tracked as an ordinary file
+dashboard_repos/&lt;dashboard id&gt;/_removed/&lt;key&gt;/         a deleted view
+dashboard_repos/&lt;dashboard id&gt;/.views/&lt;key&gt;.git        the repository of one view (ignored)
+dashboard_repos/_removed/&lt;id&gt;-&lt;UTC time&gt;/    the repository of a deleted dashboard
+</code></pre>
+<p>The dashboard id is the dashboard's URL path. The default dashboard uses the
+reserved id <code>_default</code>. Ids and view keys must match
+<code>[A-Za-z0-9][A-Za-z0-9_-]{0,63}</code>, so nothing can contain a dot, a slash or a
+leading dash. Anything else is refused.</p>
+<h3>What was built: separate Git directories, not submodules</h3>
+<p>Git submodules and plain nested repositories both fail the requirement that
+one clone or push of a dashboard repository carries every tab. A nested
+repository is only recorded as a pinned commit in its parent, so the parent
+does not hold its content or history. Bundles under <code>views/&lt;key&gt;.bundle</code> would
+be rewritten on every save and grow without bound.</p>
+<p>Instead, each view repository keeps its Git directory in <code>.views/&lt;key&gt;.git</code>
+and uses <code>views/&lt;key&gt;/</code> as its working folder, with no <code>.git</code> inside it (every
+Git call passes <code>--git-dir</code> and <code>--work-tree</code>). Because of that:</p>
+<ul>
+<li>The dashboard repository tracks <code>views/&lt;key&gt;/view.yaml</code> as an ordinary file,
+so every commit of the dashboard contains the full content of every tab.
+<code>.views/</code> is ignored by the dashboard repository.</li>
+<li>After each save, the history of every changed view is fetched into the
+dashboard repository as the branch <code>view/&lt;key&gt;</code>. The view's real commits
+(not copies) live in the dashboard repository's object store.</li>
+<li><code>views.lock</code> lists <code>&lt;key&gt; &lt;commit of the view repository&gt;</code>, so the
+dashboard history and each view history can be matched.</li>
+</ul>
+<p>A single clone of the dashboard repository therefore holds the content of
+every tab in <code>main</code> and every tab's history in <code>origin/view/&lt;key&gt;</code>. A push
+sends <code>HEAD:refs/heads/main</code> and <code>refs/heads/view/*</code>.</p>
+<p>Limits, stated plainly:</p>
+<ul>
+<li>The <code>view/&lt;key&gt;</code> branches have unrelated histories next to <code>main</code>. They are
+read with <code>git log origin/view/&lt;key&gt;</code>; they are not merged into <code>main</code>.</li>
+<li>A clone has the history of each view but not the view repositories as
+working repositories (<code>.views/</code> is ignored). Reading history from a clone
+works with plain Git. The history manager on the instance uses the real view
+repositories.</li>
+<li>The view repositories and branches are never rewritten, force-pushed or
+deleted.</li>
+</ul>
+<h3>Remote and push</h3>
+<p><code>dashboard_repos/set_remote</code> sets or removes <code>origin</code> of one dashboard
+repository, and <code>dashboard_repos/push</code> sends it, with every view's history,
+never forced. Nothing is ever pushed or fetched unless a remote is set and a
+push is requested. The history page has a Remote section for both (see
+Interface).</p>
+<p>The address rule is stricter than the one the automation repositories use. An
+address is accepted only as:</p>
+<ul>
+<li><code>https://host/path</code></li>
+<li><code>ssh://host/path</code></li>
+<li><code>git@host:path</code></li>
+</ul>
+<p>with an optional port, and with no user name or password (so <code>ssh://git@host/x</code>
+is refused; use the <code>git@host:path</code> form), no query string, no fragment, no
+space or control character, and at most 500 characters. A bare local path is
+refused when setting a remote. A bare local path that was stored earlier keeps
+working, and is shown as it is.</p>
+<p>The address is never handed back with anything that could hold a secret. When
+the stored address does not follow the rule (it was set before the rule was
+tightened), status reports <code>remote: null</code> and <code>remote_unsafe: true</code>, and a push
+is refused until the address is removed or set again. The text of a failed push
+is cut down to one line, the address and any user information are removed from
+it, and the result carries the time of the push. The last push (time, result,
+masked error) is kept in the repository's <code>.git</code> folder, outside the history,
+and returned by <code>dashboard_repos/status</code> as <code>last_push</code>.</p>
+<h3>What the history keeps, and forgetting it</h3>
+<p>A dashboard configuration can hold secrets typed into cards: an address with a
+token in an iframe card, a webhook id. Every save commits them, so they are in
+every old version, in backups of the configuration folder, and in everything
+a push sends to a remote. Going back to an old version brings old values back.
+The history page says so beside the Restore action and in the Remote section.</p>
+<p><code>dashboard_repos/forget</code> is the way out. It deletes the whole repository of
+one dashboard, with every tab's history, for good, and starts again from the
+dashboard as it is now. The interface asks for a confirmation that says what
+is deleted. Copies already pushed to a remote are not changed, and anything
+still typed into a card is in the new first version.</p>
+<p>When a dashboard is deleted, its repository is moved to
+<code>dashboard_repos/_removed/&lt;id&gt;-&lt;UTC time&gt;/</code> (a repository found at start-up
+with no matching dashboard is moved the same way). A new dashboard with the
+same address starts with an empty history. The moved folder is never read
+again by this feature; delete it by hand to remove its secrets.</p>
+<h3>Stable view keys</h3>
+<p>Views have no id. The key of a view is its <code>path</code> when that is a safe name
+that is not already used, otherwise a generated <code>view-&lt;8 hex&gt;</code>. The key is
+kept in <code>meta.json</code> inside the repository, not in the person's dashboard
+configuration. On every save the views are matched to the known ones:</p>
+<ol>
+<li>by <code>path</code>;</li>
+<li>by <code>title</code>, the nearest position first;</li>
+<li>by position alone, which is how a rename is followed.</li>
+</ol>
+<p>Behaviour:</p>
+<ul>
+<li><strong>Rename:</strong> the key and repository stay; the commit says "Rename view A to B".</li>
+<li><strong>Reorder:</strong> keys stay; the dashboard commit says "Reorder views".</li>
+<li><strong>Delete:</strong> the working folder moves to <code>_removed/&lt;key&gt;/</code>, its repository
+and history stay, and the dashboard commit says "Remove view X". A key is
+never reused.</li>
+<li><strong>New view:</strong> a new repository with a first commit "Add view X".</li>
+<li>A delete and an add in the same save at the same position is read as a
+rename. This is the limit of matching without an id.</li>
+</ul>
+<h3>When commits happen</h3>
+<p>On every save of a stored dashboard (the <code>lovelace_updated</code> event that
+<code>LovelaceStorage.async_save</code> already fires; Lovelace is not changed), each view
+whose content changed gets one commit, then the dashboard gets one. Existing
+dashboards get their first commit when Home Assistant has started.
+Dashboards written in YAML and generated dashboards have no stored
+configuration and are skipped (listed as such in the status). A save that
+changes nothing makes no commit. Messages are generated from the change
+(<code>Home: change cards</code>, <code>Add view X</code>, <code>Change settings: title</code>).</p>
+<p>Saves are coalesced: commits run one at a time, and a commit reads the newest
+saved configuration when its turn comes, so a storm of saves while one commit
+is waiting or running leaves at most one more commit waiting per dashboard.
+The listener never raises.</p>
+<p>Every view and the settings are written out and size-checked before the first
+commit, so one view over 2 MB refuses the whole save with nothing half
+recorded. Keys are compared lower-cased, so two views whose paths differ only
+by case never share a folder on a disk that ignores case. Names, keys and
+commit ids are matched in full (not "up to a trailing newline").</p>
+<p>A failure to commit never blocks the save: it is logged once and reported in
+<code>dashboard_repos/status</code> as <code>error</code>.</p>
+<h3>Websocket commands (admin only)</h3>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>dashboard_repos/status</code></td>
+  <td>Every dashboard, its views, removed views, remote and last error.</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/history</code></td>
+  <td>Commits of a dashboard, or of one view (<code>view_key</code>).</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/version</code></td>
+  <td>The configuration at a commit, as data and YAML.</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/diff</code></td>
+  <td>The difference between two commits, as text.</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/restore</code></td>
+  <td>Put a dashboard or a view back to a commit.</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/forget</code></td>
+  <td>Delete the whole history of a dashboard and start it again.</td>
+</tr>
+<tr>
+  <td><code>dashboard_repos/set_remote</code>, <code>dashboard_repos/push</code></td>
+  <td>Remote and push, with the stricter address rule above.</td>
+</tr>
+</tbody>
+</table>
+<p>Restoring first waits for any save still queued and commits the current
+state ("Before restoring to <code>&lt;id&gt;</code>"), so going back never loses it. When that
+cannot be done the command refuses with the error code
+<code>current_state_not_recorded</code>, and the interface asks again with a second
+confirmation; only then does it send <code>without_saving_current</code>. One tab is put
+back by its key only, using the keys recorded at that commit of the current
+state, never its position or title. When no tab has the key any more the tab
+is added at the end as a new tab, and the result says so (<code>new_view</code>). The
+restored configuration is checked (a dashboard of views, each within the size
+limit) before it is saved. It is written back through Lovelace's own save, so
+open dashboards update, and the result carries the commit it made, so the
+page reloads when the server reports it. History is never rewritten.</p>
+<p>Error codes: <code>git_error</code>, <code>dashboard_not_found</code> (no such dashboard),
+<code>not_storage_dashboard</code> (it exists but is not edited in the interface),
+<code>dashboard_changed</code>, <code>save_failed</code> (the dashboard's own save failed),
+<code>current_state_not_recorded</code>. Restoring one tab into a dashboard that has no
+stored configuration is refused. The interface shows each known code as a
+localized sentence with the server text as detail, and offers Retry for
+<code>dashboard_changed</code>. A push no longer holds the commit queue: each dashboard
+has its own push lock, and a second push waits, then says it is still running.
+Replacing a remote asks first and says what stays on the old one. A failure at
+start-up on one dashboard no longer stops the others.</p>
+<h3>Safety</h3>
+<p>Git is run with argument lists, never a shell, with hooks disabled, signing
+off, and no global or system configuration, by the same helper as the
+automation repositories. Ids, keys and commits are validated before use.
+Configurations over 2 MB, dashboards over 100 views and diffs over 200 000
+characters are bounded.</p>
+<h2>Interface</h2>
+<p><code>/config/dashboard_history?dashboard=&lt;id&gt;&amp;view=&lt;key&gt;&amp;commit=&lt;sha&gt;</code></p>
+<p>Without <code>dashboard</code>, the page lists the dashboards with a link to the history
+of each dashboard and each tab. With one, it shows the commits (searchable),
+the changes and the content of the selected commit, a comparison with another
+commit and a restore with a confirmation that states exactly what is replaced
+(the whole dashboard with all its tabs, or only the one tab, or a new tab when
+the tab no longer exists). A warning about secrets typed into cards sits next
+to Restore.</p>
+<p>Below the commits, an admin sees:</p>
+<ul>
+<li><strong>Remote</strong>: the current address (never with credentials), a field to set or
+clear it that checks the same rule as the server in the browser (the server
+stays the authority), the same warning about secrets, a plain statement of
+what Push now sends (this dashboard's configuration, every tab and every old
+version, including anything typed into cards), the Push now button with a
+confirmation, the result, and the time of the last push. Nothing contacts a
+remote unless an address is set and the button is pressed. Pushes are never
+forced.</li>
+<li><strong>Forget this dashboard's history</strong> (whole-dashboard view only), with a
+confirmation.</li>
+</ul>
+<p>Not built: a screen to list or delete the <code>_removed</code> archives.</p>
+<h2>Verification</h2>
+<p><code>core/tests/components/dashboard_repos/test_repos.py</code> uses real Git. It covers
+first save, unchanged save, one-view change, rename, reorder, delete, keys,
+reading back versions, diffs, notes, unsafe input, and cloning one dashboard
+repository into a fresh folder to read every tab's content and history.</p>
+<p><code>core/tests/components/dashboard_repos/test_repos.py</code> also covers: names,
+keys and commit ids that end in a newline, one oversized view or oversized
+settings recording nothing, a deleted dashboard's history not being adopted by
+a new one, forgetting, hostile remote addresses (credentials in every scheme,
+query strings, fragments, bare paths, option-like and <code>ext::</code> strings, an
+embedded newline, over-long addresses), credentials set earlier never being
+shown or used, push errors and the last push, restoring by key only and adding
+a new tab when the key is gone, rejecting a configuration that cannot be
+recorded, keys that differ only by case, and the commit queue (a burst becomes
+one commit, a save during a commit queues one more, a failing commit is not
+raised). <code>frontend/test/data/dashboard_repos.test.ts</code> checks the browser copy
+of the address rule against the same list.</p>
+<h3>Run on a real instance</h3>
+<p>On 10 November 2026 the server commands were driven on a running copy: two saves, the history, a restore, and deleting an archived history. The interface page, setting a remote and pushing have not been seen, and no push to a real remote has been made.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/dashboard-history/README.md</code></p><details><summary>Original Markdown source</summary><pre># Dashboard history
+
+Every dashboard kept in storage has its own Git repository, every tab (view) of
+a dashboard has its own repository, and every dashboard and every tab has its
+own history manager page.
+
+## Design
+
+### Layout on disk
+
+Under the configuration folder, next to `automation_repos`:
+
+```text
+dashboard_repos/&lt;dashboard id&gt;/.git          the dashboard repository
+dashboard_repos/&lt;dashboard id&gt;/dashboard.yaml  settings, and the keys of the views in order
+dashboard_repos/&lt;dashboard id&gt;/meta.json     key, title and path of each view
+dashboard_repos/&lt;dashboard id&gt;/views.lock    the commit each view repository is at
+dashboard_repos/&lt;dashboard id&gt;/views/&lt;key&gt;/view.yaml   one view, tracked as an ordinary file
+dashboard_repos/&lt;dashboard id&gt;/_removed/&lt;key&gt;/         a deleted view
+dashboard_repos/&lt;dashboard id&gt;/.views/&lt;key&gt;.git        the repository of one view (ignored)
+dashboard_repos/_removed/&lt;id&gt;-&lt;UTC time&gt;/    the repository of a deleted dashboard
+```
+
+The dashboard id is the dashboard&#x27;s URL path. The default dashboard uses the
+reserved id `_default`. Ids and view keys must match
+`[A-Za-z0-9][A-Za-z0-9_-]{0,63}`, so nothing can contain a dot, a slash or a
+leading dash. Anything else is refused.
+
+### What was built: separate Git directories, not submodules
+
+Git submodules and plain nested repositories both fail the requirement that
+one clone or push of a dashboard repository carries every tab. A nested
+repository is only recorded as a pinned commit in its parent, so the parent
+does not hold its content or history. Bundles under `views/&lt;key&gt;.bundle` would
+be rewritten on every save and grow without bound.
+
+Instead, each view repository keeps its Git directory in `.views/&lt;key&gt;.git`
+and uses `views/&lt;key&gt;/` as its working folder, with no `.git` inside it (every
+Git call passes `--git-dir` and `--work-tree`). Because of that:
+
+- The dashboard repository tracks `views/&lt;key&gt;/view.yaml` as an ordinary file,
+  so every commit of the dashboard contains the full content of every tab.
+  `.views/` is ignored by the dashboard repository.
+- After each save, the history of every changed view is fetched into the
+  dashboard repository as the branch `view/&lt;key&gt;`. The view&#x27;s real commits
+  (not copies) live in the dashboard repository&#x27;s object store.
+- `views.lock` lists `&lt;key&gt; &lt;commit of the view repository&gt;`, so the
+  dashboard history and each view history can be matched.
+
+A single clone of the dashboard repository therefore holds the content of
+every tab in `main` and every tab&#x27;s history in `origin/view/&lt;key&gt;`. A push
+sends `HEAD:refs/heads/main` and `refs/heads/view/*`.
+
+Limits, stated plainly:
+
+- The `view/&lt;key&gt;` branches have unrelated histories next to `main`. They are
+  read with `git log origin/view/&lt;key&gt;`; they are not merged into `main`.
+- A clone has the history of each view but not the view repositories as
+  working repositories (`.views/` is ignored). Reading history from a clone
+  works with plain Git. The history manager on the instance uses the real view
+  repositories.
+- The view repositories and branches are never rewritten, force-pushed or
+  deleted.
+
+### Remote and push
+
+`dashboard_repos/set_remote` sets or removes `origin` of one dashboard
+repository, and `dashboard_repos/push` sends it, with every view&#x27;s history,
+never forced. Nothing is ever pushed or fetched unless a remote is set and a
+push is requested. The history page has a Remote section for both (see
+Interface).
+
+The address rule is stricter than the one the automation repositories use. An
+address is accepted only as:
+
+- `https://host/path`
+- `ssh://host/path`
+- `git@host:path`
+
+with an optional port, and with no user name or password (so `ssh://git@host/x`
+is refused; use the `git@host:path` form), no query string, no fragment, no
+space or control character, and at most 500 characters. A bare local path is
+refused when setting a remote. A bare local path that was stored earlier keeps
+working, and is shown as it is.
+
+The address is never handed back with anything that could hold a secret. When
+the stored address does not follow the rule (it was set before the rule was
+tightened), status reports `remote: null` and `remote_unsafe: true`, and a push
+is refused until the address is removed or set again. The text of a failed push
+is cut down to one line, the address and any user information are removed from
+it, and the result carries the time of the push. The last push (time, result,
+masked error) is kept in the repository&#x27;s `.git` folder, outside the history,
+and returned by `dashboard_repos/status` as `last_push`.
+
+### What the history keeps, and forgetting it
+
+A dashboard configuration can hold secrets typed into cards: an address with a
+token in an iframe card, a webhook id. Every save commits them, so they are in
+every old version, in backups of the configuration folder, and in everything
+a push sends to a remote. Going back to an old version brings old values back.
+The history page says so beside the Restore action and in the Remote section.
+
+`dashboard_repos/forget` is the way out. It deletes the whole repository of
+one dashboard, with every tab&#x27;s history, for good, and starts again from the
+dashboard as it is now. The interface asks for a confirmation that says what
+is deleted. Copies already pushed to a remote are not changed, and anything
+still typed into a card is in the new first version.
+
+When a dashboard is deleted, its repository is moved to
+`dashboard_repos/_removed/&lt;id&gt;-&lt;UTC time&gt;/` (a repository found at start-up
+with no matching dashboard is moved the same way). A new dashboard with the
+same address starts with an empty history. The moved folder is never read
+again by this feature; delete it by hand to remove its secrets.
+
+### Stable view keys
+
+Views have no id. The key of a view is its `path` when that is a safe name
+that is not already used, otherwise a generated `view-&lt;8 hex&gt;`. The key is
+kept in `meta.json` inside the repository, not in the person&#x27;s dashboard
+configuration. On every save the views are matched to the known ones:
+
+1. by `path`;
+2. by `title`, the nearest position first;
+3. by position alone, which is how a rename is followed.
+
+Behaviour:
+
+- **Rename:** the key and repository stay; the commit says &quot;Rename view A to B&quot;.
+- **Reorder:** keys stay; the dashboard commit says &quot;Reorder views&quot;.
+- **Delete:** the working folder moves to `_removed/&lt;key&gt;/`, its repository
+  and history stay, and the dashboard commit says &quot;Remove view X&quot;. A key is
+  never reused.
+- **New view:** a new repository with a first commit &quot;Add view X&quot;.
+- A delete and an add in the same save at the same position is read as a
+  rename. This is the limit of matching without an id.
+
+### When commits happen
+
+On every save of a stored dashboard (the `lovelace_updated` event that
+`LovelaceStorage.async_save` already fires; Lovelace is not changed), each view
+whose content changed gets one commit, then the dashboard gets one. Existing
+dashboards get their first commit when Home Assistant has started.
+Dashboards written in YAML and generated dashboards have no stored
+configuration and are skipped (listed as such in the status). A save that
+changes nothing makes no commit. Messages are generated from the change
+(`Home: change cards`, `Add view X`, `Change settings: title`).
+
+Saves are coalesced: commits run one at a time, and a commit reads the newest
+saved configuration when its turn comes, so a storm of saves while one commit
+is waiting or running leaves at most one more commit waiting per dashboard.
+The listener never raises.
+
+Every view and the settings are written out and size-checked before the first
+commit, so one view over 2 MB refuses the whole save with nothing half
+recorded. Keys are compared lower-cased, so two views whose paths differ only
+by case never share a folder on a disk that ignores case. Names, keys and
+commit ids are matched in full (not &quot;up to a trailing newline&quot;).
+
+A failure to commit never blocks the save: it is logged once and reported in
+`dashboard_repos/status` as `error`.
+
+### Websocket commands (admin only)
+
+| Command | Purpose |
+| --- | --- |
+| `dashboard_repos/status` | Every dashboard, its views, removed views, remote and last error. |
+| `dashboard_repos/history` | Commits of a dashboard, or of one view (`view_key`). |
+| `dashboard_repos/version` | The configuration at a commit, as data and YAML. |
+| `dashboard_repos/diff` | The difference between two commits, as text. |
+| `dashboard_repos/restore` | Put a dashboard or a view back to a commit. |
+| `dashboard_repos/forget` | Delete the whole history of a dashboard and start it again. |
+| `dashboard_repos/set_remote`, `dashboard_repos/push` | Remote and push, with the stricter address rule above. |
+
+Restoring first waits for any save still queued and commits the current
+state (&quot;Before restoring to `&lt;id&gt;`&quot;), so going back never loses it. When that
+cannot be done the command refuses with the error code
+`current_state_not_recorded`, and the interface asks again with a second
+confirmation; only then does it send `without_saving_current`. One tab is put
+back by its key only, using the keys recorded at that commit of the current
+state, never its position or title. When no tab has the key any more the tab
+is added at the end as a new tab, and the result says so (`new_view`). The
+restored configuration is checked (a dashboard of views, each within the size
+limit) before it is saved. It is written back through Lovelace&#x27;s own save, so
+open dashboards update, and the result carries the commit it made, so the
+page reloads when the server reports it. History is never rewritten.
+
+Error codes: `git_error`, `dashboard_not_found` (no such dashboard),
+`not_storage_dashboard` (it exists but is not edited in the interface),
+`dashboard_changed`, `save_failed` (the dashboard&#x27;s own save failed),
+`current_state_not_recorded`. Restoring one tab into a dashboard that has no
+stored configuration is refused. The interface shows each known code as a
+localized sentence with the server text as detail, and offers Retry for
+`dashboard_changed`. A push no longer holds the commit queue: each dashboard
+has its own push lock, and a second push waits, then says it is still running.
+Replacing a remote asks first and says what stays on the old one. A failure at
+start-up on one dashboard no longer stops the others.
+
+### Safety
+
+Git is run with argument lists, never a shell, with hooks disabled, signing
+off, and no global or system configuration, by the same helper as the
+automation repositories. Ids, keys and commits are validated before use.
+Configurations over 2 MB, dashboards over 100 views and diffs over 200 000
+characters are bounded.
+
+## Interface
+
+`/config/dashboard_history?dashboard=&lt;id&gt;&amp;view=&lt;key&gt;&amp;commit=&lt;sha&gt;`
+
+Without `dashboard`, the page lists the dashboards with a link to the history
+of each dashboard and each tab. With one, it shows the commits (searchable),
+the changes and the content of the selected commit, a comparison with another
+commit and a restore with a confirmation that states exactly what is replaced
+(the whole dashboard with all its tabs, or only the one tab, or a new tab when
+the tab no longer exists). A warning about secrets typed into cards sits next
+to Restore.
+
+Below the commits, an admin sees:
+
+- **Remote**: the current address (never with credentials), a field to set or
+  clear it that checks the same rule as the server in the browser (the server
+  stays the authority), the same warning about secrets, a plain statement of
+  what Push now sends (this dashboard&#x27;s configuration, every tab and every old
+  version, including anything typed into cards), the Push now button with a
+  confirmation, the result, and the time of the last push. Nothing contacts a
+  remote unless an address is set and the button is pressed. Pushes are never
+  forced.
+- **Forget this dashboard&#x27;s history** (whole-dashboard view only), with a
+  confirmation.
+
+Not built: a screen to list or delete the `_removed` archives.
+
+## Verification
+
+`core/tests/components/dashboard_repos/test_repos.py` uses real Git. It covers
+first save, unchanged save, one-view change, rename, reorder, delete, keys,
+reading back versions, diffs, notes, unsafe input, and cloning one dashboard
+repository into a fresh folder to read every tab&#x27;s content and history.
+
+`core/tests/components/dashboard_repos/test_repos.py` also covers: names,
+keys and commit ids that end in a newline, one oversized view or oversized
+settings recording nothing, a deleted dashboard&#x27;s history not being adopted by
+a new one, forgetting, hostile remote addresses (credentials in every scheme,
+query strings, fragments, bare paths, option-like and `ext::` strings, an
+embedded newline, over-long addresses), credentials set earlier never being
+shown or used, push errors and the last push, restoring by key only and adding
+a new tab when the key is gone, rejecting a configuration that cannot be
+recorded, keys that differ only by case, and the commit queue (a burst becomes
+one commit, a save during a commit queues one more, a failing commit is not
+raised). `frontend/test/data/dashboard_repos.test.ts` checks the browser copy
+of the address rule against the same list.
+
+### Run on a real instance
+
+On 10 November 2026 the server commands were driven on a running copy: two saves, the history, a restore, and deleting an archived history. The interface page, setting a remote and pushing have not been seen, and no push to a real remote has been made.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Dashboard repositories in Home Assistant is <code>dashboard_repos</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/main/docs/features/dashboard-history/README.md</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/dashboard_repos</code></dd></dl></section><p><a href="../../integrations/dashboard_repos/">Return to the Dashboard repositories guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

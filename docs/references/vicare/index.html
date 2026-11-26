@@ -1,1 +1,489 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viessmann ViCare reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:8" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vicare/">Viessmann ViCare guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Viessmann ViCare</h1><p>Instructions how to integrate Viessmann heating devices with Home Assistant</p><section><h2>Overview</h2><p>The Viessmann ViCare integration lets you control Viessmann devices via the Viessmann ViCare (REST) API. Most recent network-connected Viessmann heating devices (e.g., gas boilers) should be supported.</p></section><section><h2>Prerequisites</h2><p>You will need to sign in to the Viessmann developer portal with your existing ViCare app user credentials.</p></section><section><h2>API limits</h2><p>The Viessmann API is rate-limited. In the &quot;Basic&quot; (free) tier of their API plans, if you exceed one of the limits below, you will be blocked for 24 hours:</p></section><section><h2>Entities</h2><p>ViCare represents devices as a set of data points and the ViCare integration maps those to entity entities of different platform platforms in Home Assistant. A single device may be represented by one or more platforms.</p></section><section><h2>Climate</h2><p>Represents the heating controls of your device.</p></section><section><h2>Fan</h2><p>Ventilation units are displayed as fans and enable the change of speed and use of presets.</p></section><section><h2>Water heater</h2><p>Represents the domestic hot water controls of your device.</p></section><section><h2>Sensor</h2><p>Additional data for a device is available as separate sensors. The sensors are automatically discovered based on the available API data points.</p></section><section><h2>Button</h2><p>Button entities are available to trigger actions like a one-time charge of the water heater.</p></section><section><h2>Number</h2><p>Number entities are available to adjust values like the predefined temperature for different heating programs or the heating curve shift and slope.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Viessmann ViCare.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Documented actions</h3><ul class="chips"><li>get circulation schedule</li><li>set circulation schedule</li><li>set vicare mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Entities</li><li>Climate and water heater control</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vicare/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vicare</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vicare</code></dd></dl></section><p><a href="../../integrations/vicare/">Return to the Viessmann ViCare guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viessmann ViCare reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:8" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/vicare/">Viessmann ViCare guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Viessmann ViCare</h1><p>Instructions how to integrate Viessmann heating devices with Home Assistant</p><div class="reader-body"><p>The <strong>Viessmann ViCare</strong> integration lets you control <a>Viessmann</a> devices via the Viessmann ViCare (REST) API.
+Most recent network-connected Viessmann heating devices (e.g., gas boilers) should be supported.</p>
+<h2>Prerequisites</h2>
+<p>You will need to sign in to the <a>Viessmann developer portal</a> with <strong>your existing ViCare app user credentials</strong>.</p>
+<p>Create a new API client by selecting <strong>Add</strong> in the <strong>Clients</strong> section on the developer dashboard with the following settings:</p>
+<ul>
+<li>Name: <code>HomeAssistant</code></li>
+<li>Google reCAPTCHA: <code>disabled</code></li>
+<li>Redirect URIs: <code>https://my.home-assistant.io/redirect/oauth</code></li>
+</ul>
+<p>Copy the <strong>Client ID</strong> in the <strong>Clients</strong> section on the developer dashboard for the setup in Home Assistant.</p>
+<p><strong>Note</strong></p>
+<p>It may take up to an hour for your new client to become active and usable. Otherwise, you will not receive any devices in Home Assistant.</p>
+<p>When Home Assistant prompts for application credentials during setup, enter the <strong>Client ID</strong> from the Viessmann developer portal. The <strong>Client Secret</strong> field is not used by the integration (ViCare uses PKCE), so you can enter any value.</p>
+<h3>API limits</h3>
+<p>The Viessmann API is rate-limited. In the "Basic" (free) tier of their API plans, if you exceed one of the limits below, you will be blocked for 24 hours:</p>
+<ul>
+<li>120 calls for a time window of 10 minutes</li>
+<li>1450 calls for a time window of 24 hours</li>
+</ul>
+<p>For the paid API plans this limit increases to 3000 calls in 24 hours. The integration polls the API every 60 seconds and will work within these limits. However, any additional requests to the API, for example, by setting the temperature via the integration and interacting with the ViCare app, count into those limits.</p>
+<p><strong>Important</strong></p>
+<p>For any Viessmann API plan except the most expensive "Advanced" tier, Viessmann imposes certain limits on which APIs are accessible for end-user consumption. Unfortunately, this also affects APIs useful for smart home integrations, like controlling thermostats (TRVs) and climate sensors, which are only available in the "Advanced" plan API tier. In case you set up the integration with a lower-tier plan, TRVs and other smart home entities will not become accessible in your Home Assistant installation.</p>
+<p>Please consider providing feedback to Viessmann as described in <a>their FAQ</a> "Where can I give feedback on the API?" if you consider this a limitation for your use case.</p>
+<p><strong>Note</strong></p>
+<p>If you have multiple Viessmann devices in Home Assistant, the limit is shared between them, meaning the poll interval is increased, and the values are less frequently updated!</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Viessmann ViCare</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Viessmann ViCare</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Entities</h2>
+<p>ViCare represents devices as a set of <a>data points</a> and the ViCare integration maps those to entity entities of different platform platforms in Home Assistant. A single device may be represented by one or more platforms.</p>
+<h3>Climate</h3>
+<p>Represents the heating controls of your device.</p>
+<p><strong>Note</strong></p>
+<p>Viessmann devices with room temperature sensing will show the current room temperature via <code>current_temperature</code>. All other devices will show the current supply temperature of the heating circuit.</p>
+<h3>Fan</h3>
+<p>Ventilation units are displayed as fans and enable the change of speed and use of presets.</p>
+<h3>Water heater</h3>
+<p>Represents the domestic hot water controls of your device.</p>
+<p><strong>Note</strong></p>
+<p>It is not possible to turn on/off water heating via the water heater integration since this would conflict with the operation modes of the heating integration. Therefore, the operation mode of that integration is just available as an attribute and cannot be modified.</p>
+<h3>Sensor</h3>
+<p>Additional data for a device is available as separate sensors. The sensors are automatically discovered based on the available API data points.</p>
+<h3>Button</h3>
+<p>Button entities are available to trigger actions like a one-time charge of the water heater.</p>
+<h3>Number</h3>
+<p>Number entities are available to adjust values like the predefined temperature for different heating programs or the heating curve shift and slope.</p>
+<h3>Select</h3>
+<p>Select entities allow configuring the domestic hot water (DHW) operating mode of your Viessmann device. Available options depend on the specific device model and may include <code>balanced</code>, <code>economical</code>, or <code>off</code> modes.</p>
+<h3>Switch</h3>
+<p>Ventilation devices expose their quickmodes as switches, such as <strong>Intensive</strong>, <strong>Eco</strong>, <strong>Boost</strong>, and <strong>Silent</strong>. Only the quickmodes reported by the device are created.</p>
+<p>Quickmodes are mutually exclusive. Turn the active one off before turning another on, otherwise activation fails with "Only one quickmode can be active at a time".</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Climate and water heater control</h2>
+<p>The ViCare integration also provides the standard <a href="../climate/">climate</a> and <a href="../water_heater/">water_heater</a> actions. The ViCare integration provides <code>set_temperature</code>, <code>set_hvac_mode</code>, and <code>set_preset_mode</code> for climate entities, and <code>set_temperature</code> for the water heater. A few of these behave in ViCare-specific ways.</p>
+<h3>Setting the temperature</h3>
+<p>The <code>climate.set_temperature</code> action always affects the current normal temperature or, if a preset is set, the temperature of the preset (that is, a Viessmann program such as eco or comfort).</p>
+<h3>Setting the HVAC mode</h3>
+<p>The ViCare integration maps the Home Assistant HVAC modes to Viessmann operation modes as follows:</p>
+<ul>
+<li><code>off</code>: maps to <code>Standby</code>, which switches off heating and domestic hot water. Devices without standby use <code>DHW</code> (hot water only) or <code>ForcedReduced</code> instead.</li>
+<li><code>heat</code>: maps to <code>ForcedNormal</code>, which permanently sets heating to the normal temperature.</li>
+<li><code>auto</code>: maps to <code>DHWandHeating</code>, which switches between the reduced and normal temperature based on the heating schedule programmed in your device.</li>
+</ul>
+<h3>Setting the preset mode</h3>
+<p>The <code>climate.set_preset_mode</code> action supports the <em>eco</em> and <em>comfort</em> preset modes. These are identical to the respective Viessmann programs and are only active temporarily for 8 hours. Eco mode reduces the target temperature by 3°C, whereas Comfort mode sets the target temperature to a configurable value. Consult your heating device manual for more information.</p>
+<h2>Troubleshooting</h2>
+<h3>Invalid redirection URI</h3>
+<p>When adding or re-authenticating the integration, you get this error in the browser:</p>
+<pre><code>{"error":"invalid_request", "error_description":"Invalid redirection URI."}
+</code></pre>
+<p>Set the <strong>Redirect URIs</strong> on your API client in the <a>Viessmann developer portal</a> to exactly <code>https://my.home-assistant.io/redirect/oauth</code>, save (it may take up to an hour to become active), and try again.</p>
+<p>This error can also happen if you use a <strong>Client ID</strong> from older guides, like the one used by the ViCare app. That client only allows the redirect URI <code>vicare://oauth-callback/everest</code>, which Home Assistant cannot use. Instead of trying to change the redirect URI, create your own API client (see <a>prerequisites</a>) and use its <strong>Client ID</strong>.</p>
+<h3>Client not registered</h3>
+<p>When adding the integration, you get this error in the browser:</p>
+<pre><code>{"error":"invalid_request", "error_description":"Client not registered."}
+</code></pre>
+<p>The Client ID sent to Viessmann does not match a client in the developer portal. This usually happens after you have set up ViCare before: Home Assistant keeps your old Client ID as an application credential and reuses it automatically, even after you remove the integration. To enter a new Client ID, delete the stored one first:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>In the top right corner, select the three dots  menu and select <strong>Application credentials</strong>.</li>
+<li>Select the <strong>Viessmann ViCare</strong> credential, select the three dots  menu and select <strong>Delete</strong>.</li>
+<li>Add the integration again. Setup now prompts for the application credentials again; enter the <strong>Client ID</strong> from your current client in the <a>Viessmann developer portal</a>.</li>
+</ol>
+<h3>GATEWAY_OFFLINE</h3>
+<p>The ViCare API tends to lose contact with the gateway from time to time. This will be logged in Home Assistant with:</p>
+<pre><code>Invalid data from Vicare server: {
+  'viErrorId': '...',
+  'statusCode': 400,
+  'errorType': 'DEVICE_COMMUNICATION_ERROR',
+  'message': '',
+  'extendedPayload': {
+    'httpStatusCode': 'NotFound',
+    'code': '404',
+    'reason': 'GATEWAY_OFFLINE'
+  }
+}
+</code></pre>
+<p>Usually, this resolves itself after a while, but if this state persists, try to power cycle your gateway.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. Once the integration is removed, you can remove the API client (assuming it was only used by this integration) by going to the <a>Viessmann developer portal</a> and deleting the client you created for Home Assistant.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/vicare.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions how to integrate Viessmann heating devices with Home Assistant
+ha_release: 0.99
+ha_domain: vicare
+---
+
+The **Viessmann ViCare** {% term integration %} lets you control [Viessmann](https://www.viessmann-climatesolutions.com) devices via the Viessmann ViCare (REST) API.
+Most recent network-connected Viessmann heating devices (e.g., gas boilers) should be supported.
+
+## Prerequisites
+
+You will need to sign in to the [Viessmann developer portal](https://app.developer.viessmann-climatesolutions.com) with **your existing ViCare app user credentials**.
+
+Create a new API client by selecting **Add** in the **Clients** section on the developer dashboard with the following settings:
+   - Name: `HomeAssistant`
+   - Google reCAPTCHA: `disabled`
+   - Redirect URIs: `https://my.home-assistant.io/redirect/oauth`
+
+Copy the **Client ID** in the **Clients** section on the developer dashboard for the setup in Home Assistant.
+
+{% note %}
+It may take up to an hour for your new client to become active and usable. Otherwise, you will not receive any devices in Home Assistant.
+{% endnote %}
+
+When Home Assistant prompts for application credentials during setup, enter the **Client ID** from the Viessmann developer portal. The **Client Secret** field is not used by the integration (ViCare uses PKCE), so you can enter any value.
+
+### API limits
+
+The Viessmann API is rate-limited. In the &quot;Basic&quot; (free) tier of their API plans, if you exceed one of the limits below, you will be blocked for 24 hours:
+
+- 120 calls for a time window of 10 minutes
+- 1450 calls for a time window of 24 hours
+
+For the paid API plans this limit increases to 3000 calls in 24 hours. The {% term integration %} polls the API every 60 seconds and will work within these limits. However, any additional requests to the API, for example, by setting the temperature via the integration and interacting with the ViCare app, count into those limits.
+
+{% important %}
+For any Viessmann API plan except the most expensive &quot;Advanced&quot; tier, Viessmann imposes certain limits on which APIs are accessible for end-user consumption. Unfortunately, this also affects APIs useful for smart home integrations, like controlling thermostats (TRVs) and climate sensors, which are only available in the &quot;Advanced&quot; plan API tier. In case you set up the integration with a lower-tier plan, TRVs and other smart home entities will not become accessible in your Home Assistant installation.
+
+Please consider providing feedback to Viessmann as described in [their FAQ](https://developer.viessmann-climatesolutions.com/start/faq.html) &quot;Where can I give feedback on the API?&quot; if you consider this a limitation for your use case.
+{% endimportant %}
+
+{% note %}
+If you have multiple Viessmann devices in Home Assistant, the limit is shared between them, meaning the poll interval is increased, and the values are less frequently updated!
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+
+## Entities
+
+ViCare represents devices as a set of [data points](https://api.viessmann-climatesolutions.com/documentation/data-points) and the ViCare {% term integration %} maps those to {% term entity entities %} of different {% term platform platforms %} in Home Assistant. A single device may be represented by one or more platforms.
+
+### Climate
+
+Represents the heating controls of your device.
+
+{% note %}
+Viessmann devices with room temperature sensing will show the current room temperature via `current_temperature`. All other devices will show the current supply temperature of the heating circuit.
+{% endnote %}
+
+### Fan
+
+Ventilation units are displayed as fans and enable the change of speed and use of presets.
+
+### Water heater
+
+Represents the domestic hot water controls of your device.
+
+{% note %}
+It is not possible to turn on/off water heating via the water heater {% term integration %} since this would conflict with the operation modes of the heating integration. Therefore, the operation mode of that integration is just available as an attribute and cannot be modified.
+{% endnote %}
+
+### Sensor
+
+Additional data for a device is available as separate sensors. The sensors are automatically discovered based on the available API data points.
+
+### Button
+
+Button entities are available to trigger actions like a one-time charge of the water heater.
+
+### Number
+
+Number entities are available to adjust values like the predefined temperature for different heating programs or the heating curve shift and slope.
+
+### Select
+
+Select entities allow configuring the domestic hot water (&lt;abbr title=&quot;domestic hot water&quot;&gt;DHW&lt;/abbr&gt;) operating mode of your Viessmann device. Available options depend on the specific device model and may include `balanced`, `economical`, or `off` modes.
+
+### Switch
+
+Ventilation devices expose their quickmodes as switches, such as **Intensive**, **Eco**, **Boost**, and **Silent**. Only the quickmodes reported by the device are created.
+
+Quickmodes are mutually exclusive. Turn the active one off before turning another on, otherwise activation fails with &quot;Only one quickmode can be active at a time&quot;.
+
+{% include integrations/actions.md %}
+
+## Climate and water heater control
+
+The ViCare integration also provides the standard [climate](/integrations/climate/) and [water_heater](/integrations/water_heater/) actions. The ViCare integration provides `set_temperature`, `set_hvac_mode`, and `set_preset_mode` for climate entities, and `set_temperature` for the water heater. A few of these behave in ViCare-specific ways.
+
+### Setting the temperature
+
+The `climate.set_temperature` action always affects the current normal temperature or, if a preset is set, the temperature of the preset (that is, a Viessmann program such as eco or comfort).
+
+### Setting the HVAC mode
+
+The ViCare integration maps the Home Assistant HVAC modes to Viessmann operation modes as follows:
+
+- `off`: maps to `Standby`, which switches off heating and domestic hot water. Devices without standby use `DHW` (hot water only) or `ForcedReduced` instead.
+- `heat`: maps to `ForcedNormal`, which permanently sets heating to the normal temperature.
+- `auto`: maps to `DHWandHeating`, which switches between the reduced and normal temperature based on the heating schedule programmed in your device.
+
+### Setting the preset mode
+
+The `climate.set_preset_mode` action supports the *eco* and *comfort* preset modes. These are identical to the respective Viessmann programs and are only active temporarily for 8 hours. Eco mode reduces the target temperature by 3°C, whereas Comfort mode sets the target temperature to a configurable value. Consult your heating device manual for more information.
+
+## Troubleshooting
+
+### Invalid redirection URI
+
+When adding or re-authenticating the integration, you get this error in the browser:
+
+```text
+{&quot;error&quot;:&quot;invalid_request&quot;, &quot;error_description&quot;:&quot;Invalid redirection URI.&quot;}
+```
+
+Set the **Redirect URIs** on your API client in the [Viessmann developer portal](https://app.developer.viessmann-climatesolutions.com) to exactly `https://my.home-assistant.io/redirect/oauth`, save (it may take up to an hour to become active), and try again.
+
+This error can also happen if you use a **Client ID** from older guides, like the one used by the ViCare app. That client only allows the redirect URI `vicare://oauth-callback/everest`, which Home Assistant cannot use. Instead of trying to change the redirect URI, create your own API client (see [prerequisites](#prerequisites)) and use its **Client ID**.
+
+### Client not registered
+
+When adding the integration, you get this error in the browser:
+
+```text
+{&quot;error&quot;:&quot;invalid_request&quot;, &quot;error_description&quot;:&quot;Client not registered.&quot;}
+```
+
+The Client ID sent to Viessmann does not match a client in the developer portal. This usually happens after you have set up ViCare before: Home Assistant keeps your old Client ID as an application credential and reuses it automatically, even after you remove the integration. To enter a new Client ID, delete the stored one first:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. In the top right corner, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu and select **Application credentials**.
+3. Select the **Viessmann ViCare** credential, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu and select **Delete**.
+4. Add the integration again. Setup now prompts for the application credentials again; enter the **Client ID** from your current client in the [Viessmann developer portal](https://app.developer.viessmann-climatesolutions.com).
+
+### GATEWAY_OFFLINE
+
+The ViCare API tends to lose contact with the gateway from time to time. This will be logged in Home Assistant with:
+
+```log
+Invalid data from Vicare server: {
+  &#x27;viErrorId&#x27;: &#x27;...&#x27;,
+  &#x27;statusCode&#x27;: 400,
+  &#x27;errorType&#x27;: &#x27;DEVICE_COMMUNICATION_ERROR&#x27;,
+  &#x27;message&#x27;: &#x27;&#x27;,
+  &#x27;extendedPayload&#x27;: {
+    &#x27;httpStatusCode&#x27;: &#x27;NotFound&#x27;,
+    &#x27;code&#x27;: &#x27;404&#x27;,
+    &#x27;reason&#x27;: &#x27;GATEWAY_OFFLINE&#x27;
+  }
+}
+```
+
+Usually, this resolves itself after a while, but if this state persists, try to power cycle your gateway.
+
+## Removing the integration
+
+This integration follows standard integration removal. Once the integration is removed, you can remove the API client (assuming it was only used by this integration) by going to the [Viessmann developer portal](https://app.developer.viessmann-climatesolutions.com) and deleting the client you created for Home Assistant.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Viessmann ViCare.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Documented actions</h3><ul class="chips"><li>get circulation schedule</li><li>set circulation schedule</li><li>set vicare mode</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Entities</li><li>Climate and water heater control</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/vicare/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/vicare</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/vicare</code></dd></dl></section><p><a href="../../integrations/vicare/">Return to the Viessmann ViCare guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

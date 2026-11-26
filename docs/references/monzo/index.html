@@ -1,1 +1,748 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monzo reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:291" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/monzo/">Monzo guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Monzo</h1><p>Connect Monzo bank accounts to Home Assistant to monitor account and pot balances.</p><section><h2>Prerequisites and approval</h2><p>4. Once submitted, you can proceed with adding the integration.</p></section><section><h2>Adding a second account</h2><p>1. Create another OAuth client by repeating the steps above. 2. In Home Assistant, add the new credentials before adding the new integration entry.</p></section><section><h2>Supported functionality</h2><p>The integration creates a device for each Monzo account and pot.</p></section><section><h2>Sensors</h2><p>Account and pot devices provide the following sensor:</p></section><section><h2>Transaction events</h2><p>The integration creates a Transaction event entity for each Monzo account. When Monzo reports a new transaction, the entity fires a transaction_created event and the integration refreshes the account and pot balances.</p></section><section><h2>Monzo automation examples</h2><p>These blueprints provide reusable automations for moving money between a Monzo account and one of its pots.</p></section><section><h2>Automation: keep an account at a target balance</h2><p>This blueprint keeps a selected account at a target balance. When the account balance changes, it deposits any excess into the selected pot or withdraws the shortfall from it. The withdrawal is limited to the pot&#x27;s available balance. The automation also checks the balance every 15 minutes as a fallback.</p></section><section><h2>Automation: reimburse purchases from a pot by merchant</h2><p>This blueprint watches the selected account&#x27;s Transaction event entity. When it receives a debit transaction from the specified merchant, it withdraws the transaction amount from a selected pot. For example, after a Netflix payment, it can move the same amount from a subscriptions pot back into the account.</p></section><section><h2>Data updates</h2><p>The integration polling polls Monzo for account and pot data every minute. When Monzo sends a new transaction through a webhook, the integration fires the account&#x27;s Transaction event entity and requests an immediate refresh of the account and pot balances.</p></section><section><h2>Symptom: “Network error” after entering your email address</h2><p>During setup or reauthentication, the Monzo authentication page displays Network error after you enter your email address.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Monzo.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>event</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>deposit into pot</li><li>withdraw from pot</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites and approval</li><li>Supported functionality</li><li>Monzo automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/monzo/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/monzo</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/monzo</code></dd></dl></section><p><a href="../../integrations/monzo/">Return to the Monzo guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monzo reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:291" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/monzo/">Monzo guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Monzo</h1><p>Connect Monzo bank accounts to Home Assistant to monitor account and pot balances.</p><div class="reader-body"><p><a>Monzo</a> is a digital bank. The <strong>Monzo</strong> integration connects your Monzo accounts to Home Assistant. You can monitor account and pot balances, track how much you have spent today, react to new transactions, and move money between an account and its pots.</p>
+<h2>Prerequisites and approval</h2>
+<ol>
+<li><p>Sign in to the <a>Monzo developer portal</a> with your Monzo account.</p>
+</li>
+<li><p>Go to <strong>Clients</strong> &gt; <strong>New OAuth Client</strong> to create an OAuth client for Home Assistant.</p>
+</li>
+<li><p>Enter the following values. Use the redirect URL exactly as shown; do not replace it with the URL of your Home Assistant instance:</p>
+<ul>
+<li><strong>Name</strong>: <code>Home Assistant</code></li>
+<li><strong>Logo URL</strong>: Leave this field blank</li>
+<li><strong>Redirect URLs</strong>: <code>https://my.home-assistant.io/redirect/oauth</code></li>
+<li><strong>Description</strong>: For example, <code>Used by the Monzo Home Assistant integration</code></li>
+<li><strong>Confidentiality</strong>: <strong>Confidential</strong></li>
+</ul>
+</li>
+<li><p>Once submitted, you can proceed with adding the integration.</p>
+<ul>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and add the <strong>Monzo</strong> integration.</li>
+<li>Enter the client ID and client secret for the OAuth client you created in the Monzo developer portal.</li>
+<li>After you authorize Home Assistant access, approve the request in the Monzo app. Home Assistant waits for this second approval and completes setup automatically. If you see <strong>Approval timed out</strong> or <strong>Connection error</strong>, follow the on-screen instructions to try again.</li>
+</ul>
+</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Monzo</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Monzo</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h3>Adding a second account</h3>
+<ol>
+<li>Create another OAuth client by repeating the steps above.</li>
+<li>In Home Assistant, add the new credentials before adding the new integration entry.<ul>
+<li>On the <strong>Devices &amp; services</strong> page, select the three dots  menu in the top-right corner, select <strong>Application credentials</strong>, and then select <strong>Add application credentials</strong>.</li>
+</ul>
+</li>
+<li>Return to <strong>Devices &amp; services</strong> &gt; <strong>Monzo</strong>, select <strong>Add entry</strong>, and authenticate the second account.</li>
+</ol>
+<h2>Supported functionality</h2>
+<p>The integration creates a device for each Monzo account and pot.</p>
+<h3>Sensors</h3>
+<p>Account and pot devices provide the following sensor:</p>
+<ul>
+<li><strong>Balance</strong>: The current balance of the account or pot.</li>
+</ul>
+<p>Account devices also provide the following sensors:</p>
+<ul>
+<li><strong>Total balance</strong>: The current balance of that account plus all of its pots.</li>
+<li><strong>Spent today</strong>: The amount spent from the account since around 4:00 AM (Monzo's day boundary), shown as a positive value. Money received does not reduce this amount.</li>
+</ul>
+<h3>Transaction events</h3>
+<p>The integration creates a <strong>Transaction</strong> event entity for each Monzo account. When Monzo reports a new transaction, the entity fires a <code>transaction_created</code> event and the integration refreshes the account and pot balances.</p>
+<p>The complete transaction data provided by Monzo is available in the event entity's <code>data</code> attribute for use in automations. By default, Home Assistant also stores this data in the recorder history.</p>
+<p>Transaction events require either <a>Home Assistant Cloud</a> or an external URL configured under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong> that is accessible from the web.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Monzo automation examples</h2>
+<p>These blueprints provide reusable automations for moving money between a Monzo account and one of its pots.</p>
+<p><strong>Important</strong></p>
+<p>These blueprints move money automatically. Make sure you have selected the correct account, pot, and entities, and test the automation with a small amount first.</p>
+<h3>Automation: keep an account at a target balance</h3>
+<p>This blueprint keeps a selected account at a target balance. When the account balance changes, it deposits any excess into the selected pot or withdraws the shortfall from it. The withdrawal is limited to the pot's available balance. The automation also checks the balance every 15 minutes as a fallback.</p>
+<p>For example, you can keep 1,000 in your account's currency in your current account and move the remainder to or from a savings pot.</p>
+<pre><code>blueprint:
+  name: Keep a Monzo account at a target balance
+  description: &gt;
+    Move money between a Monzo account and one of its pots to keep the account
+    at a chosen balance. The automation runs when the account balance changes
+    and every 15 minutes as a fallback.
+  domain: automation
+  author: Jake Martin
+  homeassistant:
+    min_version: 2026.9.0
+  input:
+    account:
+      name: Monzo account
+      description: The account to keep at the target balance.
+      selector:
+        device:
+          filter:
+            - integration: monzo
+              model: Account
+    pot:
+      name: Monzo pot
+      description: &gt;
+        The pot to move money to and from. It must belong to the selected
+        account and Monzo connection.
+      selector:
+        device:
+          filter:
+            - integration: monzo
+              model: Pot
+    account_balance:
+      name: Account balance sensor
+      description: &gt;
+        Select the sensor named Balance for the selected account, not Total
+        balance or Spent today.
+      selector:
+        entity:
+          filter:
+            - integration: monzo
+              domain: sensor
+              device_class: monetary
+              device:
+                integration: monzo
+                model: Account
+    pot_balance:
+      name: Pot balance sensor
+      description: Select the Balance sensor for the selected pot.
+      selector:
+        entity:
+          filter:
+            - integration: monzo
+              domain: sensor
+              device_class: monetary
+              device:
+                integration: monzo
+                model: Pot
+    target_balance:
+      name: Target balance
+      description: The balance to keep in the account, in its currency.
+      default: 1000
+      selector:
+        number:
+          min: 0
+          max: 1000000
+          step: 0.01
+          mode: box
+
+variables:
+  account_device_input: !input account
+  pot_device_input: !input pot
+  account_balance_entity: !input account_balance
+  pot_balance_entity: !input pot_balance
+  target_balance_input: !input target_balance
+
+triggers:
+  - trigger: state
+    entity_id: !input account_balance
+  - trigger: time_pattern
+    minutes: "/15"
+
+conditions:
+  - condition: template
+    value_template: &gt;
+      {{
+        is_number(states(account_balance_entity))
+        and is_number(states(pot_balance_entity))
+        and device_id(account_balance_entity) == account_device_input
+        and device_id(pot_balance_entity) == pot_device_input
+      }}
+
+actions:
+  - variables:
+      account_balance_value: &gt;
+        {{ states(account_balance_entity) | float }}
+      pot_balance_value: &gt;
+        {{ states(pot_balance_entity) | float }}
+      target_balance_value: &gt;
+        {{ target_balance_input | float }}
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: &gt;
+              {{ account_balance_value &gt; target_balance_value }}
+        sequence:
+          - action: monzo.deposit_into_pot
+            data:
+              account: !input account
+              pot: !input pot
+              amount: &gt;
+                {{
+                  (account_balance_value - target_balance_value) | round(2)
+                }}
+      - conditions:
+          - condition: template
+            value_template: &gt;
+              {{
+                account_balance_value &lt; target_balance_value
+                and pot_balance_value &gt; 0
+              }}
+        sequence:
+          - action: monzo.withdraw_from_pot
+            data:
+              account: !input account
+              pot: !input pot
+              amount: &gt;
+                {{
+                  [
+                    target_balance_value - account_balance_value,
+                    pot_balance_value,
+                  ]
+                  | min
+                  | round(2)
+                }}
+
+mode: single
+max_exceeded: silent
+</code></pre>
+<h3>Automation: reimburse purchases from a pot by merchant</h3>
+<p>This blueprint watches the selected account's <strong>Transaction</strong> event entity. When it receives a debit transaction from the specified merchant, it withdraws the transaction amount from a selected pot. For example, after a Netflix payment, it can move the same amount from a subscriptions pot back into the account.</p>
+<p>Before importing the blueprint, create an <strong>Input text</strong> helper under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>. Set its maximum length to 255 characters. The blueprint uses it to remember recent transaction IDs and guard against a repeated webhook moving money twice.</p>
+<pre><code>blueprint:
+  name: Reimburse Monzo purchases from a pot by merchant
+  description: &gt;
+    When a debit transaction is created for a chosen merchant, withdraw the
+    transaction amount from a selected Monzo pot into its account.
+  domain: automation
+  author: Jake Martin
+  homeassistant:
+    min_version: 2026.9.0
+  input:
+    transaction_event:
+      name: Transaction event
+      description: The Transaction event entity for the selected account.
+      selector:
+        entity:
+          filter:
+            - integration: monzo
+              domain: event
+              device:
+                integration: monzo
+                model: Account
+    account:
+      name: Monzo account
+      description: The account that contains the matching transactions.
+      selector:
+        device:
+          filter:
+            - integration: monzo
+              model: Account
+    pot:
+      name: Monzo pot
+      description: &gt;
+        The pot to reimburse the account from. It must belong to the selected
+        account and Monzo connection.
+      selector:
+        device:
+          filter:
+            - integration: monzo
+              model: Pot
+    merchant_name:
+      name: Merchant name
+      description: &gt;
+        The merchant name to match, without regard to capitalization. For
+        example, Netflix.
+      selector:
+        text:
+    processed_transaction:
+      name: Processed transactions helper
+      description: &gt;
+        An Input text helper with its maximum length set to 255 characters. The
+        automation uses it to remember recently processed transaction IDs.
+      selector:
+        entity:
+          filter:
+            - domain: input_text
+
+variables:
+  account_device_input: !input account
+  transaction_event_entity: !input transaction_event
+  merchant_name_input: !input merchant_name
+  processed_transaction_entity: !input processed_transaction
+
+triggers:
+  - trigger: event.received
+    target:
+      entity_id: !input transaction_event
+    options:
+      event_type:
+        - transaction_created
+
+actions:
+  - variables:
+      transaction: &gt;
+        {{ trigger.to_state.attributes.get('data', {}) }}
+  - variables:
+      transaction_amount: &gt;
+        {{ transaction.get('amount', 0) | int }}
+      transaction_id: &gt;
+        {{ transaction.get('id', '') }}
+      transaction_merchant_name: &gt;
+        {% set merchant = transaction.get('merchant') %}
+        {{ merchant.get('name', '') if merchant is mapping else '' }}
+      processed_transaction_ids: &gt;
+        {% set value = states(processed_transaction_entity) %}
+        {{
+          value.split('|')
+          if value not in ['unknown', 'unavailable', '']
+          else []
+        }}
+  - condition: template
+    value_template: &gt;
+      {{
+        transaction_id
+        and transaction_id not in processed_transaction_ids
+        and device_id(transaction_event_entity) == account_device_input
+        and transaction_amount &lt; 0
+        and not transaction.get('decline_reason')
+        and (transaction_merchant_name | lower)
+          == (merchant_name_input | lower)
+      }}
+  - action: monzo.withdraw_from_pot
+    data:
+      account: !input account
+      pot: !input pot
+      amount: &gt;
+        {{ (transaction_amount | abs / 100) | round(2) }}
+  - action: input_text.set_value
+    target:
+      entity_id: !input processed_transaction
+    data:
+      value: &gt;
+        {{ ([transaction_id] + processed_transaction_ids)[:5] | join('|') }}
+
+mode: queued
+max_exceeded: silent
+</code></pre>
+<h2>Data updates</h2>
+<p>The integration polling polls Monzo for account and pot data every minute. When Monzo sends a new transaction through a webhook, the integration fires the account's <strong>Transaction</strong> event entity and requests an immediate refresh of the account and pot balances.</p>
+<p>New accounts and pots are added after a successful refresh. Devices for accounts and pots that Monzo no longer returns are removed.</p>
+<p>If Home Assistant cannot register a webhook, account and pot sensors continue to update every minute, but the <strong>Transaction</strong> event entities do not receive new events.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Transaction events require either <a>Home Assistant Cloud</a> or an external URL configured under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong> that is accessible from the web.</li>
+<li>Pot transfers only work between a pot and its associated account in the same Monzo connection.</li>
+<li>Loan, Flex, and Rewards accounts do not support pot transfers.</li>
+<li>You cannot withdraw from a pot that has <strong>Added security</strong> enabled. Use the Monzo app to withdraw from that pot.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Monzo displays a network error during authentication</h3>
+<h4>Symptom: “Network error” after entering your email address</h4>
+<p>During setup or reauthentication, the Monzo authentication page displays <strong>Network error</strong> after you enter your email address.</p>
+<h4>Description</h4>
+<p>This error can occur when the redirect URL configured for your OAuth client in the Monzo developer portal is incorrect.
+Monzo can also show this error if Home Assistant is using saved credentials for a previous OAuth client.</p>
+<h4>Resolution</h4>
+<p>In the <a>Monzo developer portal</a>, open the OAuth client used by Home Assistant and set <strong>Redirect URLs</strong> to <code>https://my.home-assistant.io/redirect/oauth</code>. Use this URL exactly as shown. Do not replace it with a local or Home Assistant Cloud URL. Then, retry authentication in Home Assistant.</p>
+<p>If the redirect URL is correct, <a href="../application_credentials/">check the saved Monzo application credentials</a> and compare the client ID with the one in the Monzo developer portal.
+If the IDs differ, remove the existing Monzo entry, <a href="../application_credentials/">delete the saved application credentials</a>, add the correct credentials using <a href="../application_credentials/">these manual setup instructions</a>, and add the Monzo integration again.</p>
+<h3>Approval times out</h3>
+<h4>Symptom: “Approval timed out”</h4>
+<p>Home Assistant displays <strong>Approval timed out</strong> while you are setting up or reauthenticating the integration.</p>
+<h4>Description</h4>
+<p>After you authorize Home Assistant in your browser, Monzo requires a second approval in the Monzo app. Home Assistant waits up to five minutes for this approval.</p>
+<h4>Resolution</h4>
+<p>Approve the request in the Monzo app, then select <strong>Try again</strong> in Home Assistant.</p>
+<h3>Transaction events are not received</h3>
+<h4>Symptom: balances update, but no transaction events are received</h4>
+<p>Account and pot balances continue to update, but the <strong>Transaction</strong> event entity does not receive <code>transaction_created</code> events.</p>
+<h4>Description</h4>
+<p>Monzo must be able to reach the Home Assistant webhook from the web. Balance sensors use polling and can continue to work when the webhook is unavailable.</p>
+<h4>Resolution</h4>
+<p>Use <a>Home Assistant Cloud</a> or configure a publicly accessible external URL under <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong>. Home Assistant automatically retries webhook registration after temporary failures.</p>
+<h3>A pot transfer fails</h3>
+<h4>Symptom: an action reports that the transfer failed or was rejected</h4>
+<p>The <strong>Deposit into pot</strong> or <strong>Withdraw from pot</strong> action does not complete successfully.</p>
+<h4>Resolution</h4>
+<ul>
+<li>Make sure the account and pot belong to the same Monzo connection and that the pot belongs to the selected account.</li>
+<li>Do not select a Loan, Flex, or Rewards account.</li>
+<li>For withdrawals, make sure the pot has enough money and does not have <strong>Added security</strong> enabled.</li>
+<li>If Home Assistant cannot confirm whether a transfer completed, check the balance in the Monzo app before trying again.</li>
+</ul>
+<p>If the problem continues, download diagnostics from the Monzo integration entry and include them when reporting the issue.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows the standard integration removal process. Home Assistant also attempts to remove the webhooks it registered with Monzo. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/monzo.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Connect Monzo bank accounts to Home Assistant to monitor account and pot balances.
+ha_release: 2024.6
+ha_domain: monzo
+---
+
+[Monzo](https://monzo.com/) is a digital bank. The **Monzo** {% term integration %} connects your Monzo accounts to Home Assistant. You can monitor account and pot balances, track how much you have spent today, react to new transactions, and move money between an account and its pots.
+
+## Prerequisites and approval
+
+1. Sign in to the [Monzo developer portal](https://developers.monzo.com/) with your Monzo account.
+2. Go to **Clients** &gt; **New OAuth Client** to create an OAuth client for Home Assistant.
+3. Enter the following values. Use the redirect URL exactly as shown; do not replace it with the URL of your Home Assistant instance:
+   - **Name**: `Home Assistant`
+   - **Logo URL**: Leave this field blank
+   - **Redirect URLs**: `https://my.home-assistant.io/redirect/oauth`
+   - **Description**: For example, `Used by the Monzo Home Assistant integration`
+   - **Confidentiality**: **Confidential**
+
+4. Once submitted, you can proceed with adding the integration.
+   - Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and add the **Monzo** integration.
+   - Enter the client ID and client secret for the OAuth client you created in the Monzo developer portal.
+   - After you authorize Home Assistant access, approve the request in the Monzo app. Home Assistant waits for this second approval and completes setup automatically. If you see **Approval timed out** or **Connection error**, follow the on-screen instructions to try again.
+
+{% include integrations/config_flow.md %}
+
+### Adding a second account
+
+1. Create another OAuth client by repeating the steps above.
+2. In Home Assistant, add the new credentials before adding the new integration entry.
+   - On the **Devices &amp; services** page, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu in the top-right corner, select **Application credentials**, and then select **Add application credentials**.
+3. Return to **Devices &amp; services** &gt; **Monzo**, select **Add entry**, and authenticate the second account.
+
+## Supported functionality
+
+The integration creates a device for each Monzo account and pot.
+
+### Sensors
+
+Account and pot devices provide the following sensor:
+
+- **Balance**: The current balance of the account or pot.
+
+Account devices also provide the following sensors:
+
+- **Total balance**: The current balance of that account plus all of its pots.
+- **Spent today**: The amount spent from the account since around 4:00 AM (Monzo&#x27;s day boundary), shown as a positive value. Money received does not reduce this amount.
+
+### Transaction events
+
+The integration creates a **Transaction** {% term event %} {% term entity %} for each Monzo account. When Monzo reports a new transaction, the entity fires a `transaction_created` event and the integration refreshes the account and pot balances.
+
+The complete transaction data provided by Monzo is available in the event entity&#x27;s `data` attribute for use in automations. By default, Home Assistant also stores this data in the recorder history.
+
+Transaction events require either [Home Assistant Cloud](/cloud/) or an external URL configured under {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %} that is accessible from the web.
+
+{% include integrations/actions.md %}
+
+## Monzo automation examples
+
+These blueprints provide reusable automations for moving money between a Monzo account and one of its pots.
+
+{% important %}
+These blueprints move money automatically. Make sure you have selected the correct account, pot, and entities, and test the automation with a small amount first.
+{% endimportant %}
+
+### Automation: keep an account at a target balance
+
+This blueprint keeps a selected account at a target balance. When the account balance changes, it deposits any excess into the selected pot or withdraws the shortfall from it. The withdrawal is limited to the pot&#x27;s available balance. The automation also checks the balance every 15 minutes as a fallback.
+
+For example, you can keep 1,000 in your account&#x27;s currency in your current account and move the remainder to or from a savings pot.
+
+{% blueprint_example blueprint=&quot;monzo/keep_account_at_target.yaml&quot; %}
+
+### Automation: reimburse purchases from a pot by merchant
+
+This blueprint watches the selected account&#x27;s **Transaction** event entity. When it receives a debit transaction from the specified merchant, it withdraws the transaction amount from a selected pot. For example, after a Netflix payment, it can move the same amount from a subscriptions pot back into the account.
+
+Before importing the blueprint, create an **Input text** {% term helper %} under {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}. Set its maximum length to 255 characters. The blueprint uses it to remember recent transaction IDs and guard against a repeated webhook moving money twice.
+
+{% blueprint_example blueprint=&quot;monzo/reimburse_merchant_from_pot.yaml&quot; %}
+
+## Data updates
+
+The integration {% term polling polls %} Monzo for account and pot data every minute. When Monzo sends a new transaction through a webhook, the integration fires the account&#x27;s **Transaction** event entity and requests an immediate refresh of the account and pot balances.
+
+New accounts and pots are added after a successful refresh. Devices for accounts and pots that Monzo no longer returns are removed.
+
+If Home Assistant cannot register a webhook, account and pot sensors continue to update every minute, but the **Transaction** event entities do not receive new events.
+
+## Known limitations
+
+- Transaction events require either [Home Assistant Cloud](/cloud/) or an external URL configured under {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %} that is accessible from the web.
+- Pot transfers only work between a pot and its associated account in the same Monzo connection.
+- Loan, Flex, and Rewards accounts do not support pot transfers.
+- You cannot withdraw from a pot that has **Added security** enabled. Use the Monzo app to withdraw from that pot.
+
+## Troubleshooting
+
+### Monzo displays a network error during authentication
+
+#### Symptom: “Network error” after entering your email address
+
+During setup or reauthentication, the Monzo authentication page displays **Network error** after you enter your email address.
+
+#### Description
+
+This error can occur when the redirect URL configured for your OAuth client in the Monzo developer portal is incorrect.
+Monzo can also show this error if Home Assistant is using saved credentials for a previous OAuth client.
+
+#### Resolution
+
+In the [Monzo developer portal](https://developers.monzo.com/), open the OAuth client used by Home Assistant and set **Redirect URLs** to `https://my.home-assistant.io/redirect/oauth`. Use this URL exactly as shown. Do not replace it with a local or Home Assistant Cloud URL. Then, retry authentication in Home Assistant.
+
+If the redirect URL is correct, [check the saved Monzo application credentials](/integrations/application_credentials/#to-view-stored-application-credentials) and compare the client ID with the one in the Monzo developer portal.
+If the IDs differ, remove the existing Monzo entry, [delete the saved application credentials](/integrations/application_credentials/#deleting-application-credentials), add the correct credentials using [these manual setup instructions](/integrations/application_credentials/#manual-setup), and add the Monzo integration again.
+
+### Approval times out
+
+#### Symptom: “Approval timed out”
+
+Home Assistant displays **Approval timed out** while you are setting up or reauthenticating the integration.
+
+#### Description
+
+After you authorize Home Assistant in your browser, Monzo requires a second approval in the Monzo app. Home Assistant waits up to five minutes for this approval.
+
+#### Resolution
+
+Approve the request in the Monzo app, then select **Try again** in Home Assistant.
+
+### Transaction events are not received
+
+#### Symptom: balances update, but no transaction events are received
+
+Account and pot balances continue to update, but the **Transaction** event entity does not receive `transaction_created` events.
+
+#### Description
+
+Monzo must be able to reach the Home Assistant webhook from the web. Balance sensors use polling and can continue to work when the webhook is unavailable.
+
+#### Resolution
+
+Use [Home Assistant Cloud](/cloud/) or configure a publicly accessible external URL under {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %}. Home Assistant automatically retries webhook registration after temporary failures.
+
+### A pot transfer fails
+
+#### Symptom: an action reports that the transfer failed or was rejected
+
+The **Deposit into pot** or **Withdraw from pot** action does not complete successfully.
+
+#### Resolution
+
+- Make sure the account and pot belong to the same Monzo connection and that the pot belongs to the selected account.
+- Do not select a Loan, Flex, or Rewards account.
+- For withdrawals, make sure the pot has enough money and does not have **Added security** enabled.
+- If Home Assistant cannot confirm whether a transfer completed, check the balance in the Monzo app before trying again.
+
+If the problem continues, download diagnostics from the Monzo integration entry and include them when reporting the issue.
+
+## Removing the integration
+
+This integration follows the standard integration removal process. Home Assistant also attempts to remove the webhooks it registered with Monzo. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Monzo.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>event</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>deposit into pot</li><li>withdraw from pot</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites and approval</li><li>Supported functionality</li><li>Monzo automation examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/monzo/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/monzo</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/monzo</code></dd></dl></section><p><a href="../../integrations/monzo/">Return to the Monzo guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,876 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alert reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:192" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/alert/">Alert guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Alert</h1><p>Instructions on how to set up automatic alerts within Home Assistant.</p><section><h2>Overview</h2><p>The Alert integration is designed to notify you when problematic issues arise. For example, if the garage door is left open, the alert integration can be used to remind you of this by sending you repeating notifications at customizable intervals. This is also used for low battery sensors, water leak sensors, or any condition that may need your attention.</p></section><section><h2>Basic example</h2><p>The alert integration uses any of the notification integrations. To set up the alert integration, first, you must set up a notification integration. Then, add the following to your configuration.yaml file.</p></section><section><h2>Complex alert criteria</h2><p>By design, the alert integration only handles very simple criteria for firing. That is, it only checks if a single entity&#x27;s state is equal to a value. At some point, it may be desirable to have an alert with a more complex criteria. Possibly, when a battery percentage falls below a threshold. Maybe you want to disable the alert on certain days. Maybe the alert firing should depend on more than one input. For all of these situations, it is best to use the alert in conjunction with a Template Binary Sensor. The following example does that.</p></section><section><h2>Dynamic notification delay times</h2><p>It may be desirable to have the delays between alert notifications dynamically change as the alert continues to fire. This can be done by setting the repeat configuration key to a list of numbers rather than a single number. Altering the first example would look like the following.</p></section><section><h2>Message templates</h2><p>It may be desirable to have the alert notifications include information about the state of the entity. Templates can be used in the message or name of the alert to make it more relevant. The following will show for a plant how to include the problem attribute of the entity.</p></section><section><h2>Additional parameters for notifiers</h2><p>Some notifiers support more parameters (e.g., to set text color or action</p></section><section><h2>Alert automation examples</h2><p>Alerts keep reminding you until a problem is solved. With the alert actions, you decide when those reminders stop and start again.</p></section><section><h2>Automation: acknowledge an alert from a phone notification</h2><p>Your alert sends a notification with an Acknowledge button to your phone. When you select the button, this automation acknowledges the alert, so you don&#x27;t get more reminders.</p></section><section><h2>Automation: turn the alert back on when you leave</h2><p>You acknowledged the garage door alert while you were home. When you leave, you want reminders again if the door is still open.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Alert in Home Assistant is <code>alert</code>.</p><h3>Documented actions</h3><ul class="chips"><li>toggle</li><li>turn off</li><li>turn on</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Alert automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/alert/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/alert</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/alert</code></dd></dl></section><p><a href="../../integrations/alert/">Return to the Alert guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alert reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:192" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/alert/">Alert guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Alert</h1><p>Instructions on how to set up automatic alerts within Home Assistant.</p><div class="reader-body"><p>The <strong>Alert</strong> integration is designed to notify you when problematic issues arise.
+For example, if the garage door is left open, the <code>alert</code> integration can be used
+to remind you of this by sending you repeating notifications at customizable
+intervals. This is also used for low battery sensors,
+water leak sensors, or any condition that may need your attention.</p>
+<p>Alerts will add an entity to the front end.
+This entity allows you to silence an alert until it is resolved and has three
+possible states:</p>
+<table>
+<thead>
+<tr>
+  <th>State</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>idle</code></td>
+  <td>The condition for the alert is false.</td>
+</tr>
+<tr>
+  <td><code>on</code></td>
+  <td>The condition for the alert is true.</td>
+</tr>
+<tr>
+  <td><code>off</code></td>
+  <td>The condition for the alert is true but it was acknowledged.</td>
+</tr>
+</tbody>
+</table>
+<h3>Basic example</h3>
+<p>The <code>alert</code> integration uses any of the <code>notification</code> integrations. To
+set up the <code>alert</code> integration, first, you must set up a <a href="../notify/">notification integration</a>.
+Then, add the following to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code># Example configuration.yaml entry
+alert:
+  garage_door:
+    name: Garage is open
+    done_message: Garage is closed
+    entity_id: input_boolean.garage_door
+    state: "on"
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+</code></pre>
+<pre><code>
+name:
+  description: The friendly name of the alert.
+  required: true
+  type: string
+entity_id:
+  description: The ID of the entity to watch.
+  required: true
+  type: string
+title:
+  description: &gt;
+    A title to be used for the notification if the notifier supports it
+    with [template](/docs/templating/) support.
+  required: false
+  type: template
+state:
+  description: The problem condition for the entity.
+  required: false
+  type: string
+  default: on
+repeat:
+  description: &gt;
+    Number of minutes before the notification should be repeated.
+    Can be either a number or a list of numbers.
+  required: true
+  type: [integer, list]
+can_acknowledge:
+  description: Control whether the notification can be acknowledged; set to `false` if the alert should not be acknowledgeable.
+  required: false
+  type: boolean
+  default: true
+skip_first:
+  description: &gt;
+    Controls whether the notification should be
+    sent immediately or after the first delay.
+  required: false
+  type: boolean
+  default: false
+message:
+  description: &gt;
+    A message to be sent after an alert transitions from `idle` to `on`
+    with [template](/docs/templating/) support.
+  required: false
+  type: template
+done_message:
+  description: &gt;
+    A message sent after an alert transitions from `on` or `off` to `idle` with
+    [template](/docs/templating/) support. Is only sent if an alert notification
+    was sent for transitioning from `idle` to `on`.
+  required: false
+  type: template
+notifiers:
+  description: "List of `notification` integrations to use for alerts."
+  required: false
+  type: list
+data:
+  description: "Dictionary of extra parameters to send to the notifier."
+  required: false
+  type: list&#32;&#32;
+
+</code></pre>
+<p>In this example, the garage door status (<code>input_boolean.garage_door</code>) is watched
+and this alert will be triggered when its status is equal to <code>on</code>.
+This indicates that the door has been opened. Because the <code>skip_first</code> option
+was set to <code>true</code>, the first notification will not be delivered immediately.
+However, every 30 minutes, a notification will be delivered until either
+<code>input_boolean.garage_door</code> no longer has a state of <code>on</code> or until the alert is
+acknowledged using the Home Assistant frontend.</p>
+<p>For notifiers that require other parameters (such as <code>twilio_sms</code> which requires
+you specify a <code>target</code> parameter when sending the notification), you can use the
+<code>group</code> notification to wrap them for an alert.
+Simply create a <code>group</code> notification type with a single notification member
+(such as <code>twilio_sms</code>) specifying the required parameters other than <code>message</code>
+provided by the <code>alert</code> integration:</p>
+<pre><code>- platform: group
+  name: john_phone_sms
+  services:
+    - action: twilio_sms
+      data:
+        target: !secret john_phone
+</code></pre>
+<pre><code>alert:
+  freshwater_temp_alert:
+    name: "Warning: I have detected a problem with the freshwater tank temperature"
+    entity_id: binary_sensor.freshwater_temperature_status
+    state: "on"
+    repeat: 5
+    can_acknowledge: true
+    skip_first: false
+    notifiers:
+      - john_phone_sms
+</code></pre>
+<h3>Complex alert criteria</h3>
+<p>By design, the <code>alert</code> integration only handles very simple criteria for firing.
+That is, it only checks if a single entity's state is equal to a value. At some
+point, it may be desirable to have an alert with a more complex criteria.
+Possibly, when a battery percentage falls below a threshold. Maybe you want to
+disable the alert on certain days. Maybe the alert firing should depend on more
+than one input. For all of these situations, it is best to use the alert in
+conjunction with a <code>Template Binary Sensor</code>. The following example does that.</p>
+<pre><code>template:
+  - binary_sensor:
+      - name: "Motion Battery is Low"
+        state: "{{ state_attr('sensor.motion', 'battery') | float(default=0) &lt; 15 }}"
+        device_class: battery
+
+alert:
+  motion_battery:
+    name: Motion Battery is Low
+    entity_id: binary_sensor.motion_battery_is_low
+    repeat: 30
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+</code></pre>
+<p>This example will begin firing as soon as the entity <code>sensor.motion</code>'s <code>battery</code>
+attribute falls below 15. It will continue to fire until the battery attribute
+raises above 15 or the alert is acknowledged on the frontend.</p>
+<h3>Dynamic notification delay times</h3>
+<p>It may be desirable to have the delays between alert notifications dynamically
+change as the alert continues to fire. This can be done by setting the <code>repeat</code>
+configuration key to a list of numbers rather than a single number.
+Altering the first example would look like the following.</p>
+<pre><code># Example configuration.yaml entry
+alert:
+  garage_door:
+    name: Garage is open
+    entity_id: input_boolean.garage_door
+    state: "on"   # Optional, 'on' is the default value
+    repeat:
+      - 15
+      - 30
+      - 60
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+</code></pre>
+<p>Now the first message will be sent after a 15 minute delay, the second will be
+sent 30 minutes after that, and a 60 minute delay will fall between every
+following notification.
+For example, if the garage door opens at 2:00, a notification will be
+sent at 2:15, 2:45, 3:45, 4:45, and so on, continuing every 60 minutes.</p>
+<h3>Message templates</h3>
+<p>It may be desirable to have the alert notifications include information
+about the state of the entity. <a>Templates</a>
+can be used in the message or name of the alert to make it more relevant.
+The following will show for a plant how to include the problem <code>attribute</code>
+of the entity.</p>
+<pre><code># Example configuration.yaml entry
+alert:
+  office_plant:
+    name: Plant in office needs help
+    entity_id: plant.plant_office
+    state: "problem"
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    message: "Plant {{ states.plant.plant_office }} needs help ({{ state_attr('plant.plant_office', 'problem') }})"
+    done_message: Plant in office is fine
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+</code></pre>
+<p>The resulting message could be <code>Plant Officeplant needs help (moisture low)</code>.</p>
+<h3>Additional parameters for notifiers</h3>
+<p>Some notifiers support more parameters (e.g., to set text color or action
+buttons). These can be supplied via the <code>data</code> parameter:</p>
+<pre><code># Example configuration.yaml entry
+alert:
+  garage_door:
+    name: "Garage is open"
+    message: "The garage door is still open"
+    done_message: "The garage door is closed"
+    entity_id: input_boolean.garage_door
+    state: "on"   # Optional, 'on' is the default value
+    repeat:
+      - 15
+      - 30
+      - 60
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    data:
+      inline_keyboard:
+        - 'Close garage:/close_garage, Acknowledge:/garage_acknowledge'
+    notifiers:
+      - frank_telegram
+</code></pre>
+<p>This particular example relies on the <code>inline_keyboard</code> functionality of
+Telegram, where the user is presented with buttons to execute certain actions.</p>
+<p>Based on the example above you can make an automation to stop further messages,
+but you will still receive the done message.</p>
+<pre><code>- alias: "Telegram callback to stop alerts for garage door"
+  triggers:
+    - trigger: event
+      event_type: telegram_callback
+      event_data:
+        data: "/garage_acknowledge"
+  actions:
+    - action: alert.turn_off
+      target:
+        entity_id: alert.garage_door
+</code></pre>
+<p>Notifications sent to Home Assistant Companion apps support <a>replacing</a> and <a>clearing</a> notifications. To use these functions with alerts, set a <code>tag</code> in the message data, send <code>clear_notification</code> as the <code>done_message</code>, and use <code>mobile_app_*</code> as the notifier:</p>
+<pre><code>alert:
+  garage_door:
+    name: Garage is open
+    done_message: clear_notification
+    entity_id: input_boolean.garage_door
+    state: "on"
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    notifiers:
+      - mobile_app_ryan
+      - mobile_app_kristen
+    data:
+      tag: garage-door
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Alert automation examples</h2>
+<p>Alerts keep reminding you until a problem is solved. With the alert actions, you decide when those reminders stop and start again.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: acknowledge an alert from a phone notification</h3>
+<p>Your alert sends a notification with an <strong>Acknowledge</strong> button to your phone. When you select the button, this automation acknowledges the alert, so you don't get more reminders.</p>
+<ul>
+<li><strong>Trigger</strong>: Manual event received<ul>
+<li><strong>Event type</strong>: <code>mobile_app_notification_action</code></li>
+<li><strong>Event data</strong>: <code>action: ACKNOWLEDGE_GARAGE</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Alert: Turn off<ul>
+<li><strong>Target</strong>: Garage door alert</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for acknowledging an alert from a phone notification</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Acknowledge the garage door alert from my phone"
+triggers:
+- trigger: event
+event_type: mobile_app_notification_action
+event_data:
+action: ACKNOWLEDGE_GARAGE
+actions:
+- action: alert.turn_off
+target:
+entity_id: alert.garage_door</p>
+<h3>Automation: turn the alert back on when you leave</h3>
+<p>You acknowledged the garage door alert while you were home. When you leave, you want reminders again if the door is still open.</p>
+<ul>
+<li><strong>Trigger</strong>: Zone left<ul>
+<li><strong>Target</strong>: You</li>
+<li><strong>Zone</strong>: Home</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Alert: Turn on<ul>
+<li><strong>Target</strong>: Garage door alert</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for turning an alert back on when you leave</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Turn the garage door alert back on when I leave"
+triggers:
+- trigger: zone.left
+target:
+entity_id: person.you
+options:
+zone: zone.home
+actions:
+- action: alert.turn_on
+target:
+entity_id: alert.garage_door</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/alert.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up automatic alerts within Home Assistant.
+ha_release: 0.38
+ha_domain: alert
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The **Alert** {% term integration %} is designed to notify you when problematic issues arise.
+For example, if the garage door is left open, the `alert` integration can be used
+to remind you of this by sending you repeating notifications at customizable
+intervals. This is also used for low battery sensors,
+water leak sensors, or any condition that may need your attention.
+
+Alerts will add an entity to the front end.
+This entity allows you to silence an alert until it is resolved and has three
+possible states:
+
+| State  | Description                                                  |
+| ------ | ------------------------------------------------------------ |
+| `idle` | The condition for the alert is false.                        |
+| `on`   | The condition for the alert is true.                         |
+| `off`  | The condition for the alert is true but it was acknowledged. |
+
+### Basic example
+
+The `alert` integration uses any of the `notification` integrations. To
+set up the `alert` integration, first, you must set up a [notification integration](/integrations/notify).
+Then, add the following to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+```yaml
+# Example configuration.yaml entry
+alert:
+  garage_door:
+    name: Garage is open
+    done_message: Garage is closed
+    entity_id: input_boolean.garage_door
+    state: &quot;on&quot;
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+```
+
+{% configuration %}
+name:
+  description: The friendly name of the alert.
+  required: true
+  type: string
+entity_id:
+  description: The ID of the entity to watch.
+  required: true
+  type: string
+title:
+  description: &gt;
+    A title to be used for the notification if the notifier supports it
+    with [template](/docs/templating/) support.
+  required: false
+  type: template
+state:
+  description: The problem condition for the entity.
+  required: false
+  type: string
+  default: on
+repeat:
+  description: &gt;
+    Number of minutes before the notification should be repeated.
+    Can be either a number or a list of numbers.
+  required: true
+  type: [integer, list]
+can_acknowledge:
+  description: Control whether the notification can be acknowledged; set to `false` if the alert should not be acknowledgeable.
+  required: false
+  type: boolean
+  default: true
+skip_first:
+  description: &gt;
+    Controls whether the notification should be
+    sent immediately or after the first delay.
+  required: false
+  type: boolean
+  default: false
+message:
+  description: &gt;
+    A message to be sent after an alert transitions from `idle` to `on`
+    with [template](/docs/templating/) support.
+  required: false
+  type: template
+done_message:
+  description: &gt;
+    A message sent after an alert transitions from `on` or `off` to `idle` with
+    [template](/docs/templating/) support. Is only sent if an alert notification
+    was sent for transitioning from `idle` to `on`.
+  required: false
+  type: template
+notifiers:
+  description: &quot;List of `notification` integrations to use for alerts.&quot;
+  required: false
+  type: list
+data:
+  description: &quot;Dictionary of extra parameters to send to the notifier.&quot;
+  required: false
+  type: list&#32;&#32;
+{% endconfiguration %}
+
+In this example, the garage door status (`input_boolean.garage_door`) is watched
+and this alert will be triggered when its status is equal to `on`.
+This indicates that the door has been opened. Because the `skip_first` option
+was set to `true`, the first notification will not be delivered immediately.
+However, every 30 minutes, a notification will be delivered until either
+`input_boolean.garage_door` no longer has a state of `on` or until the alert is
+acknowledged using the Home Assistant frontend.
+
+For notifiers that require other parameters (such as `twilio_sms` which requires
+you specify a `target` parameter when sending the notification), you can use the
+`group` notification to wrap them for an alert.
+Simply create a `group` notification type with a single notification member
+(such as `twilio_sms`) specifying the required parameters other than `message`
+provided by the `alert` integration:
+
+```yaml
+- platform: group
+  name: john_phone_sms
+  services:
+    - action: twilio_sms
+      data:
+        target: !secret john_phone
+```
+
+```yaml
+alert:
+  freshwater_temp_alert:
+    name: &quot;Warning: I have detected a problem with the freshwater tank temperature&quot;
+    entity_id: binary_sensor.freshwater_temperature_status
+    state: &quot;on&quot;
+    repeat: 5
+    can_acknowledge: true
+    skip_first: false
+    notifiers:
+      - john_phone_sms
+```
+
+### Complex alert criteria
+
+By design, the `alert` integration only handles very simple criteria for firing.
+That is, it only checks if a single entity&#x27;s state is equal to a value. At some
+point, it may be desirable to have an alert with a more complex criteria.
+Possibly, when a battery percentage falls below a threshold. Maybe you want to
+disable the alert on certain days. Maybe the alert firing should depend on more
+than one input. For all of these situations, it is best to use the alert in
+conjunction with a `Template Binary Sensor`. The following example does that.
+
+
+```yaml
+template:
+  - binary_sensor:
+      - name: &quot;Motion Battery is Low&quot;
+        state: &quot;{{ state_attr(&#x27;sensor.motion&#x27;, &#x27;battery&#x27;) | float(default=0) &lt; 15 }}&quot;
+        device_class: battery
+
+alert:
+  motion_battery:
+    name: Motion Battery is Low
+    entity_id: binary_sensor.motion_battery_is_low
+    repeat: 30
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+```
+
+
+This example will begin firing as soon as the entity `sensor.motion`&#x27;s `battery`
+attribute falls below 15. It will continue to fire until the battery attribute
+raises above 15 or the alert is acknowledged on the frontend.
+
+### Dynamic notification delay times
+
+It may be desirable to have the delays between alert notifications dynamically
+change as the alert continues to fire. This can be done by setting the `repeat`
+configuration key to a list of numbers rather than a single number.
+Altering the first example would look like the following.
+
+```yaml
+# Example configuration.yaml entry
+alert:
+  garage_door:
+    name: Garage is open
+    entity_id: input_boolean.garage_door
+    state: &quot;on&quot;   # Optional, &#x27;on&#x27; is the default value
+    repeat:
+      - 15
+      - 30
+      - 60
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+```
+
+Now the first message will be sent after a 15 minute delay, the second will be
+sent 30 minutes after that, and a 60 minute delay will fall between every
+following notification.
+For example, if the garage door opens at 2:00, a notification will be
+sent at 2:15, 2:45, 3:45, 4:45, and so on, continuing every 60 minutes.
+
+### Message templates
+
+It may be desirable to have the alert notifications include information
+about the state of the entity. [Templates][template]
+can be used in the message or name of the alert to make it more relevant.
+The following will show for a plant how to include the problem `attribute`
+of the entity.
+
+
+```yaml
+# Example configuration.yaml entry
+alert:
+  office_plant:
+    name: Plant in office needs help
+    entity_id: plant.plant_office
+    state: &quot;problem&quot;
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    message: &quot;Plant {{ states.plant.plant_office }} needs help ({{ state_attr(&#x27;plant.plant_office&#x27;, &#x27;problem&#x27;) }})&quot;
+    done_message: Plant in office is fine
+    notifiers:
+      - ryans_phone
+      - kristens_phone
+```
+
+
+The resulting message could be `Plant Officeplant needs help (moisture low)`.
+
+### Additional parameters for notifiers
+
+Some notifiers support more parameters (e.g., to set text color or action
+  buttons). These can be supplied via the `data` parameter:
+
+```yaml
+# Example configuration.yaml entry
+alert:
+  garage_door:
+    name: &quot;Garage is open&quot;
+    message: &quot;The garage door is still open&quot;
+    done_message: &quot;The garage door is closed&quot;
+    entity_id: input_boolean.garage_door
+    state: &quot;on&quot;   # Optional, &#x27;on&#x27; is the default value
+    repeat:
+      - 15
+      - 30
+      - 60
+    can_acknowledge: true  # Optional, default is true
+    skip_first: true  # Optional, false is the default
+    data:
+      inline_keyboard:
+        - &#x27;Close garage:/close_garage, Acknowledge:/garage_acknowledge&#x27;
+    notifiers:
+      - frank_telegram
+```
+
+This particular example relies on the `inline_keyboard` functionality of
+Telegram, where the user is presented with buttons to execute certain actions.
+
+Based on the example above you can make an automation to stop further messages,
+but you will still receive the done message.
+
+```yaml
+- alias: &quot;Telegram callback to stop alerts for garage door&quot;
+  triggers:
+    - trigger: event
+      event_type: telegram_callback
+      event_data:
+        data: &quot;/garage_acknowledge&quot;
+  actions:
+    - action: alert.turn_off
+      target:
+        entity_id: alert.garage_door
+```
+
+Notifications sent to Home Assistant Companion apps support [replacing](https://companion.home-assistant.io/docs/notifications/notifications-basic/#replacing) and [clearing](https://companion.home-assistant.io/docs/notifications/notifications-basic/#replacing) notifications. To use these functions with alerts, set a `tag` in the message data, send `clear_notification` as the `done_message`, and use `mobile_app_*` as the notifier:
+
+```yaml
+alert:
+  garage_door:
+    name: Garage is open
+    done_message: clear_notification
+    entity_id: input_boolean.garage_door
+    state: &quot;on&quot;
+    repeat: 30
+    can_acknowledge: true
+    skip_first: true
+    notifiers:
+      - mobile_app_ryan
+      - mobile_app_kristen
+    data:
+      tag: garage-door
+```
+
+[template]: /docs/templating/
+
+{% include integrations/actions.md %}
+
+## Alert automation examples
+
+Alerts keep reminding you until a problem is solved. With the alert actions, you decide when those reminders stop and start again.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: acknowledge an alert from a phone notification
+
+Your alert sends a notification with an **Acknowledge** button to your phone. When you select the button, this automation acknowledges the alert, so you don&#x27;t get more reminders.
+
+- **Trigger**: Manual event received
+  - **Event type**: `mobile_app_notification_action`
+  - **Event data**: `action: ACKNOWLEDGE_GARAGE`
+- **Action**: Alert: Turn off
+  - **Target**: Garage door alert
+
+{% details &quot;YAML example for acknowledging an alert from a phone notification&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Acknowledge the garage door alert from my phone&quot;
+  triggers:
+    - trigger: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: ACKNOWLEDGE_GARAGE
+  actions:
+    - action: alert.turn_off
+      target:
+        entity_id: alert.garage_door
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: turn the alert back on when you leave
+
+You acknowledged the garage door alert while you were home. When you leave, you want reminders again if the door is still open.
+
+- **Trigger**: Zone left
+  - **Target**: You
+  - **Zone**: Home
+- **Action**: Alert: Turn on
+  - **Target**: Garage door alert
+
+{% details &quot;YAML example for turning an alert back on when you leave&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Turn the garage door alert back on when I leave&quot;
+  triggers:
+    - trigger: zone.left
+      target:
+        entity_id: person.you
+      options:
+        zone: zone.home
+  actions:
+    - action: alert.turn_on
+      target:
+        entity_id: alert.garage_door
+{% endexample %}
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Alert in Home Assistant is <code>alert</code>.</p><h3>Documented actions</h3><ul class="chips"><li>toggle</li><li>turn off</li><li>turn on</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Alert automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/alert/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/alert</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/alert</code></dd></dl></section><p><a href="../../integrations/alert/">Return to the Alert guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

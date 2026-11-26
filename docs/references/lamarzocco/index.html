@@ -1,1 +1,796 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La Marzocco reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:194" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/lamarzocco/">La Marzocco guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>La Marzocco</h1><p>Instructions on how to integrate your La Marzocco coffee machine with Home Assistant.</p><section><h2>Overview</h2><p>This integration interacts with La Marzocco coffee machines through calls to the La Marzocco cloud API.</p></section><section><h2>Data updates</h2><p>By default, this integration will receive push updates from the cloud about its general status. If that is not possible it will query the cloud every 15 seconds for an update of general machine information, every 15 minutes for new statistics, every 30 minutes for updated schedules and every 8 hours for a firmware update.</p></section><section><h2>Calendar</h2><p>The integration exposes a calendar for the machine&#x27;s auto-on/off schedule. It only displays the schedule; you can&#x27;t make changes to the schedule from the calendar. The schedule will be displayed recurrently: If you set the machine to start up on Mondays at 8:00 and shut down at 9:00, you will get events for all Mondays in your calendar. On days when you have the auto on/off feature disabled, you will not get an event in the calendar. Also, if you have the auto on/off feature disabled globally (for example, through the switch &quot;Auto on/off&quot;), there will be no events in the calendar.</p></section><section><h2>Supported devices</h2><p>Currently, only devices from the &quot;Home&quot; range are supported:</p></section><section><h2>Automations</h2><p>Get started with these automation examples.</p></section><section><h2>Turn steamboiler on when machine is turned on</h2><p>I often drink milk beverages in the morning and espresso in the afternoon, but forget to re-enable the steamboiler again, so this automation ensures that the steam boiler is always turned on, when the machine is turned on.</p></section><section><h2>Troubleshooting</h2><p>Check the La Marzocco Home app to see if you can connect to your machine there. If not, remove the machine and add it again (follow the instructions in the La Marzocco App).</p></section><section><h2>Removing the integration</h2><p>This integration follows standard integration removal. No extra steps are required.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for La Marzocco.</p><p>The <strong>accept policy</strong> configuration step lists <code>commercial_policy</code>, <code>profile_policy</code>.</p><p>The <strong>bluetooth selection</strong> configuration step lists <code>mac</code>.</p><p>The <strong>machine selection</strong> configuration step lists <code>machine</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Data updates</li><li>Buttons</li><li>Numbers</li><li>Switches</li><li>Binary sensors</li><li>Sensors</li><li>Updates</li><li>Selects</li><li>Calendar</li><li>Supported devices</li><li>Possible use-cases</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/lamarzocco/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/lamarzocco</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/lamarzocco</code></dd></dl></section><p><a href="../../integrations/lamarzocco/">Return to the La Marzocco guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>La Marzocco reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:194" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/lamarzocco/">La Marzocco guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>La Marzocco</h1><p>Instructions on how to integrate your La Marzocco coffee machine with Home Assistant.</p><div class="reader-body"><p>This integration interacts with <a>La Marzocco</a> coffee machines through calls to the La Marzocco cloud API.</p>
+<p>If your Home Assistant host can perform <a href="../dhcp/">DHCP discovery</a>, your machine will be discovered automatically. Otherwise, if your machine is in Bluetooth range to your Home Assistant host and the <a href="../bluetooth/">Bluetooth</a> integration is fully loaded, the machine will be discovered as well.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>To be able to configure your machine in Home Assistant, your machine needs to be added to your account using the official La Marzocco app first.</li>
+<li>Only login with username &amp; password is supported. If you are currently using a social login, you need to create a new La Marzocco account and transfer your machine to it to be able to use this integration.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>La Marzocco</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>La Marzocco</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Username:
+  description: "Your username you use to log into the La Marzocco app."
+Password:
+  description: "Password you use to log into the La Marzocco app."
+
+</code></pre>
+<h2>Options</h2>
+<p>To define options for La Marzocco, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of La Marzocco are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+Use Bluetooth:
+  description: Allows you to manually disable Bluetooth communication with the machine (if available). This can be used to avoid longer timeouts, e.g., when your machine is only sometimes in range.
+Offline mode:
+  description: Allows you to enable the offline mode manually. Requires use of Bluetooth. Also see [Data updates](#data-updates).
+
+</code></pre>
+<h2>Data updates</h2>
+<p>By default, this integration will receive push updates from the cloud about its general status. If that is not possible it will query the cloud every 15 seconds for an update of general machine information, every 15 minutes for new statistics, every 30 minutes for updated schedules and every 8 hours for a firmware update.</p>
+<p>If your host has access to a Bluetooth adapter and your machine is within range, the integration can request updates through Bluetooth. The integration will always try to send commands over Bluetooth first. If the machine is turned on, the Bluetooth connection will be held active to enable real-time updates for the <strong>Brewing active</strong> sensor.</p>
+<p>There is also a "Bluetooth only" mode. This Bluetooth mode starts automatically if internet access is not available, or when you enable the <strong>Offline mode</strong> option.
+In <strong>offline mode</strong>, most entities will become unavailable. Only those marked with  in the table below (<a>Available platforms &amp; entities</a>) will remain available. While in <strong>offline mode</strong>, Home Assistant requests an update from your machine every 60 seconds.</p>
+<h2>Available platforms &amp; entities</h2>
+<p>= La Marzocco Cloud
+ = Bluetooth</p>
+<h2>Buttons</h2>
+<table>
+<thead>
+<tr>
+  <th>Button name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Controllable through</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Start backflush</strong></td>
+  <td>Starts the backflush process on your machine. You got 15 seconds to turn the paddle after activation.</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h2>Numbers</h2>
+<table>
+<thead>
+<tr>
+  <th>Number name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Controllable through</th>
+  <th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Coffee target temperature</strong></td>
+  <td>Temperature the coffee boiler is set to</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Steam target temperature</strong></td>
+  <td>Temperature the steam boiler is set to</td>
+  <td><code>GS3 AV</code>, <code>GS3 MP</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Smart standby time</strong></td>
+  <td>Time until the machine will automatically stand by (if enabled)</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Preinfusion time</strong></td>
+  <td>Duration of preinfusion</td>
+  <td><code>Linea Micra</code>, <code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+  <td>only available when machine is in mode <code>Preinfusion</code></td>
+</tr>
+<tr>
+  <td><strong>Prebrew time on</strong></td>
+  <td>Duration which prebrew will be on</td>
+  <td><code>Linea Micra</code>, <code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+  <td>only available when machine is in mode <code>Prebrew</code></td>
+</tr>
+<tr>
+  <td><strong>Prebrew time off</strong></td>
+  <td>Duration which prebrew will wait</td>
+  <td><code>Linea Micra</code>, <code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+  <td>only available when machine is in mode <code>Prebrew</code></td>
+</tr>
+<tr>
+  <td><strong>Brew by weight Dose 1</strong></td>
+  <td>Weight when the machine will stop while being in <em>Dose 1</em> for Brew by weight</td>
+  <td><code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+  <td>only available when machine is paired with a scale</td>
+</tr>
+<tr>
+  <td><strong>Brew by weight Dose 2</strong></td>
+  <td>Weight when the machine will stop while being in <em>Dose 2</em> for Brew by weight</td>
+  <td><code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+  <td>only available when machine is paired with a scale</td>
+</tr>
+</tbody>
+</table>
+<h2>Switches</h2>
+<table>
+<thead>
+<tr>
+  <th>Switch name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Controllable through</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Main</strong></td>
+  <td>Allows you to turn machines on-/off</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Steam boiler</strong></td>
+  <td>Allows you to enable/disable the steam boiler</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Smart standby enabled</strong></td>
+  <td>Whether smart standby is on (machine will automatically stand by after given time)</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h2>Binary sensors</h2>
+<table>
+<thead>
+<tr>
+  <th>Binary sensor name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Retrievable from</th>
+  <th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Water tank empty</strong></td>
+  <td>Indicates whether the water tank needs a refill.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Brewing active</strong></td>
+  <td>Is on if you are in the process of making coffee.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Backflush enabled</strong></td>
+  <td>Is on if you started the backflushing process.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>WebSocket connected</strong></td>
+  <td>Track your connection to the cloud WebSocket for real time updates.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td><a>Disabled by default</a>.</td>
+</tr>
+<tr>
+  <td><strong>Bluetooth connected</strong></td>
+  <td>Track your connection over Bluetooth for local updates.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td><a>Disabled by default</a>.</td>
+</tr>
+</tbody>
+</table>
+<h2>Sensors</h2>
+<table>
+<thead>
+<tr>
+  <th>Sensor name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Retrievable from</th>
+  <th>Remarks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Coffee boiler ready time</strong></td>
+  <td>Indicates when the coffee boiler will be ready for brewing.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Steam boiler ready time</strong></td>
+  <td>Indicates when the steam boiler will be ready for brewing.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Brew start time</strong></td>
+  <td>If a brew is running, tells the exact start time of that brew.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Total coffees made</strong></td>
+  <td>How many coffees have been made in total.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Total flushes done</strong></td>
+  <td>How often the machine has been flushed.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><strong>Last cleaning time</strong></td>
+  <td>Indicates when the machine was last cleaned with a <strong>Backflush</strong>.</td>
+  <td><code>all</code></td>
+  <td></td>
+  <td>-</td>
+</tr>
+</tbody>
+</table>
+<h2>Updates</h2>
+<table>
+<thead>
+<tr>
+  <th>Update name</th>
+  <th>Description</th>
+  <th>Available for machines</th>
+  <th>Retrievable from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Gateway firmware</strong></td>
+  <td>Firmware status of the gateway</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Machine firmware</strong></td>
+  <td>Firmware status of the machine</td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h2>Selects</h2>
+<table>
+<thead>
+<tr>
+  <th>Select name</th>
+  <th>Description</th>
+  <th>Options</th>
+  <th>Available for machines</th>
+  <th>Controllable through</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Prebrew/-infusion mode</strong></td>
+  <td>Whether to use prebrew, preinfusion, or neither</td>
+  <td><code>Disabled</code>, <code>Prebrew</code>, <code>Preinfusion</code></td>
+  <td><code>Linea Micra</code>, <code>Linea Mini</code>, <code>GS3 AV</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Steam level</strong></td>
+  <td>The level your steam boiler should run at</td>
+  <td><code>1</code>,<code>2</code>,<code>3</code></td>
+  <td><code>Linea Micra</code>, <code>Linea Mini R</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Smart standby mode</strong></td>
+  <td>The smart standby mode, that decides from which events the timer to standby will run.</td>
+  <td><code>Last brewing</code>, <code>Power on</code></td>
+  <td><code>all</code></td>
+  <td></td>
+</tr>
+<tr>
+  <td><strong>Brew by weight dose mode</strong></td>
+  <td>Select the brew by weight mode of your machine</td>
+  <td><code>Continuous</code>, <code>Dose 1</code>, <code>Dose 2</code></td>
+  <td><code>Linea Mini</code>, <code>Linea Mini R</code></td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h2>Calendar</h2>
+<p>The integration exposes a calendar for the machine's auto-on/off schedule. It only displays the schedule; you can't make changes to the schedule from the calendar.
+The schedule will be displayed recurrently: If you set the machine to start up on Mondays at 8:00 and shut down at 9:00, you will get events for all Mondays in your calendar. On days when you have the auto on/off feature disabled, you will not get an event in the calendar. Also, if you have the auto on/off feature disabled globally (for example, through the switch "Auto on/off"), there will be no events in the calendar.</p>
+<h2>Supported devices</h2>
+<p>Currently, only devices from the <strong>"Home"</strong> range are supported:</p>
+<ul>
+<li><code>Linea Mini</code></li>
+<li><code>Linea Mini R</code></li>
+<li><code>Linea Micra</code></li>
+<li><code>GS3 AV</code></li>
+<li><code>GS3 MP</code></li>
+</ul>
+<h2>Possible use-cases</h2>
+<ul>
+<li>Control your machine through voice, allowing you to change boiler temperatures quickly without opening the app.</li>
+<li>Control your smart coffee scales (tare/timer start) when a brew starts.</li>
+<li>Turn on lights next to the machine while a brew is running.</li>
+</ul>
+<h2>Automations</h2>
+<p>Get started with these automation examples.</p>
+<h3>Turn steamboiler on when machine is turned on</h3>
+<p>I often drink milk beverages in the morning and espresso in the afternoon, but forget to re-enable the steamboiler again, so this automation ensures that the steam boiler is always turned on, when the machine is turned on.</p>
+<h4>Example YAML configuration</h4>
+<pre><code>alias: Turn steamboiler on when machine is turned on
+description: Ensure the steamboiler is on, when the machine gets turned on
+triggers:
+  - trigger: state
+    entity_id:
+      - switch.mr000000
+    from: "off"
+    to: "on"
+conditions:
+  - condition: state
+    entity_id: switch.mr000000_steam_boiler
+    state: "off"
+actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.mr000000_steam_boiler
+    data: {}
+mode: single
+
+</code></pre>
+<h2>Known Limitations</h2>
+<ul>
+<li>Only La Marzocco native app accounts are supported, social logins (Google, Apple &amp; WeChat) are not supported</li>
+<li>Currently it is only possible to view the schedules configured in the La Marzocco Home app, but not to edit the schedules from Home Assistant. You can, of course, build Home Assistant native automations to reflect the same functionality in Home Assistant.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Problem: Connection to machine is not possible</h4>
+<p>Check the La Marzocco Home app to see if you can connect to your machine there. If not, remove the machine and add it again (follow the instructions in the La Marzocco App).</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/lamarzocco.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate your La Marzocco coffee machine with Home Assistant.
+ha_release: 2024.2
+ha_domain: lamarzocco
+---
+
+This {% term integration %} interacts with [La Marzocco](https://lamarzocco.com/it/en/) coffee machines through calls to the La Marzocco cloud API.
+
+If your Home Assistant host can perform [DHCP discovery](/integrations/dhcp/), your machine will be discovered automatically. Otherwise, if your machine is in Bluetooth range to your Home Assistant host and the [Bluetooth](/integrations/bluetooth) integration is fully loaded, the machine will be discovered as well.
+
+## Prerequisites
+
+- To be able to configure your machine in Home Assistant, your machine needs to be added to your account using the official La Marzocco app first.
+- Only login with username &amp; password is supported. If you are currently using a social login, you need to create a new La Marzocco account and transfer your machine to it to be able to use this integration.
+
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Username:
+  description: &quot;Your username you use to log into the La Marzocco app.&quot;
+Password:
+  description: &quot;Password you use to log into the La Marzocco app.&quot;
+{% endconfiguration_basic %}
+
+{% include integrations/option_flow.md %}
+
+{% configuration_basic %}
+Use Bluetooth:
+  description: Allows you to manually disable Bluetooth communication with the machine (if available). This can be used to avoid longer timeouts, e.g., when your machine is only sometimes in range.
+Offline mode:
+  description: Allows you to enable the offline mode manually. Requires use of Bluetooth. Also see [Data updates](#data-updates).
+{% endconfiguration_basic %}
+
+## Data updates
+
+By default, this integration will receive push updates from the cloud about its general status. If that is not possible it will query the cloud every 15 seconds for an update of general machine information, every 15 minutes for new statistics, every 30 minutes for updated schedules and every 8 hours for a firmware update.
+
+If your host has access to a Bluetooth adapter and your machine is within range, the integration can request updates through Bluetooth. The integration will always try to send commands over Bluetooth first. If the machine is turned on, the Bluetooth connection will be held active to enable real-time updates for the **Brewing active** sensor.
+
+There is also a &quot;Bluetooth only&quot; mode. This Bluetooth mode starts automatically if internet access is not available, or when you enable the **Offline mode** option.
+In **offline mode**, most entities will become unavailable. Only those marked with &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; in the table below ([Available platforms &amp; entities](#available-platforms--entities)) will remain available. While in **offline mode**, Home Assistant requests an update from your machine every 60 seconds.
+
+# Available platforms &amp; entities
+
+{% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} = La Marzocco Cloud
+&lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; = Bluetooth
+
+## Buttons
+
+| Button name | Description | Available for machines | Controllable through |
+|-------------|-------------| ---------------------- | -------------------- |
+| **Start backflush** | Starts the backflush process on your machine. You got 15 seconds to turn the paddle after activation. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |&#32;
+
+
+## Numbers
+
+| Number name | Description | Available for machines | Controllable through | Remarks |
+|-------------|-------------| ---------------------- |--------------------- | ------- |
+| **Coffee target temperature** | Temperature the coffee boiler is set to | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; | - |
+| **Steam target temperature** | Temperature the steam boiler is set to | `GS3 AV`, `GS3 MP` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; | - |
+| **Smart standby time** | Time until the machine will automatically stand by (if enabled) | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Preinfusion time** | Duration of preinfusion | `Linea Micra`, `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | only available when machine is in mode `Preinfusion` |
+| **Prebrew time on** | Duration which prebrew will be on | `Linea Micra`, `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | only available when machine is in mode `Prebrew` |
+| **Prebrew time off** | Duration which prebrew will wait | `Linea Micra`, `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | only available when machine is in mode `Prebrew` |
+| **Brew by weight Dose 1** | Weight when the machine will stop while being in *Dose 1* for Brew by weight | `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | only available when machine is paired with a scale |
+| **Brew by weight Dose 2** | Weight when the machine will stop while being in *Dose 2* for Brew by weight | `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | only available when machine is paired with a scale |
+
+
+## Switches
+
+| Switch name | Description | Available for machines | Controllable through |
+|-------------|-------------| ---------------------- | -------------------- |
+| **Main**      | Allows you to turn machines on-/off | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; |
+| **Steam boiler** | Allows you to enable/disable the steam boiler | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |
+| **Smart standby enabled** | Whether smart standby is on (machine will automatically stand by after given time) | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; |
+
+## Binary sensors
+
+| Binary sensor name | Description | Available for machines |  Retrievable from | Remarks |
+|------------------- |-------------| ---------------------- | ----------------- | ------- |
+| **Water tank empty** | Indicates whether the water tank needs a refill. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Brewing active** | Is on if you are in the process of making coffee. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; | - |
+| **Backflush enabled** | Is on if you started the backflushing process. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %}| - |
+| **WebSocket connected** | Track your connection to the cloud WebSocket for real time updates. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %}| [Disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). |
+| **Bluetooth connected** | Track your connection over Bluetooth for local updates. | `all` | &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; | [Disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). |
+
+## Sensors
+
+| Sensor name | Description | Available for machines |  Retrievable from | Remarks |
+|------------------- |-------------| ---------------------- | ----------------- | ------- |
+| **Coffee boiler ready time** | Indicates when the coffee boiler will be ready for brewing. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Steam boiler ready time** | Indicates when the steam boiler will be ready for brewing. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Brew start time** | If a brew is running, tells the exact start time of that brew. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Total coffees made** | How many coffees have been made in total. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Total flushes done** | How often the machine has been flushed. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+| **Last cleaning time** | Indicates when the machine was last cleaned with a **Backflush**. | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} | - |
+
+## Updates
+
+| Update name | Description | Available for machines | Retrievable from |
+|-------------|-------------| ---------------------- |---------------- |&#32;
+| **Gateway firmware** | Firmware status of the gateway |  `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |
+| **Machine firmware** | Firmware status of the machine |  `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |
+
+## Selects
+
+| Select name | Description | Options | Available for machines | Controllable through |
+|-------------|-------------| --------| ---------------------- | -------------------- |
+| **Prebrew/-infusion mode** | Whether to use prebrew, preinfusion, or neither | `Disabled`, `Prebrew`, `Preinfusion` | `Linea Micra`, `Linea Mini`, `GS3 AV` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |
+| **Steam level** | The level your steam boiler should run at | `1`,`2`,`3` | `Linea Micra`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt; |
+| **Smart standby mode** | The smart standby mode, that decides from which events the timer to standby will run. | `Last brewing`, `Power on` | `all` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} &lt;iconify-icon inline title=&quot;Bluetooth&quot; icon=&quot;material-symbols:bluetooth&quot;&gt;&lt;/iconify-icon&gt;  |
+| **Brew by weight dose mode** | Select the brew by weight mode of your machine | `Continuous`, `Dose 1`, `Dose 2` | `Linea Mini`, `Linea Mini R` | {% icon &quot;material-symbols:cloud-outline&quot; title=&quot;La Marzocco Cloud&quot; %} |
+
+## Calendar
+
+The integration exposes a {% term calendar %} for the machine&#x27;s auto-on/off schedule. It only displays the schedule; you can&#x27;t make changes to the schedule from the calendar.
+The schedule will be displayed recurrently: If you set the machine to start up on Mondays at 8:00 and shut down at 9:00, you will get events for all Mondays in your calendar. On days when you have the auto on/off feature disabled, you will not get an event in the calendar. Also, if you have the auto on/off feature disabled globally (for example, through the switch &quot;Auto on/off&quot;), there will be no events in the calendar.
+
+## Supported devices
+
+Currently, only devices from the **&quot;Home&quot;** range are supported:
+
+- `Linea Mini`
+- `Linea Mini R`
+- `Linea Micra`
+- `GS3 AV`
+- `GS3 MP`
+
+## Possible use-cases
+
+- Control your machine through voice, allowing you to change boiler temperatures quickly without opening the app.
+- Control your smart coffee scales (tare/timer start) when a brew starts.
+- Turn on lights next to the machine while a brew is running.
+
+## Automations
+
+Get started with these automation examples.
+
+### Turn steamboiler on when machine is turned on
+
+I often drink milk beverages in the morning and espresso in the afternoon, but forget to re-enable the steamboiler again, so this automation ensures that the steam boiler is always turned on, when the machine is turned on.
+
+{% details &quot;Example YAML configuration&quot; %}
+
+```yaml
+alias: Turn steamboiler on when machine is turned on
+description: Ensure the steamboiler is on, when the machine gets turned on
+triggers:
+  - trigger: state
+    entity_id:
+      - switch.mr000000
+    from: &quot;off&quot;
+    to: &quot;on&quot;
+conditions:
+  - condition: state
+    entity_id: switch.mr000000_steam_boiler
+    state: &quot;off&quot;
+actions:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.mr000000_steam_boiler
+    data: {}
+mode: single
+
+```
+{% enddetails %}
+&#32;&#32;
+## Known Limitations
+
+- Only La Marzocco native app accounts are supported, social logins (Google, Apple &amp; WeChat) are not supported
+- Currently it is only possible to view the schedules configured in the La Marzocco Home app, but not to edit the schedules from Home Assistant. You can, of course, build Home Assistant native automations to reflect the same functionality in Home Assistant.
+
+## Troubleshooting
+
+{% details &quot;Problem: Connection to machine is not possible&quot; %}
+
+Check the La Marzocco Home app to see if you can connect to your machine there. If not, remove the machine and add it again (follow the instructions in the La Marzocco App).
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for La Marzocco.</p><p>The <strong>accept policy</strong> configuration step lists <code>commercial_policy</code>, <code>profile_policy</code>.</p><p>The <strong>bluetooth selection</strong> configuration step lists <code>mac</code>.</p><p>The <strong>machine selection</strong> configuration step lists <code>machine</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Connection methods</h3><ul class="chips"><li>bluetooth</li><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Data updates</li><li>Buttons</li><li>Numbers</li><li>Switches</li><li>Binary sensors</li><li>Sensors</li><li>Updates</li><li>Selects</li><li>Calendar</li><li>Supported devices</li><li>Possible use-cases</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/lamarzocco/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/lamarzocco</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/lamarzocco</code></dd></dl></section><p><a href="../../integrations/lamarzocco/">Return to the La Marzocco guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

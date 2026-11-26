@@ -1,1 +1,2667 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BleBox devices reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:327" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/blebox/">BleBox devices guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>BleBox devices</h1><p>Instructions on how to integrate BleBox devices with Home Assistant.</p><section><h2>Prerequisites</h2><p>Before Home Assistant can discover your BleBox device, it must be connected to your Wi-Fi network.</p></section><section><h2>Data updates</h2><p>This integration uses local polling to fetch the current state of your BleBox devices. The polling interval depends on the entity type:</p></section><section><h2>rollerGate</h2><p>This integration adds the Blebox device as a cover entity to Home Assistant.</p></section><section><h2>gateBox</h2><p>This integration adds the BleBox device as a cover entity to Home Assistant.</p></section><section><h2>Additional features</h2><p>The secondary output is exposed differently depending on how you configure it in the wBox app or on the device&#x27;s website:</p></section><section><h2>gateBox Pro</h2><p>This integration adds the BleBox device as a cover entity to Home Assistant.</p></section><section><h2>doorBox</h2><p>This integration adds the Blebox device as a cover entity to Home Assistant.</p></section><section><h2>doorBox PRO</h2><p>This integration adds the Blebox device as a cover entity to Home Assistant.</p></section><section><h2>saunaBox</h2><p>This integration adds the Blebox device as a climate entity to Home Assistant.</p></section><section><h2>thermoBox</h2><p>This integration adds the Blebox device as a climate entity and 2 sensor entities to Home Assistant.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for BleBox devices.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>light</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Prerequisites</li><li>Data updates</li><li>BleBox controllers</li><li>Examples</li><li>Troubleshooting</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/blebox/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/blebox</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/blebox</code></dd></dl></section><p><a href="../../integrations/blebox/">Return to the BleBox devices guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BleBox devices reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:327" data-theme="studio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/blebox/">BleBox devices guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>BleBox devices</h1><p>Instructions on how to integrate BleBox devices with Home Assistant.</p><div class="reader-body"><p><a>BleBox</a> produces compact, low-power, feature-rich Wi-Fi devices for home automation. You can find the full product range on the <a>BleBox products page</a> and in the <a>BleBox product catalog</a>.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Control your blinds, shutters, and garage or gate automatically. For example, close them at sunset or when wind speed exceeds a set threshold.</li>
+<li>Manage your lights and dimmers from a single dashboard, and create automations that adjust brightness based on time of day or occupancy.</li>
+<li>Monitor energy consumption with a smartMeter DIN device and use the data in the Home Assistant energy dashboard.</li>
+<li>Automate your sauna or heating with a saunaBox or thermoBox by setting a target temperature so it is ready when you get home.</li>
+<li>Trigger automations from wall buttons and remotes by using an actionBox as a bridge, without replacing your existing switches.</li>
+<li>Get notified when a floodSensor detects water, or when air quality reported by an airSensor drops below an acceptable level.</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>Before Home Assistant can discover your BleBox device, it must be connected to your Wi-Fi network.</p>
+<ol>
+<li>Follow the <a>BleBox getting started guide</a> to connect your device to your Wi-Fi network using the wBox app.</li>
+<li>Once connected, Home Assistant will discover the device automatically.</li>
+</ol>
+<p><strong>Note</strong></p>
+<p>For the best experience, make sure your BleBox devices have the most recent available firmware installed.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>BleBox devices</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>BleBox devices</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: "The IP address or hostname of your BleBox device, for example `192.168.1.100` or `blebox-device.local`. Hostnames only work if they resolve on your local network. You can find the address in your router or in the wBox app."
+Port:
+  description: "The port used to communicate with your BleBox device. The default port is `80`."
+Username:
+  description: "The username for your BleBox device, if you have set up access credentials. This is optional."
+Password:
+  description: "The password for your BleBox device, if you have set up access credentials. This is optional."
+
+</code></pre>
+<h2>Data updates</h2>
+<p>This integration uses local polling to fetch the current state of your BleBox devices. The polling interval depends on the entity type:</p>
+<ul>
+<li>Lights, sensors, switches, and climate entities are polled every 5 seconds.</li>
+<li>Binary sensors, buttons, and covers are polled every 30 seconds (the Home Assistant default).</li>
+</ul>
+<h2>BleBox controllers</h2>
+<h3>rollerGate</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+<li>Stop</li>
+</ul>
+<h3>gateBox</h3>
+<p>This integration adds the BleBox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open (trigger primary output)</li>
+<li>Close (trigger primary output)</li>
+<li>Gate state (open, close, unknown)</li>
+</ul>
+<h4>Additional features</h4>
+<p>The secondary output is exposed differently depending on how you configure it in the wBox app or on the device's website:</p>
+<ul>
+<li>If it is set to stop, the cover entity supports <strong>Stop</strong>.</li>
+<li>If it is set to walk-in gate or another function, a button entity is added to trigger that output.</li>
+</ul>
+<h3>gateBox Pro</h3>
+<p>This integration adds the BleBox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open (trigger primary output)</li>
+<li>Close (trigger primary output)</li>
+<li>Gate state (open, close, unknown)</li>
+</ul>
+<h4>Additional features</h4>
+<p>The secondary output is exposed differently depending on how you configure it in the wBox app or on the device's website:</p>
+<ul>
+<li>If it is set to stop, the cover entity supports <strong>Stop</strong>.</li>
+<li>If it is set to walk-in gate or another function, a button entity is added to trigger that output.</li>
+</ul>
+<h3>doorBox</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Door state (open, close, unknown)</li>
+</ul>
+<h3>doorBox PRO</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Door state (open, close, unknown)</li>
+</ul>
+<h3>saunaBox</h3>
+<p>This integration adds the Blebox device as a climate entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Setting target temperature</li>
+<li>Read current temperature</li>
+</ul>
+<h3>thermoBox</h3>
+<p>This integration adds the Blebox device as a climate entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Set target temperature</li>
+<li>Read current temperature</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Changing operation mode (cooling/heating) requires direct access to device or from wBox app</li>
+</ul>
+<h3>shutterBox</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation (90-degree and 180-degree modes)</li>
+</ul>
+<h3>shutterBoxDC</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation</li>
+</ul>
+<h3>shutterBox DIN</h3>
+<p>This integration adds the Blebox device as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation (90-degree and 180-degree modes)</li>
+</ul>
+<h3>switchBox</h3>
+<p>This integration adds the Blebox device as a switch entity and 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+<li>Voltage measurement</li>
+</ul>
+<h3>switchBox DIN</h3>
+<p>This integration adds the Blebox device as a switch entity and 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+<li>Voltage measurement</li>
+</ul>
+<h3>switchBoxD</h3>
+<p>This integration adds the Blebox device as 2 switch entities and 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+<li>Voltage measurement</li>
+</ul>
+<h3>switchBoxD DIN</h3>
+<p>This integration adds the Blebox device as 2 switch entities and 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+<li>Voltage measurement</li>
+</ul>
+<h3>switchBoxDC</h3>
+<p>This integration adds the Blebox device as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>switchBoxD DC DIN</h3>
+<p>This integration adds the Blebox device as 2 switch entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>switchBox LIGHT</h3>
+<p>This integration adds the Blebox device as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>switchBoxT PRO</h3>
+<p>This integration adds the Blebox device as 3 switch entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>dimmerBox</h3>
+<p>This integration adds the Blebox device as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Brightness</li>
+</ul>
+<h3>wLightBox</h3>
+<p>This integration adds the Blebox device to Home Assistant as:</p>
+<ul>
+<li>multiple MONO lights entities,</li>
+<li>1 or 2 lights CCT entities,</li>
+<li>1 light RGB or RGBW or RGBCCT entity.</li>
+</ul>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color (RGB, RGBW, RGBCCT mode only)</li>
+<li>White temperature control (RGBCCT &amp; CCT mode only)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>You can create your own effects. Creator of effects is available in wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>wLightBox PRO</h3>
+<p>This integration adds the Blebox device to Home Assistant as:</p>
+<ul>
+<li>multiple MONO lights entities,</li>
+<li>1 or 2 lights CCT entities,</li>
+<li>1 light RGB or RGBW or RGBCCT entity.</li>
+</ul>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color (RGB, RGBW, RGBCCT mode only)</li>
+<li>White temperature control (RGBCCT &amp; CCT mode only)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>You can create your own effects. Creator of effects is available in wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>wLightBoxS</h3>
+<p>This integration adds the Blebox device as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>dacBoxD DC</h3>
+<p>This integration adds the Blebox device as 2 lights MONO or 1 light CCT entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Brightness / linear percentage control (depends on device's settings)</li>
+<li>White temperature control (CCT mode only)</li>
+<li>Effects</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>Own effects are possible to create. Creator of effects is available in wBox app.</li>
+<li>After settings change, device needs to be reloaded.</li>
+</ul>
+<h3>wLightBoxS PRO</h3>
+<p>This integration adds the Blebox device as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>pixelBox</h3>
+<p>This integration adds the Blebox device as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color</li>
+</ul>
+<h3>tempSensor</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of temperature</li>
+</ul>
+<h3>tempSensorAC</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of temperature for all probes</li>
+</ul>
+<h3>tempSensor PRO</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of temperature for all probes</li>
+</ul>
+<h3>tempSensor DIN</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of temperature for all probes</li>
+</ul>
+<h3>floodSensor</h3>
+<p>This integration adds the Blebox device as a moisture binary sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of moisture as either "detected" or "cleared".</li>
+</ul>
+<h3>humiditySensor</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of humidity</li>
+<li>Periodic read of temperature</li>
+</ul>
+<h3>rainSensor</h3>
+<p>This integration adds the Blebox device as a binary sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of state of rain detection</li>
+</ul>
+<h3>inputSensorD</h3>
+<p>This integration adds the Blebox device as 2 binary sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of state of 2 input sensors</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>If you need an immediate response (without local polling delay), the device can also be integrated using webhooks and automation, in the same way as <a>actionBox, actionBoxS, and proxiBox</a>.</p>
+<h3>inputSensorQ</h3>
+<p>This integration adds the Blebox device as 4 binary sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of state of 4 input sensors</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>If you need an immediate response (without local polling delay), the device can also be integrated using webhooks and automation, in the same way as <a>actionBox, actionBoxS, and proxiBox</a>.</p>
+<h3>airSensor</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of:<ul>
+<li>pm1</li>
+<li>pm2.5</li>
+<li>pm10</li>
+</ul>
+</li>
+</ul>
+<h3>co2Sensor</h3>
+<p>This integration adds the Blebox device as 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of CO2 concentration</li>
+<li>Periodic read of CO2 level description</li>
+</ul>
+<h3>windSensor PRO</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of current wind speed</li>
+</ul>
+<h3>luxSensor</h3>
+<p>This integration adds the Blebox device as a sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of illuminance (unit: lx)</li>
+</ul>
+<h3>openSensor</h3>
+<p>This integration adds the Blebox device as a sensor entity and a binary sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of open status (2 or 3 statuses depending on configuration)</li>
+<li>Periodic read of open/closed state (binary sensor)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>An option to change the detection mode is available in the wBox app.</li>
+<li>After changing settings, the device needs to be reloaded.</li>
+</ul>
+<h3>tankSensor PRO</h3>
+<p>This integration adds the BleBox device as 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of tank fill level</li>
+<li>Periodic read of liquid height</li>
+<li>Periodic read of liquid volume</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Depending on the device configuration, some of the readings may be unavailable. If the probe is not configured, Home Assistant shows a repair. For details, see <a>tankSensor probe is not configured</a>.</p>
+<h3>energyMeter DIN</h3>
+<p>This integration adds the Blebox device as multiple sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of energy consumption (active and reactive, both forward and reverse)</li>
+<li>Periodic read of power (active, reactive, and apparent)</li>
+<li>Periodic read of voltage, current, and frequency</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to configure the number of phases (1 or 3) is available in the wBox app.</li>
+<li>Option to enable/disable reverse energy measurement is available in the wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>actionBox, actionBoxS, and proxiBox</h3>
+<p>This integration does not add direct support for actionBox, actionBoxS, and proxiBox
+devices. It is however possible to integrate these devices with Home Assistant using
+automations via webhooks and wBox mobile app.</p>
+<ul>
+<li>With actionBox and its 4 inputs, you can configure up to 8 automations in Home Assistant (short and long press for each button).</li>
+<li>With actionBoxS and proxiBox, each with a single input, you can configure up to 2 automations in Home Assistant (short and long press / touch)</li>
+</ul>
+<p>Integrating actionBox, actionBoxS, or proxiBox with Home Assistant using webhooks consists of two steps:</p>
+<ul>
+<li><a>Generating the compatible webhook in Home Assistant</a></li>
+<li><a>Configuring the device in the wBox app</a></li>
+</ul>
+<h4>Generating the compatible webhook in Home Assistant</h4>
+<ol>
+<li><p>Go to <strong>Settings</strong> &gt; <strong>Automations &amp; scenes</strong> and in the lower right corner, select the <strong>Create automation</strong> button.</p>
+<p><em>Automations page with Create automation button</em></p>
+</li>
+<li><p>Select <strong>Create new automation</strong>.</p>
+<p><em>Create automation dialog</em></p>
+</li>
+<li><p>Choose <strong>Webhook</strong> as the trigger type. Note the webhook ID. You will need it later.</p>
+<p><em>New automation with webhook trigger</em></p>
+</li>
+<li><p>Next to the webhook ID, select the  cog icon and make sure the <strong>GET</strong> method is enabled.</p>
+<p><em>Webhook settings with GET method enabled</em></p>
+</li>
+<li><p>Copy the webhook URL to the clipboard by selecting the copy icon next to the webhook ID. Save it for later.</p>
+</li>
+<li><p>If applicable, add any desired conditions (the <strong>And if</strong> section) and actions (the <strong>Then do</strong> section).</p>
+<p><em>Automation with action configured</em></p>
+</li>
+</ol>
+<p><strong>Note</strong></p>
+<p>The webhook ID will be later needed in phase two and will have to be entered
+into the wBox mobile app. You may decide to use a more convenient text value. However, remember
+that this is the only thing that authenticates webhooks within your network. Treat
+this ID like a password.</p>
+<h4>Configuring the device in the wBox app</h4>
+<ol>
+<li><p>Configure the device by adding the action of
+type "send URL".</p>
+<p><em>wBox app Actions screen with Add action button</em></p>
+</li>
+<li><p>Enter the webhook URL that you copied when generating the webhook. It is the URL address for the action.</p>
+<p><em>wBox app steps: setting trigger, entering webhook URL, summary, and actions list</em></p>
+</li>
+</ol>
+<p><strong>Note</strong></p>
+<p>In order for this integration flow to work, the webhook URL host must be
+resolvable and accessible within the device network. If in doubt, please refer to the
+general <a>documentation of automations with webhook triggers</a>.</p>
+<h3>Remotes with an actionBox or Simon GO Control hub</h3>
+<p>This integration does not add direct support for BleBox μWiFi remotes or for Simon GO Control B.
+You can still use them to trigger automations in Home Assistant by pairing each remote with a hub.
+The hub receives the button press from the remote and calls a webhook in Home Assistant.</p>
+<p>You can use the following remotes:</p>
+<ul>
+<li>μRemote (4 channels, 3 buttons per channel = 12 automations)</li>
+<li>sRemote (1 channel, 4 buttons = 4 automations)</li>
+<li>inBox (4 channels, each supporting short and long press = 8 automations)</li>
+<li>Simon GO Control B from the Simon 24 GO, Simon 54 GO, or Simon 55 GO series</li>
+</ul>
+<p>You can use the following devices as a hub:</p>
+<ul>
+<li>actionBox</li>
+<li>Simon GO Control from the Simon 24 GO, Simon 54 GO, or Simon 55 GO series</li>
+</ul>
+<p>You can pair any of these remotes with any of these hubs, so BleBox and Simon GO devices work together.
+For example, you can pair a μRemote with a Simon GO Control, or a Simon GO Control B with an actionBox.</p>
+<p>When you press a button on a paired remote, the hub reacts as if a trigger happened on one of its inputs.
+For example, pressing button 1 on a μRemote paired with an actionBox fires all actions configured with the trigger "short press on input 1" on that actionBox.</p>
+<p>A remote button activates only the one trigger you assign to it.
+This is different from a physical button connected to a hub input, where a short press also activates other matching triggers, such as "rising edge".
+Because of this, a hub can handle more separate actions from remotes than from physical buttons.</p>
+<p>An actionBox supports up to 20 paired remotes.
+It provides 4 inputs and 5 trigger types, so you can set up to 20 automations through a single actionBox.</p>
+<p>Integrating a remote consists of three steps:</p>
+<ul>
+<li><a>Generating the compatible webhook in Home Assistant</a></li>
+<li><a>Configuring the device in the wBox app</a> for the hub</li>
+<li><a>Configuring the remote in the wBox app</a></li>
+</ul>
+<h4>Configuring the remote in the wBox app</h4>
+<ol>
+<li><p>Pair the remote with the hub according to the remote's pairing instructions available on the <a>BleBox manuals page</a>.</p>
+</li>
+<li><p>In the wBox app, go to the hub settings and select the <strong>Remote controls</strong> tab.</p>
+<p><em>wBox app Remote controls tab showing paired remote</em></p>
+</li>
+<li><p>Select the paired remote and then select <strong>Actions</strong>.</p>
+<p><em>wBox app paired remote detail with Actions option</em></p>
+</li>
+<li><p>Edit the remote actions:</p>
+<ul>
+<li>Select the trigger the remote button should simulate, for example "short press".</li>
+<li>Select the hub input the remote button should simulate, for example input 1.</li>
+</ul>
+<p><em>wBox app remote actions editor showing button gesture and input number</em></p>
+</li>
+<li><p>Once configured, pressing a button on the remote triggers the hub, which calls the webhook URL you set up in the <a>Generating the compatible webhook in Home Assistant</a> section.</p>
+</li>
+</ol>
+<hr>
+<h2>"BleBox inside" - Simon 24 GO</h2>
+<p>Simon 24 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the <a>Simon 24 GO catalog</a>.</p>
+<h3>Simon 24 GO SHUTTER (NEZ1W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation (90-degree and 180-degree modes)</li>
+</ul>
+<h3>Simon 24 GO SWITCHSHUTT</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 24 GO SWITCH (NEW1W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 24 GO SWITCH D (NEW2W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 24 GO SWITCH Q (NEW4W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 24 GO DIMMER 230V (NESL1W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 24 GO LED MONO</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 24 GO RGBW (NESRGB1W.01)</h3>
+<p>This integration adds the Simon 24 GO device ("blebox inside") to Home Assistant as:</p>
+<ul>
+<li>multiple MONO lights entities,</li>
+<li>1 or 2 lights CCT entities,</li>
+<li>1 light RGB or RGBW entity.</li>
+</ul>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color (RGB, RGBW mode only)</li>
+<li>White temperature control (CCT mode only)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>You can create your own effects. Creator of effects is available in wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>Simon 24 GO CONTROL (NEK1W.01) and Simon 24 GO GROUPSHUTT</h3>
+<p>This integration does not add direct support for Simon 24 GO Control and Simon 24 GO groupShutt devices. It is, however, possible to integrate these devices with Home Assistant using automations via webhooks and the wBox mobile app.</p>
+<ul>
+<li>With Simon 24 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).</li>
+</ul>
+<p>The configuration consists of two steps:</p>
+<ul>
+<li><a>Generating the compatible webhook in Home Assistant</a></li>
+<li><a>Configuring the device in the wBox app</a></li>
+</ul>
+<p>Simon 24 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h3>Simon 24 GO CONTROL B (NENB1W.01)</h3>
+<p>This integration does not add direct support for the Simon 24 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h2>"BleBox inside" - Simon 54 GO</h2>
+<p>Simon 54 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the <a>Simon 54 GO catalog</a>.</p>
+<h3>Simon 54 GO SHUTTER (DEZ1W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation (90-degree and 180-degree modes)</li>
+</ul>
+<h3>Simon 54 GO SWITCHSHUTT</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 54 GO SWITCH (DEW1WA.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 54 GO SWITCH D (DEW2W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 54 GO SWITCH Q (DEW4W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 54 GO DIMMER 230V (DESL1W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 54 GO LED MONO (DESW1W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 54 GO RGBW (DESRGB1W.01)</h3>
+<p>This integration adds the Simon 54 GO device ("blebox inside") to Home Assistant as:</p>
+<ul>
+<li>multiple MONO lights entities,</li>
+<li>1 or 2 lights CCT entities,</li>
+<li>1 light RGB or RGBW entity.</li>
+</ul>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color (RGB, RGBW mode only)</li>
+<li>White temperature control (CCT mode only)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>You can create your own effects. Creator of effects is available in wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>Simon 54 GO CONTROL (DEK1W.01) and Simon 54 GO GROUPSHUTT</h3>
+<p>This integration does not add direct support for Simon 54 GO Control and Simon 54 GO groupShutt devices. It is, however, possible to integrate these devices with Home Assistant using automations via webhooks and the wBox mobile app.</p>
+<ul>
+<li>With Simon 54 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).</li>
+</ul>
+<p>The configuration consists of two steps:</p>
+<ul>
+<li><a>Generating the compatible webhook in Home Assistant</a></li>
+<li><a>Configuring the device in the wBox app</a></li>
+</ul>
+<p>Simon 54 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h3>Simon 54 GO CONTROL B (DENB1W.01)</h3>
+<p>This integration does not add direct support for the Simon 54 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h2>"BleBox inside" - Simon 55 GO</h2>
+<p>Simon 55 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the <a>Simon 55 GO catalog</a>.</p>
+<h3>Simon 55 GO SHUTTER (TEZ1W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Stop</li>
+<li>Position</li>
+<li>Tilt regulation (90-degree and 180-degree modes)</li>
+</ul>
+<h3>Simon 55 GO SOCKET (TEGZ1W.02)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a switch entity and 3 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+<li>Voltage measurement</li>
+</ul>
+<h3>Simon 55 GO SWITCHSHUTT</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 55 GO SWITCH (TEW1W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 55 GO SWITCH D (TEW2W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a switch entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Active power measurement</li>
+<li>Last hour energy consumption measurement</li>
+</ul>
+<h3>Simon 55 GO SWITCH Q (TEW4W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a switch entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+</ul>
+<h3>Simon 55 GO DIMMER 230V (TESL1W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 55 GO LED MONO (TESW1W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>Simon 55 GO RGBW (TESRGB1W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") to Home Assistant as:</p>
+<ul>
+<li>multiple MONO lights entities,</li>
+<li>1 or 2 lights CCT entities,</li>
+<li>1 light RGB or RGBW entity.</li>
+</ul>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+<li>Color (RGB, RGBW mode only)</li>
+<li>White temperature control (CCT mode only)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to change control mode (linear / gamma correction) is available in wBox app.</li>
+<li>Option to change color mode (MONO/CCT) is available in wBox app.</li>
+<li>You can create your own effects. Creator of effects is available in wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>Simon 55 GO THERMO (TETD2W.01)</h3>
+<p>This integration adds the Simon 55 GO device ("blebox inside") as a climate entity and 2 sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Set target temperature</li>
+<li>Read current temperature</li>
+</ul>
+<h3>Simon 55 GO CONTROL (TEK1W.01) and Simon 55 GO GROUPSHUTT</h3>
+<p>This integration does not add direct support for Simon 55 GO Control and Simon 55 GO groupShutt devices. It is however possible to integrate these devices with Home Assistant using automations via webhooks and wBox mobile app.</p>
+<ul>
+<li>With Simon 55 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).</li>
+</ul>
+<p>The configuration consists of two steps:</p>
+<ul>
+<li><a>Generating the compatible webhook in Home Assistant</a></li>
+<li><a>Configuring the device in the wBox app</a></li>
+</ul>
+<p>Simon 55 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h3>Simon 55 GO CONTROL B (TENB1W.01)</h3>
+<p>This integration does not add direct support for the Simon 55 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see <a>Remotes with an actionBox or Simon GO Control hub</a>.</p>
+<h2>"BleBox inside" - other manufacturers</h2>
+<p>The following devices use BleBox Wi-Fi modules embedded by other manufacturers. Each device is sold under its own brand.</p>
+<h3>FAKRO FTP-V/FTU-V WiFi</h3>
+<p>This integration adds the Fakro device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+</ul>
+<h3>FAKRO ARF/ARP WiFi</h3>
+<p>This integration adds the Fakro device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+</ul>
+<h3>FAKRO ARZ/AMZ/VMZ WiFi</h3>
+<p>This integration adds the Fakro device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+</ul>
+<h3>SABAJ TV K-SMRT-4 - WIFI RJ-45</h3>
+<p>This integration adds the SABAJ device ("blebox inside") as a button entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Up</li>
+<li>Down</li>
+<li>Fav</li>
+</ul>
+<h3>Wiśniowski RiCo</h3>
+<p>This integration adds the Wiśniowski device ("blebox inside") as a cover entity to Home Assistant.</p>
+<ul>
+<li>Open (trigger primary output)</li>
+<li>Close (trigger primary output)</li>
+<li>Stop (trigger secondary output)</li>
+<li>Gate state (open, close, unknown) - only Pro version</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>"stop" requires setting your device's secondary trigger as stop (via website or phone app)</li>
+</ul>
+<h3>Polfendo smartGateControl</h3>
+<p>This integration adds the Polfendo device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+<li>Stop</li>
+</ul>
+<h3>Plast-met SMART LIGHT BOSSPIO</h3>
+<p>This integration adds the Plast-met device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>Plast-met SMART LIGHT SIMPIO</h3>
+<p>This integration adds the Plast-met device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>Tedee relay module</h3>
+<p>This integration adds the Tedee device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Door state (open, close, unknown)</li>
+</ul>
+<h3>DARCO ERO-32WS-0</h3>
+<p>This integration adds the DARCO device ("blebox inside") as a light entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>On</li>
+<li>Off</li>
+<li>Effects</li>
+<li>Brightness</li>
+</ul>
+<h3>SELT pergola DC</h3>
+<p>This integration adds the SELT device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+<li>Tilt regulation</li>
+</ul>
+<h3>SELT smartScreen</h3>
+<p>This integration adds the SELT device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Close</li>
+<li>Position</li>
+<li>Tilt regulation</li>
+</ul>
+<h3>Wikęd doorUnit</h3>
+<p>This integration adds the Wikęd device ("blebox inside") as a cover entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Open</li>
+<li>Door state (open, close, unknown)</li>
+</ul>
+<h3>Pstryk smartEnergyMeter</h3>
+<p>This integration adds the Pstryk device ("blebox inside") as multiple sensor entities to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of energy consumption (active and reactive, both forward and reverse)</li>
+<li>Periodic read of power (active, reactive, and apparent)</li>
+<li>Periodic read of voltage, current, and frequency</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>Option to configure the number of phases (1 or 3) is available in the wBox app.</li>
+<li>Option to enable/disable reverse energy measurement is available in the wBox app.</li>
+<li>After a settings change, the device needs to be reloaded.</li>
+</ul>
+<h3>Drutex SmartWindow</h3>
+<p>This integration adds the Drutex device ("blebox inside") as a sensor entity and a binary sensor entity to Home Assistant.</p>
+<h4>Key supported features</h4>
+<ul>
+<li>Periodic read of open status (from 2 to 5 statuses depending on configuration)</li>
+<li>Periodic read of open/closed state (binary sensor)</li>
+</ul>
+<h4>Additional features</h4>
+<ul>
+<li>An option to change the detection mode is available in the wBox app.</li>
+<li>After changing settings, the device needs to be reloaded.</li>
+</ul>
+<h2>Examples</h2>
+<h3>Close shutters at sunset</h3>
+<p>Leaving shutters open after dark can affect your privacy and home security. You can use this blueprint to automatically close your shutterBox blinds every day at sunset.</p>
+<pre><code>blueprint:
+  name: Close shutters at sunset
+  description: &gt;
+    Automatically close a BleBox shutterBox cover every day at sunset.
+  domain: automation
+  author: bkobus-bbx
+
+  input:
+    cover_entity:
+      name: Shutter
+      description: &gt;
+        Select the shutterBox cover entity to close at sunset.
+      selector:
+        entity:
+          filter:
+            - integration: blebox
+              domain: cover
+
+mode: single
+
+trigger:
+  - trigger: sun
+    event: sunset
+
+action:
+  - action: cover.close_cover
+    target:
+      entity_id: !input cover_entity
+</code></pre>
+<h3>Close the gate when leaving home</h3>
+<p>It is easy to forget to close the gate when leaving in a hurry. You can use this blueprint to automatically close your gateBox or rollerGate when the last person leaves home.</p>
+<pre><code>blueprint:
+  name: Close gate when leaving home
+  description: &gt;
+    Automatically close a BleBox gateBox or rollerGate cover when the last
+    person leaves home.
+  domain: automation
+  author: bkobus-bbx
+
+  input:
+    cover_entity:
+      name: Gate
+      description: &gt;
+        Select the gateBox or rollerGate cover entity to close when everyone
+        leaves home.
+      selector:
+        entity:
+          filter:
+            - integration: blebox
+              domain: cover
+
+mode: single
+
+trigger:
+  - trigger: state
+    entity_id: zone.home
+    to: "0"
+
+action:
+  - action: cover.close_cover
+    target:
+      entity_id: !input cover_entity
+</code></pre>
+<h3>Close covers when wind speed is too high</h3>
+<p>Strong winds can damage blinds and awnings left open outside. You can use this blueprint to automatically close your covers when the windSensor PRO detects wind speed above a safe threshold.</p>
+<pre><code>blueprint:
+  name: Close covers when wind speed is too high
+  description: &gt;
+    Automatically close a BleBox cover when a windSensor PRO reports wind speed
+    above a set threshold, protecting your blinds or awnings from damage.
+  domain: automation
+  author: bkobus-bbx
+  input:
+    wind_speed_entity:
+      name: Wind speed sensor
+      description: &gt;
+        Select the windSensor PRO wind speed sensor entity to monitor.
+      selector:
+        entity:
+          filter:
+            - integration: blebox
+              domain: sensor
+              device_class: wind_speed
+
+    wind_speed_threshold:
+      name: Wind speed threshold
+      description: &gt;
+        The wind speed above which the cover will be closed. Use the same unit
+        as your wind speed sensor.
+      default: 40
+      selector:
+        number:
+          min: 1
+          max: 200
+
+    cover_entity:
+      name: Cover
+      description: &gt;
+        Select the BleBox cover entity to close when wind speed is too high.
+      selector:
+        entity:
+          filter:
+            - integration: blebox
+              domain: cover
+
+mode: single
+
+trigger:
+  - trigger: numeric_state
+    entity_id: !input wind_speed_entity
+    above: !input wind_speed_threshold
+
+action:
+  - action: cover.close_cover
+    target:
+      entity_id: !input cover_entity
+</code></pre>
+<h2>Troubleshooting</h2>
+<h3>Device is not discovered automatically</h3>
+<h4>Symptom</h4>
+<p>The device does not appear in Home Assistant after being connected to the network.</p>
+<h4>Description</h4>
+<p>Home Assistant can only discover BleBox devices that are on the same network segment.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Confirm that the device is connected to your Wi-Fi network using the wBox app.</li>
+<li>Confirm that the device is on the same network segment as your Home Assistant instance. If it is on a different subnet, add it manually by going to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, selecting <strong>Add integration</strong>, searching for <strong>BleBox</strong>, and entering the device's IP address.</li>
+<li>If the device is on the same network segment but still not discovered, restart Home Assistant.</li>
+</ol>
+<h3>Integration shows as unavailable</h3>
+<h4>Symptom</h4>
+<p>A previously working device shows as unavailable in Home Assistant.</p>
+<h4>Description</h4>
+<p>The device's IP address has likely changed due to a DHCP lease renewal.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check the current IP address of the device in your router's DHCP client list or in the wBox app.</li>
+<li>To prevent this from happening again, assign a static IP address or a DHCP reservation to the device in your router settings.</li>
+<li>If the IP address has changed, remove the existing integration entry and add it again with the new IP address.</li>
+</ol>
+<h3>tankSensor probe is not configured</h3>
+<h4>Symptom</h4>
+<p>A tankSensor entity shows as unavailable, and a repair named <strong><em>Device</em>: <em>Sensor</em> probe not configured</strong> appears in <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Repairs</strong>.</p>
+<h4>Description</h4>
+<p>The device reports that the probe for this sensor is not configured, so it cannot provide a reading. Home Assistant raises one repair for each affected sensor.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Open the wBox app and go to the settings of your tankSensor.</li>
+<li>Configure the probe.</li>
+</ol>
+<p>When the probe is configured, the sensor starts reporting readings again and the repair disappears on its own. You don't need to change anything in Home Assistant.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>Some device settings can only be changed using the wBox app. After changing these settings, reload the affected device by going to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, selecting the device, and selecting <strong>Reload</strong>.</li>
+<li>Some devices are not directly supported as Home Assistant entities and can be integrated using <a>webhook automations</a> instead.</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required within Home Assistant or on your BleBox devices.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/blebox.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate BleBox devices with Home Assistant.
+ha_release: &#x27;0.110&#x27;
+ha_domain: blebox
+---
+
+[BleBox](https://blebox.eu/) produces compact, low-power, feature-rich Wi-Fi devices for home automation. You can find the full product range on the [BleBox products page](https://blebox.eu/en/products/) and in the [BleBox product catalog](https://blebox.eu/en/products/katalog/).
+
+## Use cases
+
+- Control your blinds, shutters, and garage or gate automatically. For example, close them at sunset or when wind speed exceeds a set threshold.
+- Manage your lights and dimmers from a single dashboard, and create automations that adjust brightness based on time of day or occupancy.
+- Monitor energy consumption with a smartMeter DIN device and use the data in the Home Assistant energy dashboard.
+- Automate your sauna or heating with a saunaBox or thermoBox by setting a target temperature so it is ready when you get home.
+- Trigger automations from wall buttons and remotes by using an actionBox as a bridge, without replacing your existing switches.
+- Get notified when a floodSensor detects water, or when air quality reported by an airSensor drops below an acceptable level.
+
+## Prerequisites
+
+Before Home Assistant can discover your BleBox device, it must be connected to your Wi-Fi network.
+
+1. Follow the [BleBox getting started guide](https://blebox.eu/start) to connect your device to your Wi-Fi network using the wBox app.
+2. Once connected, Home Assistant will discover the device automatically.
+
+{% note %}
+For the best experience, make sure your BleBox devices have the most recent available firmware installed.
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: &quot;The IP address or hostname of your BleBox device, for example `192.168.1.100` or `blebox-device.local`. Hostnames only work if they resolve on your local network. You can find the address in your router or in the wBox app.&quot;
+Port:
+  description: &quot;The port used to communicate with your BleBox device. The default port is `80`.&quot;
+Username:
+  description: &quot;The username for your BleBox device, if you have set up access credentials. This is optional.&quot;
+Password:
+  description: &quot;The password for your BleBox device, if you have set up access credentials. This is optional.&quot;
+{% endconfiguration_basic %}
+
+## Data updates
+
+This integration uses local polling to fetch the current state of your BleBox devices. The polling interval depends on the entity type:
+
+- Lights, sensors, switches, and climate entities are polled every 5 seconds.
+- Binary sensors, buttons, and covers are polled every 30 seconds (the Home Assistant default).
+
+## BleBox controllers
+
+### rollerGate
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+- Stop
+
+### gateBox
+
+This integration adds the BleBox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open (trigger primary output)
+- Close (trigger primary output)
+- Gate state (open, close, unknown)
+
+#### Additional features
+
+The secondary output is exposed differently depending on how you configure it in the wBox app or on the device&#x27;s website:
+
+- If it is set to stop, the cover entity supports **Stop**.
+- If it is set to walk-in gate or another function, a button entity is added to trigger that output.
+
+### gateBox Pro
+
+This integration adds the BleBox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open (trigger primary output)
+- Close (trigger primary output)
+- Gate state (open, close, unknown)
+
+#### Additional features
+
+The secondary output is exposed differently depending on how you configure it in the wBox app or on the device&#x27;s website:
+
+- If it is set to stop, the cover entity supports **Stop**.
+- If it is set to walk-in gate or another function, a button entity is added to trigger that output.
+
+### doorBox
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Door state (open, close, unknown)
+
+### doorBox PRO
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Door state (open, close, unknown)
+
+### saunaBox
+
+This integration adds the Blebox device as a climate entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Setting target temperature
+- Read current temperature
+
+### thermoBox
+
+This integration adds the Blebox device as a climate entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Set target temperature
+- Read current temperature
+
+#### Additional features
+
+- Changing operation mode (cooling/heating) requires direct access to device or from wBox app
+
+### shutterBox
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation (90-degree and 180-degree modes)
+
+### shutterBoxDC
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation
+
+### shutterBox DIN
+
+This integration adds the Blebox device as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation (90-degree and 180-degree modes)
+
+### switchBox
+
+This integration adds the Blebox device as a switch entity and 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+- Voltage measurement
+
+### switchBox DIN
+
+This integration adds the Blebox device as a switch entity and 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+- Voltage measurement
+
+### switchBoxD
+
+This integration adds the Blebox device as 2 switch entities and 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+- Voltage measurement
+
+### switchBoxD DIN
+
+This integration adds the Blebox device as 2 switch entities and 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+- Voltage measurement
+
+### switchBoxDC
+
+This integration adds the Blebox device as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### switchBoxD DC DIN
+
+This integration adds the Blebox device as 2 switch entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### switchBox LIGHT
+
+This integration adds the Blebox device as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### switchBoxT PRO
+
+This integration adds the Blebox device as 3 switch entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### dimmerBox
+
+This integration adds the Blebox device as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Brightness
+
+### wLightBox
+
+This integration adds the Blebox device to Home Assistant as:
+
+- multiple MONO lights entities,
+- 1 or 2 lights CCT entities,
+- 1 light RGB or RGBW or RGBCCT entity.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color (RGB, RGBW, RGBCCT mode only)
+- White temperature control (RGBCCT &amp; CCT mode only)
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- You can create your own effects. Creator of effects is available in wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### wLightBox PRO
+
+This integration adds the Blebox device to Home Assistant as:
+
+- multiple MONO lights entities,
+- 1 or 2 lights CCT entities,
+- 1 light RGB or RGBW or RGBCCT entity.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color (RGB, RGBW, RGBCCT mode only)
+- White temperature control (RGBCCT &amp; CCT mode only)
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- You can create your own effects. Creator of effects is available in wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### wLightBoxS
+
+This integration adds the Blebox device as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### dacBoxD DC
+
+This integration adds the Blebox device as 2 lights MONO or 1 light CCT entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Brightness / linear percentage control (depends on device&#x27;s settings)
+- White temperature control (CCT mode only)
+- Effects
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- Own effects are possible to create. Creator of effects is available in wBox app.
+- After settings change, device needs to be reloaded.
+
+### wLightBoxS PRO
+
+This integration adds the Blebox device as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### pixelBox
+
+This integration adds the Blebox device as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color
+
+### tempSensor
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of temperature
+
+### tempSensorAC
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of temperature for all probes
+
+### tempSensor PRO
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of temperature for all probes
+
+### tempSensor DIN
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of temperature for all probes
+
+### floodSensor
+
+This integration adds the Blebox device as a moisture binary sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of moisture as either &quot;detected&quot; or &quot;cleared&quot;.
+
+### humiditySensor
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of humidity
+- Periodic read of temperature
+
+### rainSensor
+
+This integration adds the Blebox device as a binary sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of state of rain detection
+
+### inputSensorD
+
+This integration adds the Blebox device as 2 binary sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of state of 2 input sensors
+
+{% note %}
+If you need an immediate response (without local polling delay), the device can also be integrated using webhooks and automation, in the same way as [actionBox, actionBoxS, and proxiBox](#actionbox-actionboxs-and-proxibox).
+{% endnote %}
+
+### inputSensorQ
+
+This integration adds the Blebox device as 4 binary sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of state of 4 input sensors
+
+{% note %}
+If you need an immediate response (without local polling delay), the device can also be integrated using webhooks and automation, in the same way as [actionBox, actionBoxS, and proxiBox](#actionbox-actionboxs-and-proxibox).
+{% endnote %}
+
+### airSensor
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of:
+  - pm1
+  - pm2.5
+  - pm10
+
+### co2Sensor
+
+This integration adds the Blebox device as 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of CO2 concentration
+- Periodic read of CO2 level description
+
+### windSensor PRO
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of current wind speed
+
+### luxSensor
+
+This integration adds the Blebox device as a sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of illuminance (unit: lx)
+
+### openSensor
+
+This integration adds the Blebox device as a sensor entity and a binary sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of open status (2 or 3 statuses depending on configuration)
+- Periodic read of open/closed state (binary sensor)
+
+#### Additional features
+
+- An option to change the detection mode is available in the wBox app.
+- After changing settings, the device needs to be reloaded.
+
+### tankSensor PRO
+
+This integration adds the BleBox device as 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of tank fill level
+- Periodic read of liquid height
+- Periodic read of liquid volume
+
+{% note %}
+Depending on the device configuration, some of the readings may be unavailable. If the probe is not configured, Home Assistant shows a repair. For details, see [tankSensor probe is not configured](#tanksensor-probe-is-not-configured).
+{% endnote %}
+
+### energyMeter DIN
+
+This integration adds the Blebox device as multiple sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of energy consumption (active and reactive, both forward and reverse)
+- Periodic read of power (active, reactive, and apparent)
+- Periodic read of voltage, current, and frequency
+
+#### Additional features
+
+- Option to configure the number of phases (1 or 3) is available in the wBox app.
+- Option to enable/disable reverse energy measurement is available in the wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### actionBox, actionBoxS, and proxiBox
+
+This integration does not add direct support for actionBox, actionBoxS, and proxiBox
+devices. It is however possible to integrate these devices with Home Assistant using
+automations via webhooks and wBox mobile app.
+
+- With actionBox and its 4 inputs, you can configure up to 8 automations in Home Assistant (short and long press for each button).
+- With actionBoxS and proxiBox, each with a single input, you can configure up to 2 automations in Home Assistant (short and long press / touch)
+
+Integrating actionBox, actionBoxS, or proxiBox with Home Assistant using webhooks consists of two steps:
+
+- [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant)
+- [Configuring the device in the wBox app](#configuring-the-device-in-the-wbox-app)
+
+#### Generating the compatible webhook in Home Assistant
+
+1. Go to {% my automations title=&quot;**Settings** &gt; **Automations &amp; scenes**&quot; %} and in the lower right corner, select the **Create automation** button.
+
+   ![Automations page with Create automation button](/images/integrations/blebox/automation_create_button.png)
+2. Select **Create new automation**.
+
+   ![Create automation dialog](/images/integrations/blebox/automation_creation.png)
+
+3. Choose **Webhook** as the trigger type. Note the webhook ID. You will need it later.
+
+   ![New automation with webhook trigger](/images/integrations/blebox/webhook_trigger.png)
+
+4. Next to the webhook ID, select the {% icon &quot;mdi:cog&quot; %} cog icon and make sure the **GET** method is enabled.
+
+   ![Webhook settings with GET method enabled](/images/integrations/blebox/webhook_get_method.png)
+
+5. Copy the webhook URL to the clipboard by selecting the copy icon next to the webhook ID. Save it for later.
+6. If applicable, add any desired conditions (the **And if** section) and actions (the **Then do** section).
+
+   ![Automation with action configured](/images/integrations/blebox/automation_action.png)
+
+{% note %}
+The webhook ID will be later needed in phase two and will have to be entered
+into the wBox mobile app. You may decide to use a more convenient text value. However, remember
+that this is the only thing that authenticates webhooks within your network. Treat
+this ID like a password.
+{% endnote %}
+
+#### Configuring the device in the wBox app
+
+1. Configure the device by adding the action of
+   type &quot;send URL&quot;.
+
+   ![wBox app Actions screen with Add action button](/images/integrations/blebox/wbox_add_action.jpg)
+
+2. Enter the webhook URL that you copied when generating the webhook. It is the URL address for the action.
+
+   ![wBox app steps: setting trigger, entering webhook URL, summary, and actions list](/images/integrations/blebox/wbox_webhook_action_steps.jpg)
+
+{% note %}
+In order for this integration flow to work, the webhook URL host must be
+resolvable and accessible within the device network. If in doubt, please refer to the
+general [documentation of automations with webhook triggers](/triggers/webhook/).
+{% endnote %}
+
+### Remotes with an actionBox or Simon GO Control hub
+
+This integration does not add direct support for BleBox μWiFi remotes or for Simon GO Control B.
+You can still use them to trigger automations in Home Assistant by pairing each remote with a hub.
+The hub receives the button press from the remote and calls a webhook in Home Assistant.
+
+You can use the following remotes:
+
+- μRemote (4 channels, 3 buttons per channel = 12 automations)
+- sRemote (1 channel, 4 buttons = 4 automations)
+- inBox (4 channels, each supporting short and long press = 8 automations)
+- Simon GO Control B from the Simon 24 GO, Simon 54 GO, or Simon 55 GO series
+
+You can use the following devices as a hub:
+
+- actionBox
+- Simon GO Control from the Simon 24 GO, Simon 54 GO, or Simon 55 GO series
+
+You can pair any of these remotes with any of these hubs, so BleBox and Simon GO devices work together.
+For example, you can pair a μRemote with a Simon GO Control, or a Simon GO Control B with an actionBox.
+
+When you press a button on a paired remote, the hub reacts as if a trigger happened on one of its inputs.
+For example, pressing button 1 on a μRemote paired with an actionBox fires all actions configured with the trigger &quot;short press on input 1&quot; on that actionBox.
+
+A remote button activates only the one trigger you assign to it.
+This is different from a physical button connected to a hub input, where a short press also activates other matching triggers, such as &quot;rising edge&quot;.
+Because of this, a hub can handle more separate actions from remotes than from physical buttons.
+
+An actionBox supports up to 20 paired remotes.
+It provides 4 inputs and 5 trigger types, so you can set up to 20 automations through a single actionBox.
+
+Integrating a remote consists of three steps:
+
+- [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant)
+- [Configuring the device in the wBox app](#configuring-the-device-in-the-wbox-app) for the hub
+- [Configuring the remote in the wBox app](#configuring-the-remote-in-the-wbox-app)
+
+#### Configuring the remote in the wBox app
+
+1. Pair the remote with the hub according to the remote&#x27;s pairing instructions available on the [BleBox manuals page](https://blebox.eu/en/manuals/).
+2. In the wBox app, go to the hub settings and select the **Remote controls** tab.
+
+   ![wBox app Remote controls tab showing paired remote](/images/integrations/blebox/wbox_remote_controls.jpg)
+
+3. Select the paired remote and then select **Actions**.
+
+   ![wBox app paired remote detail with Actions option](/images/integrations/blebox/wbox_remote.jpg)
+
+4. Edit the remote actions:
+   - Select the trigger the remote button should simulate, for example &quot;short press&quot;.
+   - Select the hub input the remote button should simulate, for example input 1.
+
+   ![wBox app remote actions editor showing button gesture and input number](/images/integrations/blebox/wbox_remote_actions.jpg)
+
+5. Once configured, pressing a button on the remote triggers the hub, which calls the webhook URL you set up in the [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant) section.
+
+------
+
+## &quot;BleBox inside&quot; - Simon 24 GO
+
+Simon 24 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the [Simon 24 GO catalog](https://www.kontakt-simon.com.pl/pl/Katalog/1426/).
+
+### Simon 24 GO SHUTTER (NEZ1W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation (90-degree and 180-degree modes)
+
+### Simon 24 GO SWITCHSHUTT
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 24 GO SWITCH (NEW1W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 24 GO SWITCH D (NEW2W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 24 GO SWITCH Q (NEW4W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 24 GO DIMMER 230V (NESL1W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Brightness
+
+### Simon 24 GO LED MONO
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### Simon 24 GO RGBW (NESRGB1W.01)
+
+This integration adds the Simon 24 GO device (&quot;blebox inside&quot;) to Home Assistant as:
+
+- multiple MONO lights entities,
+- 1 or 2 lights CCT entities,
+- 1 light RGB or RGBW entity.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color (RGB, RGBW mode only)
+- White temperature control (CCT mode only)
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- You can create your own effects. Creator of effects is available in wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### Simon 24 GO CONTROL (NEK1W.01) and Simon 24 GO GROUPSHUTT
+
+This integration does not add direct support for Simon 24 GO Control and Simon 24 GO groupShutt devices. It is, however, possible to integrate these devices with Home Assistant using automations via webhooks and the wBox mobile app.
+
+- With Simon 24 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).
+
+The configuration consists of two steps:
+
+- [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant)
+- [Configuring the device in the wBox app](#configuring-the-device-in-the-wbox-app)
+
+Simon 24 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+### Simon 24 GO CONTROL B (NENB1W.01)
+
+This integration does not add direct support for the Simon 24 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+## &quot;BleBox inside&quot; - Simon 54 GO
+
+Simon 54 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the [Simon 54 GO catalog](https://www.kontakt-simon.com.pl/pl/Katalog/1252/).
+
+### Simon 54 GO SHUTTER (DEZ1W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation (90-degree and 180-degree modes)
+
+### Simon 54 GO SWITCHSHUTT
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 54 GO SWITCH (DEW1WA.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 54 GO SWITCH D (DEW2W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 54 GO SWITCH Q (DEW4W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 54 GO DIMMER 230V (DESL1W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Brightness
+
+### Simon 54 GO LED MONO (DESW1W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### Simon 54 GO RGBW (DESRGB1W.01)
+
+This integration adds the Simon 54 GO device (&quot;blebox inside&quot;) to Home Assistant as:
+
+- multiple MONO lights entities,
+- 1 or 2 lights CCT entities,
+- 1 light RGB or RGBW entity.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color (RGB, RGBW mode only)
+- White temperature control (CCT mode only)
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- You can create your own effects. Creator of effects is available in wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### Simon 54 GO CONTROL (DEK1W.01) and Simon 54 GO GROUPSHUTT
+
+This integration does not add direct support for Simon 54 GO Control and Simon 54 GO groupShutt devices. It is, however, possible to integrate these devices with Home Assistant using automations via webhooks and the wBox mobile app.
+
+- With Simon 54 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).
+
+The configuration consists of two steps:
+
+- [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant)
+- [Configuring the device in the wBox app](#configuring-the-device-in-the-wbox-app)
+
+Simon 54 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+### Simon 54 GO CONTROL B (DENB1W.01)
+
+This integration does not add direct support for the Simon 54 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+## &quot;BleBox inside&quot; - Simon 55 GO
+
+Simon 55 GO is a range of wall switches and accessories with integrated BleBox Wi-Fi modules. The full product range is available in the [Simon 55 GO catalog](https://www.kontakt-simon.com.pl/pl/Katalog/1257/).
+
+### Simon 55 GO SHUTTER (TEZ1W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Stop
+- Position
+- Tilt regulation (90-degree and 180-degree modes)
+
+### Simon 55 GO SOCKET (TEGZ1W.02)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a switch entity and 3 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+- Voltage measurement
+
+### Simon 55 GO SWITCHSHUTT
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 55 GO SWITCH (TEW1W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 55 GO SWITCH D (TEW2W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a switch entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Active power measurement
+- Last hour energy consumption measurement
+
+### Simon 55 GO SWITCH Q (TEW4W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a switch entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+
+### Simon 55 GO DIMMER 230V (TESL1W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Brightness
+
+### Simon 55 GO LED MONO (TESW1W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### Simon 55 GO RGBW (TESRGB1W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) to Home Assistant as:
+
+- multiple MONO lights entities,
+- 1 or 2 lights CCT entities,
+- 1 light RGB or RGBW entity.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+- Color (RGB, RGBW mode only)
+- White temperature control (CCT mode only)
+
+#### Additional features
+
+- Option to change control mode (linear / gamma correction) is available in wBox app.
+- Option to change color mode (MONO/CCT) is available in wBox app.
+- You can create your own effects. Creator of effects is available in wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### Simon 55 GO THERMO (TETD2W.01)
+
+This integration adds the Simon 55 GO device (&quot;blebox inside&quot;) as a climate entity and 2 sensor entities to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Set target temperature
+- Read current temperature
+
+### Simon 55 GO CONTROL (TEK1W.01) and Simon 55 GO GROUPSHUTT
+
+This integration does not add direct support for Simon 55 GO Control and Simon 55 GO groupShutt devices. It is however possible to integrate these devices with Home Assistant using automations via webhooks and wBox mobile app.
+
+- With Simon 55 GO Control and its 4 buttons, you can configure up to 8 automations in Home Assistant (short and long press for each button).
+
+The configuration consists of two steps:
+
+- [Generating the compatible webhook in Home Assistant](#generating-the-compatible-webhook-in-home-assistant)
+- [Configuring the device in the wBox app](#configuring-the-device-in-the-wbox-app)
+
+Simon 55 GO Control can also work as a hub for remotes, such as μRemote or Simon GO Control B.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+### Simon 55 GO CONTROL B (TENB1W.01)
+
+This integration does not add direct support for the Simon 55 GO Control B device.
+You can use it as a remote paired with an actionBox or a Simon GO Control hub.
+For details, see [Remotes with an actionBox or Simon GO Control hub](#remotes-with-an-actionbox-or-simon-go-control-hub).
+
+## &quot;BleBox inside&quot; - other manufacturers
+
+The following devices use BleBox Wi-Fi modules embedded by other manufacturers. Each device is sold under its own brand.
+
+### FAKRO FTP-V/FTU-V WiFi
+
+This integration adds the Fakro device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+
+### FAKRO ARF/ARP WiFi
+
+This integration adds the Fakro device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+
+### FAKRO ARZ/AMZ/VMZ WiFi
+
+This integration adds the Fakro device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+
+### SABAJ TV K-SMRT-4 - WIFI RJ-45
+
+This integration adds the SABAJ device (&quot;blebox inside&quot;) as a button entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Up
+- Down
+- Fav
+
+### Wiśniowski RiCo
+
+This integration adds the Wiśniowski device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+- Open (trigger primary output)
+- Close (trigger primary output)
+- Stop (trigger secondary output)
+- Gate state (open, close, unknown) - only Pro version
+
+#### Additional features
+
+- &quot;stop&quot; requires setting your device&#x27;s secondary trigger as stop (via website or phone app)
+
+### Polfendo smartGateControl
+
+This integration adds the Polfendo device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+- Stop
+
+### Plast-met SMART LIGHT BOSSPIO
+
+This integration adds the Plast-met device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### Plast-met SMART LIGHT SIMPIO
+
+This integration adds the Plast-met device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### Tedee relay module
+
+This integration adds the Tedee device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Door state (open, close, unknown)
+
+### DARCO ERO-32WS-0
+
+This integration adds the DARCO device (&quot;blebox inside&quot;) as a light entity to Home Assistant.
+
+#### Key supported features
+
+- On
+- Off
+- Effects
+- Brightness
+
+### SELT pergola DC
+
+This integration adds the SELT device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+- Tilt regulation
+
+### SELT smartScreen
+
+This integration adds the SELT device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Close
+- Position
+- Tilt regulation
+
+### Wikęd doorUnit
+
+This integration adds the Wikęd device (&quot;blebox inside&quot;) as a cover entity to Home Assistant.
+
+#### Key supported features
+
+- Open
+- Door state (open, close, unknown)
+
+### Pstryk smartEnergyMeter
+
+This integration adds the Pstryk device (&quot;blebox inside&quot;) as multiple sensor entities to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of energy consumption (active and reactive, both forward and reverse)
+- Periodic read of power (active, reactive, and apparent)
+- Periodic read of voltage, current, and frequency
+
+#### Additional features
+
+- Option to configure the number of phases (1 or 3) is available in the wBox app.
+- Option to enable/disable reverse energy measurement is available in the wBox app.
+- After a settings change, the device needs to be reloaded.
+
+### Drutex SmartWindow
+
+This integration adds the Drutex device (&quot;blebox inside&quot;) as a sensor entity and a binary sensor entity to Home Assistant.
+
+#### Key supported features
+
+- Periodic read of open status (from 2 to 5 statuses depending on configuration)
+- Periodic read of open/closed state (binary sensor)
+
+#### Additional features
+
+- An option to change the detection mode is available in the wBox app.
+- After changing settings, the device needs to be reloaded.
+
+## Examples
+
+### Close shutters at sunset
+
+Leaving shutters open after dark can affect your privacy and home security. You can use this blueprint to automatically close your shutterBox blinds every day at sunset.
+
+{% blueprint_example blueprint=&quot;blebox/close_shutters_at_sunset.yaml&quot; %}
+
+### Close the gate when leaving home
+
+It is easy to forget to close the gate when leaving in a hurry. You can use this blueprint to automatically close your gateBox or rollerGate when the last person leaves home.
+
+{% blueprint_example blueprint=&quot;blebox/close_gate_on_leave.yaml&quot; %}
+
+### Close covers when wind speed is too high
+
+Strong winds can damage blinds and awnings left open outside. You can use this blueprint to automatically close your covers when the windSensor PRO detects wind speed above a safe threshold.
+
+{% blueprint_example blueprint=&quot;blebox/close_covers_on_high_wind.yaml&quot; %}
+
+## Troubleshooting
+
+### Device is not discovered automatically
+
+#### Symptom
+
+The device does not appear in Home Assistant after being connected to the network.
+
+#### Description
+
+Home Assistant can only discover BleBox devices that are on the same network segment.
+
+#### Resolution
+
+1. Confirm that the device is connected to your Wi-Fi network using the wBox app.
+2. Confirm that the device is on the same network segment as your Home Assistant instance. If it is on a different subnet, add it manually by going to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, selecting **Add integration**, searching for **BleBox**, and entering the device&#x27;s IP address.
+3. If the device is on the same network segment but still not discovered, restart Home Assistant.
+
+### Integration shows as unavailable
+
+#### Symptom
+
+A previously working device shows as unavailable in Home Assistant.
+
+#### Description
+
+The device&#x27;s IP address has likely changed due to a DHCP lease renewal.
+
+#### Resolution
+
+1. Check the current IP address of the device in your router&#x27;s DHCP client list or in the wBox app.
+2. To prevent this from happening again, assign a static IP address or a DHCP reservation to the device in your router settings.
+3. If the IP address has changed, remove the existing integration entry and add it again with the new IP address.
+
+### tankSensor probe is not configured
+
+#### Symptom
+
+A tankSensor entity shows as unavailable, and a repair named **_Device_: _Sensor_ probe not configured** appears in {% my repairs title=&quot;**Settings** &gt; **System** &gt; **Repairs**&quot; %}.
+
+#### Description
+
+The device reports that the probe for this sensor is not configured, so it cannot provide a reading. Home Assistant raises one repair for each affected sensor.
+
+#### Resolution
+
+1. Open the wBox app and go to the settings of your tankSensor.
+2. Configure the probe.
+
+When the probe is configured, the sensor starts reporting readings again and the repair disappears on its own. You don&#x27;t need to change anything in Home Assistant.
+
+## Known limitations
+
+- Some device settings can only be changed using the wBox app. After changing these settings, reload the affected device by going to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, selecting the device, and selecting **Reload**.
+- Some devices are not directly supported as Home Assistant entities and can be integrated using [webhook automations](#generating-the-compatible-webhook-in-home-assistant) instead.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required within Home Assistant or on your BleBox devices.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for BleBox devices.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>password</code>, <code>port</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>light</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Prerequisites</li><li>Data updates</li><li>BleBox controllers</li><li>Examples</li><li>Troubleshooting</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/blebox/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/blebox</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/blebox</code></dd></dl></section><p><a href="../../integrations/blebox/">Return to the BleBox devices guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

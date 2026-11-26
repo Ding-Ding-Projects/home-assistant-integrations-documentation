@@ -1,1 +1,800 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Slack reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:122" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/slack/">Slack guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Slack</h1><p>Instructions on how to add Slack notifications to Home Assistant.</p><section><h2>Overview</h2><p>The Slack integration allows you to deliver notifications from Home Assistant to Slack.</p></section><section><h2>Slack App</h2><p>1. Create a new app under your Slack.com account. 2. Click the OAuth &amp; Permissions link in the sidebar, under the Features heading.</p></section><section><h2>Sample App Manifest</h2><p>You can easily create a bot with all the permissions needed from an App Manifest.</p></section><section><h2>Integration Setup</h2><p>When installing the integration, use these settings:</p></section><section><h2>Sending Messages</h2><p>One of the easiest ways to send a message, is to create a script. You can paste in YAML and make changes in the GUI.</p></section><section><h2>Target Types</h2><p>The target field accepts either a single value or a list of values. Each target can be:</p></section><section><h2>Icons</h2><p>Slack uses the standard emoji sets used here. Alternatively a publicly accessible URL may be used.</p></section><section><h2>Slack action data</h2><p>The following attributes can be placed inside the data key of the action for extended functionality:</p></section><section><h2>Obtaining a member ID</h2><p>Some of the examples below use a member ID. This is a unique string assigned by Slack to all users (members and guests) and not a username set by the user. To get a member ID:</p></section><section><h2>Examples</h2><p>To send a file from remote path that is protected by HTTP Basic Auth:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Slack.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>, <code>default_channel</code>, <code>icon</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setup</li><li>Usage</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/slack/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/slack</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/slack</code></dd></dl></section><p><a href="../../integrations/slack/">Return to the Slack guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Slack reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:122" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/slack/">Slack guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Slack</h1><p>Instructions on how to add Slack notifications to Home Assistant.</p><div class="reader-body"><p>The <strong>Slack</strong> integration allows you to deliver notifications from Home Assistant to <a>Slack</a>.</p>
+<p><em>Illustration</em></p>
+<h2>Setup</h2>
+<h3>Slack App</h3>
+<ol>
+<li>Create a <a>new app</a> under your Slack.com account.</li>
+<li>Click the <code>OAuth &amp; Permissions</code> link in the sidebar, under the Features heading.</li>
+</ol>
+<p>Find <code>Features/OAuth and Permissions/Scopes/Bot Token Scopes</code></p>
+<ol>
+<li>Add the following OAuth scopes:</li>
+</ol>
+<ul>
+<li><code>chat:write</code></li>
+<li><code>dnd:read</code></li>
+<li><code>channels:manage</code></li>
+<li><code>channels:read</code></li>
+<li><code>groups:read</code></li>
+<li><code>groups:write</code></li>
+<li><code>im:read</code></li>
+<li><code>im:write</code></li>
+<li><code>mpim:read</code></li>
+<li><code>mpim:write</code></li>
+<li>Optionally add <code>chat:write.customize</code> to modify your Slack bot's username and icon.</li>
+</ul>
+<p><em>Illustration</em></p>
+<ol>
+<li>Scroll up to <code>OAuth Tokens &amp; Redirect URLs</code> and click <code>Install to Workspace</code>.</li>
+</ol>
+<p>In <code>Features/OAuth and Permissions/OAuth Tokens for Your Workspace</code>:</p>
+<ol>
+<li>Copy the Bot User OAuth Token. Use this as 'API Key' when setting up in Home Assistant</li>
+</ol>
+<p><em>Illustration</em></p>
+<ol>
+<li>Ensure that the bot user is added to the channel in which you want it to post. This can be completed in several ways:</li>
+</ol>
+<ul>
+<li>Using <code>/invite @bot</code> from the channel</li>
+<li>Tagging the bot user in a message, then adding it to the channel via the Slackbot prompt.</li>
+<li>Channel settings -&gt; <code>Integrations</code> -&gt; <code>Add apps</code></li>
+</ul>
+<h4>Sample App Manifest</h4>
+<p>You can easily create a bot with all the permissions needed from an App Manifest.</p>
+<pre><code>display_information:
+  name: Home Notifications
+features:
+  bot_user:
+    display_name: Home Notifications
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - incoming-webhook
+      - chat:write
+      - dnd:read
+      - chat:write.customize
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+</code></pre>
+<h3>Integration Setup</h3>
+<p>When installing the integration, use these settings:</p>
+<p>API Key: <code>xoxb-abc-def</code></p>
+<ul>
+<li>Bot User OAuth Token (from step 5 above)</li>
+</ul>
+<p>Default Channel: <code>#channel</code></p>
+<ul>
+<li>Channel name that bot will post to if a channel is not supplied when called</li>
+</ul>
+<p>Icon/Username:</p>
+<ul>
+<li>optional - if you want to have a custom name/icon for the bot user not already set in Slack</li>
+</ul>
+<p><em>Illustration</em></p>
+<h2>Usage</h2>
+<h3>Sending Messages</h3>
+<p>One of the easiest ways to send a message, is to create a script. You can paste in YAML and make changes in the GUI.</p>
+<p>You can call this script as an action.</p>
+<ol>
+<li>Go to Home Assistant Settings &gt; Automations and Scenes &gt; Scripts &gt; Add Script</li>
+<li>Click the three dots in the top right, and pick 'Edit in YAML'. Paste in the contents below.</li>
+<li>Change <code>YOUR_SLACK_TEAM</code> to the team name <code>(*.slack.com)</code></li>
+</ol>
+<pre><code>alias: "Notify: Slack Notification Template"
+sequence:
+  - action: notify.YOUR_SLACK_TEAM
+    data:
+      message: "Fallback Text"
+      target: "#test-channel" # Single channel target
+      title: "Reminder"
+      data:
+        blocks:
+          - type: section
+            text:
+              type: mrkdwn
+              text: &gt;-
+                This is a mrkdwn section block *this is bold*, and ~this is
+                crossed out~, and &lt;https://google.com|this is a link&gt;
+</code></pre>
+<p>Update the blocks array with valid Slack blocks. The easiest way to create this is using <a>Slack Block Kit Builder</a>.  Up to 50 blocks may be included per message.</p>
+<p>Create a duplicate of this script to use for different messages, and different channels (the door was opened in #security, the light was left on in #lights, etc).</p>
+<p>You can also send messages to multiple targets (channels and/or users) at once:</p>
+<pre><code>alias: "Notify: Multiple Targets Message"
+sequence:
+  - action: notify.YOUR_SLACK_TEAM
+    data:
+      message: "Alert: Motion detected!"
+      target:&#32;
+        - "#security"    # Channel by name
+        - "C01234ABCD"   # Channel by ID
+        - "U5678EFGH"    # Direct message to user by ID
+      title: "Security Alert"
+      data:
+        blocks:
+          - type: section
+            text:
+              type: mrkdwn
+              text: "Motion detected in the backyard camera"
+</code></pre>
+<h3>Target Types</h3>
+<p>The <code>target</code> field accepts either a single value or a list of values. Each target can be:</p>
+<ul>
+<li>A channel name with a <code>#</code> prefix (e.g., <code>#general</code>)</li>
+<li>A channel name without the <code>#</code> prefix (e.g., <code>general</code>)</li>
+<li>A channel ID (e.g., <code>C01234ABCD</code>)</li>
+<li>A user ID for direct messages (e.g., <code>U5678EFGH</code>)</li>
+</ul>
+<p>When sending files, make sure you have the proper permissions set up as described in the Setup section.</p>
+<h3>Icons</h3>
+<p>Slack uses the standard emoji sets used <a>here</a>. Alternatively a publicly accessible URL may be used.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Slack</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Slack</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>One sensor entity will be created:</p>
+<ul>
+<li><strong>Do Not Disturb Timer</strong>: The amount of time left for Do Not Disturb status.</li>
+</ul>
+<h3>Slack action data</h3>
+<p>The following attributes can be placed inside the <code>data</code> key of the action for extended functionality:</p>
+<table>
+<thead>
+<tr>
+  <th>Attribute</th>
+  <th>Optional</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>username</code></td>
+  <td>yes</td>
+  <td>The username of the Slack bot.</td>
+</tr>
+<tr>
+  <td><code>icon</code></td>
+  <td>yes</td>
+  <td>The icon of the Slack bot.</td>
+</tr>
+<tr>
+  <td><code>file</code></td>
+  <td>yes</td>
+  <td>A file to include with the message; see below.</td>
+</tr>
+<tr>
+  <td><code>blocks</code></td>
+  <td>yes</td>
+  <td>Array of <a>Slack blocks</a>. <em>NOTE</em>: if using <code>blocks</code>, they are shown <strong>in place of</strong> the <code>message</code> within Slack apps. The message field will be used as notification text and anywhere else Slack is unable to display blocks. <code>message</code> is required regardless of whether this field is used.</td>
+</tr>
+<tr>
+  <td><code>blocks_template</code></td>
+  <td>yes</td>
+  <td>The same as <code>blocks</code>, but able to support <a>templates</a>.</td>
+</tr>
+<tr>
+  <td><code>thread_ts</code></td>
+  <td>yes</td>
+  <td>Sends the message as a reply to a specified parent message.</td>
+</tr>
+</tbody>
+</table>
+<p>Note that using <code>file</code> will ignore all usage of <code>blocks</code> and <code>blocks_template</code> (as Slack does not support those frameworks in messages that accompany uploaded files).</p>
+<p>To include a local file with the Slack message, use these attributes underneath the <code>file</code> key:</p>
+<table>
+<thead>
+<tr>
+  <th>Attribute</th>
+  <th>Optional</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>path</code></td>
+  <td>no</td>
+  <td>A local filepath that has been <a href="../homeassistant/">whitelisted</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>To include a remote file with the Slack message, use these attributes underneath the <code>file</code> key:</p>
+<table>
+<thead>
+<tr>
+  <th>Attribute</th>
+  <th>Optional</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>url</code></td>
+  <td>no</td>
+  <td>A URL that has been <a href="../homeassistant/">whitelisted</a>.</td>
+</tr>
+<tr>
+  <td><code>username</code></td>
+  <td>yes</td>
+  <td>An optional username if the URL is protected by HTTP Basic Auth.</td>
+</tr>
+<tr>
+  <td><code>password</code></td>
+  <td>yes</td>
+  <td>An optional password if the URL is protected by HTTP Basic Auth.</td>
+</tr>
+</tbody>
+</table>
+<h3>Obtaining a member ID</h3>
+<p>Some of the examples below use a member ID. This is a unique string assigned by Slack to all users (members and guests) and not a username set by the user. To get a member ID:</p>
+<ol>
+<li>Select a Slack user (both name and profile image work) to bring up their profile side panel.</li>
+<li>Open the context menu by selecting the three dots.</li>
+<li>Select <strong>Copy member ID</strong>.</li>
+</ol>
+<p><em>Illustration</em></p>
+<h3>Examples</h3>
+<p>To send a file from local path:</p>
+<pre><code>message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    path: /path/to/file.ext
+</code></pre>
+<p>To send a file from remote path:</p>
+<pre><code>message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    url: "http://site.com/image.jpg"
+</code></pre>
+<p>To send a file from remote path that is protected by HTTP Basic Auth:</p>
+<pre><code>message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    url: "http://site.com/image.jpg"
+    username: user
+    password: pass
+</code></pre>
+<p>To use the block framework:</p>
+<pre><code>message: Fallback message for notifications or in case the blocks don't display anything.
+title: Title of the file.
+data:
+  blocks:
+    - type: section
+      text:
+        type: mrkdwn
+        text: 'Danny Torrence left the following review for your property:'
+    - type: section
+      block_id: section567
+      text:
+        type: mrkdwn
+        text: "&lt;https://example.com|Overlook Hotel&gt; \n :star: \n Doors had too many
+          axe holes, guest in room 237 was far too rowdy, whole place felt stuck in
+          the 1920s."
+      accessory:
+        type: image
+        image_url: https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg
+        alt_text: Haunted hotel image
+    - type: section
+      block_id: section789
+      fields:
+      - type: mrkdwn
+        text: |-
+          *Average Rating*
+          1.0
+</code></pre>
+<p>Send a message directly to a user by setting the target to their member ID.</p>
+<pre><code>message: "Hello there!"
+target: "U12345"
+title: "Hi"
+data:
+  blocks: []
+</code></pre>
+<p>Send a message to a channel that mentions (@username, highlights a users name in yellow) a user.</p>
+<pre><code>message: "&lt;@MEMBER_ID&gt; your appointment starts soon"
+target: "#general"
+title: "Reminder"
+data:
+  blocks: []
+</code></pre>
+<p>Send a message as reply to an existing message. <code>thread_ts</code> can be retrieved via a script utilising <a>Bolt</a>, any other Slack library, or the Slack API directly.</p>
+<pre><code>message: "Here's some supplementary information that doesn't need to be present in the channel directly."
+target: "#general"
+data:
+  thread_ts: "1684736481.064129"
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/slack.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to add Slack notifications to Home Assistant.
+ha_release: pre 0.7
+ha_domain: slack
+---
+
+The **Slack** {% term integration %} allows you to deliver notifications from Home Assistant to [Slack](https://slack.com/).
+
+![](/images/integrations/slack/slack-message.png)
+
+
+## Setup
+
+### Slack App
+
+1. Create a [new app](https://api.slack.com/apps) under your Slack.com account.
+2. Click the `OAuth &amp; Permissions` link in the sidebar, under the Features heading.
+
+Find `Features/OAuth and Permissions/Scopes/Bot Token Scopes`
+
+3. Add the following OAuth scopes:
+  - `chat:write`
+  - `dnd:read`
+  - `channels:manage`
+  - `channels:read`
+  - `groups:read`
+  - `groups:write`
+  - `im:read`
+  - `im:write`
+  - `mpim:read`
+  - `mpim:write`
+  - Optionally add `chat:write.customize` to modify your Slack bot&#x27;s username and icon.
+
+![](/images/integrations/slack/bot-token-scopes.png)
+
+4. Scroll up to `OAuth Tokens &amp; Redirect URLs` and click `Install to Workspace`.
+
+In `Features/OAuth and Permissions/OAuth Tokens for Your Workspace`:
+
+5. Copy the Bot User OAuth Token. Use this as &#x27;API Key&#x27; when setting up in Home Assistant
+
+![](/images/integrations/slack/oauth-tokens-for-workspace.png)
+
+6. Ensure that the bot user is added to the channel in which you want it to post. This can be completed in several ways:
+
+- Using `/invite @bot` from the channel
+- Tagging the bot user in a message, then adding it to the channel via the Slackbot prompt.
+- Channel settings -&gt; `Integrations` -&gt; `Add apps`
+
+#### Sample App Manifest
+
+You can easily create a bot with all the permissions needed from an App Manifest.
+
+```yaml
+display_information:
+  name: Home Notifications
+features:
+  bot_user:
+    display_name: Home Notifications
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - incoming-webhook
+      - chat:write
+      - dnd:read
+      - chat:write.customize
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+```
+
+### Integration Setup
+
+When installing the integration, use these settings:
+
+API Key: `xoxb-abc-def`
+- Bot User OAuth Token (from step 5 above)
+
+Default Channel: `#channel`
+- Channel name that bot will post to if a channel is not supplied when called
+
+Icon/Username:
+- optional - if you want to have a custom name/icon for the bot user not already set in Slack
+
+![](/images/integrations/slack/slack-integration-setup.png)
+
+## Usage
+
+### Sending Messages
+
+One of the easiest ways to send a message, is to create a script. You can paste in YAML and make changes in the GUI.
+
+You can call this script as an action.
+
+1. Go to Home Assistant Settings &gt; Automations and Scenes &gt; Scripts &gt; Add Script
+2. Click the three dots in the top right, and pick &#x27;Edit in YAML&#x27;. Paste in the contents below.
+3. Change `YOUR_SLACK_TEAM` to the team name `(*.slack.com)`
+
+```yaml
+alias: &quot;Notify: Slack Notification Template&quot;
+sequence:
+  - action: notify.YOUR_SLACK_TEAM
+    data:
+      message: &quot;Fallback Text&quot;
+      target: &quot;#test-channel&quot; # Single channel target
+      title: &quot;Reminder&quot;
+      data:
+        blocks:
+          - type: section
+            text:
+              type: mrkdwn
+              text: &gt;-
+                This is a mrkdwn section block *this is bold*, and ~this is
+                crossed out~, and &lt;https://google.com|this is a link&gt;
+```
+
+Update the blocks array with valid Slack blocks. The easiest way to create this is using [Slack Block Kit Builder](https://app.slack.com/block-kit-builder).  Up to 50 blocks may be included per message.
+
+Create a duplicate of this script to use for different messages, and different channels (the door was opened in #security, the light was left on in #lights, etc).
+
+You can also send messages to multiple targets (channels and/or users) at once:
+
+```yaml
+alias: &quot;Notify: Multiple Targets Message&quot;
+sequence:
+  - action: notify.YOUR_SLACK_TEAM
+    data:
+      message: &quot;Alert: Motion detected!&quot;
+      target:&#32;
+        - &quot;#security&quot;    # Channel by name
+        - &quot;C01234ABCD&quot;   # Channel by ID
+        - &quot;U5678EFGH&quot;    # Direct message to user by ID
+      title: &quot;Security Alert&quot;
+      data:
+        blocks:
+          - type: section
+            text:
+              type: mrkdwn
+              text: &quot;Motion detected in the backyard camera&quot;
+```
+
+### Target Types
+
+The `target` field accepts either a single value or a list of values. Each target can be:
+
+- A channel name with a `#` prefix (e.g., `#general`)
+- A channel name without the `#` prefix (e.g., `general`)
+- A channel ID (e.g., `C01234ABCD`)
+- A user ID for direct messages (e.g., `U5678EFGH`)
+
+When sending files, make sure you have the proper permissions set up as described in the Setup section.
+
+### Icons
+
+Slack uses the standard emoji sets used [here](https://slack.com/intl/en-gb/help/articles/202931348-Use-emoji-and-reactions#add-emoji-to-your-messages). Alternatively a publicly accessible URL may be used.
+
+{% include integrations/config_flow.md %}
+
+One sensor entity will be created:
+
+- **Do Not Disturb Timer**: The amount of time left for Do Not Disturb status.
+
+### Slack action data
+
+The following attributes can be placed inside the `data` key of the action for extended functionality:
+
+| Attribute         | Optional | Description                                                                                                                                                                                                                                                                                                                                     |
+| ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `username`        | yes      | The username of the Slack bot.                                                                                                                                                                                                                                                                                                                  |
+| `icon`            | yes      | The icon of the Slack bot.                                                                                                                                                                                                                                                                                                                      |
+| `file`            | yes      | A file to include with the message; see below.                                                                                                                                                                                                                                                                                                  |
+| `blocks`          | yes      | Array of [Slack blocks](https://api.slack.com/messaging/composing/layouts). *NOTE*: if using `blocks`, they are shown **in place of** the `message` within Slack apps. The message field will be used as notification text and anywhere else Slack is unable to display blocks. `message` is required regardless of whether this field is used. |
+| `blocks_template` | yes      | The same as `blocks`, but able to support [templates](/docs/templating/).                                                                                                                                                                                                                             |
+| `thread_ts`       | yes      | Sends the message as a reply to a specified parent message.                                                                                                                                                                                                                                                                                     |
+
+Note that using `file` will ignore all usage of `blocks` and `blocks_template` (as Slack does not support those frameworks in messages that accompany uploaded files).
+
+To include a local file with the Slack message, use these attributes underneath the `file` key:
+
+| Attribute | Optional | Description                                                                                         |
+| --------- | -------- | --------------------------------------------------------------------------------------------------- |
+| `path`    | no       | A local filepath that has been [whitelisted](/integrations/homeassistant/#allowlist_external_dirs). |
+
+To include a remote file with the Slack message, use these attributes underneath the `file` key:
+
+| Attribute  | Optional | Description                                                                              |
+| ---------- | -------- | ---------------------------------------------------------------------------------------- |
+| `url`      | no       | A URL that has been [whitelisted](/integrations/homeassistant/#allowlist_external_urls). |
+| `username` | yes      | An optional username if the URL is protected by HTTP Basic Auth.                         |
+| `password` | yes      | An optional password if the URL is protected by HTTP Basic Auth.                         |
+
+### Obtaining a member ID
+
+Some of the examples below use a member ID. This is a unique string assigned by Slack to all users (members and guests) and not a username set by the user. To get a member ID:
+
+1. Select a Slack user (both name and profile image work) to bring up their profile side panel.
+2. Open the context menu by selecting the three dots.
+3. Select **Copy member ID**.
+
+![](/images/integrations/slack/slack-member-id.png)
+
+### Examples
+
+To send a file from local path:
+
+```yaml
+message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    path: /path/to/file.ext
+```
+
+To send a file from remote path:
+
+```yaml
+message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    url: &quot;http://site.com/image.jpg&quot;
+```
+
+To send a file from remote path that is protected by HTTP Basic Auth:
+
+```yaml
+message: Message that will be added as a comment to the file.
+title: Title of the file.
+data:
+  file:
+    url: &quot;http://site.com/image.jpg&quot;
+    username: user
+    password: pass
+```
+
+To use the block framework:
+
+```yaml
+message: Fallback message for notifications or in case the blocks don&#x27;t display anything.
+title: Title of the file.
+data:
+  blocks:
+    - type: section
+      text:
+        type: mrkdwn
+        text: &#x27;Danny Torrence left the following review for your property:&#x27;
+    - type: section
+      block_id: section567
+      text:
+        type: mrkdwn
+        text: &quot;&lt;https://example.com|Overlook Hotel&gt; \n :star: \n Doors had too many
+          axe holes, guest in room 237 was far too rowdy, whole place felt stuck in
+          the 1920s.&quot;
+      accessory:
+        type: image
+        image_url: https://is5-ssl.mzstatic.com/image/thumb/Purple3/v4/d3/72/5c/d3725c8f-c642-5d69-1904-aa36e4297885/source/256x256bb.jpg
+        alt_text: Haunted hotel image
+    - type: section
+      block_id: section789
+      fields:
+      - type: mrkdwn
+        text: |-
+          *Average Rating*
+          1.0
+```
+
+
+Send a message directly to a user by setting the target to their member ID.
+
+
+```yaml
+message: &quot;Hello there!&quot;
+target: &quot;U12345&quot;
+title: &quot;Hi&quot;
+data:
+  blocks: []
+```
+
+Send a message to a channel that mentions (@username, highlights a users name in yellow) a user.
+
+```yaml
+message: &quot;&lt;@MEMBER_ID&gt; your appointment starts soon&quot;
+target: &quot;#general&quot;
+title: &quot;Reminder&quot;
+data:
+  blocks: []
+```
+
+Send a message as reply to an existing message. `thread_ts` can be retrieved via a script utilising [Bolt](https://slack.dev/bolt-python/tutorial/getting-started), any other Slack library, or the Slack API directly.
+
+```yaml
+message: &quot;Here&#x27;s some supplementary information that doesn&#x27;t need to be present in the channel directly.&quot;
+target: &quot;#general&quot;
+data:
+  thread_ts: &quot;1684736481.064129&quot;
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Slack.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>, <code>default_channel</code>, <code>icon</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setup</li><li>Usage</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/slack/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/slack</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/slack</code></dd></dl></section><p><a href="../../integrations/slack/">Return to the Slack guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

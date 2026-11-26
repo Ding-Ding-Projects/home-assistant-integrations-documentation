@@ -1,1 +1,395 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text-to-speech (TTS) reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:67" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tts/">Text-to-speech (TTS) guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Text-to-speech (TTS)</h1><p>Instructions on how to set up text-to-speech (TTS) with Home Assistant.</p><section><h2>Overview</h2><p>Text-to-speech (TTS) enables Home Assistant to speak to you.</p></section><section><h2>Text-to-speech states</h2><p>The state of a text-to-speech entity is a timestamp showing the date and time when text-to-speech was last used. Home Assistant stores the timestamp in UTC, for example, 2026-01-01T12:00:00.123456+00:00. The Home Assistant interface shows it in your local date and time format.</p></section><section><h2>Cache</h2><p>The integration cache can be controlled with the cache option in the action to speak or say, setting it to True to enable it (default), or False to disable it. A long time cache will be located on the file system. The in-memory cache for fast responses to media players will be auto-cleaned after a short period.</p></section><section><h2>Preferred audio settings</h2><p>Each TTS platform produces audio samples in different formats, not always compatible with every media player. TTS integration building block supports a way to configure preferred target audio format through options option of speak or say actions.</p></section><section><h2>POST `/api/tts_get_url`</h2><p>Returns a URL to the generated TTS file. The engine_id (which is the entity id) or platform parameter together with message are required. Additional parameters cache, language and options are supported, as JSON attributes, as described for speak action.</p></section><section><h2>Troubleshooting</h2><p>The following sections describe some of the problems encountered with media devices.</p></section><section><h2>Self-signed certificates</h2><p>This problem occurs when your Home Assistant instance is configured to be accessed through SSL, and you are using a self-signed certificate on your internal URL.</p></section><section><h2>Google cast devices</h2><p>Google cast devices (such as Google Home or Chromecast) require the host in media URLs to be resolvable using Google&#x27;s public DNS servers, and if the URL is specifying the https protocol, the certificate must be valid and not self-signed.</p></section><section><h2>Partial, corrupted or no audio</h2><p>Some media players could reproduce only partial, corrupted or no audio at all when the audio format is not fully supported. In such cases it is required to experiment with different combinations of audio formats, channels, sample rates and bits using preferred audio settings options.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Text-to-speech (TTS) in Home Assistant is <code>tts</code>.</p><h3>Documented actions</h3><ul class="chips"><li>clear cache</li><li>say</li><li>speak</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Text-to-speech states</li><li>Cache</li><li>Preferred audio settings</li><li>REST API</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tts/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tts</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tts</code></dd></dl></section><p><a href="../../integrations/tts/">Return to the Text-to-speech (TTS) guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text-to-speech (TTS) reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:67" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tts/">Text-to-speech (TTS) guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Text-to-speech (TTS)</h1><p>Instructions on how to set up text-to-speech (TTS) with Home Assistant.</p><div class="reader-body"><p>Text-to-speech (TTS) enables Home Assistant to speak to you.</p>
+<p><strong>Note</strong></p>
+<p><strong>Building block integration</strong></p>
+<p>This text-to-speech (tts) is a building block integration that cannot be added to your Home Assistant directly but is used and provided by other integrations.</p>
+<p>A building block integration differs from the typical integration that connects to a device or service. Instead, other integrations that do integrate a device or service into Home Assistant use this text-to-speech (tts) building block to provide entities, services, and other functionality that you can use in your automations or dashboards.</p>
+<p>If one of your integrations features this building block, this page documents the functionality the text-to-speech (tts) building block offers.</p>
+<p>See all <a>TTS integrations</a> using this building block for ways to use it in your automations. If you are using the Home Assistant voice assistant <a>Assist</a>, it uses TTS when replying to you. Another way to use TTS is by using <a>TTS with Home Assistant Cloud</a>.</p>
+<h2>Text-to-speech states</h2>
+<p>The state of a text-to-speech entity is a timestamp showing the date and time when text-to-speech was last used. Home Assistant stores the timestamp in UTC, for example, <code>2026-01-01T12:00:00.123456+00:00</code>. The Home Assistant interface shows it in your local date and time format.</p>
+<p>In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:</p>
+<ul>
+<li><strong>Unavailable</strong> (<code>unavailable</code>): The entity is currently unavailable.</li>
+<li><strong>Unknown</strong> (<code>unknown</code>): The state is not yet known.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Cache</h2>
+<p>The integration cache can be controlled with the <code>cache</code> option in the action to <code>speak</code> or <code>say</code>, setting it to <code>True</code> to enable it (default), or <code>False</code> to disable it. A long time cache will be located on the file system. The in-memory cache for fast responses to media players will be auto-cleaned after a short period.</p>
+<h2>Preferred audio settings</h2>
+<p>Each TTS platform produces audio samples in different formats, not always compatible with every media player. TTS integration building block supports a way to configure preferred target audio format through <code>options</code> option of <code>speak</code> or <code>say</code> actions.</p>
+<p>TTS integration building block uses <a href="../ffmpeg/">FFmpeg integration</a> to perform audio transcoding when target entity platform does not support one or all the specified preferred audio format settings (refer to specific platform documentation for any supported setting with related supported values).</p>
+<p>Available preferred audio settings, all optional, are:</p>
+<ul>
+<li><code>preferred_format</code>: Set the audio format. When not supported by the target entity platform, the value is a file extension like <code>wav</code>, <code>mp3</code>, or <code>ogg</code>, among ones supported by FFmpeg tool for output files.</li>
+<li><code>preferred_sample_rate</code>: Set the sample rate. When not supported by the target entity platform, the value is in Hz as a number, among ones supported by the <code>-ar</code> parameter of FFmpeg tool.</li>
+<li><code>preferred_sample_channels</code>: Set the number of audio channels. When not supported by the target entity platform, the value is a number among ones supported by the <code>-ac</code> parameter of FFmpeg tool.</li>
+<li><code>preferred_sample_bytes</code>: Set the audio bit sampling. When not supported by the target entity platform, can only be set to <code>2</code> to use 16-bit audio sampling (any other value is ignored).</li>
+<li><code>preferred_bitrate</code>: Set the audio bitrate in kbps as a number, for example <code>48</code>. This setting applies to MP3 output only. By default, Home Assistant encodes MP3 audio at a variable bitrate. If you set this option, Home Assistant encodes the audio at a constant bitrate, which some hardware decoders require.</li>
+</ul>
+<p>Example to produce an MP3 audio at 22050Hz:</p>
+<pre><code>action: tts.speak
+target:
+  entity_id: tts.example
+data:
+  media_player_entity_id: media_player.kitchen
+  message: "May the force be with you."
+  options:
+    preferred_format: mp3
+    preferred_sample_rate: 22050
+</code></pre>
+<h2>REST API</h2>
+<h3>POST <code>/api/tts_get_url</code></h3>
+<p>Returns a URL to the generated TTS file. The <code>engine_id</code> (which is the entity id) or <code>platform</code> parameter together with <code>message</code> are required. Additional parameters <code>cache</code>, <code>language</code> and <code>options</code> are supported, as JSON attributes, as described for <code>speak</code> action.</p>
+<pre><code>{
+  "engine_id": "tts.amazon_polly",
+  "message": "I am speaking now"
+}
+</code></pre>
+<p>The return code is 200 if the file is generated. The message body will contain a JSON object with the URL.</p>
+<pre><code>{
+  "path": "/api/tts_proxy/265944c108cbb00b2a621be5930513e03a0bb2cd_en_-_tts.demo.mp3",
+  "url": "http://127.0.0.1:8123/api/tts_proxy/265944c108cbb00b2a621be5930513e03a0bb2cd_en_-_tts.demo.mp3"
+}
+</code></pre>
+<p>Sample <code>curl</code> command:</p>
+<pre><code>$ curl -X POST -H "Authorization: Bearer &lt;ACCESS TOKEN&gt;" \
+       -H "Content-Type: application/json" \
+       -d '{"message": "I am speaking now", "engine_id": "amazon_polly"}' \
+       http://localhost:8123/api/tts_get_url
+</code></pre>
+<h2>Troubleshooting</h2>
+<p><strong>Important</strong></p>
+<p>Playing TTS media will prioritize the local Home Assistant URL, which can be configured by navigating to <strong>Settings &gt; System &gt; Network</strong>.
+It is highly recommended to set the local Home Assistant URL to automatic, in which case the generated URL will be <code>http://&lt;local_ip&gt;:&lt;local_port&gt;</code>.</p>
+<p>The following sections describe some of the problems encountered with media devices.</p>
+<h3>Self-signed certificates</h3>
+<p>This problem occurs when your Home Assistant instance is configured to be accessed through SSL, and you are using a self-signed certificate on your internal URL.</p>
+<p>The <code>tts</code> action will send an <code>https://</code> URL to the media device, which will check the certificate, and reject it. So it won't play your file. If you could make the device accept your certificate, it would play the file. However, many media devices do not allow changing settings to accept self-signed certificates. Ultimately, your option may be to serve files to local devices as <code>http://</code> rather than <code>https://</code>.</p>
+<h3>Google cast devices</h3>
+<p>Google cast devices (such as Google Home or Chromecast) require the host in media URLs to be resolvable using Google's public DNS servers, and if the URL is specifying the <code>https</code> protocol, the certificate must be valid and not self-signed.</p>
+<p>These requirements present the following problems, all of which create problems if the local Home Assistant URL is not <code>http://&lt;local_ip&gt;:&lt;local_port&gt;</code>:</p>
+<ul>
+<li><p>They <a>reject self-signed certificates</a>.</p>
+</li>
+<li><p>They use Google's public DNS servers to resolve names, not DNS servers provided via DHCP. Additionally, they do not resolve local names through mDNS. This means they do not work with URLs that contain hostnames established by local naming means. Let's say your Home Assistant instance is running on a machine made known locally as <code>ha</code> (via local DNS) and <code>homeassistant.local</code> (via mDNS). All machines on your local network can access it as <code>ha</code> or <code>homeassistant.local</code>. However, try as you may, your cast device won't download the media files from your <code>ha</code> machine. That's because your cast device ignores your local naming setup. In this example, the <code>say</code> action creates a URL like <code>http://ha/path/to/media.mp3</code> (or <code>https://...</code> if you are using SSL). If you are <em>not</em> using SSL, then setting an internal URL that contains the IP address of your server works around this issue. By using an IP address, the cast device does not have to resolve the hostname.</p>
+</li>
+<li><p>If you are using SSL (e.g., <code>https://yourhost.example.org/...</code>) then you <em>must</em> use the hostname in the certificate (e.g., <code>external_url: https://yourhost.example.org</code>). You cannot use an IP address since the certificate won't be valid for the IP address, and the cast device will refuse the connection.</p>
+</li>
+</ul>
+<p>The recommended way to overcome these obstacles is to not manually configure a local Home Assistant URL.</p>
+<h3>Partial, corrupted or no audio</h3>
+<p>Some media players could reproduce only partial, corrupted or no audio at all when the audio format is not fully supported. In such cases it is required to experiment with different combinations of audio formats, channels, sample rates and bits using <a>preferred audio settings</a> options.</p>
+<p>For example, some Google Cast devices skip initial audio part when the audio is sampled at 22050Hz, and to fix the problem it is required to set the <code>preferred_sample_rate</code> setting in the <code>options</code> option to <code>44100</code>.</p>
+<p>Some devices also reject variable bitrate MP3 audio and play nothing at all. To fix the problem, set the <code>preferred_bitrate</code> setting in the <code>options</code> option, for example to <code>48</code>. Home Assistant then encodes the audio at a constant bitrate, which these decoders accept.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/tts.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to set up text-to-speech (TTS) with Home Assistant.
+ha_release: 0.35
+ha_domain: tts
+related:
+  - url: https://www.home-assistant.io/integrations/#text-to-speech
+    title: List of integrations using the TTS integration
+  - url: https://www.nabucasa.com/config/tts/
+    title: TTS with Home Assistant Cloud
+  - url: https://www.home-assistant.io/integrations/google_translate/
+    title: Google Translate TTS
+  - url: https://www.home-assistant.io/integrations/microsoft/
+    title: Microsoft TTS
+  - url: https://www.home-assistant.io/voice_control/
+    title: Home Assistant Assist
+---
+
+Text-to-speech (TTS) enables Home Assistant to speak to you.
+
+{% include integrations/building_block_integration.md %}
+
+See all [TTS integrations](/integrations/#text-to-speech) using this building block for ways to use it in your automations. If you are using the Home Assistant voice assistant [Assist](/voice_control/), it uses TTS when replying to you. Another way to use TTS is by using [TTS with Home Assistant Cloud](https://www.nabucasa.com/config/tts/).
+
+## Text-to-speech states
+
+The {% term state %} of a text-to-speech {% term entity %} is a timestamp showing the date and time when text-to-speech was last used. Home Assistant stores the timestamp in UTC, for example, `2026-01-01T12:00:00.123456+00:00`. The Home Assistant interface shows it in your local date and time format.
+
+In addition, the entity can have the following states. Each item shows the interface label, followed by the stored state:
+
+- **Unavailable** (`unavailable`): The entity is currently unavailable.
+- **Unknown** (`unknown`): The state is not yet known.
+
+{% include integrations/actions.md %}
+
+## Cache
+
+The integration cache can be controlled with the `cache` option in the action to `speak` or `say`, setting it to `True` to enable it (default), or `False` to disable it. A long time cache will be located on the file system. The in-memory cache for fast responses to media players will be auto-cleaned after a short period.
+
+## Preferred audio settings
+
+Each TTS platform produces audio samples in different formats, not always compatible with every media player. TTS integration building block supports a way to configure preferred target audio format through `options` option of `speak` or `say` actions.
+
+TTS integration building block uses [FFmpeg integration](/integrations/ffmpeg) to perform audio transcoding when target entity platform does not support one or all the specified preferred audio format settings (refer to specific platform documentation for any supported setting with related supported values).
+
+Available preferred audio settings, all optional, are:
+
+- `preferred_format`: Set the audio format. When not supported by the target entity platform, the value is a file extension like `wav`, `mp3`, or `ogg`, among ones supported by FFmpeg tool for output files.
+- `preferred_sample_rate`: Set the sample rate. When not supported by the target entity platform, the value is in Hz as a number, among ones supported by the `-ar` parameter of FFmpeg tool.
+- `preferred_sample_channels`: Set the number of audio channels. When not supported by the target entity platform, the value is a number among ones supported by the `-ac` parameter of FFmpeg tool.
+- `preferred_sample_bytes`: Set the audio bit sampling. When not supported by the target entity platform, can only be set to `2` to use 16-bit audio sampling (any other value is ignored).
+- `preferred_bitrate`: Set the audio bitrate in kbps as a number, for example `48`. This setting applies to MP3 output only. By default, Home Assistant encodes MP3 audio at a variable bitrate. If you set this option, Home Assistant encodes the audio at a constant bitrate, which some hardware decoders require.
+
+Example to produce an MP3 audio at 22050Hz:
+
+```yaml
+action: tts.speak
+target:
+  entity_id: tts.example
+data:
+  media_player_entity_id: media_player.kitchen
+  message: &quot;May the force be with you.&quot;
+  options:
+    preferred_format: mp3
+    preferred_sample_rate: 22050
+```
+
+## REST API
+
+### POST `/api/tts_get_url`
+
+Returns a URL to the generated TTS file. The `engine_id` (which is the entity id) or `platform` parameter together with `message` are required. Additional parameters `cache`, `language` and `options` are supported, as JSON attributes, as described for `speak` action.
+
+```json
+{
+  &quot;engine_id&quot;: &quot;tts.amazon_polly&quot;,
+  &quot;message&quot;: &quot;I am speaking now&quot;
+}
+```
+
+The return code is 200 if the file is generated. The message body will contain a JSON object with the URL.
+
+```json
+{
+  &quot;path&quot;: &quot;/api/tts_proxy/265944c108cbb00b2a621be5930513e03a0bb2cd_en_-_tts.demo.mp3&quot;,
+  &quot;url&quot;: &quot;http://127.0.0.1:8123/api/tts_proxy/265944c108cbb00b2a621be5930513e03a0bb2cd_en_-_tts.demo.mp3&quot;
+}
+```
+
+Sample `curl` command:
+
+```bash
+$ curl -X POST -H &quot;Authorization: Bearer &lt;ACCESS TOKEN&gt;&quot; \
+       -H &quot;Content-Type: application/json&quot; \
+       -d &#x27;{&quot;message&quot;: &quot;I am speaking now&quot;, &quot;engine_id&quot;: &quot;amazon_polly&quot;}&#x27; \
+       http://localhost:8123/api/tts_get_url
+```
+
+## Troubleshooting
+
+{% important %}
+Playing TTS media will prioritize the local Home Assistant URL, which can be configured by navigating to **{% my network title=&quot;Settings &gt; System &gt; Network&quot; %}**.
+It is highly recommended to set the local Home Assistant URL to automatic, in which case the generated URL will be `http://&lt;local_ip&gt;:&lt;local_port&gt;`.
+{% endimportant %}
+
+The following sections describe some of the problems encountered with media devices.
+
+### Self-signed certificates
+
+This problem occurs when your Home Assistant instance is configured to be accessed through SSL, and you are using a self-signed certificate on your internal URL.
+
+The `tts` action will send an `https://` URL to the media device, which will check the certificate, and reject it. So it won&#x27;t play your file. If you could make the device accept your certificate, it would play the file. However, many media devices do not allow changing settings to accept self-signed certificates. Ultimately, your option may be to serve files to local devices as `http://` rather than `https://`.
+
+### Google cast devices
+
+Google cast devices (such as Google Home or Chromecast) require the host in media URLs to be resolvable using Google&#x27;s public DNS servers, and if the URL is specifying the `https` protocol, the certificate must be valid and not self-signed.
+
+These requirements present the following problems, all of which create problems if the local Home Assistant URL is not `http://&lt;local_ip&gt;:&lt;local_port&gt;`:
+
+- They [reject self-signed certificates](#self-signed-certificates).
+
+- They use Google&#x27;s public DNS servers to resolve names, not DNS servers provided via DHCP. Additionally, they do not resolve local names through mDNS. This means they do not work with URLs that contain hostnames established by local naming means. Let&#x27;s say your Home Assistant instance is running on a machine made known locally as `ha` (via local DNS) and `homeassistant.local` (via mDNS). All machines on your local network can access it as `ha` or `homeassistant.local`. However, try as you may, your cast device won&#x27;t download the media files from your `ha` machine. That&#x27;s because your cast device ignores your local naming setup. In this example, the `say` action creates a URL like `http://ha/path/to/media.mp3` (or `https://...` if you are using SSL). If you are _not_ using SSL, then setting an internal URL that contains the IP address of your server works around this issue. By using an IP address, the cast device does not have to resolve the hostname.
+
+- If you are using SSL (e.g., `https://yourhost.example.org/...`) then you _must_ use the hostname in the certificate (e.g., `external_url: https://yourhost.example.org`). You cannot use an IP address since the certificate won&#x27;t be valid for the IP address, and the cast device will refuse the connection.
+
+The recommended way to overcome these obstacles is to not manually configure a local Home Assistant URL.
+
+### Partial, corrupted or no audio
+
+Some media players could reproduce only partial, corrupted or no audio at all when the audio format is not fully supported. In such cases it is required to experiment with different combinations of audio formats, channels, sample rates and bits using [preferred audio settings](#preferred-audio-settings) options.
+
+For example, some Google Cast devices skip initial audio part when the audio is sampled at 22050Hz, and to fix the problem it is required to set the `preferred_sample_rate` setting in the `options` option to `44100`.
+
+Some devices also reject variable bitrate MP3 audio and play nothing at all. To fix the problem, set the `preferred_bitrate` setting in the `options` option, for example to `48`. Home Assistant then encodes the audio at a constant bitrate, which these decoders accept.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Text-to-speech (TTS) in Home Assistant is <code>tts</code>.</p><h3>Documented actions</h3><ul class="chips"><li>clear cache</li><li>say</li><li>speak</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Text-to-speech states</li><li>Cache</li><li>Preferred audio settings</li><li>REST API</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tts/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tts</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tts</code></dd></dl></section><p><a href="../../integrations/tts/">Return to the Text-to-speech (TTS) guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

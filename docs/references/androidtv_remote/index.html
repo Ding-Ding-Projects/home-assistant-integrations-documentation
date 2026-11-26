@@ -1,1 +1,1418 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Android TV Remote reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:216" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/androidtv_remote/">Android TV Remote guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Android TV Remote</h1><p>Instructions on how to integrate Android TV Remote into Home Assistant.</p><section><h2>Overview</h2><p>The Android TV Remote integration allows you to control an Android TV and launching apps. For this to work, the Android TV device needs to have Android TV Remote Service which is pre-installed on most devices (Fire TV devices are a notable exception).</p></section><section><h2>Media player</h2><p>This integration adds a media_player with basic playback and volume controls. The media player provides volume information and display name of current active app on the Android TV. Due to API limitations, the integration will not display the playback status. It is recommended to use this integration together with Google Cast integration. Two media players can be combined into one using the Universal Media Player integration. See Using with Google Cast section for more details.</p></section><section><h2>Launching activities</h2><p>The most reliable way to launch an app, or open a specific screen within it, is with a deep link supported by the app.</p></section><section><h2>Launching apps</h2><p>If an app doesn&#x27;t have a deep link, or the device doesn&#x27;t have the Google Play Store, you can try to launch it directly by its application ID (package name). The app doesn&#x27;t need to exist in the Google Play Store. If it exists, you can find the application ID in the URL of the app&#x27;s Google Play Store listing. For example, if the URL of an app page is play.google.com/store/apps/details?id=com.example.app123, the application ID is com.example.app123. The application ID is also displayed in the media player card when you launch the application on the device.</p></section><section><h2>Switch channels</h2><p>You can pass the channel number to switch channels. The channel number must be an integer.</p></section><section><h2>Using with Google Cast</h2><p>Replace media_player.living_room_tv_remote with your Android TV Remote media player entity ID. Replace media_player.living_room_tv_cast with your Google Cast media player entity ID.</p></section><section><h2>Remote</h2><p>The remote allows you to send key commands and text as input to your Android TV device with the remote.send_command action. The entity has the current_activity attribute that shows the current foreground app on the Android TV. You can pass a deep link, or the application ID shown in this current_activity, as activity in the remote.turn_on action to launch that app. Launching by application ID currently doesn&#x27;t work reliably for many apps due to a Google Play Store change, so use a deep link when you have one.</p></section><section><h2>Sending key commands</h2><p>Whether a command does something depends on your Android TV device, its firmware, and the app in the foreground. Some devices remap or ignore certain keys, so a command like GUIDE or MENU might do nothing or trigger a different action than you expect. The commands are sent to your device as is, so Home Assistant cannot change how your device reacts to them.</p></section><section><h2>Press and release as separate events</h2><p>When a button, controller, or frontend card already emits separate press and release events, you can forward each one to the TV as its own service call by prefixing the command with a direction. Each call sends exactly one event, so the release fires when your source event fires, not when a fixed hold_secs timer ends.</p></section><section><h2>Sending text input</h2><p>To send text as keyboard input, prefix the value of command with text:. The text after the prefix is delivered to whichever input field is currently focused on the Android TV.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Android TV Remote.</p><p>The <strong>pair</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>media player</li><li>remote</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Media player</li><li>Remote</li><li>Limitations and known issues</li><li>Data updates</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/androidtv_remote/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/androidtv_remote</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/androidtv_remote</code></dd></dl></section><p><a href="../../integrations/androidtv_remote/">Return to the Android TV Remote guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Android TV Remote reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:216" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/androidtv_remote/">Android TV Remote guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Android TV Remote</h1><p>Instructions on how to integrate Android TV Remote into Home Assistant.</p><div class="reader-body"><p>The <strong>Android TV Remote</strong> integration allows you to control an Android TV and launching apps. For this to work, the Android TV device needs to have <a>Android TV Remote Service</a> which is pre-installed on most devices (Fire TV devices are a notable exception).</p>
+<p>For a quick introduction on how to get started with Android TV Remote, check out this video:</p>
+<p></p>
+<h2>Configuration</h2>
+<p>To add the <strong>Android TV Remote</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Android TV Remote</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Options</h2>
+<p>To define options for Android TV Remote, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Android TV Remote are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+Configure Applications List:
+  description: Here you can define applications where the keys are app IDs and the values are app names and icons that will be displayed in the UI.
+Enable IME:
+  description: Enable this option to be able to get the current app name and send text as keyboard input. Disable it for devices that show 'Use keyboard on mobile device screen' instead of the on-screen keyboard.
+
+</code></pre>
+<h2>Media player</h2>
+<p>This integration adds a <code>media_player</code> with basic playback and volume controls. The media player provides volume information and display name of current active app on the Android TV. Due to API limitations, the integration will not display the playback status. It is recommended to use this integration together with <a href="../cast/">Google Cast integration</a>. Two media players can be combined into one using the <a href="../universal/">Universal Media Player</a> integration. See <a>Using with Google Cast</a> section for more details.</p>
+<p>Using the <code>media_player.play_media</code> action, you can launch applications, switch channels, and start activities via <code>Deep Links</code>. Only <code>app</code>, <code>url</code> and <code>channel</code> media types are supported.</p>
+<h3>Launching activities</h3>
+<p>The most reliable way to launch an app, or open a specific screen within it, is with a deep link supported by the app.</p>
+<p>Examples of deep links for popular applications:</p>
+<table>
+<thead>
+<tr>
+  <th>App</th>
+  <th>Deep link</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>| YouTube | <code>https://www.youtube.com</code> or <code>vnd.youtube://</code> or <code>vnd.youtube.launch://</code>
+| Netflix | <code>https://www.netflix.com/title/&lt;title ID&gt;?source=30</code> or <code>netflix://</code>
+| Prime Video | <code>https://app.primevideo.com</code>
+| Disney+ | <code>https://www.disneyplus.com</code>
+| Plex | <code>plex://</code>
+| Twitch | <code>twitch://home</code> <code>[home, stream, game, video, clip, search, browse, channel, user]</code></p>
+<p>The Netflix app opens a specific title only when the link ends with <code>?source=30</code>. Without it, the app opens, but shows or resumes the last watched title. The title ID is the number in the title's address on netflix.com.</p>
+<p>Example:</p>
+<pre><code># Open a specific YouTube video:
+action: media_player.play_media
+data:
+  media:
+    media_content_type: url
+    media_content_id: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+target:
+  entity_id: media_player.living_room_tv
+</code></pre>
+<h3>Launching apps</h3>
+<p>If an app doesn't have a deep link, or the device doesn't have the Google Play Store, you can try to launch it directly by its application ID (package name).
+The app doesn't need to exist in the Google Play Store.
+If it exists, you can find the application ID in the URL of the app's Google Play Store listing.
+For example, if the URL of an app page is <code>play.google.com/store/apps/details?id=com.example.app123</code>, the application ID is <code>com.example.app123</code>.
+The application ID is also displayed in the media player card when you launch the application on the device.</p>
+<p><strong>Note</strong></p>
+<p>A change to the Google Play Store is currently preventing this method from working for many apps. If launching by application ID doesn't work, use a <a>deep link</a> instead.</p>
+<p>Examples of application IDs for popular applications:</p>
+<table>
+<thead>
+<tr>
+  <th>App</th>
+  <th>App ID</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>| YouTube | <code>com.google.android.youtube.tv</code>
+| Netflix | <code>com.netflix.ninja</code>
+| Prime Video | <code>com.amazon.amazonvideo.livingroom</code>
+| Disney+ | <code>com.disney.disneyplus</code>
+| Plex | <code>com.plexapp.android</code>
+| Kodi | <code>org.xbmc.kodi</code>
+| Twitch | <code>tv.twitch.android.app</code></p>
+<p>Example:</p>
+<pre><code># Launch the YouTube app
+action: media_player.play_media
+data:
+  media:
+    media_content_type: app
+    media_content_id: com.google.android.youtube.tv
+target:
+  entity_id: media_player.living_room_tv
+</code></pre>
+<h3>Switch channels</h3>
+<p>You can pass the channel number to switch channels. The channel number must be an integer.</p>
+<p>Example:</p>
+<pre><code># Change channel to number 15:
+action: media_player.play_media
+data:
+  media:
+    media_content_type: channel
+    media_content_id: 15
+target:
+  entity_id: media_player.living_room_tv
+</code></pre>
+<h3>Using with Google Cast</h3>
+<p>Android TV Remote integration provides information about the power status of the device and gives you the ability to control playback. However, it does not provide information about the currently playing content (media title, duration, play/pause state, etc.). In turn, <a href="../cast/">Google Cast</a> integration does not provide reliable information about the power status of the device (e.g. on Android TV Home Screen) and does not allow you to control playback in Android apps without <a>MediaSession</a> support. However, it can display full information about the content being played in supported apps. For convenience, you can combine two media players into one using <a href="../universal/">Universal Media Player</a> integration. Universal Media Player will automatically select the appropriate active media player entity.</p>
+<h4>Example YAML configuration</h4>
+<p>Replace <code>media_player.living_room_tv_remote</code> with your Android TV Remote media player entity ID.
+Replace <code>media_player.living_room_tv_cast</code> with your Google Cast media player entity ID.</p>
+<pre><code>media_player:
+  - platform: universal
+    name: living_room_tv
+    unique_id: living_room_tv
+    device_class: tv
+    children:
+      - media_player.living_room_tv_remote
+      - media_player.living_room_tv_cast
+    browse_media_entity: media_player.living_room_tv_cast
+    commands:
+      turn_off:
+        action: media_player.turn_off
+        data:
+          entity_id: media_player.living_room_tv_remote
+      turn_on:
+        action: media_player.turn_on
+        data:
+          entity_id: media_player.living_room_tv_remote
+      volume_up:
+        action: media_player.volume_up
+        data:
+          entity_id: media_player.living_room_tv_remote
+      volume_down:
+        action: media_player.volume_down
+        data:
+          entity_id: media_player.living_room_tv_remote
+</code></pre>
+<h2>Remote</h2>
+<p>The remote allows you to send key commands and text as input to your Android TV device with the <code>remote.send_command</code> action.
+The entity has the <code>current_activity</code> attribute that shows the current foreground app on the Android TV.
+You can pass a <a>deep link</a>, or the application ID shown in this <code>current_activity</code>, as <code>activity</code> in the <code>remote.turn_on</code> action to launch that app.
+Launching by application ID currently doesn't work reliably for many apps due to a Google Play Store change, so use a deep link when you have one.</p>
+<h4>List of the most common commands</h4>
+<p>Navigation:</p>
+<ul>
+<li>DPAD_UP</li>
+<li>DPAD_DOWN</li>
+<li>DPAD_LEFT</li>
+<li>DPAD_RIGHT</li>
+<li>DPAD_CENTER</li>
+<li>BUTTON_A</li>
+<li>BUTTON_B</li>
+<li>BUTTON_X</li>
+<li>BUTTON_Y</li>
+<li>BACK</li>
+</ul>
+<p>Volume Control:</p>
+<ul>
+<li>VOLUME_DOWN</li>
+<li>VOLUME_UP</li>
+<li>VOLUME_MUTE</li>
+<li>MUTE</li>
+</ul>
+<p>Media Control:</p>
+<ul>
+<li>MEDIA_PLAY_PAUSE</li>
+<li>MEDIA_PLAY</li>
+<li>MEDIA_PAUSE</li>
+<li>MEDIA_NEXT</li>
+<li>MEDIA_PREVIOUS</li>
+<li>MEDIA_STOP</li>
+<li>MEDIA_RECORD</li>
+<li>MEDIA_REWIND</li>
+<li>MEDIA_FAST_FORWARD</li>
+</ul>
+<p>TV Control:</p>
+<ul>
+<li>0</li>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+<li>5</li>
+<li>6</li>
+<li>7</li>
+<li>8</li>
+<li>9</li>
+<li>DEL</li>
+<li>ENTER</li>
+<li>CHANNEL_UP</li>
+<li>CHANNEL_DOWN</li>
+<li>F1</li>
+<li>F2</li>
+<li>F3</li>
+<li>F4</li>
+<li>F5</li>
+<li>F6</li>
+<li>F7</li>
+<li>F8</li>
+<li>F9</li>
+<li>F10</li>
+<li>F11</li>
+<li>F12</li>
+<li>TV</li>
+<li>PROG_RED</li>
+<li>PROG_GREEN</li>
+<li>PROG_YELLOW</li>
+<li>PROG_BLUE</li>
+</ul>
+<p>Other:</p>
+<ul>
+<li>BUTTON_MODE</li>
+<li>EXPLORER</li>
+<li>MENU</li>
+<li>HOME</li>
+<li>INFO</li>
+<li>GUIDE</li>
+<li>TV_TELETEXT</li>
+<li>CAPTIONS</li>
+<li>DVR</li>
+<li>MEDIA_AUDIO_TRACK</li>
+<li>SETTINGS</li>
+<li>SEARCH</li>
+<li>ASSIST</li>
+<li>POWER</li>
+</ul>
+<h3>Sending key commands</h3>
+<p>Whether a command does something depends on your Android TV device, its firmware, and the app in the foreground. Some devices remap or ignore certain keys, so a command like <code>GUIDE</code> or <code>MENU</code> might do nothing or trigger a different action than you expect. The commands are sent to your device as is, so Home Assistant cannot change how your device reacts to them.</p>
+<p>Pass any of the most common commands in the list above as <code>command</code> in the <code>remote.send_command</code> action.</p>
+<pre><code># Open the currently selected item on the Android TV
+action: remote.send_command
+data:
+  command: DPAD_CENTER
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<p>To trigger the long-press behavior of a key, supply <code>hold_secs</code> in seconds. Fractional seconds, like <code>0.5</code> for half a second, are supported. The integration will press the key, wait the given duration, and then release it as a single atomic call.</p>
+<pre><code># Long press on the currently selected item on the Android TV
+action: remote.send_command
+data:
+  command: DPAD_CENTER
+  hold_secs: 0.5
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<h3>Press and release as separate events</h3>
+<p>When a button, controller, or frontend card already emits separate press and release events, you can forward each one to the TV as its own service call by prefixing the command with a direction. Each call sends exactly one event, so the release fires when your source event fires, not when a fixed <code>hold_secs</code> timer ends.</p>
+<p>The accepted prefixes are <code>start_long:</code> (press down), <code>end_long:</code> (release up), and <code>short:</code> (the default). Prefixes are case-insensitive. Plain commands without a prefix continue to send a short tap. When both a prefix and <code>hold_secs</code> are supplied, <code>hold_secs</code> takes precedence.</p>
+<pre><code># Press down on DPAD_DOWN. Returns immediately, the key stays "held".
+action: remote.send_command
+data:
+  command: "start_long:DPAD_DOWN"
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<pre><code># Release DPAD_DOWN. Sent later, when the user lets go.
+action: remote.send_command
+data:
+  command: "end_long:DPAD_DOWN"
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<h3>Sending text input</h3>
+<p>To send text as keyboard input, prefix the value of <code>command</code> with <code>text:</code>. The text after the prefix is delivered to whichever input field is currently focused on the Android TV.</p>
+<pre><code># Send "Never Gonna Give You Up" as keyboard input text to the selected input field
+action: remote.send_command
+data:
+  command: text:Never Gonna Give You Up
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<h3>Launching apps and activities</h3>
+<p>Use <code>remote.turn_on</code> with the <code>activity</code> field to launch an app or open a specific deep link. The value can be an application ID (see the <a>Launching apps section</a>), a URL, or a scheme supported by the target app.</p>
+<pre><code># Launch YouTube
+action: remote.turn_on
+data:
+  activity: https://www.youtube.com
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<pre><code># Open a specific YouTube video
+action: remote.turn_on
+data:
+  activity: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+target:
+  entity_id: remote.living_room_tv
+</code></pre>
+<h3>Dashboard example</h3>
+<p>You have to manually create buttons in Lovelace to send commands to the Android TV device or launch apps on it.</p>
+<p>Below is an example for you to start with. Many of the buttons support long press.</p>
+<p><em>Screenshot Android TV Remote example</em></p>
+<h4>YAML Lovelace example</h4>
+<p>Add a Manual card with the following code.
+Replace all instances of <code>living_room_tv</code> with your entity ID.</p>
+<ul>
+<li>To use the <code>replace all</code> functionality, inside the code editor, press <code>ctrl+F</code> (or <code>command+F</code> on Mac).</li>
+</ul>
+<pre><code>type: vertical-stack
+cards:
+  - type: entities
+    entities:
+      - entity: remote.living_room_tv
+  - square: true
+    columns: 3
+    type: grid
+    cards:
+      - type: button
+        show_icon: false
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-up-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_UP
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        show_icon: false
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-left-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_LEFT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:circle
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_CENTER
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_CENTER
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:arrow-right-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_RIGHT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-left
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: BACK
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: BACK
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:arrow-down-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_DOWN
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:home-outline
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: HOME
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: HOME
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+  - square: false
+    columns: 3
+    type: grid
+    cards:
+      - type: button
+        icon: mdi:skip-previous
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_PREVIOUS
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_REWIND
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:play-pause
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_PLAY_PAUSE
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_STOP
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:skip-next
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_NEXT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_FAST_FORWARD
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:volume-off
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MUTE
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:volume-medium
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: VOLUME_DOWN
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:volume-high
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: VOLUME_UP
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+  - square: false
+    columns: 4
+    type: grid
+    cards:
+      - type: button
+        icon: mdi:youtube
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://www.youtube.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:netflix
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: netflix://
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: picture
+        image: &gt;-
+          https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/450px-Amazon_Prime_Video_logo.svg.png
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://app.primevideo.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: picture
+        image: &gt;-
+          https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/440px-Disney%2B_logo.svg.png
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://www.disneyplus.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+  - type: entity
+    entity: remote.living_room_tv
+    attribute: current_activity
+  - type: media-control
+    entity: media_player.living_room_tv
+</code></pre>
+<h2>Limitations and known issues</h2>
+<ul>
+<li>Launching apps by their application ID (as opposed to a deep link) currently doesn't work for many apps due to a Google Play Store change. Use a <a>deep link</a> instead when one is available.</li>
+<li>The integration doesn't work with Fire TV devices because they are missing the <a>Android TV Remote Service</a>. Attempts to sideload it haven't been successful.</li>
+<li>If you cannot use the Google TV mobile app or the Google Home mobile app to send commands to the device, you cannot send commands with this integration either.</li>
+<li>Commands don't work on Netflix. They don't work from the Google TV mobile app or the Google Home mobile app either.</li>
+<li>Some devices, like Xiaomi, become unavailable after they are turned off and can't be turned on with this integration.</li>
+<li>Some devices, like TCL, become unavailable after they are turned off, unless you activate the <strong>Screenless service</strong>. To activate it, go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Power and energy</strong> &gt; <strong>Screenless service</strong>, and activate it.</li>
+<li>Some devices experience disconnects every 15 seconds. This is typically resolved by rebooting the Android TV device after the initial setup of the integration.</li>
+<li>If you are not able to connect to the Android TV device, or are asked to pair it again and again, try force-stopping the Android TV Remote Service and clearing its storage. On the Android TV device, go to <strong>Settings</strong> &gt; <strong>Apps</strong> &gt; <strong>Show system apps</strong>. Then, select <strong>Android TV Remote Service</strong> &gt; <strong>Storage</strong> &gt; <strong>Clear storage</strong>. You will have to reboot Home Assistant to restart pairing with the Android TV.</li>
+<li>Some onscreen keyboards enabled by TV manufacturers do not support concurrent virtual and onscreen keyboard use. This presents whenever a text field is selected, such as "search" where a constant <strong>use the keyboard on your mobile device</strong> will show, preventing you from opening the onscreen keyboard to type. This can be overcome by either disabling your 3rd party keyboard and using the default Gboard keyboard or by deselecting <strong>Enable IME</strong> in the <strong>Configure</strong> page of the integration.</li>
+<li>If you can't turn on your Nvidia Shield device, go to <strong>Settings</strong> &gt; <strong>Remotes &amp; accessories</strong> &gt; <strong>Simplified wake buttons</strong> and disable the following options: <strong>SHIELD 2019 Remote: Wake on power and Netflix buttons only</strong> and <strong>Controllers: Wake on NVIDIA or logo buttons only</strong>.</li>
+</ul>
+<h2>Data updates</h2>
+<p>Android TV devices push data directly to Home Assistant, enabling immediate updates for device state changes such as power state, volume, and current active app. But the media player entity has assumed playback state since the Android TV Remote API doesn't provide playback status.</p>
+<h2>Removing the integration</h2>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/androidtv_remote.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Android TV Remote into Home Assistant.
+ha_release: 2023.5
+ha_domain: androidtv_remote
+---
+
+The **Android TV Remote** {% term integration %} allows you to control an Android TV and launching apps. For this to work, the Android TV device needs to have [Android TV Remote Service](https://play.google.com/store/apps/details?id=com.google.android.tv.remote.service) which is pre-installed on most devices (Fire TV devices are a notable exception).
+
+For a quick introduction on how to get started with Android TV Remote, check out this video:
+
+&lt;lite-youtube videoid=&quot;htbnf5YxAuw&quot; videotitle=&quot;Android TV Remote Integration with Home Assistant&quot;&gt;&lt;/lite-youtube&gt;
+
+{% include integrations/config_flow.md %}
+
+{% include integrations/option_flow.md %}
+{% configuration_basic %}
+Configure Applications List:
+  description: Here you can define applications where the keys are app IDs and the values are app names and icons that will be displayed in the UI.
+Enable IME:
+  description: Enable this option to be able to get the current app name and send text as keyboard input. Disable it for devices that show &#x27;Use keyboard on mobile device screen&#x27; instead of the on-screen keyboard.
+{% endconfiguration_basic %}
+
+## Media player
+
+This {% term integration %} adds a `media_player` with basic playback and volume controls. The media player provides volume information and display name of current active app on the Android TV. Due to API limitations, the integration will not display the playback status. It is recommended to use this integration together with [Google Cast integration](/integrations/cast/). Two media players can be combined into one using the [Universal Media Player](/integrations/universal/) integration. See [Using with Google Cast](#using-with-google-cast) section for more details.
+
+Using the `media_player.play_media` {% term action %}, you can launch applications, switch channels, and start activities via `Deep Links`. Only `app`, `url` and `channel` media types are supported.
+
+### Launching activities
+
+The most reliable way to launch an app, or open a specific screen within it, is with a deep link supported by the app.
+
+Examples of deep links for popular applications:
+
+| App | Deep link |
+| --- | --- |
+| YouTube | `https://www.youtube.com` or `vnd.youtube://` or `vnd.youtube.launch://`
+| Netflix | `https://www.netflix.com/title/&lt;title ID&gt;?source=30` or `netflix://`
+| Prime Video | `https://app.primevideo.com`
+| Disney+ | `https://www.disneyplus.com`
+| Plex | `plex://`
+| Twitch | `twitch://home` `[home, stream, game, video, clip, search, browse, channel, user]`
+
+The Netflix app opens a specific title only when the link ends with `?source=30`. Without it, the app opens, but shows or resumes the last watched title. The title ID is the number in the title&#x27;s address on netflix.com.
+
+Example:
+
+```yaml
+# Open a specific YouTube video:
+action: media_player.play_media
+data:
+  media:
+    media_content_type: url
+    media_content_id: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+target:
+  entity_id: media_player.living_room_tv
+```
+
+### Launching apps
+
+If an app doesn&#x27;t have a deep link, or the device doesn&#x27;t have the Google Play Store, you can try to launch it directly by its application ID (package name).
+The app doesn&#x27;t need to exist in the Google Play Store.
+If it exists, you can find the application ID in the URL of the app&#x27;s Google Play Store listing.
+For example, if the URL of an app page is `play.google.com/store/apps/details?id=com.example.app123`, the application ID is `com.example.app123`.
+The application ID is also displayed in the media player card when you launch the application on the device.
+
+{% note %}
+A change to the Google Play Store is currently preventing this method from working for many apps. If launching by application ID doesn&#x27;t work, use a [deep link](#launching-activities) instead.
+{% endnote %}
+
+Examples of application IDs for popular applications:
+
+| App | App ID |
+| --- | --- |
+| YouTube | `com.google.android.youtube.tv`
+| Netflix | `com.netflix.ninja`
+| Prime Video | `com.amazon.amazonvideo.livingroom`
+| Disney+ | `com.disney.disneyplus`
+| Plex | `com.plexapp.android`
+| Kodi | `org.xbmc.kodi`
+| Twitch | `tv.twitch.android.app`
+
+Example:
+
+```yaml
+# Launch the YouTube app
+action: media_player.play_media
+data:
+  media:
+    media_content_type: app
+    media_content_id: com.google.android.youtube.tv
+target:
+  entity_id: media_player.living_room_tv
+```
+
+### Switch channels
+
+You can pass the channel number to switch channels. The channel number must be an integer.
+
+Example:
+
+```yaml
+# Change channel to number 15:
+action: media_player.play_media
+data:
+  media:
+    media_content_type: channel
+    media_content_id: 15
+target:
+  entity_id: media_player.living_room_tv
+```
+
+### Using with Google Cast
+
+Android TV Remote {% term integration %} provides information about the power status of the device and gives you the ability to control playback. However, it does not provide information about the currently playing content (media title, duration, play/pause state, etc.). In turn, [Google Cast](/integrations/cast/) integration does not provide reliable information about the power status of the device (e.g. on Android TV Home Screen) and does not allow you to control playback in Android apps without [MediaSession](https://developer.android.com/reference/android/media/session/MediaSession) support. However, it can display full information about the content being played in supported apps. For convenience, you can combine two media players into one using [Universal Media Player](/integrations/universal/) integration. Universal Media Player will automatically select the appropriate active media player entity.
+
+{% details &quot;Example YAML configuration&quot; %}
+
+Replace `media_player.living_room_tv_remote` with your Android TV Remote media player entity ID.
+Replace `media_player.living_room_tv_cast` with your Google Cast media player entity ID.
+
+```yaml
+media_player:
+  - platform: universal
+    name: living_room_tv
+    unique_id: living_room_tv
+    device_class: tv
+    children:
+      - media_player.living_room_tv_remote
+      - media_player.living_room_tv_cast
+    browse_media_entity: media_player.living_room_tv_cast
+    commands:
+      turn_off:
+        action: media_player.turn_off
+        data:
+          entity_id: media_player.living_room_tv_remote
+      turn_on:
+        action: media_player.turn_on
+        data:
+          entity_id: media_player.living_room_tv_remote
+      volume_up:
+        action: media_player.volume_up
+        data:
+          entity_id: media_player.living_room_tv_remote
+      volume_down:
+        action: media_player.volume_down
+        data:
+          entity_id: media_player.living_room_tv_remote
+```
+
+{% enddetails %}
+
+## Remote
+
+The remote allows you to send key commands and text as input to your Android TV device with the `remote.send_command` action.
+The entity has the `current_activity` attribute that shows the current foreground app on the Android TV.
+You can pass a [deep link](#launching-activities), or the application ID shown in this `current_activity`, as `activity` in the `remote.turn_on` action to launch that app.
+Launching by application ID currently doesn&#x27;t work reliably for many apps due to a Google Play Store change, so use a deep link when you have one.
+
+{% details &quot;List of the most common commands&quot; %}
+
+Navigation:
+- DPAD_UP
+- DPAD_DOWN
+- DPAD_LEFT
+- DPAD_RIGHT
+- DPAD_CENTER
+- BUTTON_A
+- BUTTON_B
+- BUTTON_X
+- BUTTON_Y
+- BACK
+
+Volume Control:
+- VOLUME_DOWN
+- VOLUME_UP
+- VOLUME_MUTE
+- MUTE
+
+Media Control:
+- MEDIA_PLAY_PAUSE
+- MEDIA_PLAY
+- MEDIA_PAUSE
+- MEDIA_NEXT
+- MEDIA_PREVIOUS
+- MEDIA_STOP
+- MEDIA_RECORD
+- MEDIA_REWIND
+- MEDIA_FAST_FORWARD
+
+TV Control:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+- 8
+- 9
+- DEL
+- ENTER
+- CHANNEL_UP
+- CHANNEL_DOWN
+- F1
+- F2
+- F3
+- F4
+- F5
+- F6
+- F7
+- F8
+- F9
+- F10
+- F11
+- F12
+- TV
+- PROG_RED
+- PROG_GREEN
+- PROG_YELLOW
+- PROG_BLUE
+
+Other:
+- BUTTON_MODE
+- EXPLORER
+- MENU
+- HOME
+- INFO
+- GUIDE
+- TV_TELETEXT
+- CAPTIONS
+- DVR
+- MEDIA_AUDIO_TRACK
+- SETTINGS
+- SEARCH
+- ASSIST
+- POWER
+
+{% enddetails %}
+
+### Sending key commands
+
+Whether a command does something depends on your Android TV device, its firmware, and the app in the foreground. Some devices remap or ignore certain keys, so a command like `GUIDE` or `MENU` might do nothing or trigger a different action than you expect. The commands are sent to your device as is, so Home Assistant cannot change how your device reacts to them.
+
+Pass any of the most common commands in the list above as `command` in the `remote.send_command` action.
+
+```yaml
+# Open the currently selected item on the Android TV
+action: remote.send_command
+data:
+  command: DPAD_CENTER
+target:
+  entity_id: remote.living_room_tv
+```
+
+To trigger the long-press behavior of a key, supply `hold_secs` in seconds. Fractional seconds, like `0.5` for half a second, are supported. The integration will press the key, wait the given duration, and then release it as a single atomic call.
+
+```yaml
+# Long press on the currently selected item on the Android TV
+action: remote.send_command
+data:
+  command: DPAD_CENTER
+  hold_secs: 0.5
+target:
+  entity_id: remote.living_room_tv
+```
+
+### Press and release as separate events
+
+When a button, controller, or frontend card already emits separate press and release events, you can forward each one to the TV as its own service call by prefixing the command with a direction. Each call sends exactly one event, so the release fires when your source event fires, not when a fixed `hold_secs` timer ends.
+
+The accepted prefixes are `start_long:` (press down), `end_long:` (release up), and `short:` (the default). Prefixes are case-insensitive. Plain commands without a prefix continue to send a short tap. When both a prefix and `hold_secs` are supplied, `hold_secs` takes precedence.
+
+```yaml
+# Press down on DPAD_DOWN. Returns immediately, the key stays &quot;held&quot;.
+action: remote.send_command
+data:
+  command: &quot;start_long:DPAD_DOWN&quot;
+target:
+  entity_id: remote.living_room_tv
+```
+
+```yaml
+# Release DPAD_DOWN. Sent later, when the user lets go.
+action: remote.send_command
+data:
+  command: &quot;end_long:DPAD_DOWN&quot;
+target:
+  entity_id: remote.living_room_tv
+```
+
+### Sending text input
+
+To send text as keyboard input, prefix the value of `command` with `text:`. The text after the prefix is delivered to whichever input field is currently focused on the Android TV.
+
+```yaml
+# Send &quot;Never Gonna Give You Up&quot; as keyboard input text to the selected input field
+action: remote.send_command
+data:
+  command: text:Never Gonna Give You Up
+target:
+  entity_id: remote.living_room_tv
+```
+
+### Launching apps and activities
+
+Use `remote.turn_on` with the `activity` field to launch an app or open a specific deep link. The value can be an application ID (see the [Launching apps section](#launching-apps)), a URL, or a scheme supported by the target app.
+
+```yaml
+# Launch YouTube
+action: remote.turn_on
+data:
+  activity: https://www.youtube.com
+target:
+  entity_id: remote.living_room_tv
+```
+
+```yaml
+# Open a specific YouTube video
+action: remote.turn_on
+data:
+  activity: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+target:
+  entity_id: remote.living_room_tv
+```
+
+### Dashboard example
+
+You have to manually create buttons in Lovelace to send commands to the Android TV device or launch apps on it.
+
+Below is an example for you to start with. Many of the buttons support long press.
+
+![Screenshot Android TV Remote example](/images/integrations/androidtv_remote/lovelace_example.png)
+
+{% details &quot;YAML Lovelace example&quot; %}
+
+Add a Manual card with the following code.&#32;
+Replace all instances of `living_room_tv` with your entity ID.
+ - To use the `replace all` functionality, inside the code editor, press `ctrl+F` (or `command+F` on Mac).
+
+```yaml
+type: vertical-stack
+cards:
+  - type: entities
+    entities:
+      - entity: remote.living_room_tv
+  - square: true
+    columns: 3
+    type: grid
+    cards:
+      - type: button
+        show_icon: false
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-up-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_UP
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        show_icon: false
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-left-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_LEFT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:circle
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_CENTER
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_CENTER
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:arrow-right-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_RIGHT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:arrow-left
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: BACK
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: BACK
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:arrow-down-bold
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: DPAD_DOWN
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:home-outline
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: HOME
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: HOME
+            hold_secs: 0.5
+          target:
+            entity_id: remote.living_room_tv
+  - square: false
+    columns: 3
+    type: grid
+    cards:
+      - type: button
+        icon: mdi:skip-previous
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_PREVIOUS
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_REWIND
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:play-pause
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_PLAY_PAUSE
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_STOP
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:skip-next
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_NEXT
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MEDIA_FAST_FORWARD
+          target:
+            entity_id: remote.living_room_tv
+      - type: button
+        icon: mdi:volume-off
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: MUTE
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:volume-medium
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: VOLUME_DOWN
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:volume-high
+        tap_action:
+          action: perform-action
+          perform_action: remote.send_command
+          data:
+            command: VOLUME_UP
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+  - square: false
+    columns: 4
+    type: grid
+    cards:
+      - type: button
+        icon: mdi:youtube
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://www.youtube.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: button
+        icon: mdi:netflix
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: netflix://
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: picture
+        image: &gt;-
+          https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/450px-Amazon_Prime_Video_logo.svg.png
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://app.primevideo.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+      - type: picture
+        image: &gt;-
+          https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/440px-Disney%2B_logo.svg.png
+        tap_action:
+          action: perform-action
+          perform_action: remote.turn_on
+          data:
+            activity: https://www.disneyplus.com
+          target:
+            entity_id: remote.living_room_tv
+        hold_action:
+          action: none
+  - type: entity
+    entity: remote.living_room_tv
+    attribute: current_activity
+  - type: media-control
+    entity: media_player.living_room_tv
+```
+
+{% enddetails %}
+
+
+## Limitations and known issues
+
+- Launching apps by their application ID (as opposed to a deep link) currently doesn&#x27;t work for many apps due to a Google Play Store change. Use a [deep link](#launching-activities) instead when one is available.
+- The integration doesn&#x27;t work with Fire TV devices because they are missing the [Android TV Remote Service](https://play.google.com/store/apps/details?id=com.google.android.tv.remote.service). Attempts to sideload it haven&#x27;t been successful.
+- If you cannot use the Google TV mobile app or the Google Home mobile app to send commands to the device, you cannot send commands with this integration either.
+- Commands don&#x27;t work on Netflix. They don&#x27;t work from the Google TV mobile app or the Google Home mobile app either.
+- Some devices, like Xiaomi, become unavailable after they are turned off and can&#x27;t be turned on with this integration.
+- Some devices, like TCL, become unavailable after they are turned off, unless you activate the **Screenless service**. To activate it, go to **Settings** &gt; **System** &gt; **Power and energy** &gt; **Screenless service**, and activate it.
+- Some devices experience disconnects every 15 seconds. This is typically resolved by rebooting the Android TV device after the initial setup of the integration.
+- If you are not able to connect to the Android TV device, or are asked to pair it again and again, try force-stopping the Android TV Remote Service and clearing its storage. On the Android TV device, go to **Settings** &gt; **Apps** &gt; **Show system apps**. Then, select **Android TV Remote Service** &gt; **Storage** &gt; **Clear storage**. You will have to reboot Home Assistant to restart pairing with the Android TV.
+- Some onscreen keyboards enabled by TV manufacturers do not support concurrent virtual and onscreen keyboard use. This presents whenever a text field is selected, such as &quot;search&quot; where a constant **use the keyboard on your mobile device** will show, preventing you from opening the onscreen keyboard to type. This can be overcome by either disabling your 3rd party keyboard and using the default Gboard keyboard or by deselecting **Enable IME** in the **Configure** page of the integration.
+- If you can&#x27;t turn on your Nvidia Shield device, go to **Settings** &gt; **Remotes &amp; accessories** &gt; **Simplified wake buttons** and disable the following options: **SHIELD 2019 Remote: Wake on power and Netflix buttons only** and **Controllers: Wake on NVIDIA or logo buttons only**.
+
+
+## Data updates
+
+Android TV devices push data directly to Home Assistant, enabling immediate updates for device state changes such as power state, volume, and current active app. But the media player entity has assumed playback state since the Android TV Remote API doesn&#x27;t provide playback status.
+
+
+## Removing the integration
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Android TV Remote.</p><p>The <strong>pair</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>media player</li><li>remote</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Media player</li><li>Remote</li><li>Limitations and known issues</li><li>Data updates</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/androidtv_remote/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/androidtv_remote</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/androidtv_remote</code></dd></dl></section><p><a href="../../integrations/androidtv_remote/">Return to the Android TV Remote guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

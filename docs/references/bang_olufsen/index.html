@@ -1,1 +1,982 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bang &amp; Olufsen reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:158" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/bang_olufsen/">Bang &amp; Olufsen guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Bang &amp; Olufsen</h1><p>Instructions on how to integrate Bang &amp; Olufsen devices into Home Assistant.</p><section><h2>Overview</h2><p>The Bang &amp; Olufsen integration enables control of some of the features of certain Bang &amp; Olufsen devices through Home Assistant.</p></section><section><h2>Compatible devices</h2><p>Devices that have been tested and _should_ work without any trouble are:</p></section><section><h2>Data updates</h2><p>The Bang &amp; Olufsen integration uses the Mozart API, which is a local REST API with a WebSocket notification channel for immediate state information such as media metadata, playback progress, and volume. The only exception is that the repeat and shuffle controls are polled every 30 seconds.</p></section><section><h2>Supported features</h2><p>Currently, for each added physical device, a single device is created that includes a media_player entity and, if available, event entities.</p></section><section><h2>Media player</h2><p>Several features are available through the media player entity:</p></section><section><h2>Mozart device controls</h2><p>Event entities are created for each of the available physical controls on your device. These controls usually have their own behaviors, so using them for automations is not always ideal. Available event entities:</p></section><section><h2>Button variations</h2><p>Many devices have the same button layout, but not all of them. These are the differences:</p></section><section><h2>Beoremote One</h2><p>A Home Assistant device is created for each paired Beoremote One via their paired Mozart device. Event entities are created for each of the compatible keys on the remote. These event entities are disabled by default.</p></section><section><h2>Triggering events</h2><p>There are 4 different types of key events:</p></section><section><h2>Configuring light and control functions</h2><p>Several functions are available on the Beoremote One. These are available as function 1-17 for the Light submenu and 1-27 for the Control submenu.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Bang &amp; Olufsen.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>model</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>media player</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>beolink allstandby</li><li>beolink expand</li><li>beolink join</li><li>beolink leave</li><li>beolink unexpand</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Compatible devices</li><li>Data updates</li><li>Supported features</li><li>Limitations</li><li>Playing media</li><li>Beolink multiroom</li><li>Automations</li><li>Diagnostics and troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/bang_olufsen/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/bang_olufsen</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/bang_olufsen</code></dd></dl></section><p><a href="../../integrations/bang_olufsen/">Return to the Bang &amp; Olufsen guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bang &amp; Olufsen reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:158" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/bang_olufsen/">Bang &amp; Olufsen guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Bang &amp; Olufsen</h1><p>Instructions on how to integrate Bang &amp; Olufsen devices into Home Assistant.</p><div class="reader-body"><p>The <strong>Bang &amp; Olufsen</strong> integration enables control of some of the features of certain <a>Bang &amp; Olufsen</a> devices through Home Assistant.</p>
+<h2>Compatible devices</h2>
+<p>Devices that have been tested and <em>should</em> work without any trouble are:</p>
+<ul>
+<li><a>Beoconnect Core</a></li>
+<li><a>Beolab 8</a></li>
+<li><a>Beolab 28</a></li>
+<li><a>Beosound 2 3rd gen</a></li>
+<li><a>Beosound A5</a></li>
+<li><a>Beosound A9 5th gen</a></li>
+<li><a>Beosound Balance</a></li>
+<li><a>Beosound Emerge</a></li>
+<li><a>Beosound Level</a></li>
+<li><a>Beosound Premiere</a></li>
+<li><a>Beosound Theatre</a></li>
+<li><a>Beoremote One</a> through paired devices</li>
+</ul>
+<p>and any other <a>Mozart</a> based products. This means all <a>Connected Speakers</a> that have been launched after 2020.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Bang &amp; Olufsen</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Bang &amp; Olufsen</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+IP Address:
+  description: The IP address of your device. Can be found by navigating to the device on the [Bang &amp; Olufsen app](https://www.bang-olufsen.com/en/dk/story/apps) and selecting `Settings` → `About` → `IP address`.
+Device model:
+  description: The model name of your Bang &amp; Olufsen device. This is used to determine some capabilities of the device. If the device is not in the list yet, choose a product similar to yours.
+
+</code></pre>
+<h2>Data updates</h2>
+<p>The <strong>Bang &amp; Olufsen</strong> integration uses the <a>Mozart API</a>, which is a local REST API with a WebSocket notification channel for immediate state information such as media metadata, playback progress, and volume. The only exception is that the repeat and shuffle controls are polled every 30 seconds.</p>
+<h2>Supported features</h2>
+<p>Currently, for each added physical device, a single device is created that includes a <code>media_player</code> entity and, if available, <code>event</code> entities.</p>
+<h3>Media player</h3>
+<p>Several features are available through the media player entity:</p>
+<ul>
+<li>See current metadata, progress, volume, and more.</li>
+<li>Control next/previous, play/pause, shuffle/repeat settings, volume, sound mode, audio and video sources, and more.</li>
+<li>Play various media through the <a>media player play media action</a>.</li>
+<li>Control multiroom audio through <a>Beolink</a>:<ul>
+<li>Control with Home Assistant media_player grouping.</li>
+<li>Monitor current <a>Beolink state</a> through media player properties.</li>
+<li>Dedicated <a>Beolink actions</a> have been defined to provide further control:<ul>
+<li>Connect or expand to <a>ASE</a> products not available in Home Assistant.</li>
+<li>Expand sessions to all discovered devices.</li>
+<li>Connect to, expand to or unexpand devices.</li>
+<li>Set all connected Beolink devices to standby.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Events</h3>
+<h4>Mozart device controls</h4>
+<p>Event entities are created for each of the available physical controls on your device. These controls usually have their own behaviors, so using them for automations is not always ideal.
+Available event entities:</p>
+<ul>
+<li>Bluetooth (Not available on Beosound Premiere)</li>
+<li>Microphone</li>
+<li>Next</li>
+<li>Play / Pause</li>
+<li>Favourite 1</li>
+<li>Favourite 2</li>
+<li>Favourite 3</li>
+<li>Favourite 4</li>
+<li>Previous</li>
+<li>Volume</li>
+</ul>
+<p>All of these event entities support the following event types:</p>
+<ul>
+<li>Release of short press</li>
+<li>Long press</li>
+<li>Release of long press</li>
+<li>Very long press</li>
+<li>Release of very long press</li>
+</ul>
+<h5>Button variations</h5>
+<p>Many devices have the same button layout, but not all of them. These are the differences:</p>
+<ul>
+<li>The <a>Beoconnect Core</a> does not support device controls.</li>
+<li>The <a>Beosound A9 5th gen</a> and the <a>Beosound Premiere</a> do not have Bluetooth or Microphone buttons</li>
+<li>The <a>Beosound A5</a> does not have a Microphone button</li>
+</ul>
+<h4>Beoremote One</h4>
+<p>A Home Assistant device is created for each paired Beoremote One via their paired Mozart device. Event entities are created for each of the compatible keys on the remote. These event entities are <a>disabled by default</a>.</p>
+<p>Beoremote One devices are automatically added as they are detected.</p>
+<h5>Triggering events</h5>
+<p>There are 4 different types of key events:</p>
+<ul>
+<li>Control functions</li>
+<li>Control keys</li>
+<li>Light functions</li>
+<li>Light keys</li>
+</ul>
+<p>Functions can be accessed by pressing the <code>Right</code> key while either <code>Control</code> or <code>Light</code> are highlighted and can be triggered by pressing <code>Select</code>.</p>
+<p>Keys can be triggered by pressing the <code>Select</code> key while either <code>Control</code> or <code>Light</code> are highlighted, and then pressing one of the compatible keys. The <code>Select</code> press can also be skipped, by simply pressing one of the compatible keys while the desired submenu is highlighted.</p>
+<p>Each of these triggers have two different event states:</p>
+<ul>
+<li>key_press</li>
+<li>key_release</li>
+</ul>
+<p>In total, this amounts to 90 different remote key Event entities per remote.</p>
+<h5>Configuring light and control functions</h5>
+<p>Several functions are available on the Beoremote One. These are available as <code>function</code> 1-17 for the <strong>Light</strong> submenu and 1-27 for the <strong>Control</strong> submenu.</p>
+<p>Only a subset of these functions are enabled by default. Change settings for the <strong>Control</strong> and <strong>Light</strong> submenus following these steps:</p>
+<ul>
+<li>Press up and select the name of the currently selected paired device. This will show a list of the paired devices.</li>
+<li>Select <strong>Beovision</strong></li>
+<li>Navigate to <strong>Settings</strong> &gt; <strong>Advanced</strong> &gt; <strong>Light menu</strong> / <strong>Control menu</strong>.<ul>
+<li>Use the <strong>Show</strong> setting to change which functions are visible.</li>
+<li>Use the <strong>Rename</strong> setting to rename the visible functions.</li>
+<li>Use the <strong>Move</strong> setting to reorder the visible functions.</li>
+</ul>
+</li>
+</ul>
+<p>The function names are not available to the Mozart device, so enable <a>debug logging</a> and trigger functions to see what function IDs are associated with which functions on the remote.</p>
+<h3>Sensor</h3>
+<h4>Mozart battery level</h4>
+<p>Mozart devices that have a built-in battery, such as the <a>Beosound A5</a> and <a>Beosound Level</a>, will have a battery level sensor.</p>
+<h4>Beoremote One battery level</h4>
+<p>Any paired Beoremote One remotes will have an associated battery level sensor. Battery level reporting from the remote is currently not very accurate, but can still be useful.</p>
+<h3>Binary sensor</h3>
+<h4>Mozart battery charging</h4>
+<p>Mozart devices that have a built-in battery, such as the <a>Beosound A5</a> and <a>Beosound Level</a>, have a battery charging binary sensor.</p>
+<h2>Limitations</h2>
+<p>Currently, some features of the Mozart platform are not available through the <a>public API</a>. Some may become available at a later point, but until then the <a>Bang &amp; Olufsen App</a> can be used to configure these settings and features:</p>
+<ul>
+<li>Creating timers and alarms</li>
+<li>Retrieving detailed alarm and timer information</li>
+</ul>
+<p>And more app-centric features such as:</p>
+<ul>
+<li>Creating presets</li>
+<li>Creating listening positions</li>
+<li>Creating sound modes</li>
+<li>Creating stereo pairs</li>
+<li>Adjusting specific sound settings</li>
+<li>Pairing remotes</li>
+</ul>
+<h3>Beoremote One</h3>
+<p>Several remote controls can be paired to the same Mozart device and are still created as Home Assistant devices and Event entities. These remote controls will trigger the same WebSocket notification, meaning that a press on remote A will also trigger Remote B's associated Event entity.</p>
+<p>This has the benefit of being able to trigger automations mapped to remote A with remote B, but also means that each Mozart device <em>only</em> supports the 90 Event entities that a single remote provides.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Playing media</h2>
+<p>The Bang &amp; Olufsen integration supports different playback types in the <code>media_player.play_media</code> action: playback from URL, activating a favorite, playback from a local file, playing a radio station, activating a Deezer flow and Deezer playlists, albums, tracks, and playing files and text-to-speech (TTS) as an overlay.</p>
+<h3>Playback examples</h3>
+<p>Playing <a>DR P1</a> from a URL:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: url
+  media_content_id: http://live-icy.dr.dk/A/A03H.mp3
+</code></pre>
+<p>Activating the first favourite:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: favourite
+  media_content_id: 1
+</code></pre>
+<p>Playing a local file:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_id: media-source://media_source/local/example.mp3
+  media_content_type: music
+</code></pre>
+<p>Playing a radio station:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_id: 1234567890123456
+  media_content_type: radio
+</code></pre>
+<p>Playing a Deezer flow. Optionally define a Deezer user ID:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: flow
+  extra:
+    id: 1234567890
+</code></pre>
+<p>Playing a Deezer playlist. Optionally define starting position for the playlist:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: playlist:1234567890
+  extra:
+    start_from: 123
+</code></pre>
+<p>Playing a Deezer album. Optionally define starting position for the album:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: album:1234567890
+  extra:
+    start_from: 123
+</code></pre>
+<p>Playing a Deezer track:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: 1234567890
+</code></pre>
+<p>Playing a Tidal playlist. Optionally define starting position for the playlist:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: playlist:01234567-89ab-cdfe-0123-456789abcdef
+  extra:
+    start_from: 123
+</code></pre>
+<p>Playing a Tidal album. Optionally define starting position for the album:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: album:123456789
+  extra:
+    start_from: 123
+</code></pre>
+<p>Playing a Tidal track:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: 123456789
+</code></pre>
+<h4>Overlay</h4>
+<p>Interrupts currently playing media to play an audio message.</p>
+<p>To use the Bang &amp; Olufsen Cloud TTS, use <code>overlay_tts</code> as the <code>media_content_type</code> and enter a message into the <code>media_content_id</code> field.
+Bang &amp; Olufsen Cloud TTS messages are limited to 100 unique messages a day and are cached for 24 hours.</p>
+<p>Extra keys available:</p>
+<ul>
+<li><code>overlay_absolute_volume</code>: Specify an absolute volume for the overlay.</li>
+<li><code>overlay_offset_volume</code>: Specify a volume offset to be added to the current volume level.</li>
+<li><code>overlay_tts_language</code>: Specify the language used for text-to-speech. Uses the BCP 47 standard. The default is <code>en-us</code>.</li>
+</ul>
+<h5>Examples</h5>
+<p>Playing a local file with an absolute volume as an overlay:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: music
+  media_content_id: media-source://media_source/local/doorbell.mp3
+  announce: true
+  extra:
+    overlay_absolute_volume: 60
+</code></pre>
+<p>Playing a Bang &amp; Olufsen Cloud TTS message with an offset volume (as TTS messages can be quiet):</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: overlay_tts
+  media_content_id: This is a test
+  announce: true
+  extra:
+    overlay_offset_volume: 10
+</code></pre>
+<p>Playing a Bang &amp; Olufsen Cloud TTS message with a local language:</p>
+<pre><code>action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: overlay_tts
+  media_content_id: Dette er en test
+  announce: true
+  extra:
+    overlay_tts_language: da-dk
+</code></pre>
+<h2>Beolink multiroom</h2>
+<p><a>Beolink</a> is Bang &amp; Olufsen's multiroom audio solution. This integration supports Home Assistant's <code>media_player</code> grouping, but to fully benefit from Beolink, such as joining legacy devices that are not added to Home Assistant, the integration provides dedicated actions.</p>
+<p>Attempting to run an invalid Beolink action results in either a Home Assistant error or an audible error indication from your device.</p>
+<h2>Automations</h2>
+<p>WebSocket notifications received from the device are fired as events in Home Assistant. These can be received by listening to <code>bang_olufsen_websocket_event</code> event types, where <code>device_id</code> or <code>serial_number</code> can be used to differentiate devices.</p>
+<h3>Getting Deezer URIs</h3>
+<p>To find Deezer playlist, album URIs, and user IDs for Deezer flows, the Deezer website has to be accessed. When navigating to an album, the URL will look something like: <a>https://www.deezer.com/en/album/ALBUM_ID</a>, and this needs to be converted to: <code>album:ALBUM_ID</code> and the same applies to playlists, which have the format: <code>playlist:PLAYLIST_ID</code>.</p>
+<p>Deezer user IDs can be found at <a>https://www.deezer.com/en/profile/USER_ID</a> by selecting the active user in a web browser.</p>
+<p>Additionally, Deezer IDs for currently playing tracks can be found in the <code>media_content_id</code> attribute in the <code>media_player</code> entity.</p>
+<h3>Getting Tidal URIs</h3>
+<p>Tidal playlists, album URIs and track IDs are available via the Tidal website. When navigating to an album, the URL will look something like <a>https://listen.tidal.com/album/ALBUM_ID/</a>, and this needs to be converted to <code>album:ALBUM_ID</code>. The same applies to playlists, which have the format <code>playlist:PLAYLIST_ID</code>. Individual tracks can be found by sharing the track and selecting the <code>Copy track link</code> method, which should yield a link of the format <a>https://tidal.com/browse/track/TRACK_ID?u</a>, this can be played by extracting the track id <code>TRACK_ID</code>.</p>
+<p>Additionally, Tidal IDs for currently playing tracks can be found in the <code>media_content_id</code> attribute in the <code>media_player</code> entity.</p>
+<h3>Getting B&amp;O Radio station IDs</h3>
+<p>Radio station IDs for currently playing stations can be found in the <code>media_content_id</code> attribute in the <code>media_player</code> entity.</p>
+<h3>Beolink</h3>
+<p>Discovered devices and devices in an active Beolink experience are available in the properties of the media_player entity. A device is represented by its friendly name and JID, used for connecting devices.</p>
+<pre><code>beolink:
+  self: The current device
+  leader: Beolink leader (if available)
+  listeners: Beolink listeners (if available)
+  peers: Beolink peers (if available)
+</code></pre>
+<h2>Diagnostics and troubleshooting</h2>
+<p>The <strong>Bang &amp; Olufsen</strong> integration supports <a>Home Assistant debug logs and diagnostics</a>.
+Where all received WebSocket events are provided through debug logs and the following is provided in the diagnostics:</p>
+<ul>
+<li>Config entry</li>
+<li>Mozart device<ul>
+<li>WebSocket connection state</li>
+<li>Media player state</li>
+<li>Button Event states (if available)</li>
+<li>Battery level sensor (if available)</li>
+<li>Battery charging binary sensor (if available)</li>
+</ul>
+</li>
+<li>Beoremote One remotes (if available)<ul>
+<li>Key Event states (if available)</li>
+<li>Overall status</li>
+<li>Battery level sensor (if available)</li>
+</ul>
+</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/bang_olufsen.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Bang &amp; Olufsen devices into Home Assistant.
+ha_release: 2024.2
+ha_domain: bang_olufsen
+---
+
+The **Bang &amp; Olufsen** {% term integration %} enables control of some of the features of certain [Bang &amp; Olufsen](https://www.bang-olufsen.com/) devices through Home Assistant.
+
+## Compatible devices
+
+Devices that have been tested and _should_ work without any trouble are:
+
+- [Beoconnect Core](https://www.bang-olufsen.com/en/dk/accessories/beoconnect-core)
+- [Beolab 8](https://www.bang-olufsen.com/en/dk/speakers/beolab-8)
+- [Beolab 28](https://www.bang-olufsen.com/en/dk/speakers/beolab-28)
+- [Beosound 2 3rd gen](https://www.bang-olufsen.com/en/dk/speakers/beosound-2)
+- [Beosound A5](https://www.bang-olufsen.com/en/dk/speakers/beosound-a5)
+- [Beosound A9 5th gen](https://www.bang-olufsen.com/en/dk/speakers/beosound-a9)
+- [Beosound Balance](https://www.bang-olufsen.com/en/dk/speakers/beosound-balance)
+- [Beosound Emerge](https://www.bang-olufsen.com/en/dk/speakers/beosound-emerge)
+- [Beosound Level](https://www.bang-olufsen.com/en/dk/speakers/beosound-level)
+- [Beosound Premiere](https://www.bang-olufsen.com/en/dk/soundbars/beosound-premiere)
+- [Beosound Theatre](https://www.bang-olufsen.com/en/dk/soundbars/beosound-theatre)
+- [Beoremote One](https://www.bang-olufsen.com/en/dk/accessories/beoremote-one) through paired devices
+
+and any other [Mozart](https://support.bang-olufsen.com/hc/en-us/articles/24766979863441-Which-platform-is-my-Connected-Audio-product-based-on) based products. This means all [Connected Speakers](https://www.bang-olufsen.com/en/dk/story/connected-speakers) that have been launched after 2020.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+IP Address:
+  description: The IP address of your device. Can be found by navigating to the device on the [Bang &amp; Olufsen app](https://www.bang-olufsen.com/en/dk/story/apps) and selecting `Settings` → `About` → `IP address`.
+Device model:
+  description: The model name of your Bang &amp; Olufsen device. This is used to determine some capabilities of the device. If the device is not in the list yet, choose a product similar to yours.
+{% endconfiguration_basic %}
+
+## Data updates
+
+The **Bang &amp; Olufsen** integration uses the [Mozart API](https://bang-olufsen.github.io/mozart-open-api), which is a local REST API with a WebSocket notification channel for immediate state information such as media metadata, playback progress, and volume. The only exception is that the repeat and shuffle controls are polled every 30 seconds.
+
+## Supported features
+
+Currently, for each added physical device, a single device is created that includes a `media_player` entity and, if available, `event` entities.
+
+### Media player
+
+Several features are available through the media player entity:
+
+- See current metadata, progress, volume, and more.
+- Control next/previous, play/pause, shuffle/repeat settings, volume, sound mode, audio and video sources, and more.
+- Play various media through the [media player play media action](#playing-media).
+- Control multiroom audio through [Beolink](https://support.bang-olufsen.com/hc/en-us/articles/4411572883089-What-is-Beolink-Multiroom):
+  - Control with Home Assistant media_player grouping.
+  - Monitor current [Beolink state](#beolink) through media player properties.
+  - Dedicated [Beolink actions](#beolink-multiroom) have been defined to provide further control:
+    - Connect or expand to [ASE](https://support.bang-olufsen.com/hc/en-us/articles/24766979863441-Which-platform-is-my-Connected-Audio-product-based-on) products not available in Home Assistant.
+    - Expand sessions to all discovered devices.
+    - Connect to, expand to or unexpand devices.
+    - Set all connected Beolink devices to standby.
+
+### Events
+
+#### Mozart device controls
+
+Event entities are created for each of the available physical controls on your device. These controls usually have their own behaviors, so using them for automations is not always ideal.
+Available event entities:
+
+- Bluetooth (Not available on Beosound Premiere)
+- Microphone
+- Next
+- Play / Pause
+- Favourite 1
+- Favourite 2
+- Favourite 3
+- Favourite 4
+- Previous
+- Volume
+
+All of these event entities support the following event types:
+
+- Release of short press
+- Long press
+- Release of long press
+- Very long press
+- Release of very long press
+
+##### Button variations
+
+Many devices have the same button layout, but not all of them. These are the differences:
+
+- The [Beoconnect Core](https://www.bang-olufsen.com/en/dk/accessories/beoconnect-core) does not support device controls.
+- The [Beosound A9 5th gen](https://www.bang-olufsen.com/en/dk/speakers/beosound-a9) and the [Beosound Premiere](https://www.bang-olufsen.com/en/dk/soundbars/beosound-premiere) do not have Bluetooth or Microphone buttons
+- The [Beosound A5](https://www.bang-olufsen.com/en/dk/speakers/beosound-a5) does not have a Microphone button
+
+#### Beoremote One
+
+A Home Assistant device is created for each paired Beoremote One via their paired Mozart device. Event entities are created for each of the compatible keys on the remote. These event entities are [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+
+Beoremote One devices are automatically added as they are detected.
+
+##### Triggering events
+
+There are 4 different types of key events:
+
+- Control functions
+- Control keys
+- Light functions
+- Light keys
+
+Functions can be accessed by pressing the `Right` key while either `Control` or `Light` are highlighted and can be triggered by pressing `Select`.
+
+Keys can be triggered by pressing the `Select` key while either `Control` or `Light` are highlighted, and then pressing one of the compatible keys. The `Select` press can also be skipped, by simply pressing one of the compatible keys while the desired submenu is highlighted.
+
+Each of these triggers have two different event states:
+
+- key_press
+- key_release
+
+In total, this amounts to 90 different remote key Event entities per remote.
+
+##### Configuring light and control functions
+
+Several functions are available on the Beoremote One. These are available as `function` 1-17 for the **Light** submenu and 1-27 for the **Control** submenu.
+
+Only a subset of these functions are enabled by default. Change settings for the **Control** and **Light** submenus following these steps:
+
+- Press up and select the name of the currently selected paired device. This will show a list of the paired devices.
+- Select **Beovision**
+- Navigate to **Settings** &gt; **Advanced** &gt; **Light menu** / **Control menu**.
+  - Use the **Show** setting to change which functions are visible.
+  - Use the **Rename** setting to rename the visible functions.
+  - Use the **Move** setting to reorder the visible functions.
+
+The function names are not available to the Mozart device, so enable [debug logging](#diagnostics-and-troubleshooting) and trigger functions to see what function IDs are associated with which functions on the remote.
+
+### Sensor
+
+#### Mozart battery level
+
+Mozart devices that have a built-in battery, such as the [Beosound A5](https://www.bang-olufsen.com/en/dk/speakers/beosound-a5) and [Beosound Level](https://www.bang-olufsen.com/en/dk/speakers/beosound-level), will have a battery level sensor.
+
+#### Beoremote One battery level
+
+Any paired Beoremote One remotes will have an associated battery level sensor. Battery level reporting from the remote is currently not very accurate, but can still be useful.
+
+### Binary sensor
+
+#### Mozart battery charging
+
+Mozart devices that have a built-in battery, such as the [Beosound A5](https://www.bang-olufsen.com/en/dk/speakers/beosound-a5) and [Beosound Level](https://www.bang-olufsen.com/en/dk/speakers/beosound-level), have a battery charging binary sensor.
+
+## Limitations
+
+Currently, some features of the Mozart platform are not available through the [public API](https://github.com/bang-olufsen/mozart-open-api). Some may become available at a later point, but until then the [Bang &amp; Olufsen App](https://www.bang-olufsen.com/en/dk/story/apps) can be used to configure these settings and features:
+
+- Creating timers and alarms
+- Retrieving detailed alarm and timer information
+
+And more app-centric features such as:
+
+- Creating presets
+- Creating listening positions
+- Creating sound modes
+- Creating stereo pairs
+- Adjusting specific sound settings
+- Pairing remotes
+
+### Beoremote One
+
+Several remote controls can be paired to the same Mozart device and are still created as Home Assistant devices and Event entities. These remote controls will trigger the same WebSocket notification, meaning that a press on remote A will also trigger Remote B&#x27;s associated Event entity.
+
+This has the benefit of being able to trigger automations mapped to remote A with remote B, but also means that each Mozart device _only_ supports the 90 Event entities that a single remote provides.
+
+{% include integrations/actions.md %}
+
+## Playing media
+
+The Bang &amp; Olufsen integration supports different playback types in the `media_player.play_media` action: playback from URL, activating a favorite, playback from a local file, playing a radio station, activating a Deezer flow and Deezer playlists, albums, tracks, and playing files and text-to-speech (TTS) as an overlay.
+
+### Playback examples
+
+Playing [DR P1](https://www.dr.dk/lyd/p1) from a URL:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: url
+  media_content_id: http://live-icy.dr.dk/A/A03H.mp3
+```
+
+Activating the first favourite:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: favourite
+  media_content_id: 1
+```
+
+Playing a local file:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_id: media-source://media_source/local/example.mp3
+  media_content_type: music
+```
+
+Playing a radio station:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_id: 1234567890123456
+  media_content_type: radio
+```
+
+Playing a Deezer flow. Optionally define a Deezer user ID:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: flow
+  extra:
+    id: 1234567890
+```
+
+Playing a Deezer playlist. Optionally define starting position for the playlist:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: playlist:1234567890
+  extra:
+    start_from: 123
+```
+
+Playing a Deezer album. Optionally define starting position for the album:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: album:1234567890
+  extra:
+    start_from: 123
+```
+
+Playing a Deezer track:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: deezer
+  media_content_id: 1234567890
+```
+
+Playing a Tidal playlist. Optionally define starting position for the playlist:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: playlist:01234567-89ab-cdfe-0123-456789abcdef
+  extra:
+    start_from: 123
+```
+
+Playing a Tidal album. Optionally define starting position for the album:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: album:123456789
+  extra:
+    start_from: 123
+```
+
+Playing a Tidal track:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: tidal
+  media_content_id: 123456789
+```
+
+#### Overlay
+
+Interrupts currently playing media to play an audio message.
+
+To use the Bang &amp; Olufsen Cloud TTS, use `overlay_tts` as the `media_content_type` and enter a message into the `media_content_id` field.
+Bang &amp; Olufsen Cloud TTS messages are limited to 100 unique messages a day and are cached for 24 hours.
+
+Extra keys available:
+
+- `overlay_absolute_volume`: Specify an absolute volume for the overlay.
+- `overlay_offset_volume`: Specify a volume offset to be added to the current volume level.
+- `overlay_tts_language`: Specify the language used for text-to-speech. Uses the BCP 47 standard. The default is `en-us`.
+
+##### Examples
+
+Playing a local file with an absolute volume as an overlay:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: music
+  media_content_id: media-source://media_source/local/doorbell.mp3
+  announce: true
+  extra:
+    overlay_absolute_volume: 60
+```
+
+Playing a Bang &amp; Olufsen Cloud TTS message with an offset volume (as TTS messages can be quiet):
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: overlay_tts
+  media_content_id: This is a test
+  announce: true
+  extra:
+    overlay_offset_volume: 10
+```
+
+Playing a Bang &amp; Olufsen Cloud TTS message with a local language:
+
+```yaml
+action: media_player.play_media
+target:
+  entity_id: media_player.beosound_balance_12345678
+data:
+  media_content_type: overlay_tts
+  media_content_id: Dette er en test
+  announce: true
+  extra:
+    overlay_tts_language: da-dk
+```
+
+## Beolink multiroom
+
+[Beolink](https://support.bang-olufsen.com/hc/en-us/articles/4411572883089-What-is-Beolink-Multiroom) is Bang &amp; Olufsen&#x27;s multiroom audio solution. This integration supports Home Assistant&#x27;s `media_player` grouping, but to fully benefit from Beolink, such as joining legacy devices that are not added to Home Assistant, the integration provides dedicated actions.
+
+Attempting to run an invalid Beolink action results in either a Home Assistant error or an audible error indication from your device.
+
+
+## Automations
+
+WebSocket notifications received from the device are fired as events in Home Assistant. These can be received by listening to `bang_olufsen_websocket_event` event types, where `device_id` or `serial_number` can be used to differentiate devices.
+
+### Getting Deezer URIs
+
+To find Deezer playlist, album URIs, and user IDs for Deezer flows, the Deezer website has to be accessed. When navigating to an album, the URL will look something like: &lt;https://www.deezer.com/en/album/ALBUM_ID&gt;, and this needs to be converted to: `album:ALBUM_ID` and the same applies to playlists, which have the format: `playlist:PLAYLIST_ID`.
+
+Deezer user IDs can be found at &lt;https://www.deezer.com/en/profile/USER_ID&gt; by selecting the active user in a web browser.
+
+Additionally, Deezer IDs for currently playing tracks can be found in the `media_content_id` attribute in the `media_player` entity.
+
+### Getting Tidal URIs
+
+Tidal playlists, album URIs and track IDs are available via the Tidal website. When navigating to an album, the URL will look something like &lt;https://listen.tidal.com/album/ALBUM_ID/&gt;, and this needs to be converted to `album:ALBUM_ID`. The same applies to playlists, which have the format `playlist:PLAYLIST_ID`. Individual tracks can be found by sharing the track and selecting the `Copy track link` method, which should yield a link of the format &lt;https://tidal.com/browse/track/TRACK_ID?u&gt;, this can be played by extracting the track id `TRACK_ID`.
+
+Additionally, Tidal IDs for currently playing tracks can be found in the `media_content_id` attribute in the `media_player` entity.
+
+### Getting B&amp;O Radio station IDs
+
+Radio station IDs for currently playing stations can be found in the `media_content_id` attribute in the `media_player` entity.
+
+### Beolink
+
+Discovered devices and devices in an active Beolink experience are available in the properties of the media_player entity. A device is represented by its friendly name and JID, used for connecting devices.
+
+```yaml
+beolink:
+  self: The current device
+  leader: Beolink leader (if available)
+  listeners: Beolink listeners (if available)
+  peers: Beolink peers (if available)
+```
+
+## Diagnostics and troubleshooting
+
+The **Bang &amp; Olufsen** integration supports [Home Assistant debug logs and diagnostics](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics).
+Where all received WebSocket events are provided through debug logs and the following is provided in the diagnostics:
+
+- Config entry
+- Mozart device
+  - WebSocket connection state
+  - Media player state
+  - Button Event states (if available)
+  - Battery level sensor (if available)
+  - Battery charging binary sensor (if available)
+- Beoremote One remotes (if available)
+  - Key Event states (if available)
+  - Overall status
+  - Battery level sensor (if available)
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Bang &amp; Olufsen.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>model</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>event</li><li>media player</li><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>beolink allstandby</li><li>beolink expand</li><li>beolink join</li><li>beolink leave</li><li>beolink unexpand</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Compatible devices</li><li>Data updates</li><li>Supported features</li><li>Limitations</li><li>Playing media</li><li>Beolink multiroom</li><li>Automations</li><li>Diagnostics and troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/bang_olufsen/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/bang_olufsen</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/bang_olufsen</code></dd></dl></section><p><a href="../../integrations/bang_olufsen/">Return to the Bang &amp; Olufsen guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,795 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IMAP reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:128" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/imap/">IMAP guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>IMAP</h1><p>Instructions on how to integrate IMAP unread email into Home Assistant.</p><section><h2>Overview</h2><p>The IMAP integration is observing your IMAP server. It can report the number of unread emails and can send a custom event that can be used to trigger an automation. Other search criteria can be used, as shown in the example below.</p></section><section><h2>Microsoft 365 and Live IMAP services</h2><p>Microsoft has removed support for direct use (App) passwords when accessing IMAP without modern verification. You can create an App password, but access is only allowed though OAUTH2 enabled mail clients authorized by Microsoft or via an App registration in Microsoft Entra ID (school or business).</p></section><section><h2>Google Gmail IMAP service</h2><p>If you’re going to use Gmail, 2-step verification must be enabled on your Gmail account. Once it is enabled, you need to create an App Password.</p></section><section><h2>Configuring IMAP Searches</h2><p>By default, this integration will count unread emails. By configuring the search string, you can count other results, for example:</p></section><section><h2>Selecting a charset supported by the imap server</h2><p>Some IMAP services, like Yahoo, require a US-ASCII charset to be configured.</p></section><section><h2>Selecting message data to include in the IMAP event</h2><p>By default, the IMAP event won&#x27;t include text or headers message data. If you want them to be included (text, headers, or both), you have to manually select them in the option flow. Another way to process the text data, is to use the imap.fetch action. In this case, text won&#x27;t be limited by size.</p></section><section><h2>Selecting an alternate SSL cipher list or disabling SSL verification</h2><p>If the default IMAP server settings do not work, you might try to set an alternate SSL cipher list. The SSL cipher list option allows you to select the list of SSL ciphers to be accepted from this endpoint: default (_system default_), modern or intermediate (_inspired by Mozilla Security/Server Side TLS_).</p></section><section><h2>Enable IMAP-Push</h2><p>IMAP-Push is enabled by default if your IMAP server supports it. If you use an unreliable IMAP service that periodically drops the connection and causes issues, you might consider turning off IMAP-Push. This will fall back to polling the IMAP server.</p></section><section><h2>Troubleshooting</h2><p>Email providers may limit the number of reported emails. The number may be less than the limit (10,000 at least for Yahoo) even if you set the IMAP search to reduce the number of results. If you are not getting expected events and cleaning your Inbox or the configured folder is not desired, set up an email filter for the specific sender to go into a new folder. Then create a new config entry or modify the existing one with the desired folder.</p></section><section><h2>Using events</h2><p>When a new message arrives or a message is removed within the defined search command scope, the imap integration will send a custom event that can be used to trigger an automation. It is also possible to use to create a template binary_sensor or sensor based the event data.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for IMAP.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>charset</code>, <code>event_message_data</code>, <code>folder</code>, <code>password</code>, <code>port</code>, <code>search</code>, <code>server</code>, <code>ssl_cipher_list</code>, <code>username</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>delete</li><li>fetch</li><li>fetch part</li><li>move</li><li>seen</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Example - post-processing</li><li>Example - keyword spotting</li><li>Example - extracting formatted text from an email using template sensors</li><li>Example - custom event data template</li><li>Remove an IMAP service</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/imap/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/imap</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/imap</code></dd></dl></section><p><a href="../../integrations/imap/">Return to the IMAP guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IMAP reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:128" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/imap/">IMAP guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>IMAP</h1><p>Instructions on how to integrate IMAP unread email into Home Assistant.</p><div class="reader-body"><p>The <strong>IMAP</strong> integration is observing your <a>IMAP server</a>. It can report the number of unread emails and can send a custom event that can be used to trigger an automation. Other search criteria can be used, as shown in the example below.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>IMAP</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>IMAP</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h3>IMAP services with App Passwords</h3>
+<h3>Microsoft 365 and Live IMAP services</h3>
+<p>Microsoft has removed support for direct use (App) passwords when accessing IMAP without modern verification. You can create an App password, but access is only allowed though OAUTH2 enabled mail clients authorized by Microsoft or via an App registration in Microsoft Entra ID (school or business).</p>
+<p>An OAUTH2 authentication flow is not supported for the IMAP integration. This means that unfortunately, it is not possible to use Home Assistant IMAP with Microsoft 365 IMAP services for school and business and the (free) personal Microsoft Live IMAP services.</p>
+<h3>Google Gmail IMAP service</h3>
+<p>If you’re going to use Gmail, 2-step verification must be enabled on your Gmail account. Once it is enabled, you need to create an <a>App Password</a>.</p>
+<ol>
+<li><p>Go to your <a>Google Account</a></p>
+</li>
+<li><p>Select <strong>Security</strong></p>
+</li>
+<li><p>Under “How you sign into Google” select <strong>2-Step Verification</strong>.</p>
+</li>
+<li><p>Sign in to your Account.</p>
+</li>
+<li><p>At the bottom of the 2-Step Verification page, click <strong>App Passwords</strong>.</p>
+</li>
+<li><p>Give your app a name that makes sense to you (Home Assistant IMAP, for example).</p>
+</li>
+<li><p>Click <strong>Create</strong>, then make a note of your 16-character app password for safekeeping (remove the spaces when you save it).</p>
+</li>
+<li><p>Click <strong>Done</strong>.</p>
+</li>
+<li><p>Add the IMAP Integration to your Home Assistant instance using the My button above. Enter the following information as needed:</p>
+<ul>
+<li>Username: Your Gmail email login</li>
+<li>Password: your 16-character app password (without the spaces)</li>
+<li>Server: <code>imap.gmail.com</code></li>
+<li>Port: <code>993</code></li>
+</ul>
+</li>
+<li><p>Click <strong>Submit</strong>.</p>
+</li>
+<li><p>Assign your integration to an "Area" if desired, then click <strong>Finish</strong>.</p>
+</li>
+</ol>
+<p>Congratulations, you now have a sensor that counts the number of unread emails in your Gmail account. From here you can create additional sensors based upon the data that comes through the event bus when there's a new message detected.</p>
+<h3>Configuring IMAP Searches</h3>
+<p>By default, this integration will count unread emails. By configuring the search string, you can count other results, for example:</p>
+<ul>
+<li><code>ALL</code> to count all emails in a folder</li>
+<li><code>FROM</code>, <code>TO</code>, <code>SUBJECT</code> to find emails in a folder (see <a>IMAP RFC for all standard options</a>)</li>
+<li><a>Gmail's IMAP extensions</a> allow raw Gmail searches, like <code>X-GM-RAW "in: inbox older_than:7d"</code> to show emails older than one week in your inbox. Note that raw Gmail searches will ignore your folder configuration and search all emails in your account!</li>
+</ul>
+<h3>Selecting a charset supported by the imap server</h3>
+<p>Some IMAP services, like Yahoo, require a <code>US-ASCII</code> charset to be configured.</p>
+<h3>Selecting message data to include in the IMAP event</h3>
+<p>By default, the IMAP event won't include <code>text</code> or <code>headers</code> message data. If you want them to be included (<code>text</code>, <code>headers</code>, or both), you have to manually select them in the option flow.
+Another way to process the <code>text</code> data, is to use the <code>imap.fetch</code> action. In this case, <code>text</code> won't be limited by size.</p>
+<h3>Selecting an alternate SSL cipher list or disabling SSL verification</h3>
+<p>If the default IMAP server settings do not work, you might try to set an alternate SSL cipher list.
+The SSL cipher list option allows you to select the list of SSL ciphers to be accepted from this endpoint: <code>default</code> (<em>system default</em>), <code>modern</code> or <code>intermediate</code> (<em>inspired by <a>Mozilla Security/Server Side TLS</a></em>).</p>
+<p>If you are using self signed certificates, you can turn off SSL verification.</p>
+<h3>Enable IMAP-Push</h3>
+<p>IMAP-Push is enabled by default if your IMAP server supports it. If you use an unreliable IMAP service that periodically drops the connection and causes issues, you might consider turning off IMAP-Push. This will fall back to polling the IMAP server.</p>
+<h3>Troubleshooting</h3>
+<p>Email providers may limit the number of reported emails. The number may be less than the limit (10,000 at least for Yahoo) even if you set the <code>IMAP search</code> to reduce the number of results. If you are not getting expected events and cleaning your Inbox or the configured folder is not desired, set up an email filter for the specific sender to go into a new folder. Then create a new config entry or modify the existing one with the desired folder.</p>
+<h3>Using events</h3>
+<p>When a new message arrives or a message is removed within the defined search command scope, the <code>imap</code> integration will send a custom <a>event</a> that can be used to trigger an automation.
+It is also possible to use to create a template <a href="../template/"><code>binary_sensor</code> or <code>sensor</code></a> based the <a>event data</a>.</p>
+<p>The table below shows what attributes come with <code>trigger.event.data</code>. The data is a dictionary that has the keys that are shown below.</p>
+<p>The attributes shown in the table are also available as variables for the custom event data template. The <a href="../imap/">example</a> shows how to use this as an event filter.</p>
+<p><strong>Note</strong></p>
+<p>The <code>text</code> attribute is not size limited when used as a variable in the template.</p>
+<pre><code>
+server:
+  description: The IMAP server name
+username:
+  description: The IMAP username
+search:
+  description: The IMAP search configuration
+folder:
+  description: The IMAP folder configuration
+text:
+  description: The email body `text` of the message. By default, only the first 2048 bytes of the body text will be available; the rest will be clipped off. You can increase the maximum text size of the body, but this is not advised and will never guarantee that the entire message text is available. A better practice is to use a custom event data template that can parse the entire message, not limited by size. The rendered result will then be added as an attribute `custom` to the event data to be used for automations. `text` will be included if it is explicitly selected in the option flow.
+sender:
+  description: The `sender` of the message
+subject:
+  description: The `subject` of the message
+date:
+  description: A `datetime` object of the `date` sent
+headers:
+  description: The `headers` of the message in the for of a dictionary. The values are iterable as headers can occur more than once. `headers` will be included if it is explicitly selected in the option flow.
+custom:
+  description: Holds the result of the custom event data [template](/docs/templating). All attributes are available as a variable in the template.
+initial:
+  description: Returns `True` if this is the initial event for the last message received. When a message within the search scope is removed and the last message received has not been changed, then an `imap_content` event is generated and the `initial` property is set to `False`. Note that if no `Message-ID` header was set on the triggering email, the `initial` property will always be set to `True`.
+parts:
+  description: Returns a dictionary with the available parts in a multipart message. The keys of the dictionary can be used to pass via the `part` option to the `fetch` action to allow you to receive the content of a specific part of the message.
+uid:
+  description: Latest `uid` of the message.
+
+</code></pre>
+<p>The <code>event_type</code> for the custom event should be set to <code>imap_content</code>. The configuration below shows how you can use the event data in a template <code>sensor</code>.</p>
+<p>If the default maximum message size (2048 bytes) used in events is too small for your needs, you can increase this maximum size.</p>
+<p><strong>Warning</strong></p>
+<p>Increasing the default maximum message size (2048 bytes) could have a negative impact on performance as event data is also logged by the <code>recorder</code>. If the total event data size exceeds the maximum event size (32168 bytes), the event will be skipped.</p>
+<pre><code>template:
+  - trigger:
+      - trigger: event
+        event_type: "imap_content"
+        id: "custom_event"
+    sensor:
+      - name: imap_content
+        state: "{{ trigger.event.data['subject'] }}"
+        attributes:
+          Entry: "{{ trigger.event.data['entry_id'] }}"
+          UID: "{{ trigger.event.data['uid'] }}"
+          Message: "{{ trigger.event.data['text'] }}"
+          Server: "{{ trigger.event.data['server'] }}"
+          Username: "{{ trigger.event.data['username'] }}"
+          Search: "{{ trigger.event.data['search'] }}"
+          Folder: "{{ trigger.event.data['folder'] }}"
+          Sender: "{{ trigger.event.data['sender'] }}"
+          Date: "{{ trigger.event.data['date'] }}"
+          Subject: "{{ trigger.event.data['subject'] }}"
+          Initial: "{{ trigger.event.data['initial'] }}"
+          To: "{{ trigger.event.data['headers'].get('Delivered-To', ['n/a'])[0] }}"
+          Return-Path: "{{ trigger.event.data['headers'].get('Return-Path',['n/a'])[0] }}"
+          Received-first: "{{ trigger.event.data['headers'].get('Received',['n/a'])[0] }}"
+          Received-last: "{{ trigger.event.data['headers'].get('Received',['n/a'])[-1] }}"
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Example - post-processing</h2>
+<p>The example below filters the event trigger by <code>entry_id</code>, fetches the message and stores it in <code>message_text</code>. It then marks the message in the event as seen and finally, it adds a notification with the subject of the message. The <code>seen</code> action <code>entry_id</code> can be a template or literal string. In UI mode you can select the desired entry from a list as well.</p>
+<pre><code>alias: "imap fetch and seen example"
+description: "Fetch and mark an incoming message as seen"
+triggers:
+  - trigger: event
+    event_type: imap_content
+    event_data:
+      entry_id: 91fadb3617c5a3ea692aeb62d92aa869
+conditions:
+  - condition: template
+    value_template: "{{ trigger.event.data['sender'] == 'info@example.com' }}"
+actions:
+  - action: imap.fetch
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: "{{ trigger.event.data['uid'] }}"
+    response_variable: message_text
+  - action: imap.seen
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: "{{ trigger.event.data['uid'] }}"
+  - action: persistent_notification.create
+    data:
+      message: "{{ message_text['subject'] }}"
+</code></pre>
+<p>In case you want to process a message part, use the <code>fetch_part</code> action, and specify the <code>part</code> option.</p>
+<pre><code>alias: "imap fetch and seen example"
+description: "Fetch and mark an incoming message as seen"
+triggers:
+  - trigger: event
+    event_type: imap_content
+    event_data:
+      entry_id: 91fadb3617c5a3ea692aeb62d92aa869
+conditions:
+  - condition: template
+    value_template: "{{ trigger.event.data['sender'] == 'info@example.com' }}"
+  - condition: template
+    value_template: "{{ trigger.event.data['parts'].get('1') }}"
+  - condition: template
+    value_template: "{{ trigger.event.data['parts']['1'].get('content_type') == 'text/plain' }}"
+actions:
+  - action: imap.fetch_part
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: "{{ trigger.event.data['uid'] }}"
+      part: "1"
+    response_variable: message_text
+  - action: imap.seen
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: "{{ trigger.event.data['uid'] }}"
+  - action: persistent_notification.create
+    data:
+      message: "{{ message_text['part_data'] | base64_decode }}"
+</code></pre>
+<h2>Example - keyword spotting</h2>
+<p>The following example shows the usage of the IMAP email content sensor to scan the subject of an email for text, in this case, an email from the APC SmartConnect service, which tells whether the UPS is running on battery or not.</p>
+<pre><code>template:
+  - trigger:
+      - trigger: event
+        event_type: "imap_content"
+        id: "custom_event"
+        event_data:
+          sender: "no-reply@smartconnect.apc.com"
+          initial: true
+    sensor:
+      - name: house_electricity
+        state: &gt;-
+          {% if 'UPS On Battery' in trigger.event.data["subject"] %}
+            power_out
+          {% elif 'Power Restored' in trigger.event.data["subject"] %}
+            power_on
+          {% endif %}
+</code></pre>
+<h2>Example - extracting formatted text from an email using template sensors</h2>
+<p>This example shows how to extract numbers or other formatted data from an email to change the value of a template sensor to a value extracted from the email. In this example, we will be extracting energy use, cost, and billed amount from an email (from Georgia Power) and putting it into sensor values using a template sensor that runs against our IMAP email sensor already set up. A sample of the body of the email used is below:</p>
+<pre><code>Yesterday's Energy Use:                             76 kWh
+Yesterday's estimated energy cost:                  $8
+Monthly Energy use-to-date for 23 days:             1860 kWh
+Monthly estimated energy cost-to-date for 23 days:  $198
+
+To view your account for details about your energy use, please click here.
+</code></pre>
+<p>Below is the template sensor which extracts the information from the body of the email in our IMAP email sensor (named sensor.energy_email) into 3 sensors for the energy use, daily cost, and billing cycle total.</p>
+<pre><code>template:
+  - trigger:
+      - trigger: event
+        event_type: "imap_content"
+        id: "custom_event"
+        event_data:
+          sender: "no-reply@smartconnect.apc.com"
+    sensor:
+      - name: "Previous Day Energy Use"
+        unit_of_measurement: "kWh"
+        state: &gt;
+        {{ trigger.event.data["text"]
+          | regex_findall_index("\*Yesterday's Energy Use:\* ([0-9]+) kWh") }}
+      - name: "Previous Day Cost"
+        unit_of_measurement: "$"
+        state: &gt;
+          {{ trigger.event.data["text"]
+            | regex_findall_index("\*Yesterday's estimated energy cost:\* \$([0-9.]+)") }}
+      - name: "Billing Cycle Total"
+        unit_of_measurement: "$"
+        state: &gt;
+          {{ trigger.event.data["text"]
+            | regex_findall_index("\ days:\* \$([0-9.]+)") }}
+</code></pre>
+<p>By making small changes to the regular expressions defined above, a similar structure can parse other types of data out of the body text of other emails.</p>
+<h2>Example - custom event data template</h2>
+<p>We can define a custom event data template to help filter events. This can be handy if, for example, we have multiple senders we want to allow.
+We define the following template to return true if part of the <code>sender</code> is <code>@example.com</code>:</p>
+<pre><code>{{ "@example.com" in sender }}
+</code></pre>
+<p>This will render to <code>True</code> if the sender is allowed. The result is added to the event data as <code>trigger.event.data["custom"]</code>.</p>
+<p>The example below will only set the state to the subject of the email of template sensor, but only if the sender address matches.</p>
+<pre><code>template:
+  - trigger:
+      - trigger: event
+        event_type: "imap_content"
+        id: "custom_event"
+        event_data:
+          custom: true
+    sensor:
+      - name: event filtered by template
+        state: '{{ trigger.event.data["subject"] }}'
+</code></pre>
+<h2>Remove an IMAP service</h2>
+<p>This integration follows standard config entry removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/imap.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate IMAP unread email into Home Assistant.
+ha_release: 0.25
+ha_domain: imap
+---
+
+The **IMAP** {% term integration %} is observing your [IMAP server](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol). It can report the number of unread emails and can send a custom event that can be used to trigger an automation. Other search criteria can be used, as shown in the example below.
+
+{% include integrations/config_flow.md %}
+
+### IMAP services with App Passwords
+
+### Microsoft 365 and Live IMAP services
+
+Microsoft has removed support for direct use (App) passwords when accessing IMAP without modern verification. You can create an App password, but access is only allowed though OAUTH2 enabled mail clients authorized by Microsoft or via an App registration in Microsoft Entra ID (school or business).
+
+An OAUTH2 authentication flow is not supported for the IMAP integration. This means that unfortunately, it is not possible to use Home Assistant IMAP with Microsoft 365 IMAP services for school and business and the (free) personal Microsoft Live IMAP services.
+
+### Google Gmail IMAP service
+
+If you’re going to use Gmail, 2-step verification must be enabled on your Gmail account. Once it is enabled, you need to create an [App Password](https://support.google.com/mail/answer/185833).
+
+1. Go to your [Google Account](https://myaccount.google.com/)
+2. Select **Security**
+3. Under “How you sign into Google” select **2-Step Verification**.
+4. Sign in to your Account.
+5. At the bottom of the 2-Step Verification page, click **App Passwords**.
+6. Give your app a name that makes sense to you (Home Assistant IMAP, for example).
+7. Click **Create**, then make a note of your 16-character app password for safekeeping (remove the spaces when you save it).
+8. Click **Done**.
+9. Add the IMAP Integration to your Home Assistant instance using the My button above. Enter the following information as needed:
+
+    - Username: Your Gmail email login
+    - Password: your 16-character app password (without the spaces)
+    - Server: `imap.gmail.com`
+    - Port: `993`
+
+10. Click **Submit**.
+11. Assign your integration to an &quot;Area&quot; if desired, then click **Finish**.
+
+Congratulations, you now have a sensor that counts the number of unread emails in your Gmail account. From here you can create additional sensors based upon the data that comes through the event bus when there&#x27;s a new message detected.
+
+### Configuring IMAP Searches
+
+By default, this integration will count unread emails. By configuring the search string, you can count other results, for example:
+
+- `ALL` to count all emails in a folder
+- `FROM`, `TO`, `SUBJECT` to find emails in a folder (see [IMAP RFC for all standard options](https://tools.ietf.org/html/rfc3501#section-6.4.4))
+- [Gmail&#x27;s IMAP extensions](https://developers.google.com/gmail/imap/imap-extensions) allow raw Gmail searches, like `X-GM-RAW &quot;in: inbox older_than:7d&quot;` to show emails older than one week in your inbox. Note that raw Gmail searches will ignore your folder configuration and search all emails in your account!
+
+
+### Selecting a charset supported by the imap server
+
+Some IMAP services, like Yahoo, require a `US-ASCII` charset to be configured.
+
+### Selecting message data to include in the IMAP event
+
+By default, the IMAP event won&#x27;t include `text` or `headers` message data. If you want them to be included (`text`, `headers`, or both), you have to manually select them in the option flow.
+Another way to process the `text` data, is to use the `imap.fetch` action. In this case, `text` won&#x27;t be limited by size.
+
+### Selecting an alternate SSL cipher list or disabling SSL verification
+
+If the default IMAP server settings do not work, you might try to set an alternate SSL cipher list.
+The SSL cipher list option allows you to select the list of SSL ciphers to be accepted from this endpoint: `default` (_system default_), `modern` or `intermediate` (_inspired by [Mozilla Security/Server Side TLS](https://wiki.mozilla.org/Security/Server_Side_TLS)_).
+
+If you are using self signed certificates, you can turn off SSL verification.
+
+### Enable IMAP-Push
+
+IMAP-Push is enabled by default if your IMAP server supports it. If you use an unreliable IMAP service that periodically drops the connection and causes issues, you might consider turning off IMAP-Push. This will fall back to polling the IMAP server.
+
+### Troubleshooting
+
+Email providers may limit the number of reported emails. The number may be less than the limit (10,000 at least for Yahoo) even if you set the `IMAP search` to reduce the number of results. If you are not getting expected events and cleaning your Inbox or the configured folder is not desired, set up an email filter for the specific sender to go into a new folder. Then create a new config entry or modify the existing one with the desired folder.
+
+### Using events
+
+When a new message arrives or a message is removed within the defined search command scope, the `imap` integration will send a custom [event](/docs/automation/trigger/#event-trigger) that can be used to trigger an automation.
+It is also possible to use to create a template [`binary_sensor` or `sensor`](/integrations/template/#trigger-based-template-binary-sensors-buttons-numbers-selects-and-sensors) based the [event data](/docs/automation/trigger-data/#event-triggers).
+
+The table below shows what attributes come with `trigger.event.data`. The data is a dictionary that has the keys that are shown below.
+
+The attributes shown in the table are also available as variables for the custom event data template. The [example](/integrations/imap/#example---custom-event-data-template) shows how to use this as an event filter.
+
+{% note %}
+The `text` attribute is not size limited when used as a variable in the template.
+{% endnote %}
+
+{% configuration_basic %}
+server:
+  description: The IMAP server name
+username:
+  description: The IMAP username
+search:
+  description: The IMAP search configuration
+folder:
+  description: The IMAP folder configuration
+text:
+  description: The email body `text` of the message. By default, only the first 2048 bytes of the body text will be available; the rest will be clipped off. You can increase the maximum text size of the body, but this is not advised and will never guarantee that the entire message text is available. A better practice is to use a custom event data template that can parse the entire message, not limited by size. The rendered result will then be added as an attribute `custom` to the event data to be used for automations. `text` will be included if it is explicitly selected in the option flow.
+sender:
+  description: The `sender` of the message
+subject:
+  description: The `subject` of the message
+date:
+  description: A `datetime` object of the `date` sent
+headers:
+  description: The `headers` of the message in the for of a dictionary. The values are iterable as headers can occur more than once. `headers` will be included if it is explicitly selected in the option flow.
+custom:
+  description: Holds the result of the custom event data [template](/docs/templating). All attributes are available as a variable in the template.
+initial:
+  description: Returns `True` if this is the initial event for the last message received. When a message within the search scope is removed and the last message received has not been changed, then an `imap_content` event is generated and the `initial` property is set to `False`. Note that if no `Message-ID` header was set on the triggering email, the `initial` property will always be set to `True`.
+parts:
+  description: Returns a dictionary with the available parts in a multipart message. The keys of the dictionary can be used to pass via the `part` option to the `fetch` action to allow you to receive the content of a specific part of the message.
+uid:
+  description: Latest `uid` of the message.
+{% endconfiguration_basic %}
+
+The `event_type` for the custom event should be set to `imap_content`. The configuration below shows how you can use the event data in a template `sensor`.
+
+If the default maximum message size (2048 bytes) used in events is too small for your needs, you can increase this maximum size.
+
+{% warning %}
+Increasing the default maximum message size (2048 bytes) could have a negative impact on performance as event data is also logged by the `recorder`. If the total event data size exceeds the maximum event size (32168 bytes), the event will be skipped.
+{% endwarning %}
+
+```yaml
+template:
+  - trigger:
+      - trigger: event
+        event_type: &quot;imap_content&quot;
+        id: &quot;custom_event&quot;
+    sensor:
+      - name: imap_content
+        state: &quot;{{ trigger.event.data[&#x27;subject&#x27;] }}&quot;
+        attributes:
+          Entry: &quot;{{ trigger.event.data[&#x27;entry_id&#x27;] }}&quot;
+          UID: &quot;{{ trigger.event.data[&#x27;uid&#x27;] }}&quot;
+          Message: &quot;{{ trigger.event.data[&#x27;text&#x27;] }}&quot;
+          Server: &quot;{{ trigger.event.data[&#x27;server&#x27;] }}&quot;
+          Username: &quot;{{ trigger.event.data[&#x27;username&#x27;] }}&quot;
+          Search: &quot;{{ trigger.event.data[&#x27;search&#x27;] }}&quot;
+          Folder: &quot;{{ trigger.event.data[&#x27;folder&#x27;] }}&quot;
+          Sender: &quot;{{ trigger.event.data[&#x27;sender&#x27;] }}&quot;
+          Date: &quot;{{ trigger.event.data[&#x27;date&#x27;] }}&quot;
+          Subject: &quot;{{ trigger.event.data[&#x27;subject&#x27;] }}&quot;
+          Initial: &quot;{{ trigger.event.data[&#x27;initial&#x27;] }}&quot;
+          To: &quot;{{ trigger.event.data[&#x27;headers&#x27;].get(&#x27;Delivered-To&#x27;, [&#x27;n/a&#x27;])[0] }}&quot;
+          Return-Path: &quot;{{ trigger.event.data[&#x27;headers&#x27;].get(&#x27;Return-Path&#x27;,[&#x27;n/a&#x27;])[0] }}&quot;
+          Received-first: &quot;{{ trigger.event.data[&#x27;headers&#x27;].get(&#x27;Received&#x27;,[&#x27;n/a&#x27;])[0] }}&quot;
+          Received-last: &quot;{{ trigger.event.data[&#x27;headers&#x27;].get(&#x27;Received&#x27;,[&#x27;n/a&#x27;])[-1] }}&quot;
+```
+
+{% include integrations/actions.md %}
+
+## Example - post-processing
+
+The example below filters the event trigger by `entry_id`, fetches the message and stores it in `message_text`. It then marks the message in the event as seen and finally, it adds a notification with the subject of the message. The `seen` action `entry_id` can be a template or literal string. In UI mode you can select the desired entry from a list as well.
+
+```yaml
+alias: &quot;imap fetch and seen example&quot;
+description: &quot;Fetch and mark an incoming message as seen&quot;
+triggers:
+  - trigger: event
+    event_type: imap_content
+    event_data:
+      entry_id: 91fadb3617c5a3ea692aeb62d92aa869
+conditions:
+  - condition: template
+    value_template: &quot;{{ trigger.event.data[&#x27;sender&#x27;] == &#x27;info@example.com&#x27; }}&quot;
+actions:
+  - action: imap.fetch
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: &quot;{{ trigger.event.data[&#x27;uid&#x27;] }}&quot;
+    response_variable: message_text
+  - action: imap.seen
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: &quot;{{ trigger.event.data[&#x27;uid&#x27;] }}&quot;
+  - action: persistent_notification.create
+    data:
+      message: &quot;{{ message_text[&#x27;subject&#x27;] }}&quot;
+```
+
+In case you want to process a message part, use the `fetch_part` action, and specify the `part` option.&#32;
+
+```yaml
+alias: &quot;imap fetch and seen example&quot;
+description: &quot;Fetch and mark an incoming message as seen&quot;
+triggers:
+  - trigger: event
+    event_type: imap_content
+    event_data:
+      entry_id: 91fadb3617c5a3ea692aeb62d92aa869
+conditions:
+  - condition: template
+    value_template: &quot;{{ trigger.event.data[&#x27;sender&#x27;] == &#x27;info@example.com&#x27; }}&quot;
+  - condition: template
+    value_template: &quot;{{ trigger.event.data[&#x27;parts&#x27;].get(&#x27;1&#x27;) }}&quot;
+  - condition: template
+    value_template: &quot;{{ trigger.event.data[&#x27;parts&#x27;][&#x27;1&#x27;].get(&#x27;content_type&#x27;) == &#x27;text/plain&#x27; }}&quot;
+actions:
+  - action: imap.fetch_part
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: &quot;{{ trigger.event.data[&#x27;uid&#x27;] }}&quot;
+      part: &quot;1&quot;
+    response_variable: message_text
+  - action: imap.seen
+    data:
+      entry: 91fadb3617c5a3ea692aeb62d92aa869
+      uid: &quot;{{ trigger.event.data[&#x27;uid&#x27;] }}&quot;
+  - action: persistent_notification.create
+    data:
+      message: &quot;{{ message_text[&#x27;part_data&#x27;] | base64_decode }}&quot;
+```
+
+
+## Example - keyword spotting
+
+The following example shows the usage of the IMAP email content sensor to scan the subject of an email for text, in this case, an email from the APC SmartConnect service, which tells whether the UPS is running on battery or not.
+
+```yaml
+template:
+  - trigger:
+      - trigger: event
+        event_type: &quot;imap_content&quot;
+        id: &quot;custom_event&quot;
+        event_data:
+          sender: &quot;no-reply@smartconnect.apc.com&quot;
+          initial: true
+    sensor:
+      - name: house_electricity
+        state: &gt;-
+          {% if &#x27;UPS On Battery&#x27; in trigger.event.data[&quot;subject&quot;] %}
+            power_out
+          {% elif &#x27;Power Restored&#x27; in trigger.event.data[&quot;subject&quot;] %}
+            power_on
+          {% endif %}
+```
+
+## Example - extracting formatted text from an email using template sensors
+
+This example shows how to extract numbers or other formatted data from an email to change the value of a template sensor to a value extracted from the email. In this example, we will be extracting energy use, cost, and billed amount from an email (from Georgia Power) and putting it into sensor values using a template sensor that runs against our IMAP email sensor already set up. A sample of the body of the email used is below:
+
+```text
+Yesterday&#x27;s Energy Use:                             76 kWh
+Yesterday&#x27;s estimated energy cost:                  $8
+Monthly Energy use-to-date for 23 days:             1860 kWh
+Monthly estimated energy cost-to-date for 23 days:  $198
+
+To view your account for details about your energy use, please click here.
+```
+
+Below is the template sensor which extracts the information from the body of the email in our IMAP email sensor (named sensor.energy_email) into 3 sensors for the energy use, daily cost, and billing cycle total.
+
+```yaml
+template:
+  - trigger:
+      - trigger: event
+        event_type: &quot;imap_content&quot;
+        id: &quot;custom_event&quot;
+        event_data:
+          sender: &quot;no-reply@smartconnect.apc.com&quot;
+    sensor:
+      - name: &quot;Previous Day Energy Use&quot;
+        unit_of_measurement: &quot;kWh&quot;
+        state: &gt;
+        {{ trigger.event.data[&quot;text&quot;]
+          | regex_findall_index(&quot;\*Yesterday&#x27;s Energy Use:\* ([0-9]+) kWh&quot;) }}
+      - name: &quot;Previous Day Cost&quot;
+        unit_of_measurement: &quot;$&quot;
+        state: &gt;
+          {{ trigger.event.data[&quot;text&quot;]
+            | regex_findall_index(&quot;\*Yesterday&#x27;s estimated energy cost:\* \$([0-9.]+)&quot;) }}
+      - name: &quot;Billing Cycle Total&quot;
+        unit_of_measurement: &quot;$&quot;
+        state: &gt;
+          {{ trigger.event.data[&quot;text&quot;]
+            | regex_findall_index(&quot;\ days:\* \$([0-9.]+)&quot;) }}
+```
+
+By making small changes to the regular expressions defined above, a similar structure can parse other types of data out of the body text of other emails.
+
+## Example - custom event data template
+
+We can define a custom event data template to help filter events. This can be handy if, for example, we have multiple senders we want to allow.
+We define the following template to return true if part of the `sender` is `@example.com`:
+
+{% raw %}
+
+```jinja2
+{{ &quot;@example.com&quot; in sender }}
+```
+
+{% endraw %}
+
+This will render to `True` if the sender is allowed. The result is added to the event data as `trigger.event.data[&quot;custom&quot;]`.
+
+The example below will only set the state to the subject of the email of template sensor, but only if the sender address matches.
+
+```yaml
+template:
+  - trigger:
+      - trigger: event
+        event_type: &quot;imap_content&quot;
+        id: &quot;custom_event&quot;
+        event_data:
+          custom: true
+    sensor:
+      - name: event filtered by template
+        state: &#x27;{{ trigger.event.data[&quot;subject&quot;] }}&#x27;
+```
+
+## Remove an IMAP service
+
+This integration follows standard config entry removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for IMAP.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>charset</code>, <code>event_message_data</code>, <code>folder</code>, <code>password</code>, <code>port</code>, <code>search</code>, <code>server</code>, <code>ssl_cipher_list</code>, <code>username</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Documented actions</h3><ul class="chips"><li>delete</li><li>fetch</li><li>fetch part</li><li>move</li><li>seen</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Example - post-processing</li><li>Example - keyword spotting</li><li>Example - extracting formatted text from an email using template sensors</li><li>Example - custom event data template</li><li>Remove an IMAP service</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/imap/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/imap</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/imap</code></dd></dl></section><p><a href="../../integrations/imap/">Return to the IMAP guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

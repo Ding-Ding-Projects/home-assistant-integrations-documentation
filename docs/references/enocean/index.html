@@ -1,1 +1,834 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EnOcean reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:81" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/enocean/">EnOcean guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>EnOcean</h1><p>Connect EnOcean devices to Home Assistant</p><section><h2>Overview</h2><p>The EnOcean standard is supported by many different vendors. There are switches and sensors of many different kinds, and typically they employ energy harvesting to get power such that no batteries are necessary.</p></section><section><h2>Binary sensor</h2><p>This can typically be one of those batteryless wall switches. Tested with:</p></section><section><h2>Automation example</h2><p>Sample automation to switch lights on and off:</p></section><section><h2>Light</h2><p>An EnOcean light can take many forms. Currently only one type has been tested: Eltako FUD61 dimmer.</p></section><section><h2>Sensor</h2><p>The EnOcean sensor platform currently supports the following device types:</p></section><section><h2>Power sensor</h2><p>This has been tested with a Permundo PSC234 switch, but any device sending EEP A5-12-01 messages will work.</p></section><section><h2>Humidity sensor</h2><p>The following EnOcean Equipment Profiles are supported:</p></section><section><h2>Temperature sensor</h2><p>This sensor has been tested with a generic STM-330 sensor, which is used in most indoor temperature sensor devices.</p></section><section><h2>Window handle</h2><p>As of now, the Hoppe SecuSignal window handle from Somfy has been successfully tested. However, any mechanical window handle that follows the EnOcean RPS telegram spec F6 10 00 (Hoppe AG) is supported.</p></section><section><h2>Switch</h2><p>An EnOcean switch can take many forms. Currently, only a few types have been tested: Permundo PSC234 and Nod On SIN-2-1-01.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for EnOcean.</p><p>The <strong>detect</strong> configuration step lists <code>device</code>.</p><p>The <strong>manual</strong> configuration step lists <code>device</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>enocean</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Binary sensor</li><li>Automation example</li><li>Light</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/enocean/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/enocean</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/enocean</code></dd></dl></section><p><a href="../../integrations/enocean/">Return to the EnOcean guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EnOcean reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:81" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/enocean/">EnOcean guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>EnOcean</h1><p>Connect EnOcean devices to Home Assistant</p><div class="reader-body"><p>The <a>EnOcean</a> standard is supported by many different vendors. There are switches and sensors of many different kinds, and typically they employ energy harvesting to get power such that no batteries are necessary.</p>
+<p>The EnOcean integration adds support for some of these devices. You will need a controller like the <a>USB300</a> in order for it to work.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li><a>Binary sensor</a> - Wall switches</li>
+<li><a>Sensor</a> - Power meters, temperature sensors, humidity sensors and window handles</li>
+<li><a>Light</a> - Dimmers</li>
+<li><a>Switch</a></li>
+</ul>
+<p>However, due to the wide range of message types, not all devices will work without code changes.
+The following devices have been confirmed to work out of the box:</p>
+<ul>
+<li>Eltako FUD61 dimmer</li>
+<li>Eltako FT55 battery-less wall switch</li>
+<li>Jung ENOA590WW battery-less wall switch</li>
+<li>Omnio WS-CH-102-L-rw battery-less wall switch</li>
+<li>Permundo PSC234 (switch and power monitor)</li>
+<li>EnOcean STM-330 temperature sensor</li>
+<li>Hoppe SecuSignal window handle from Somfy</li>
+</ul>
+<p>If you own a device not listed here, please check whether your device can talk in one of the listed <a>EnOcean Equipment Profiles</a> (EEP). If it does, it will most likely work. The available profiles are usually listed somewhere in the device manual.</p>
+<p>Support for tech-in messages is not implemented.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>EnOcean</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>EnOcean</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Despite the UI-based configuration of the hub, the entities are still configured using YAML see next chapters).</p>
+<h2>Binary sensor</h2>
+<p>This can typically be one of those batteryless wall switches.
+Tested with:</p>
+<ul>
+<li>Eltako FT55 which uses the EnOcean PTM 215 module</li>
+<li><a>TRIO2SYS Wall switches</a> which uses the EnOcean PTM210 DB module</li>
+<li>Omnio WS-CH-102</li>
+</ul>
+<p>The following <a>EnOcean Equipment Profiles</a> are supported:</p>
+<ul>
+<li>F6-02-01 (Light and Blind Control - Application Style 1)</li>
+<li>F6-02-02 (Light and Blind Control - Application Style 2)</li>
+</ul>
+<p>To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code># Example configuration.yaml entry
+binary_sensor:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+</code></pre>
+<pre><code>
+id:
+  description: The ID of the device. This is the 4 bytes long number written on the dimmer.
+  required: true
+  type: list
+name:
+  description: An identifier for the switch in the frontend.
+  required: false
+  type: string
+  default: EnOcean binary sensor
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: device_class
+
+</code></pre>
+<p>EnOcean binary sensors have no state, they only generate 'button_pressed' events. The event data has following fields:</p>
+<ul>
+<li><strong>id</strong>: The ID of the device (see configuration).</li>
+<li><strong>pushed</strong>: <code>1</code> for a button press, <code>0</code> for a button release.</li>
+<li><strong>which</strong>: Always <code>0</code> when using the single rocket.  <code>0</code> or <code>1</code> when using the dual rocket switch.</li>
+<li><strong>onoff</strong>: <code>0</code> or <code>1</code> for either side of the rocket.</li>
+</ul>
+<h2>Automation example</h2>
+<p>Sample automation to switch lights on and off:</p>
+<pre><code># Example automation to turn lights on/off on button release
+automation:
+  - alias: "Hall light switches"
+    triggers:
+      - trigger: event
+        event_type: button_pressed
+        event_data:
+          id: [0xYY, 0xYY, 0xYY, 0xYY]
+          pushed: 0
+    actions:
+      - action: "{% if trigger.event.data.onoff %} light.turn_on {% else %} light.turn_off {%endif %}"
+        target:
+          entity_id: "{% if trigger.event.data.which == 1 %} light.hall_left {% else %} light.hall_right {%endif %}"
+</code></pre>
+<p>You can find the <code>event_data</code> <code>id</code> by going to <strong>Settings</strong> &gt; <strong>Tools</strong> &gt; <strong>Events</strong> and listening to "button_pressed" events. Then hit a button on the device and you should see an event.</p>
+<h2>Light</h2>
+<p>An EnOcean light can take many forms. Currently only one type has been tested: Eltako FUD61 dimmer.</p>
+<p>To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+light:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    sender_id: [0xFF,0xC6,0xEA,0x04]
+</code></pre>
+<pre><code>
+id:
+  description: The ID of the device. This is the 4 bytes long number written on the dimmer.
+  required: true
+  type: list
+sender_id:
+  description: The Sender ID of the device. This is a 4 bytes long number.
+  required: true
+  type: list
+name:
+  description: An identifier for the light in the frontend.
+  required: false
+  default: EnOcean Light
+  type: string
+
+</code></pre>
+<h2>Sensor</h2>
+<p>The EnOcean sensor platform currently supports the following device types:</p>
+<ul>
+<li><a>power sensor</a></li>
+<li><a>humidity sensor</a></li>
+<li><a>temperature sensor</a></li>
+<li><a>window handle</a></li>
+</ul>
+<p>To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - name: Television
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+</code></pre>
+<pre><code>
+id:
+  description: The ID of the device. This is the 4 bytes long identifier of your device.
+  required: true
+  type: list
+name:
+  description: An identifier for the sensor in the frontend.
+  required: false
+  type: string
+  default: EnOcean sensor
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: device_class
+  default: powersensor
+
+</code></pre>
+<h3>Power sensor</h3>
+<p>This has been tested with a Permundo PSC234 switch, but any device sending EEP <strong>A5-12-01</strong> messages will work.</p>
+<p>Add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - name: Television
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: powersensor
+</code></pre>
+<h3>Humidity sensor</h3>
+<p>The following <a>EnOcean Equipment Profiles</a> are supported:</p>
+<ul>
+<li>Any profile that contains the humidity value at position <strong>DB2.7</strong> to <strong>DB2.0</strong></li>
+<li><strong>A5-04-01</strong> - Temp. and Humidity Sensor, Range 0°C to +40°C and 0% to 100%</li>
+<li><strong>A5-04-02</strong> - Temp. and Humidity Sensor, Range -20°C to +60°C and 0% to 100%</li>
+<li><strong>A5-10-10</strong> to <strong>A5-10-14</strong> - Room Operating Panels</li>
+</ul>
+<p>Add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - name: Bathroom
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: humidity
+</code></pre>
+<h3>Temperature sensor</h3>
+<p>This sensor has been tested with a generic STM-330 sensor, which is used in most indoor temperature sensor devices.</p>
+<p>The following <a>EnOcean Equipment Profiles</a> are supported:</p>
+<ul>
+<li>Any profile that contains an 8-bit temperature at position DB1.7 to DB1.0. 10-bit is not supported.</li>
+<li><strong>A5-02-01</strong> to <strong>A5-02-1B</strong> - Temperature Sensor with various temperature ranges</li>
+<li><strong>A5-10-01</strong> to <strong>A5-10-14</strong> - Room Operating Panels</li>
+<li><strong>A5-04-01</strong> - Temp. and Humidity Sensor, Range 0°C to +40°C and 0% to 100%</li>
+<li><strong>A5-04-02</strong> - Temp. and Humidity Sensor, Range -20°C to +60°C and 0% to 100%</li>
+<li><strong>A5-10-03</strong> - Temp. Sensor, Set point control</li>
+<li><strong>A5-10-10</strong> - Temp. and Humidity Sensor and Set Point</li>
+<li><strong>A5-10-12</strong> - Temp. and Humidity Sensor, Set Point and Occupancy Control</li>
+</ul>
+<p>Check the manual of your temperature sensor to figure out what EEP it uses.
+If you do not know, make an educated guess and check the reported values. It's easiest to validate the temperature at the boundaries of the range, so maybe put the sensor into the fridge for a while.</p>
+<p>Add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+sensor:
+  - name: Living Room
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: temperature
+</code></pre>
+<p>The temperature sensor supports these additional configuration properties.</p>
+<pre><code>
+min_temp:
+  description: The minimal temperature in °C your sensor supports.
+  required: false
+  type: integer
+  default: 0
+max_temp:
+  description: The maximum temperature in °C your sensor supports.
+  required: false
+  type: integer
+  default: 40
+range_from:
+  description: The range value your sensor reports for `min_temp`
+  required: false
+  type: integer
+  default: 255
+range_to:
+  description: The range value your sensor reports for `max_temp`
+  required: false
+  type: integer
+  default: 0
+
+</code></pre>
+<p>Note that the default configuration values of <em>range_from</em> and <em>range_to</em> are not typos, the range is backwards for most sensors.
+However, some EEPs have a different, inverted range, which goes from 0 to 250. This includes the following EEPs:</p>
+<ul>
+<li><strong>A5-04-01</strong></li>
+<li><strong>A5-04-02</strong></li>
+<li><strong>A5-10-10</strong> to <strong>A5-10-14</strong></li>
+<li><strong>A5-20-01</strong> - Battery powered actuator (bi-dir)</li>
+</ul>
+<p>Adapt the <code>configuration.yaml</code> for those sensors:</p>
+<pre><code># Example configuration.yaml entry for EEP A5-10-10
+sensor:
+  - name: Living Room
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: temperature
+    range_from: 0
+    range_to: 250
+</code></pre>
+<h3>Window handle</h3>
+<p>As of now, the Hoppe SecuSignal window handle from Somfy has been successfully tested. However, any mechanical window handle that follows the EnOcean RPS telegram spec F6 10 00 (Hoppe AG) is supported.</p>
+<p>To configure a window handle, add the following code to your <code>configuration.yaml</code>:</p>
+<pre><code># Example configuration.yaml entry for window handle EEP F6-10-00
+sensor:
+  - name: Living Room Window Handle
+    platform: enocean
+    id: [0xDE,0xAD,0xBE,0xEF]
+    device_class: windowhandle
+</code></pre>
+<p>The configuration does not have any optional parameters.</p>
+<p>The window handle sensor can have the following states:</p>
+<ul>
+<li><strong>closed</strong>: The window handle is in closed position (typically down, or 6 o'clock)</li>
+<li><strong>open</strong>: The window handle is in open position (typically left or right, or 3 o'clock or 9 o'clock)</li>
+<li><strong>tilt</strong>: The window handle is in tilt position (typically up or 12 o'clock)</li>
+</ul>
+<h2>Switch</h2>
+<p>An EnOcean switch can take many forms. Currently, only a few types have been tested: Permundo PSC234 and Nod On SIN-2-1-01.</p>
+<p>To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+switch:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+</code></pre>
+<pre><code>
+id:
+  description: The ID of the device. This is a 4 bytes long number.
+  required: true
+  type: list
+name:
+  description: An identifier for the switch.
+  required: false
+  default: EnOcean Switch
+  type: string
+channel:
+  description: The number of the channel (typically 0 or 1) for the output channel to switch.
+  required: false
+  default: 0
+  type: integer
+
+</code></pre>
+<pre><code># Example entries for a switch with 2 outputs (channels), e.g., the Nod On SIN-2-1-01
+switch nodon01_0:
+  - platform: enocean
+    id: [0x05,0x04,0x03,0x02]
+    name: enocean_nodon01_0
+    channel: 0
+
+switch nodon01_1:
+  - platform: enocean
+    id: [0x05,0x04,0x03,0x02]
+    name: enocean_nodon01_1
+    channel: 1
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/enocean.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Connect EnOcean devices to Home Assistant
+ha_release: 0.21
+ha_domain: enocean
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The [EnOcean](https://en.wikipedia.org/wiki/EnOcean) standard is supported by many different vendors. There are switches and sensors of many different kinds, and typically they employ energy harvesting to get power such that no batteries are necessary.
+
+The EnOcean integration adds support for some of these devices. You will need a controller like the [USB300](https://www.enocean.com/product/usb-300/) in order for it to work.
+
+There is currently support for the following device types within Home Assistant:
+
+- [Binary sensor](#binary-sensor) - Wall switches
+- [Sensor](#sensor) - Power meters, temperature sensors, humidity sensors and window handles
+- [Light](#light) - Dimmers
+- [Switch](#switch)
+
+However, due to the wide range of message types, not all devices will work without code changes.
+The following devices have been confirmed to work out of the box:
+
+- Eltako FUD61 dimmer
+- Eltako FT55 battery-less wall switch
+- Jung ENOA590WW battery-less wall switch
+- Omnio WS-CH-102-L-rw battery-less wall switch
+- Permundo PSC234 (switch and power monitor)
+- EnOcean STM-330 temperature sensor
+- Hoppe SecuSignal window handle from Somfy
+
+If you own a device not listed here, please check whether your device can talk in one of the listed [EnOcean Equipment Profiles](https://www.enocean-alliance.org/specifications/) (EEP). If it does, it will most likely work. The available profiles are usually listed somewhere in the device manual.
+
+Support for tech-in messages is not implemented.
+
+{% include integrations/config_flow.md %}
+
+Despite the UI-based configuration of the hub, the entities are still configured using YAML see next chapters).
+
+## Binary sensor
+
+This can typically be one of those batteryless wall switches.
+Tested with:
+
+- Eltako FT55 which uses the EnOcean PTM 215 module
+- [TRIO2SYS Wall switches](https://www.trio2sys.fr/index.php/produits-enocean-sans-fil-sans-pile-interoperable/emetteur-sans-fils-sans-pile-interoperable-enocean) which uses the EnOcean PTM210 DB module
+- Omnio WS-CH-102
+
+The following [EnOcean Equipment Profiles](https://www.enocean-alliance.org/specifications/) are supported:
+
+- F6-02-01 (Light and Blind Control - Application Style 1)
+- F6-02-02 (Light and Blind Control - Application Style 2)
+
+To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+```yaml
+# Example configuration.yaml entry
+binary_sensor:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+```
+
+{% configuration %}
+id:
+  description: The ID of the device. This is the 4 bytes long number written on the dimmer.
+  required: true
+  type: list
+name:
+  description: An identifier for the switch in the frontend.
+  required: false
+  type: string
+  default: EnOcean binary sensor
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/#device-class), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: device_class
+{% endconfiguration %}
+
+EnOcean binary sensors have no state, they only generate &#x27;button_pressed&#x27; events. The event data has following fields:
+
+- **id**: The ID of the device (see configuration).
+- **pushed**: `1` for a button press, `0` for a button release.
+- **which**: Always `0` when using the single rocket.  `0` or `1` when using the dual rocket switch.
+- **onoff**: `0` or `1` for either side of the rocket.
+
+## Automation example
+
+Sample automation to switch lights on and off:
+
+```yaml
+# Example automation to turn lights on/off on button release
+automation:
+  - alias: &quot;Hall light switches&quot;
+    triggers:
+      - trigger: event
+        event_type: button_pressed
+        event_data:
+          id: [0xYY, 0xYY, 0xYY, 0xYY]
+          pushed: 0
+    actions:
+      - action: &quot;{% if trigger.event.data.onoff %} light.turn_on {% else %} light.turn_off {%endif %}&quot;
+        target:
+          entity_id: &quot;{% if trigger.event.data.which == 1 %} light.hall_left {% else %} light.hall_right {%endif %}&quot;
+```
+
+You can find the `event_data` `id` by going to {% my tools_events title=&quot;**Settings** &gt; **Tools** &gt; **Events**&quot; %} and listening to &quot;button_pressed&quot; events. Then hit a button on the device and you should see an event.
+
+## Light
+
+An EnOcean light can take many forms. Currently only one type has been tested: Eltako FUD61 dimmer.
+
+To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+light:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    sender_id: [0xFF,0xC6,0xEA,0x04]
+```
+
+{% configuration %}
+id:
+  description: The ID of the device. This is the 4 bytes long number written on the dimmer.
+  required: true
+  type: list
+sender_id:
+  description: The Sender ID of the device. This is a 4 bytes long number.
+  required: true
+  type: list
+name:
+  description: An identifier for the light in the frontend.
+  required: false
+  default: EnOcean Light
+  type: string
+{% endconfiguration %}
+
+## Sensor
+
+The EnOcean sensor platform currently supports the following device types:
+
+- [power sensor](#power-sensor)
+- [humidity sensor](#humidity-sensor)
+- [temperature sensor](#temperature-sensor)
+- [window handle](#window-handle)
+&#32;
+To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - name: Television
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+```
+
+{% configuration %}
+id:
+  description: The ID of the device. This is the 4 bytes long identifier of your device.
+  required: true
+  type: list
+name:
+  description: An identifier for the sensor in the frontend.
+  required: false
+  type: string
+  default: EnOcean sensor
+device_class:
+  description: Sets the [class of the device](/integrations/binary_sensor/), changing the device state and icon that is displayed on the frontend.
+  required: false
+  type: device_class
+  default: powersensor
+{% endconfiguration %}
+
+### Power sensor
+
+This has been tested with a Permundo PSC234 switch, but any device sending EEP **A5-12-01** messages will work.
+
+Add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - name: Television
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: powersensor
+```
+
+### Humidity sensor
+
+The following [EnOcean Equipment Profiles](https://www.enocean-alliance.org/specifications/) are supported:
+
+- Any profile that contains the humidity value at position **DB2.7** to **DB2.0**
+- **A5-04-01** - Temp. and Humidity Sensor, Range 0°C to +40°C and 0% to 100%
+- **A5-04-02** - Temp. and Humidity Sensor, Range -20°C to +60°C and 0% to 100%
+- **A5-10-10** to **A5-10-14** - Room Operating Panels
+
+Add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - name: Bathroom
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: humidity
+```
+
+### Temperature sensor
+
+This sensor has been tested with a generic STM-330 sensor, which is used in most indoor temperature sensor devices.&#32;
+
+The following [EnOcean Equipment Profiles](https://www.enocean-alliance.org/specifications/) are supported:
+
+- Any profile that contains an 8-bit temperature at position DB1.7 to DB1.0. 10-bit is not supported.
+- **A5-02-01** to **A5-02-1B** - Temperature Sensor with various temperature ranges
+- **A5-10-01** to **A5-10-14** - Room Operating Panels
+- **A5-04-01** - Temp. and Humidity Sensor, Range 0°C to +40°C and 0% to 100%
+- **A5-04-02** - Temp. and Humidity Sensor, Range -20°C to +60°C and 0% to 100%
+- **A5-10-03** - Temp. Sensor, Set point control
+- **A5-10-10** - Temp. and Humidity Sensor and Set Point
+- **A5-10-12** - Temp. and Humidity Sensor, Set Point and Occupancy Control
+
+Check the manual of your temperature sensor to figure out what EEP it uses.&#32;
+If you do not know, make an educated guess and check the reported values. It&#x27;s easiest to validate the temperature at the boundaries of the range, so maybe put the sensor into the fridge for a while.&#32;
+
+Add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+sensor:
+  - name: Living Room
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: temperature
+```
+
+The temperature sensor supports these additional configuration properties.
+
+{% configuration %}
+min_temp:
+  description: The minimal temperature in °C your sensor supports.
+  required: false
+  type: integer
+  default: 0
+max_temp:
+  description: The maximum temperature in °C your sensor supports.
+  required: false
+  type: integer
+  default: 40
+range_from:
+  description: The range value your sensor reports for `min_temp`
+  required: false
+  type: integer
+  default: 255
+range_to:
+  description: The range value your sensor reports for `max_temp`
+  required: false
+  type: integer
+  default: 0
+{% endconfiguration %}
+
+Note that the default configuration values of _range_from_ and _range_to_ are not typos, the range is backwards for most sensors.
+However, some EEPs have a different, inverted range, which goes from 0 to 250. This includes the following EEPs:
+
+- **A5-04-01**
+- **A5-04-02**
+- **A5-10-10** to **A5-10-14**
+- **A5-20-01** - Battery powered actuator (bi-dir)
+
+Adapt the {% term &quot;`configuration.yaml`&quot; %} for those sensors:
+
+```yaml
+# Example configuration.yaml entry for EEP A5-10-10
+sensor:
+  - name: Living Room
+    platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+    device_class: temperature
+    range_from: 0
+    range_to: 250
+```
+
+### Window handle
+
+As of now, the Hoppe SecuSignal window handle from Somfy has been successfully tested. However, any mechanical window handle that follows the EnOcean RPS telegram spec F6 10 00 (Hoppe AG) is supported.
+
+To configure a window handle, add the following code to your {% term &quot;`configuration.yaml`&quot; %}:
+
+```yaml
+# Example configuration.yaml entry for window handle EEP F6-10-00
+sensor:
+  - name: Living Room Window Handle
+    platform: enocean
+    id: [0xDE,0xAD,0xBE,0xEF]
+    device_class: windowhandle
+```
+
+The configuration does not have any optional parameters.
+
+The window handle sensor can have the following states:
+
+- **closed**: The window handle is in closed position (typically down, or 6 o&#x27;clock)
+- **open**: The window handle is in open position (typically left or right, or 3 o&#x27;clock or 9 o&#x27;clock)
+- **tilt**: The window handle is in tilt position (typically up or 12 o&#x27;clock)
+
+## Switch
+
+An EnOcean switch can take many forms. Currently, only a few types have been tested: Permundo PSC234 and Nod On SIN-2-1-01.
+
+To use your EnOcean device, you first have to set up your EnOcean hub and then add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+switch:
+  - platform: enocean
+    id: [0x01,0x90,0x84,0x3C]
+```
+
+{% configuration %}
+id:
+  description: The ID of the device. This is a 4 bytes long number.
+  required: true
+  type: list
+name:
+  description: An identifier for the switch.
+  required: false
+  default: EnOcean Switch
+  type: string
+channel:
+  description: The number of the channel (typically 0 or 1) for the output channel to switch.
+  required: false
+  default: 0
+  type: integer
+{% endconfiguration %}
+
+```yaml
+# Example entries for a switch with 2 outputs (channels), e.g., the Nod On SIN-2-1-01
+switch nodon01_0:
+  - platform: enocean
+    id: [0x05,0x04,0x03,0x02]
+    name: enocean_nodon01_0
+    channel: 0
+
+switch nodon01_1:
+  - platform: enocean
+    id: [0x05,0x04,0x03,0x02]
+    name: enocean_nodon01_1
+    channel: 1
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for EnOcean.</p><p>The <strong>detect</strong> configuration step lists <code>device</code>.</p><p>The <strong>manual</strong> configuration step lists <code>device</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>light</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>enocean</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Binary sensor</li><li>Automation example</li><li>Light</li><li>Sensor</li><li>Switch</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/enocean/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/enocean</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/enocean</code></dd></dl></section><p><a href="../../integrations/enocean/">Return to the EnOcean guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,1324 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>InfluxDB reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:75" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/influxdb/">InfluxDB guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>InfluxDB</h1><p>Record events in InfluxDB.</p><section><h2>Overview</h2><p>The InfluxDB integration lets you transfer all state changes to an external InfluxDB database. This integration supports:</p></section><section><h2>Additional options</h2><p>Additional options can be configured via YAML.</p></section><section><h2>Configure filter</h2><p>By default, no entity will be excluded. To limit which entities are being exposed to InfluxDB, you can use the include and exclude parameters.</p></section><section><h2>Authentication</h2><p>For InfluxDB 1.x, you must first create a database named home_assistant. InfluxDB 2.x and 3.x create buckets/databases automatically.</p></section><section><h2>InfluxDB 3 (Core and Enterprise)</h2><p>See how to get started using InfluxDB 3:</p></section><section><h2>Write API compatibility</h2><p>InfluxDB 3 Core and Enterprise provide InfluxDB v1 and v2 write API compatibility, allowing you to write data using api_version: 2.</p></section><section><h2>Query API compatibility</h2><p>InfluxDB 3 supports the v1 query API (InfluxQL) and v3 query API (SQL and InfluxQL). The v2 query API (Flux) is not supported.</p></section><section><h2>Sensor</h2><p>The influxdb sensor lets you query values from an InfluxDB database to populate a sensor state. Use this to present statistics as Home Assistant sensors from the influxdb history integration or an external data source.</p></section><section><h2>Sensor configuration</h2><p>Define the sensor connection variables and queries in your configuration.yaml file. A sensor is created for each query.</p></section><section><h2>InfluxDB 2.x sensors (Flux)</h2><p>InfluxDB 2.x requires queries in Flux. Use the query builder in the InfluxDB UI to construct queries:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for InfluxDB.</p><p>The <strong>configure v1</strong> configuration step lists <code>database</code>, <code>password</code>, <code>ssl_ca_cert</code>, <code>url</code>, <code>username</code>, <code>verify_ssl</code>.</p><p>The <strong>configure v2</strong> configuration step lists <code>bucket</code>, <code>organization</code>, <code>ssl_ca_cert</code>, <code>token</code>, <code>url</code>, <code>verify_ssl</code>.</p><p>The <strong>reconfigure v1</strong> configuration step lists <code>database</code>, <code>password</code>, <code>ssl_ca_cert</code>, <code>url</code>, <code>username</code>, <code>verify_ssl</code>.</p><p>The <strong>reconfigure v2</strong> configuration step lists <code>bucket</code>, <code>organization</code>, <code>ssl_ca_cert</code>, <code>token</code>, <code>url</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Sensor</li><li>Examples</li><li>Querying your data in Influx</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/influxdb/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/influxdb</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/influxdb</code></dd></dl></section><p><a href="../../integrations/influxdb/">Return to the InfluxDB guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>InfluxDB reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:75" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/influxdb/">InfluxDB guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>InfluxDB</h1><p>Record events in InfluxDB.</p><div class="reader-body"><p>The <strong>InfluxDB</strong> integration lets you transfer all state changes to an external <a>InfluxDB</a> database. This integration supports:</p>
+<ul>
+<li><a>InfluxDB 3 Core</a> and <a>InfluxDB 3 Enterprise</a> – The latest InfluxDB with v1 and v2 write API compatibility. Sensors query using InfluxQL. Use external tools for SQL.</li>
+<li><a>InfluxDB 2.x</a> – Including <a>InfluxDB Cloud</a>. Sensors query using Flux.</li>
+<li><a>InfluxDB 1.x</a> – Sensors query using InfluxQL.</li>
+</ul>
+<p>For more information on configuration of InfluxDB, refer to the <a>InfluxDB configuration</a> section below.</p>
+<p>The integration can export state changes for all entity types to InfluxDB, not just sensors. In addition, it can create <a>Sensor</a> entities in Home Assistant that query data back from InfluxDB.</p>
+<p><strong>Note</strong></p>
+<p>The <code>influxdb</code> integration runs parallel to the Home Assistant database. It does not replace it.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>InfluxDB</strong> integration to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>InfluxDB</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>If you have an existing YAML configuration, it will be imported automatically as a config entry. Additional options such as entity filters, tags, and measurement attributes are configured via YAML. For details, refer to the <a>options</a> section below.</p>
+<h3>InfluxDB 1.x configuration options</h3>
+<pre><code>
+URL:
+    description: "The URL of your InfluxDB host."
+Username:
+    description: "Database username with read/write privileges."
+Password:
+    description: "Password for the database user."
+Database:
+    description: "Database name. You must create the database before you can write to it."
+Verify SSL:
+    description: "Verify SSL certificate for HTTPS requests."
+SSL CA Certificate:
+    description: "Upload an optional CA certificate to use for SSL verification. Accepted formats: `.pem`, `.crt`, `.cer`, `.der`."
+
+</code></pre>
+<h3>InfluxDB 2.x and 3.x configuration options</h3>
+<pre><code>
+URL:
+    description: "The URL of your InfluxDB host."
+Organization:
+    description: "Organization ID. For InfluxDB 2.x, find this in your installation URL after `/orgs`. For InfluxDB 3, this value is required but not validated—use any value."
+Bucket:
+    description: "For InfluxDB 2.x, the bucket name. For InfluxDB 3, this maps to the database name."
+Token:
+    description: "Authentication token with write access."
+Verify SSL:
+    description: "Verify SSL certificate for HTTPS requests."
+SSL CA Certificate:
+    description: "Upload an optional CA certificate to use for SSL verification. Accepted formats: `.pem`, `.crt`, `.cer`, `.der`."
+
+</code></pre>
+<h3>Additional options</h3>
+<p>Additional options can be configured via YAML.</p>
+<p>After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code>
+max_retries:
+  type: integer
+  description: Set this to allow the integration to retry if there was a network error when transmitting data.
+  required: false
+  default: 0
+precision:
+  type: string
+  description: Set this to specify the time precision sent to influxdb. Setting a coarser precision allows InfluxDb to compress your data better. If not set, defaults to ns.
+  required: false
+  default: ns
+measurement_attr:
+  type: string
+  description: "State object attribute(s) to use as measurement name. Possible values: `unit_of_measurement`, `domain__device_class` or `entity_id`."
+  required: false
+  default: unit_of_measurement
+default_measurement:
+  type: string
+  description: Measurement name to use when the measurement_attr state attribute does not exist, e.g. when an entity doesn't have a unit.&#32;
+  required: false
+  default: uses the entity id of the entity
+override_measurement:
+  type: string
+  description: Measurement name to use instead of measurement_attr or default measurement. This will store all data points in a single measurement.
+  required: false
+exclude:
+  type: list
+  description: Configure which integrations should be excluded from recording to InfluxDB. ([Configure Filter](#configure-filter))
+  required: false
+  keys:
+    entities:
+      type: [string, list]
+      description: The list of entity ids to be excluded from recording to InfluxDB.
+      required: false
+    entity_globs:
+      type: [string, list]
+      description: Exclude all entities matching a listed pattern.
+      required: false
+    domains:
+      type: [string, list]
+      description: The list of domains to be excluded from recording to InfluxDB.
+      required: false
+include:
+  type: list
+  description: Configure which integrations should be included in recordings to InfluxDB. If set, all other entities will not be recorded to InfluxDB. ([Configure Filter](#configure-filter))
+  required: false
+  keys:
+    entities:
+      type: [string, list]
+      description: The list of entity ids to be included in recording to InfluxDB.
+      required: false
+    entity_globs:
+      type: [string, list]
+      description: Include all entities matching a listed pattern.
+      required: false
+    domains:
+      type: [string, list]
+      description: The list of domains to be included in recording to InfluxDB.
+      required: false
+tags:
+  type: map
+  description: Tags to mark the data.
+  required: false
+tags_attributes:
+  type: [string, list]
+  description: The list of attribute names which should be reported as tags and not fields to InfluxDB. For example, if set to `device_class`, you can group or filter by device class, such as all temperature sensors, in addition to entity IDs.
+  required: false
+ignore_attributes:
+  type: [string, list]
+  description: The list of attribute names to ignore when reporting to InfluxDB. This can be used to filter out attributes that either don't change or don't matter to you to reduce the amount of data stored in InfluxDB. Please be aware of the underlying InfluxDB mechanism that converts non-string attributes to strings and adds a `_str` suffix to the attribute name in this case. It means that when you want to ignore, for example, the `icon_str` attribute that shows in your InfluxDB instance, you need to provide `icon` to `ignore_attributes`.
+  required: false
+component_config:
+  type: string
+  required: false
+  description: This attribute contains integration-specific override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+component_config_domain:
+  type: string
+  required: false
+  description: This attribute contains domain-specific integration override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+component_config_glob:&#32;
+  type: string
+  required: false
+  description: This attribute contains integration-specific override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+
+</code></pre>
+<h3>Configure filter</h3>
+<p>By default, no entity will be excluded. To limit which entities are being exposed to InfluxDB, you can use the <code>include</code> and <code>exclude</code> parameters.</p>
+<pre><code># Example filter to include specified domains and exclude specified entities
+influxdb:
+  include:
+    domains:
+      - alarm_control_panel
+      - light
+    entity_globs:
+      - binary_sensor.*_occupancy
+  exclude:
+    entities:
+      - light.kitchen_light
+</code></pre>
+<p>Filters are applied as follows:</p>
+<ol>
+<li>No filter<ul>
+<li>All entities included</li>
+</ul>
+</li>
+<li>Only includes<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity matches domain include: include</li>
+<li>Otherwise, entity matches glob include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+<li>Only excludes<ul>
+<li>Entity listed in exclude: exclude</li>
+<li>Otherwise, entity matches domain exclude: exclude</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise: include</li>
+</ul>
+</li>
+<li>Domain and/or glob includes (may also have excludes)<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity listed in entities exclude: exclude</li>
+<li>Otherwise, entity matches glob include: include</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise, entity matches domain include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+<li>Domain and/or glob excludes (no domain and/or glob includes)<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise, entity listed in exclude: exclude</li>
+<li>Otherwise, entity matches glob exclude: exclude</li>
+<li>Otherwise, entity matches domain exclude: exclude</li>
+<li>Otherwise: include</li>
+</ul>
+</li>
+<li>No Domain and/or glob includes or excludes<ul>
+<li>Entity listed in entities include: include</li>
+<li>Otherwise: exclude</li>
+</ul>
+</li>
+</ol>
+<p>The following characters can be used in entity globs:</p>
+<p><code>*</code> - The asterisk represents zero, one, or multiple characters
+<code>?</code> - The question mark represents zero or one character</p>
+<h3>Examples</h3>
+<h4>Example 1</h4>
+<pre><code>influxdb:
+  max_retries: 3
+  default_measurement: state
+  exclude:
+    entities:
+      - entity.id1
+      - entity.id2
+    domains:
+      - automation
+  include:
+    entities:
+      - entity.id3
+      - entity.id4
+  tags:
+    instance: prod
+    source: hass
+</code></pre>
+<h4>Example 2</h4>
+<pre><code>influxdb:
+  tags:
+    source: HA
+  tags_attributes:
+    - device_class
+  default_measurement: units
+  exclude:
+    entities:
+      - zone.home
+    domains:
+      - persistent_notification
+      - person
+  include:
+    domains:
+      - sensor
+      - binary_sensor
+      - sun
+    entities:
+      - weather.home
+</code></pre>
+<h3>InfluxDB configuration</h3>
+<h4>Authentication</h4>
+<ul>
+<li><strong>InfluxDB 3</strong>: Authentication optional (enabled by default). Token can be generated via InfluxDB.</li>
+<li><strong>InfluxDB 2.x</strong>: Requires authentication. Token can be generated via InfluxDB.</li>
+<li><strong>InfluxDB 1.x</strong>: Authentication optional (disabled by default). If running on the same host with default settings, leave user and password empty.</li>
+</ul>
+<p>For InfluxDB 1.x, you must first <a>create a database</a> named <code>home_assistant</code>. InfluxDB 2.x and 3.x create buckets/databases automatically.</p>
+<h4>InfluxDB 3 (Core and Enterprise)</h4>
+<p>See how to get started using InfluxDB 3:</p>
+<ul>
+<li><strong><a>InfluxDB 3 Core</a></strong>: Free, open-source, optimized for recent data queries.</li>
+<li><strong><a>InfluxDB 3 Enterprise</a></strong>: Adds compaction for historical queries. Includes a free <a>At-Home license</a> for non-commercial use.</li>
+</ul>
+<h5>Write API compatibility</h5>
+<p>InfluxDB 3 Core and Enterprise provide <a>InfluxDB v1 and v2 write API compatibility</a>, allowing you to write data using <code>api_version: 2</code>.</p>
+<h5>Query API compatibility</h5>
+<p>InfluxDB 3 supports the <a>v1 query API</a> (InfluxQL) and <a>v3 query API</a> (SQL and InfluxQL). The v2 query API (Flux) is not supported.</p>
+<p><strong>Note</strong></p>
+<p><strong>Tools for querying:</strong> Query InfluxDB 3 using SQL or InfluxQL with external tools such as <a>InfluxDB 3 Explorer</a> or <a>Grafana</a>.</p>
+<p>Generate tokens using the <a><code>influxdb3</code> CLI</a> or <a>InfluxDB 3 Explorer</a>.</p>
+<h2>Sensor</h2>
+<p>The <code>influxdb</code> sensor lets you query values from an InfluxDB database to populate a sensor state. Use this to present statistics as Home Assistant sensors from the <code>influxdb</code> history integration or an external data source.</p>
+<p><strong>Note</strong></p>
+<p><strong>InfluxDB 3 sensor support:</strong> InfluxDB 3 supports the <a>v1 query API</a> (InfluxQL), so 1.x sensors using <code>queries:</code> may work. The v2 query API (Flux) is not supported—<code>queries_flux:</code> sensors don't work with InfluxDB 3.</p>
+<p><strong>Tools for querying:</strong> Query InfluxDB 3 using SQL or InfluxQL with external tools such as <a>InfluxDB 3 Explorer</a> or <a>Grafana</a>.</p>
+<p><strong>Important</strong></p>
+<p>You must configure the <code>influxdb</code> history integration to create <code>influxdb</code> sensors. To create sensors for an external InfluxDB database without writing data to it, exclude all entities:</p>
+<pre><code>influxdb:
+  exclude:
+    entity_globs: "*"
+</code></pre>
+<h3>Sensor configuration</h3>
+<p>Define the sensor connection variables and queries in your <code>configuration.yaml</code> file. A sensor is created for each query.</p>
+<h4>InfluxDB 1.x sensors (InfluxQL)</h4>
+<pre><code>sensor:
+  - platform: influxdb
+    queries:
+      - name: mean value of foo
+        where: '"name" = ''foo'''
+        measurement: '"°C"'
+</code></pre>
+<h4>InfluxDB 2.x sensors (Flux)</h4>
+<p>InfluxDB 2.x requires queries in <a>Flux</a>. Use the query builder in the InfluxDB UI to construct queries:</p>
+<pre><code>sensor:
+  - platform: influxdb
+    api_version: 2
+    organization: RANDOM_16_DIGIT_HEX_ID
+    token: GENERATED_AUTH_TOKEN
+    queries_flux:
+      - group_function: mean
+        imports:
+          - strings
+        name: "Mean humidity reported from past day"
+        query: &gt;
+          filter(fn: (r) =&gt; r._field == "value" and r.domain == "sensor" and strings.containsStr(v: r.entity_id, substr: "humidity"))
+          |&gt; keep(columns: ["_value"])
+        range_start: "-1d"
+</code></pre>
+<h3>Sensor configuration variables</h3>
+<pre><code>
+api_version:
+  type: string
+  description: API version to use. Valid values are `1` or `2`.
+  default: "1"
+ssl:
+  type: boolean
+  description: Use HTTPS instead of HTTP. Defaults to `true` for 2.x, `false` for 1.x.
+  required: false
+  default: false
+host:
+  type: string
+  description: IP address or domain of your database host. For InfluxDB Cloud, defaults to `us-west-2-1.aws.cloud2.influxdata.com`.
+  required: false
+  default: localhost
+port:
+  type: integer
+  description: Port to use.
+  required: false
+  default: 8086
+path:
+  type: string
+  description: Path to use if InfluxDB is behind a reverse proxy.
+  required: false
+username:
+  type: string
+  description: 1.x only - Database username with read privileges.
+  required: inclusive
+password:
+  type: string
+  description: 1.x only - Password for the database user. Required with `username`.
+  required: inclusive
+database:
+  type: string
+  description: 1.x only - Database name. Individual sensors can override this.
+  required: false
+  default: home_assistant
+verify_ssl:
+  type: boolean
+  description: 1.x only - Verify SSL certificate. For 2.x, SSL verification is always enabled.
+  required: false
+  default: true
+token:
+  type: string
+  description: 2.x only - Auth token with read access to your Organization and Bucket.
+  required: inclusive
+organization:
+  type: string
+  description: 2.x only - Organization ID. Find this in your InfluxDB URL after `/orgs`.
+  required: inclusive
+bucket:
+  type: string
+  description: 2.x only - Bucket name. Individual sensors can override this.
+  required: false
+  default: Home Assistant
+queries:
+  type: list
+  description: 1.x only - List of sensors using InfluxQL queries.
+  required: true
+  keys:
+    name:
+      type: string
+      description: The name of the sensor.
+      required: true
+    unique_id:
+      type: string
+      description: The unique ID for this query. This allows changing the name, icon and entity_id from the web interface.
+      required: false
+    unit_of_measurement:
+      type: string
+      description: Defines the units of measurement of the sensor, if any.
+      required: false
+    measurement:
+      type: string
+      description: Defines the measurement name in InfluxDB (the FROM clause of the query).
+      required: true
+    where:
+      type: template
+      description: Defines the data selection clause (the where clause of the query). This supports [templates](/docs/templating/syntax/).
+      required: true
+    value_template:
+      type: template
+      description: Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract a value from the payload.
+      required: false
+    database:
+      type: string
+      description: Name of the database to use.
+      required: false
+      default: home_assistant
+    group_function:
+      type: string
+      description: The group function to be used.
+      required: false
+      default: mean
+    field:
+      type: string
+      description: The field name to select.
+      required: true
+      default: value
+queries_flux:
+  type: list
+  description: 2.x only - List of sensors using Flux queries.
+  required: true
+  keys:
+    name:
+      type: string
+      description: The name of the sensor.
+      required: true
+    unique_id:
+      type: string
+      description: The unique ID for this query. This allows changing the name, icon and entity_id from the web interface.
+      required: false
+    unit_of_measurement:
+      type: string
+      description: Defines the units of measurement of the sensor, if any.
+      required: false
+    range_start:
+      type: string
+      description: "Duration or time value to start range from. All Flux queries require a `range` filter, one is automatically added to the beginning of your Flux query in the form of `range(start: {range_start}, stop: {range_stop})`."
+      required: false
+      default: -15m
+    range_stop:
+      type: string
+      description: Duration or time value to stop range at. See `range_start` above for how this is used in query.
+      required: false
+      default: now()
+    query:
+      type: template
+      description: "One or more flux filters used to get to the data you want. These should limit resultset to one table, or any beyond the first will be ignored. Your query should not begin or end with a pipe (`|&gt;`). This supports [templates](/docs/templating/syntax/)."
+      required: true
+    group_function:
+      type: string
+      description: "The group function to be used. If provided, adds `{group_function}(column: \"_value\")` to your query. Unlike 1.x queries, this does not default to mean. If omitted, `limit(n: 1)` is added instead."
+      required: false
+    value_template:
+      type: template
+      description: Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract a value from the payload. Note that `value` will be set to the value of the `_value` field in your query output.
+      required: false
+    bucket:
+      type: string
+      description: Name of the bucket within your Organization to read from.
+      required: false
+      default: Home Assistant
+    imports:
+      type: [string, list]
+      description: Libraries to import to execute your query. For example, `strings`, `date`, or `experimental/query`.
+      required: false
+
+</code></pre>
+<h2>Examples</h2>
+<h3>Full configuration for InfluxDB 1.x</h3>
+<p>The example configuration entry below creates two requests to your local InfluxDB instance, one to the database <code>db1</code>, the other to <code>db2</code>:</p>
+<ul>
+<li><code>select last(value) as value from "°C" where "name" = "foo"</code></li>
+<li><code>select min(tmp) as value from "%" where "entity_id" = ''salon'' and time &gt; now() - 1h</code></li>
+</ul>
+<pre><code>sensor:
+  - platform: influxdb
+    host: localhost
+    username: home-assistant
+    password: password
+    queries:
+      - name: last value of foo
+        unit_of_measurement: °C
+        value_template: '{{ value | round(1) }}'
+        group_function: last
+        where: '"name" = ''foo'''
+        measurement: '"°C"'
+        field: value
+        database: db1
+      - name: Min for last hour
+        unit_of_measurement: "%"
+        value_template: '{{ value | round(1) }}'
+        group_function: min
+        where: '"entity_id" = ''salon'' and time &gt; now() - 1h'
+        measurement: '"%"'
+        field: tmp
+        database: db2
+</code></pre>
+<h3>Full configuration for InfluxDB 2.x</h3>
+<pre><code>sensor:
+  - platform: influxdb
+    api_version: 2
+    token: GENERATED_AUTH_TOKEN
+    organization: RANDOM_16_DIGIT_HEX_ID
+    bucket: BUCKET_NAME
+    queries_flux:
+      - range_start: "-1d"
+        name: "How long have I been here"
+        query: &gt;
+          filter(fn: (r) =&gt; r._domain == "person" and r._entity_id == "me" and r._value != "{{ states('person.me') }}")
+          |&gt; map(fn: (r) =&gt; ({ _value: r._time }))
+        value_template: "{{ relative_time(strptime(value, '%Y-%m-%d %H:%M:%S %Z')) }}"
+      - range_start: "-1d"
+        name: "Cost of my house today across all power sensor"
+        query: &gt;
+          filter(fn: (r) =&gt; r.domain == "sensor" and r._field == "value" and regexp.matchRegexpString(r: /_power$/, v: r.entity_id))
+          |&gt; keep(columns: ["_value", "_time"])
+          |&gt; sort(columns: ["_time"], desc: false)
+          |&gt; integral(unit: 5s, column: "_value")
+        imports: regexp
+        value_template: "{{ value|float / 24.0 / 1000.0 * states('sensor.current_cost_per_kwh')|float }}"
+      - range_start: "-1d"
+        bucket: Glances Bucket
+        name: "Average CPU temp today"
+        query: "filter(fn: (r) =&gt; r._field == \"value\" and r.entity_id == \"glances_cpu_temperature\")"
+        group_function: mean
+</code></pre>
+<p>Note that when working with Flux queries, the resultset is broken into tables, you can see how this works in the Data Explorer of the UI. If you are operating on data created by the InfluxDB history integration, this means by default, you will have a table for each entity and each attribute of each entity (other than <code>unit_of_measurement</code> and any others you promoted to tags).</p>
+<p>This is more tables compared to 1.x queries, where you have one table per <code>unit_of_measurement</code> across all entities. You can still create aggregate metrics across multiple sensors. As shown above, use the <a>keep</a> or <a>drop</a> filters. When you remove key columns, InfluxDB merges tables that share a schema for <code>_value</code> into one.</p>
+<h2>Querying your data in Influx</h2>
+<h3>Sensors</h3>
+<p>For sensors with a unit of measurement defined, the unit of measurement is used as the measurement name and entries are tagged with the second part of the <code>entity_id</code>. Therefore you need to add a WHERE clause to the query to filter out values.</p>
+<p>For example a query on a <code>%</code> battery for <code>sensor.multi_sensor_battery_level</code>:</p>
+<pre><code>SELECT * FROM "%" WHERE time &gt; now() - 12h AND "entity_id" = 'multi_sensor_battery_level';
+</code></pre>
+<p>Or for temperatures represented in <code>°C</code>:</p>
+<pre><code>SELECT * FROM "°C" WHERE time &gt; now() - 1h;
+</code></pre>
+<h3>Everything else</h3>
+<p>Everything else can be queried using the <code>entity_id</code> as its measurement name.</p>
+<pre><code>SELECT * FROM "binary_sensor.front_doorbell" WHERE time &gt; now() - 24h;
+</code></pre>
+<pre><code>SELECT "temperature" FROM "climate.kitchen" WHERE time &gt; now() - 24h;
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/influxdb.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Record events in InfluxDB.
+ha_release: 0.9
+ha_domain: influxdb
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The **InfluxDB** {% term integration %} lets you transfer all state changes to an external [InfluxDB](https://influxdata.com/) database. This integration supports:
+
+- [InfluxDB 3 Core](https://docs.influxdata.com/influxdb3/core/) and [InfluxDB 3 Enterprise](https://docs.influxdata.com/influxdb3/enterprise/) – The latest InfluxDB with v1 and v2 write API compatibility. Sensors query using InfluxQL. Use external tools for SQL.
+- [InfluxDB 2.x](https://docs.influxdata.com/influxdb/v2/) – Including [InfluxDB Cloud](https://cloud2.influxdata.com/signup). Sensors query using Flux.
+- [InfluxDB 1.x](https://docs.influxdata.com/influxdb/v1/) – Sensors query using InfluxQL.
+
+For more information on configuration of InfluxDB, refer to the [InfluxDB configuration](#influxdb-configuration) section below.
+
+The integration can export state changes for all entity types to InfluxDB, not just sensors. In addition, it can create [Sensor](#sensor) entities in Home Assistant that query data back from InfluxDB.
+
+{% note %}
+The `influxdb` integration runs parallel to the Home Assistant database. It does not replace it.
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+
+If you have an existing YAML configuration, it will be imported automatically as a config entry. Additional options such as entity filters, tags, and measurement attributes are configured via YAML. For details, refer to the [options](#additional-options) section below.
+
+### InfluxDB 1.x configuration options
+
+{% configuration_basic %}
+URL:
+    description: &quot;The URL of your InfluxDB host.&quot;
+Username:
+    description: &quot;Database username with read/write privileges.&quot;
+Password:
+    description: &quot;Password for the database user.&quot;
+Database:
+    description: &quot;Database name. You must create the database before you can write to it.&quot;
+Verify SSL:
+    description: &quot;Verify SSL certificate for HTTPS requests.&quot;
+SSL CA Certificate:
+    description: &quot;Upload an optional CA certificate to use for SSL verification. Accepted formats: `.pem`, `.crt`, `.cer`, `.der`.&quot;
+{% endconfiguration_basic %}
+
+### InfluxDB 2.x and 3.x configuration options
+
+{% configuration_basic %}
+URL:
+    description: &quot;The URL of your InfluxDB host.&quot;
+Organization:
+    description: &quot;Organization ID. For InfluxDB 2.x, find this in your installation URL after `/orgs`. For InfluxDB 3, this value is required but not validated—use any value.&quot;
+Bucket:
+    description: &quot;For InfluxDB 2.x, the bucket name. For InfluxDB 3, this maps to the database name.&quot;
+Token:
+    description: &quot;Authentication token with write access.&quot;
+Verify SSL:
+    description: &quot;Verify SSL certificate for HTTPS requests.&quot;
+SSL CA Certificate:
+    description: &quot;Upload an optional CA certificate to use for SSL verification. Accepted formats: `.pem`, `.crt`, `.cer`, `.der`.&quot;
+{% endconfiguration_basic %}
+
+### Additional options
+
+Additional options can be configured via YAML.
+
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+{% configuration %}
+max_retries:
+  type: integer
+  description: Set this to allow the integration to retry if there was a network error when transmitting data.
+  required: false
+  default: 0
+precision:
+  type: string
+  description: Set this to specify the time precision sent to influxdb. Setting a coarser precision allows InfluxDb to compress your data better. If not set, defaults to ns.
+  required: false
+  default: ns
+measurement_attr:
+  type: string
+  description: &quot;State object attribute(s) to use as measurement name. Possible values: `unit_of_measurement`, `domain__device_class` or `entity_id`.&quot;
+  required: false
+  default: unit_of_measurement
+default_measurement:
+  type: string
+  description: Measurement name to use when the measurement_attr state attribute does not exist, e.g. when an entity doesn&#x27;t have a unit.&#32;
+  required: false
+  default: uses the entity id of the entity
+override_measurement:
+  type: string
+  description: Measurement name to use instead of measurement_attr or default measurement. This will store all data points in a single measurement.
+  required: false
+exclude:
+  type: list
+  description: Configure which integrations should be excluded from recording to InfluxDB. ([Configure Filter](#configure-filter))
+  required: false
+  keys:
+    entities:
+      type: [string, list]
+      description: The list of entity ids to be excluded from recording to InfluxDB.
+      required: false
+    entity_globs:
+      type: [string, list]
+      description: Exclude all entities matching a listed pattern.
+      required: false
+    domains:
+      type: [string, list]
+      description: The list of domains to be excluded from recording to InfluxDB.
+      required: false
+include:
+  type: list
+  description: Configure which integrations should be included in recordings to InfluxDB. If set, all other entities will not be recorded to InfluxDB. ([Configure Filter](#configure-filter))
+  required: false
+  keys:
+    entities:
+      type: [string, list]
+      description: The list of entity ids to be included in recording to InfluxDB.
+      required: false
+    entity_globs:
+      type: [string, list]
+      description: Include all entities matching a listed pattern.
+      required: false
+    domains:
+      type: [string, list]
+      description: The list of domains to be included in recording to InfluxDB.
+      required: false
+tags:
+  type: map
+  description: Tags to mark the data.
+  required: false
+tags_attributes:
+  type: [string, list]
+  description: The list of attribute names which should be reported as tags and not fields to InfluxDB. For example, if set to `device_class`, you can group or filter by device class, such as all temperature sensors, in addition to entity IDs.
+  required: false
+ignore_attributes:
+  type: [string, list]
+  description: The list of attribute names to ignore when reporting to InfluxDB. This can be used to filter out attributes that either don&#x27;t change or don&#x27;t matter to you to reduce the amount of data stored in InfluxDB. Please be aware of the underlying InfluxDB mechanism that converts non-string attributes to strings and adds a `_str` suffix to the attribute name in this case. It means that when you want to ignore, for example, the `icon_str` attribute that shows in your InfluxDB instance, you need to provide `icon` to `ignore_attributes`.
+  required: false
+component_config:
+  type: string
+  required: false
+  description: This attribute contains integration-specific override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+component_config_domain:
+  type: string
+  required: false
+  description: This attribute contains domain-specific integration override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of a unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+component_config_glob:&#32;
+  type: string
+  required: false
+  description: This attribute contains integration-specific override values. See [Editing entity settings in YAML](/integrations/homeassistant/#editing-entity-settings-in-yaml) for format.
+  keys:
+    override_measurement:
+      type: string
+      description: Measurement name to use instead of unit or default measurement. This will store all data points in a single measurement.
+      required: false
+    ignore_attributes:
+      type: [string, list]
+      description: The list of attribute names to ignore when reporting to InfluxDB. Will be merged with the default `ignore_attributes` list when processing a state change event for a particular entity.
+      required: false
+{% endconfiguration %}
+
+### Configure filter
+
+By default, no entity will be excluded. To limit which entities are being exposed to InfluxDB, you can use the `include` and `exclude` parameters.
+
+```yaml
+# Example filter to include specified domains and exclude specified entities
+influxdb:
+  include:
+    domains:
+      - alarm_control_panel
+      - light
+    entity_globs:
+      - binary_sensor.*_occupancy
+  exclude:
+    entities:
+      - light.kitchen_light
+```
+
+{% include common-tasks/filters.md %}
+
+### Examples
+
+#### Example 1
+
+```yaml
+influxdb:
+  max_retries: 3
+  default_measurement: state
+  exclude:
+    entities:
+      - entity.id1
+      - entity.id2
+    domains:
+      - automation
+  include:
+    entities:
+      - entity.id3
+      - entity.id4
+  tags:
+    instance: prod
+    source: hass
+```
+
+#### Example 2
+
+```yaml
+influxdb:
+  tags:
+    source: HA
+  tags_attributes:
+    - device_class
+  default_measurement: units
+  exclude:
+    entities:
+      - zone.home
+    domains:
+      - persistent_notification
+      - person
+  include:
+    domains:
+      - sensor
+      - binary_sensor
+      - sun
+    entities:
+      - weather.home
+```
+
+### InfluxDB configuration
+
+#### Authentication
+
+- **InfluxDB 3**: Authentication optional (enabled by default). Token can be generated via InfluxDB.
+- **InfluxDB 2.x**: Requires authentication. Token can be generated via InfluxDB.
+- **InfluxDB 1.x**: Authentication optional (disabled by default). If running on the same host with default settings, leave user and password empty.
+
+For InfluxDB 1.x, you must first [create a database](https://docs.influxdata.com/influxdb/v1/introduction/get-started/#creating-a-database) named `home_assistant`. InfluxDB 2.x and 3.x create buckets/databases automatically.
+
+#### InfluxDB 3 (Core and Enterprise)
+
+See how to get started using InfluxDB 3:
+
+- **[InfluxDB 3 Core](https://docs.influxdata.com/influxdb3/core/get-started/)**: Free, open-source, optimized for recent data queries.
+- **[InfluxDB 3 Enterprise](https://docs.influxdata.com/influxdb3/enterprise/get-started/)**: Adds compaction for historical queries. Includes a free [At-Home license](https://docs.influxdata.com/influxdb3/enterprise/admin/license/) for non-commercial use.
+
+##### Write API compatibility
+
+InfluxDB 3 Core and Enterprise provide [InfluxDB v1 and v2 write API compatibility](https://docs.influxdata.com/influxdb3/core/write-data/http-api/compatibility-apis/), allowing you to write data using `api_version: 2`.
+
+##### Query API compatibility
+
+InfluxDB 3 supports the [v1 query API](https://docs.influxdata.com/influxdb3/core/query-data/execute-queries/influxdb-v1-api/) (InfluxQL) and [v3 query API](https://docs.influxdata.com/influxdb3/core/query-data/execute-queries/influxdb-v3-api/) (SQL and InfluxQL). The v2 query API (Flux) is not supported.
+
+{% note %}
+**Tools for querying:** Query InfluxDB 3 using SQL or InfluxQL with external tools such as [InfluxDB 3 Explorer](https://docs.influxdata.com/influxdb3/explorer/get-started/) or [Grafana](https://docs.influxdata.com/influxdb3/core/visualize-data/grafana/).
+{% endnote %}
+
+Generate tokens using the [`influxdb3` CLI](https://docs.influxdata.com/influxdb3/core/admin/tokens/create/) or [InfluxDB 3 Explorer](https://docs.influxdata.com/influxdb3/explorer/).
+
+## Sensor
+
+The `influxdb` sensor lets you query values from an InfluxDB database to populate a sensor state. Use this to present statistics as Home Assistant sensors from the `influxdb` history integration or an external data source.
+
+{% note %}
+**InfluxDB 3 sensor support:** InfluxDB 3 supports the [v1 query API](https://docs.influxdata.com/influxdb3/core/query-data/execute-queries/influxdb-v1-api/) (InfluxQL), so 1.x sensors using `queries:` may work. The v2 query API (Flux) is not supported—`queries_flux:` sensors don&#x27;t work with InfluxDB 3.
+
+**Tools for querying:** Query InfluxDB 3 using SQL or InfluxQL with external tools such as [InfluxDB 3 Explorer](https://docs.influxdata.com/influxdb3/explorer/get-started/) or [Grafana](https://docs.influxdata.com/influxdb3/core/visualize-data/grafana/).
+{% endnote %}
+
+{% important %}
+You must configure the `influxdb` history integration to create `influxdb` sensors. To create sensors for an external InfluxDB database without writing data to it, exclude all entities:
+
+```yaml
+influxdb:
+  exclude:
+    entity_globs: &quot;*&quot;
+```
+
+{% endimportant %}
+
+### Sensor configuration
+
+Define the sensor connection variables and queries in your {% term &quot;`configuration.yaml`&quot; %} file. A sensor is created for each query.
+
+#### InfluxDB 1.x sensors (InfluxQL)
+
+```yaml
+sensor:
+  - platform: influxdb
+    queries:
+      - name: mean value of foo
+        where: &#x27;&quot;name&quot; = &#x27;&#x27;foo&#x27;&#x27;&#x27;
+        measurement: &#x27;&quot;°C&quot;&#x27;
+```
+
+#### InfluxDB 2.x sensors (Flux)
+
+InfluxDB 2.x requires queries in [Flux](https://docs.influxdata.com/flux/v0/). Use the query builder in the InfluxDB UI to construct queries:
+
+```yaml
+sensor:
+  - platform: influxdb
+    api_version: 2
+    organization: RANDOM_16_DIGIT_HEX_ID
+    token: GENERATED_AUTH_TOKEN
+    queries_flux:
+      - group_function: mean
+        imports:
+          - strings
+        name: &quot;Mean humidity reported from past day&quot;
+        query: &gt;
+          filter(fn: (r) =&gt; r._field == &quot;value&quot; and r.domain == &quot;sensor&quot; and strings.containsStr(v: r.entity_id, substr: &quot;humidity&quot;))
+          |&gt; keep(columns: [&quot;_value&quot;])
+        range_start: &quot;-1d&quot;
+```
+
+### Sensor configuration variables
+
+{% configuration %}
+api_version:
+  type: string
+  description: API version to use. Valid values are `1` or `2`.
+  default: &quot;1&quot;
+ssl:
+  type: boolean
+  description: Use HTTPS instead of HTTP. Defaults to `true` for 2.x, `false` for 1.x.
+  required: false
+  default: false
+host:
+  type: string
+  description: IP address or domain of your database host. For InfluxDB Cloud, defaults to `us-west-2-1.aws.cloud2.influxdata.com`.
+  required: false
+  default: localhost
+port:
+  type: integer
+  description: Port to use.
+  required: false
+  default: 8086
+path:
+  type: string
+  description: Path to use if InfluxDB is behind a reverse proxy.
+  required: false
+username:
+  type: string
+  description: 1.x only - Database username with read privileges.
+  required: inclusive
+password:
+  type: string
+  description: 1.x only - Password for the database user. Required with `username`.
+  required: inclusive
+database:
+  type: string
+  description: 1.x only - Database name. Individual sensors can override this.
+  required: false
+  default: home_assistant
+verify_ssl:
+  type: boolean
+  description: 1.x only - Verify SSL certificate. For 2.x, SSL verification is always enabled.
+  required: false
+  default: true
+token:
+  type: string
+  description: 2.x only - Auth token with read access to your Organization and Bucket.
+  required: inclusive
+organization:
+  type: string
+  description: 2.x only - Organization ID. Find this in your InfluxDB URL after `/orgs`.
+  required: inclusive
+bucket:
+  type: string
+  description: 2.x only - Bucket name. Individual sensors can override this.
+  required: false
+  default: Home Assistant
+queries:
+  type: list
+  description: 1.x only - List of sensors using InfluxQL queries.
+  required: true
+  keys:
+    name:
+      type: string
+      description: The name of the sensor.
+      required: true
+    unique_id:
+      type: string
+      description: The unique ID for this query. This allows changing the name, icon and entity_id from the web interface.
+      required: false
+    unit_of_measurement:
+      type: string
+      description: Defines the units of measurement of the sensor, if any.
+      required: false
+    measurement:
+      type: string
+      description: Defines the measurement name in InfluxDB (the FROM clause of the query).
+      required: true
+    where:
+      type: template
+      description: Defines the data selection clause (the where clause of the query). This supports [templates](/docs/templating/syntax/).
+      required: true
+    value_template:
+      type: template
+      description: Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract a value from the payload.
+      required: false
+    database:
+      type: string
+      description: Name of the database to use.
+      required: false
+      default: home_assistant
+    group_function:
+      type: string
+      description: The group function to be used.
+      required: false
+      default: mean
+    field:
+      type: string
+      description: The field name to select.
+      required: true
+      default: value
+queries_flux:
+  type: list
+  description: 2.x only - List of sensors using Flux queries.
+  required: true
+  keys:
+    name:
+      type: string
+      description: The name of the sensor.
+      required: true
+    unique_id:
+      type: string
+      description: The unique ID for this query. This allows changing the name, icon and entity_id from the web interface.
+      required: false
+    unit_of_measurement:
+      type: string
+      description: Defines the units of measurement of the sensor, if any.
+      required: false
+    range_start:
+      type: string
+      description: &quot;Duration or time value to start range from. All Flux queries require a `range` filter, one is automatically added to the beginning of your Flux query in the form of `range(start: {range_start}, stop: {range_stop})`.&quot;
+      required: false
+      default: -15m
+    range_stop:
+      type: string
+      description: Duration or time value to stop range at. See `range_start` above for how this is used in query.
+      required: false
+      default: now()
+    query:
+      type: template
+      description: &quot;One or more flux filters used to get to the data you want. These should limit resultset to one table, or any beyond the first will be ignored. Your query should not begin or end with a pipe (`|&gt;`). This supports [templates](/docs/templating/syntax/).&quot;
+      required: true
+    group_function:
+      type: string
+      description: &quot;The group function to be used. If provided, adds `{group_function}(column: \&quot;_value\&quot;)` to your query. Unlike 1.x queries, this does not default to mean. If omitted, `limit(n: 1)` is added instead.&quot;
+      required: false
+    value_template:
+      type: template
+      description: Defines a [template](/docs/templating/where-to-use/#processing-incoming-data) to extract a value from the payload. Note that `value` will be set to the value of the `_value` field in your query output.
+      required: false
+    bucket:
+      type: string
+      description: Name of the bucket within your Organization to read from.
+      required: false
+      default: Home Assistant
+    imports:
+      type: [string, list]
+      description: Libraries to import to execute your query. For example, `strings`, `date`, or `experimental/query`.
+      required: false
+{% endconfiguration %}
+
+## Examples
+
+### Full configuration for InfluxDB 1.x
+
+The example configuration entry below creates two requests to your local InfluxDB instance, one to the database `db1`, the other to `db2`:
+
+- `select last(value) as value from &quot;°C&quot; where &quot;name&quot; = &quot;foo&quot;`
+- `select min(tmp) as value from &quot;%&quot; where &quot;entity_id&quot; = &#x27;&#x27;salon&#x27;&#x27; and time &gt; now() - 1h`
+
+```yaml
+sensor:
+  - platform: influxdb
+    host: localhost
+    username: home-assistant
+    password: password
+    queries:
+      - name: last value of foo
+        unit_of_measurement: °C
+        value_template: &#x27;{{ value | round(1) }}&#x27;
+        group_function: last
+        where: &#x27;&quot;name&quot; = &#x27;&#x27;foo&#x27;&#x27;&#x27;
+        measurement: &#x27;&quot;°C&quot;&#x27;
+        field: value
+        database: db1
+      - name: Min for last hour
+        unit_of_measurement: &quot;%&quot;
+        value_template: &#x27;{{ value | round(1) }}&#x27;
+        group_function: min
+        where: &#x27;&quot;entity_id&quot; = &#x27;&#x27;salon&#x27;&#x27; and time &gt; now() - 1h&#x27;
+        measurement: &#x27;&quot;%&quot;&#x27;
+        field: tmp
+        database: db2
+```
+
+### Full configuration for InfluxDB 2.x
+
+```yaml
+sensor:
+  - platform: influxdb
+    api_version: 2
+    token: GENERATED_AUTH_TOKEN
+    organization: RANDOM_16_DIGIT_HEX_ID
+    bucket: BUCKET_NAME
+    queries_flux:
+      - range_start: &quot;-1d&quot;
+        name: &quot;How long have I been here&quot;
+        query: &gt;
+          filter(fn: (r) =&gt; r._domain == &quot;person&quot; and r._entity_id == &quot;me&quot; and r._value != &quot;{{ states(&#x27;person.me&#x27;) }}&quot;)
+          |&gt; map(fn: (r) =&gt; ({ _value: r._time }))
+        value_template: &quot;{{ relative_time(strptime(value, &#x27;%Y-%m-%d %H:%M:%S %Z&#x27;)) }}&quot;
+      - range_start: &quot;-1d&quot;
+        name: &quot;Cost of my house today across all power sensor&quot;
+        query: &gt;
+          filter(fn: (r) =&gt; r.domain == &quot;sensor&quot; and r._field == &quot;value&quot; and regexp.matchRegexpString(r: /_power$/, v: r.entity_id))
+          |&gt; keep(columns: [&quot;_value&quot;, &quot;_time&quot;])
+          |&gt; sort(columns: [&quot;_time&quot;], desc: false)
+          |&gt; integral(unit: 5s, column: &quot;_value&quot;)
+        imports: regexp
+        value_template: &quot;{{ value|float / 24.0 / 1000.0 * states(&#x27;sensor.current_cost_per_kwh&#x27;)|float }}&quot;
+      - range_start: &quot;-1d&quot;
+        bucket: Glances Bucket
+        name: &quot;Average CPU temp today&quot;
+        query: &quot;filter(fn: (r) =&gt; r._field == \&quot;value\&quot; and r.entity_id == \&quot;glances_cpu_temperature\&quot;)&quot;
+        group_function: mean
+```
+
+Note that when working with Flux queries, the resultset is broken into tables, you can see how this works in the Data Explorer of the UI. If you are operating on data created by the InfluxDB history integration, this means by default, you will have a table for each entity and each attribute of each entity (other than `unit_of_measurement` and any others you promoted to tags).
+
+This is more tables compared to 1.x queries, where you have one table per `unit_of_measurement` across all entities. You can still create aggregate metrics across multiple sensors. As shown above, use the [keep](https://docs.influxdata.com/flux/v0/stdlib/universe/keep/) or [drop](https://docs.influxdata.com/flux/v0/stdlib/universe/drop/) filters. When you remove key columns, InfluxDB merges tables that share a schema for `_value` into one.
+
+## Querying your data in Influx
+
+### Sensors
+
+For sensors with a unit of measurement defined, the unit of measurement is used as the measurement name and entries are tagged with the second part of the `entity_id`. Therefore you need to add a WHERE clause to the query to filter out values.&#32;
+
+For example a query on a `%` battery for `sensor.multi_sensor_battery_level`:
+
+```sql
+SELECT * FROM &quot;%&quot; WHERE time &gt; now() - 12h AND &quot;entity_id&quot; = &#x27;multi_sensor_battery_level&#x27;;
+```
+
+Or for temperatures represented in `°C`:
+
+```sql
+SELECT * FROM &quot;°C&quot; WHERE time &gt; now() - 1h;
+```
+
+### Everything else
+
+Everything else can be queried using the `entity_id` as its measurement name.
+
+```sql
+SELECT * FROM &quot;binary_sensor.front_doorbell&quot; WHERE time &gt; now() - 24h;
+```
+
+```sql
+SELECT &quot;temperature&quot; FROM &quot;climate.kitchen&quot; WHERE time &gt; now() - 24h;
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for InfluxDB.</p><p>The <strong>configure v1</strong> configuration step lists <code>database</code>, <code>password</code>, <code>ssl_ca_cert</code>, <code>url</code>, <code>username</code>, <code>verify_ssl</code>.</p><p>The <strong>configure v2</strong> configuration step lists <code>bucket</code>, <code>organization</code>, <code>ssl_ca_cert</code>, <code>token</code>, <code>url</code>, <code>verify_ssl</code>.</p><p>The <strong>reconfigure v1</strong> configuration step lists <code>database</code>, <code>password</code>, <code>ssl_ca_cert</code>, <code>url</code>, <code>username</code>, <code>verify_ssl</code>.</p><p>The <strong>reconfigure v2</strong> configuration step lists <code>bucket</code>, <code>organization</code>, <code>ssl_ca_cert</code>, <code>token</code>, <code>url</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>sensor</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Sensor</li><li>Examples</li><li>Querying your data in Influx</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/influxdb/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/influxdb</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/influxdb</code></dd></dl></section><p><a href="../../integrations/influxdb/">Return to the InfluxDB guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

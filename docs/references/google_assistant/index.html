@@ -1,1 +1,971 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Assistant reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:124" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/google_assistant/">Google Assistant guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Google Assistant</h1><p>Setup for Google Assistant integration</p><section><h2>Overview</h2><p>The Google Assistant integration allows you to control your Home Assistant devices via Google Assistant on your mobile, tablet, or Google Home device.</p></section><section><h2>Automatic setup via Home Assistant Cloud</h2><p>With Home Assistant Cloud, you can connect your Home Assistant instance in a few simple clicks to Google Assistant. With Home Assistant Cloud you don&#x27;t have to deal with dynamic DNS, SSL certificates, or opening ports on your router. Just log in via the user interface and a secure connection with the cloud will be established. Home Assistant Cloud requires a paid subscription after a 30-day free trial.</p></section><section><h2>Manual setup (if you don&#x27;t have Home Assistant Cloud)</h2><p>The Google Assistant integration (without Home Assistant Cloud) requires a bit more setup than most due to the way Google requires Assistant Apps to be set up.</p></section><section><h2>Prerequisites</h2><p>To use Google Assistant, your Home Assistant configuration has to be externally accessible with a hostname and SSL certificate.</p></section><section><h2>Google Cloud Platform configuration</h2><p>1. Create a new project in the Google Home Developer Console.</p></section><section><h2>Allow other users</h2><p>If you want to allow other household users to control the devices:</p></section><section><h2>Utilize device sync</h2><p>You are now able to support active reporting of state to Google&#x27;s server (configuration option report_state) and synchronize Home Assistant devices with the Google Home app (google_assistant.request_sync service).</p></section><section><h2>Enable local fulfillment</h2><p>Google Assistant devices can send their commands locally to Home Assistant allowing them to respond faster.</p></section><section><h2>YAML configuration</h2><p>Now add your setup to your configuration.yaml file, such as:</p></section><section><h2>Available domains</h2><p>Currently, the following domains are available to be used with Google Assistant, listed with their default types:</p></section><section><h2>Configuration details</h2><p>The domain used to identify Google Assistant in Home Assistant is <code>google_assistant</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>request sync</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Automatic setup via Home Assistant Cloud</li><li>Manual setup (if you don&#x27;t have Home Assistant Cloud)</li><li>Google Assistant automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/google_assistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/google_assistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/google_assistant</code></dd></dl></section><p><a href="../../integrations/google_assistant/">Return to the Google Assistant guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Assistant reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:124" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/google_assistant/">Google Assistant guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Google Assistant</h1><p>Setup for Google Assistant integration</p><div class="reader-body"><p>The <strong>Google Assistant</strong> integration allows you to control your Home Assistant devices via Google Assistant on your mobile, tablet, or Google Home device.</p>
+<p>If you want to send commands to Google Assistant to control devices supported by Google Assistant but not by Home Assistant, or broadcast messages to Google Assistant speakers and displays without interrupting music/video playback, take a look at the <a href="../google_assistant_sdk/">Google Assistant SDK</a> integration.</p>
+<h2>Automatic setup via Home Assistant Cloud</h2>
+<p>With <a>Home Assistant Cloud</a>, you can connect your Home Assistant instance in a few simple clicks to Google Assistant. With Home Assistant Cloud you don't have to deal with dynamic DNS, SSL certificates, or opening ports on your router. Just log in via the user interface and a secure connection with the cloud will be established. Home Assistant Cloud requires a paid subscription after a 30-day free trial.</p>
+<p>For Home Assistant Cloud users, documentation can be found <a>here</a>.</p>
+<h2>Manual setup (if you don't have Home Assistant Cloud)</h2>
+<p>The Google Assistant integration (without Home Assistant Cloud) requires a bit more setup than most due to the way Google requires Assistant Apps to be set up.</p>
+<h3>Prerequisites</h3>
+<p>To use Google Assistant, your Home Assistant configuration has to be <a>externally accessible with a hostname and SSL certificate</a>.</p>
+<ul>
+<li>If you haven't already configured that, you should do so before continuing.</li>
+<li>If you make DNS changes to accomplish this, ensure you have allowed up to the full 48 hours for DNS changes to propagate, otherwise, Google may not be able to reach your server.</li>
+<li>Once you have confirmed you can reach your Home Assistant from outside your home network, you can set up the Google integration:</li>
+</ul>
+<h3>Google Cloud Platform configuration</h3>
+<ol>
+<li><p>Create a new project in the <a>Google Home Developer Console</a>.</p>
+<ol>
+<li>Select <strong>Create a Project</strong></li>
+<li>On the <strong>Get started</strong> page, select <strong>Create project</strong>.<ul>
+<li>Give your project a name and select <strong>Create project</strong>.</li>
+</ul>
+</li>
+<li>Save your Project ID (it's under the main project name) for use below.</li>
+<li>Select <strong>Add a Cloud-to-Cloud integration</strong>.</li>
+<li>In the bottom right corner, select <strong>Next: Develop</strong>, then select <strong>Next: Setup</strong>.</li>
+<li>Select all applicable device types (you can select them all).</li>
+<li>Create an app icon 144 x 144 pixels and upload it.</li>
+<li>Under <strong>Account Linking</strong>, in the <strong>OAuth Client ID</strong> field, enter <code>https://oauth-redirect.googleusercontent.com/r/[YOUR_PROJECT_ID]</code>.</li>
+<li>Replace <code>[YOUR_PROJECT_ID]</code> with your project ID from above.</li>
+<li>Fill in the details:<ul>
+<li>In the <strong>Client Secret</strong> field, add any string (without special characters).Home Assistant doesn't need this field.</li>
+<li>In the <strong>Authorization URL</strong> field, enter <code>https://[yourdomain:port]/auth/authorize</code>.</li>
+<li>In the <strong>Token URL</strong> field, enter <code>https://[yourdomain:port]/auth/token</code>.</li>
+<li>In the <strong>Cloud fulfillment URL</strong> field, enter <code>https://[yourdomain:port]/api/google_assistant</code>.</li>
+<li>For now, skip <strong>Local fulfillment</strong> and <strong>App Flip</strong>.</li>
+<li>Under <strong>Scope(s)</strong>, enter <code>email</code>. Select <strong>Add scope</strong> and enter <code>name</code>.</li>
+<li>Leave the checkbox <strong>Have Google transmit Client ID and secret via HTTP basic auth header</strong> unchecked/cleared.</li>
+<li>Select <strong>Save</strong>.<ul>
+<li><strong>Result</strong>: You will see your project saved with the status <strong>Draft</strong>.</li>
+<li>You do not need to test.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>In the left hand menu of your project, select the <strong>Analytics</strong> link.</p>
+<ul>
+<li>Select the hamburger  menu on the top left and select <strong>APIs and Services</strong>.</li>
+</ul>
+</li>
+<li><p>Enable device sync (<a>see below for more information</a>).</p>
+<ol>
+<li>In the left hand menu, select <strong>Credentials</strong>.</li>
+<li>In the <strong>Credentials</strong> view, select <strong>Create credentials</strong> and next <strong>Service account</strong>.<ol>
+<li><strong>Service account name</strong>: Give your account a self-selected name.</li>
+<li>Select <strong>Create and Continue</strong>.</li>
+<li>Under <strong>Select a role</strong>, select <strong>Service Accounts</strong> &gt; <strong>Service Account Token Creator</strong>.</li>
+<li>Select <strong>Continue</strong> and then <strong>Done</strong>.</li>
+</ol>
+</li>
+<li>Under <strong>Service Accounts</strong>, there should now be an account called [name from 3.2.1]@[projectname].iam.gserviceaccount.com.</li>
+<li>Select the pencil button of that service account.</li>
+<li>Go to <strong>Keys</strong> and <strong>Add key</strong>.</li>
+<li>Create a private key in JSON format.</li>
+<li>This will start a download of a JSON file.<ol>
+<li>Rename the file to <code>SERVICE_ACCOUNT.json</code>.</li>
+<li>In Home Assistant, add this file to your config-folder. This will be the same folder as your <code>configuration.yaml</code>.</li>
+</ol>
+</li>
+<li>In the navigation bar in Google Cloud, select the <strong>magnifier</strong> icon, search for <strong>Homegraph API</strong>, and select it.</li>
+<li>Enable the HomeGraph API.</li>
+</ol>
+</li>
+<li><p>Add the <code>google_assistant</code> integration configuration to your <code>configuration.yaml</code> file and restart Home Assistant following the <a>configuration guide</a> below.</p>
+</li>
+<li><p>Add services in the Google Home App (note that app versions may be slightly different).</p>
+<ol>
+<li>Open the Google Home app.</li>
+<li>Select the Devices tab at the bottom and select the <code>+ Add</code> button on the bottom right corner.</li>
+<li>In the <strong>Choose a device</strong> screen, select <strong>Works with Google Home</strong>. You should have <code>[test] &lt;Action Name&gt;</code> listed under <strong>Add new</strong>. Selecting that should lead you to a browser to log in to your Home Assistant instance, then redirect back to a screen where you can set rooms and nicknames for your devices if you wish.</li>
+</ol>
+</li>
+</ol>
+<p><strong>Important</strong></p>
+<p>If you've added Home Assistant to your phone's home screen, you have to first remove it from the home screen. Otherwise, this HTML5 app will show up instead of a browser. Using it would prevent Home Assistant redirecting back to the Google Home app.</p>
+<h3>Allow other users</h3>
+<p>If you want to allow other household users to control the devices:</p>
+<ol>
+<li>Open the project you created in the <a>Google Home Developer Console</a>.</li>
+<li>Select <strong>Members</strong> on the top of the page. This redirects you to the Google Cloud Platform IAM permissions page.</li>
+<li>Select <strong>Grant access</strong> at the middle of the page.<ol>
+<li>Enter the email address of the user you want to add.</li>
+<li>Select <strong>Select a role</strong> and choose <strong>Project</strong> &gt; <strong>Viewer</strong>.</li>
+<li>Select <strong>Save</strong>.</li>
+<li>Copy and share the project link (<code>https://console.home.google.com/projects/YOUR_PROJECT_ID</code>) with the new user.</li>
+</ol>
+</li>
+<li>Have the new user open the link with their own Google account, agree to the <strong>Terms of Service</strong> popup(s).</li>
+<li>Have the new user go to their <strong>Google Assistant</strong> app to add <code>[test] your app name</code> to their account.</li>
+</ol>
+<h3>Utilize device sync</h3>
+<p>You are now able to support active reporting of state to Google's server (configuration option <code>report_state</code>) and synchronize Home Assistant devices with the Google Home app (<code>google_assistant.request_sync</code> service).</p>
+<p>Try it with "OK Google, sync my devices" - the Google Home app should import your exposed Home Assistant devices and prompt you to assign them to rooms.</p>
+<h3>Enable local fulfillment</h3>
+<p>Google Assistant devices can send their commands locally to Home Assistant allowing them to respond faster.</p>
+<p>Your Home Assistant instance needs to be connected to the same network as the Google Assistant device that you’re talking to so that it can be discovered via mDNS discovery (UDP broadcasts).</p>
+<p>Your Google Assistant devices will still communicate via the internet to:</p>
+<ul>
+<li>Get credentials to establish a local connection.</li>
+<li>Send commands that involve a <a>secure device</a>.</li>
+<li>Send commands if local fulfillment fails.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>The <a href="../http/">HTTP integration</a> must <strong>not</strong> be configured to use an SSL certificate with the <a href="../http/"><code>ssl_certificate</code> option</a>.</p>
+<p>This is because the Google Assistant device will connect directly to the IP of your Home Assistant instance and will fail if it encounters an invalid SSL certificate.</p>
+<p>For secure remote access, use a reverse proxy such as the NGINX SSL app (formerly known as NGINX SSL add-on) instead of directing external traffic straight to Home Assistant.</p>
+<ol>
+<li>Open the project you created in the <a>Google Home Developer Console</a>.</li>
+<li>Expand the <strong>Cloud-to-cloud</strong> menu on the left and select <strong>Develop</strong>, then select <strong>Edit</strong> next to your integration.</li>
+<li>Scroll down and enable <strong>Local fulfillment</strong></li>
+<li>Upload JavaScript files<ol>
+<li>Download <code>app.js</code> from <a>here</a></li>
+<li>Select <strong>Upload your JavaScript targeting Node</strong> and upload the <code>app.js</code> from step 4.1.</li>
+<li>Select <strong>Upload your JavaScript targeting Chrome (browser)</strong> and upload the same <code>app.js</code> from step 4.1.</li>
+</ol>
+</li>
+<li>Check the box <strong>Support local queries</strong>.</li>
+<li>Add device scan configuration:<ol>
+<li>Select <strong>+ Add scan configuration</strong> if no configuration exists.</li>
+<li>For Discovery protocol select <strong>mDNS</strong>.</li>
+<li>Set <strong>Enter mDNS service name</strong> to <code>_home-assistant._tcp.local</code></li>
+<li>Select <strong>Add field</strong>, then under <strong>Select a field</strong>, choose <strong>Name</strong>.</li>
+<li>Enter a new <strong>Value</strong> field set to <code>.*\._home-assistant\._tcp\.local</code></li>
+</ol>
+</li>
+<li>Scroll to bottom of page and <strong>Save</strong> your changes.</li>
+<li>Either wait for 30 minutes, or restart all your Google Assistant devices.</li>
+<li>Restart Home Assistant Core.</li>
+<li>With a Google Assistant device, try saying "OK Google, sync my devices." This can be helpful to avoid issues, especially if you are enabling local fulfillment sometime after adding cloud Google Assistant support.</li>
+</ol>
+<p>You can debug the setup by following <a>these instructions</a>.</p>
+<h3>YAML configuration</h3>
+<p>Now add your setup to your <code>configuration.yaml</code> file, such as:</p>
+<pre><code># Example configuration.yaml entry
+google_assistant:
+  project_id: YOUR_PROJECT_ID
+  service_account: !include SERVICE_ACCOUNT.json
+  report_state: true
+  exposed_domains:
+    - switch
+    - light
+  entity_config:
+    switch.kitchen:
+      name: CUSTOM_NAME_FOR_GOOGLE_ASSISTANT
+      aliases:
+        - BRIGHT_LIGHTS
+        - ENTRY_LIGHTS
+    light.living_room:
+      expose: false
+      room: LIVING_ROOM
+</code></pre>
+<pre><code>
+project_id:
+  description: "Project ID from the Google Home Developer Console (looks like `words-2ab12`)."
+  required: true
+  type: string
+secure_devices_pin:
+  description: "Pin code to say when you want to interact with a secure device."
+  required: false
+  type: string
+  default: ""
+service_account:
+  description: Service account information. You can use an include statement with your downloaded JSON file, enter data here directly or use secrets file to populate.
+  required: true
+  type: map
+  keys:
+    private_key:
+      description: Private key in PEM format
+      required: true
+      type: string
+    client_email:
+      description: Service email address
+      required: true
+      type: string
+report_state:
+  description: Actively report state changes on entities. This speeds up response time for actions affecting multiple entities since Google Assistant knows beforehand what state they are. It is also required for some features on visual controls.
+  required: false
+  default: false
+  type: boolean
+expose_by_default:
+  description: "Expose devices in all supported domains by default. If `exposed_domains` domains is set, only these domains are exposed by default. If `expose_by_default` is set to false, devices have to be manually exposed in `entity_config`."
+  required: false
+  default: true
+  type: boolean
+exposed_domains:
+  description: List of entity domains to expose to Google Assistant if `expose_by_default` is set to true. This has no effect if `expose_by_default` is set to false.
+  required: false
+  type: list
+entity_config:
+  description: Entity specific configuration for Google Assistant
+  required: false
+  type: map
+  keys:
+    YOUR_ENTITY_ID:
+      description: Entity to configure
+      required: false
+      type: map
+      keys:
+        name:
+          description: Name of the entity to show in Google Assistant
+          required: false
+          type: string
+        expose:
+          description: Force an entity to be exposed/excluded.
+          required: false
+          type: boolean
+          default: true
+        aliases:
+          description: Aliases that can also be used to refer to this entity
+          required: false
+          type: list
+        room:
+          description: Allows for associating this device to a Room in Google Assistant.
+          required: false
+          type: string
+
+</code></pre>
+<p>To apply changes to this configuration without restarting Home Assistant, use the <a><code>google_assistant.reload</code></a> action. Changing <code>project_id</code> or <code>service_account</code> still requires a restart.</p>
+<h3>Available domains</h3>
+<p>Currently, the following domains are available to be used with Google Assistant, listed with their default types:</p>
+<ul>
+<li>alarm_control_panel (arm/disarm)</li>
+<li>binary_sensor (entities with device class: <code>carbon_monoxide</code>, <code>door</code>, <code>garage_door</code>, <code>lock</code>, <code>moisture</code>, <code>opening</code>, <code>smoke</code>, <code>window</code>)</li>
+<li>button (scene)</li>
+<li>camera (streaming, requires compatible camera)</li>
+<li>climate (on/off, temperature setting, hvac_mode)</li>
+<li>cover (on/off/set position/stop/start=toggle cover)</li>
+<li>event (only entities with device class <code>doorbell</code> are supported)</li>
+<li>fan (on/off/speed percentage/preset mode)</li>
+<li>group (on/off)</li>
+<li>humidifier (humidity setting/on/off/mode)</li>
+<li>input_boolean (on/off)</li>
+<li>input_button (scene)</li>
+<li>input_select (option/setting/mode/value)</li>
+<li>light (on/off/brightness/rgb color/color temp)</li>
+<li>lawn_mower (dock/start/pause)</li>
+<li>lock</li>
+<li>media_player (on/off/set volume (via set volume)/source (via set input source)/control playback)</li>
+<li>scene</li>
+<li>script (scene)</li>
+<li>select</li>
+<li>sensor (entities with device class: <code>aqi</code>, <code>carbon_dioxide</code>, <code>carbon_monoxide</code>, <code>humidity</code>, <code>pm10</code>, <code>pm25</code>, <code>temperature</code>, <code>volatile_organic_compounds</code>)</li>
+<li>switch (on/off)</li>
+<li>vacuum (dock/start/stop/pause)</li>
+<li>valve (open/close/set position/stop/start=toggle valve)</li>
+<li>water_heater (on-off/temperature setting/operation mode)</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Some of these devices may not display correctly in the Google Home app, such as media_player, however voice commands will still work.</p>
+<h3>Secure devices</h3>
+<p>Certain devices are considered secure. This includes devices in the <code>lock</code> domain, the <code>alarm_control_panel</code> domain, as well as <code>covers</code> with device types <code>door</code>, <code>garage</code>, or <code>gate</code>.</p>
+<p>By default, secure devices cannot be opened by Google Assistant unless a <code>secure_devices_pin</code> code is set up. To allow opening, set the <code>secure_devices_pin</code> to something. You will then be prompted to speak the pin when opening the device. Closing or locking these devices does not require a pin.</p>
+<p>If a code is set for the Alarm control panel, it must be the same as the <code>secure_devices_pin</code>. If <code>code_arm_required</code> is set to <code>false</code>, the system will arm without prompting for the pin.</p>
+<h3>Room/Area support</h3>
+<p>Entities that have not been explicitly assigned to rooms but have been placed in Home Assistant areas will return room hints to Google with the devices in those areas.</p>
+<p><strong>Note</strong></p>
+<p>Some devices, such as <code>scene</code> or <code>script</code>, must be assigned to an <code>area</code> before other members of a shared Google Home Household can use them. This is because household members in a shared Google Home will not be able to view devices that are not assigned to a room <em>unless</em> they were the user who linked the service to Google Home. This issue isn't immediately apparent because <code>script</code> and <code>scene</code> devices aren't visible in the main Google Home dashboard.</p>
+<p>The automatic room assignment will not work when multiple homes are set up in your Google account.</p>
+<h3>Climate operation modes</h3>
+<p>There is not an exact 1-1 match between Home Assistant and Google Assistant for the available operation modes.
+Here are the modes that are currently available:</p>
+<ul>
+<li>off</li>
+<li>heat</li>
+<li>cool</li>
+<li>heatcool (auto)</li>
+<li>fan-only</li>
+<li>dry</li>
+<li>eco</li>
+</ul>
+<h3>TV Channels</h3>
+<p>There is no TV channel object in Home Assistant. TV channel can only be changed by number, not by name (for example, <code>Turn to channel two</code>).</p>
+<h3>Troubleshooting</h3>
+<p><strong>Note</strong></p>
+<p>Some of the troubleshooting steps below reference the legacy <a>Actions on Google console</a>. This console is separate from the <a>Google Home Developer Console</a> used in the setup steps above. If you configured the integration following the current setup instructions, your project lives in the Google Home Developer Console and some of the legacy steps may not apply.</p>
+<h4>404 errors on request sync</h4>
+<p>Syncing from Google Assistant may fail after a period of time, likely around 30 days, due to the fact that your Actions on Google app is technically in testing mode and has never been published. Eventually, it seems that the test expires. Control of devices will continue to work but syncing may not. If you say "Ok Google, sync my devices" and get the response "Unable to sync Home Assistant" (or whatever you named your project), this can usually be resolved by going back to your test app in the <a>Actions on Google console</a> and clicking <code>Simulator</code> under <code>TEST</code>. Regenerate the draft version Test App and try asking Google to sync your devices again. If regenerating the draft does not work, go back to the <code>Action</code> section and just hit the <code>enter</code> key for the URL to recreate the Preview.</p>
+<p>Syncing from Home Assistant will always work and will automatically update entity changes.</p>
+<p>The <code>request_sync</code> service requires that the initial sync from Google includes the <code>agent_user_id</code>. If not, the service will log an error that reads something like "Request contains an invalid argument". If this happens, then <a>unlink the account</a> from Home Control and relink.</p>
+<p>The <code>request_sync</code> service may fail with a 404 if the <code>project_id</code> of the HomeGraph API differs from the <code>project_id</code> of the Actions SDK found in the preferences of your project on <a>Actions on Google console</a>. Resolve this by:</p>
+<ol>
+<li>Removing your project from the <a>Google Cloud API Console</a>.</li>
+<li>Add a new project to the <a>Actions on Google console</a> Here you get a new <code>project_id</code>.</li>
+<li>Run through the previously mentioned [Actions on Google console] setup instructions until the step to create a <code>service_account</code>.</li>
+<li>Once you begin to create a new <code>service_account</code> in the [Google Cloud API Console], ensure you select the project created in  [Actions on Google console] by verifying the <code>project_id</code>.</li>
+<li>Enable HomeGraph API to the new project.</li>
+</ol>
+<p>Verify that the Google Assistant is available on <code>https://[YOUR HOME ASSISTANT URL:PORT]/api/google_assistant</code> If it is working it should return <code>405: Method Not Allowed</code> when opened in a browser or via curl.</p>
+<h4>403 errors on request sync</h4>
+<p>The <code>request_sync</code> action may fail with a 403 if the HomeGraph API is not enabled. Go to <a>Google API Console</a> and verify that HomeGraph API is enabled for your project.</p>
+<h4>404 errors on report state</h4>
+<p>If you receive 404 errors linked to reporting state in your log, Home Assistant is reporting state for entities that were never synced to Google. Ask your Google Home to <code>Sync my devices</code> or run the <code>google_assistant.request_sync</code> action.</p>
+<h4>Error during linking: "Could not update the setting. Please check your connection"</h4>
+<p>Your <strong>Cloud fulfillment URL</strong> may be invalid or unreachable. Recheck the <strong>Cloud fulfillment URL</strong> as specified in <a>Manual setup</a> and verify that it's publicly reachable.</p>
+<h4>500 / 429 error on request sync</h4>
+<p>This error may occur if the service key is invalid. Try deleting and creating a new service account and key.</p>
+<h4>NGINX</h4>
+<p>When using NGINX, ensure that your <code>proxy_pass</code> line <em>does not</em> have a trailing <code>/</code>, as this will result in errors. Your line should look like:</p>
+<pre><code>proxy_pass http://localhost:8123;</code></pre>
+<h3>Unlink and relink</h3>
+<p>If you're having trouble with <em>Account linking failed</em> after you unlinked your service, try clearing the browser history and cache.</p>
+<h3>Failed linking - Could not update the setting. Please check your connection</h3>
+<p>If you're having trouble linking your account, with the error message <code>Could not update the setting. Please check your connection</code> after logging into your Home Assistant instance, try setting <code>expose_by_default: false</code> then exposing a single simple device (light or switch preferably). It is also worth checking if any home ad blocker is disabled if you are having issues.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Google Assistant automation examples</h2>
+<p>With the manual setup, Google doesn't always notice right away when your devices change. These examples keep the Google Home app up to date for you.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: sync with Google after Home Assistant starts</h3>
+<p>When you add or remove devices in your YAML configuration, use the <a><code>google_assistant.reload</code></a> action, which asks Google to sync right away. This automation covers restarts: it asks Google to sync after Home Assistant starts, so the Google Home app shows your devices.</p>
+<ul>
+<li><strong>Trigger</strong>: Home Assistant<ul>
+<li><strong>Event</strong>: Start</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Google Assistant: Request sync<ul>
+<li><strong>Agent user ID</strong>: Your Home Assistant user ID</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for syncing with Google after a restart</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Sync devices with Google after a restart"
+triggers:
+- trigger: homeassistant
+event: start
+actions:
+- action: google_assistant.request_sync
+data:
+agent_user_id: "YOUR_USER_ID"</p>
+<h3>Automation: sync with Google when you add a new entity</h3>
+<p>When a new entity is added to Home Assistant, ask Google to sync, so a new device shows up in the Google Home app without saying "Hey Google, sync my devices".</p>
+<ul>
+<li><strong>Trigger</strong>: Manual event received<ul>
+<li><strong>Event type</strong>: <code>entity_registry_updated</code></li>
+<li><strong>Event data</strong>: <code>action: create</code></li>
+</ul>
+</li>
+<li><strong>Action</strong>: Google Assistant: Request sync<ul>
+<li><strong>Agent user ID</strong>: Your Home Assistant user ID</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for syncing with Google when an entity is added</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Sync devices with Google when an entity is added"
+triggers:
+- trigger: event
+event_type: entity_registry_updated
+event_data:
+action: create
+actions:
+- action: google_assistant.request_sync
+data:
+agent_user_id: "YOUR_USER_ID"</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/google_assistant.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Setup for Google Assistant integration
+ha_categories:
+  - other_ecosystems
+featured: true
+ha_release: 0.56
+ha_domain: google_assistant
+---
+
+The **Google Assistant** {% term integration %} allows you to control your Home Assistant devices via Google Assistant on your mobile, tablet, or Google Home device.
+
+If you want to send commands to Google Assistant to control devices supported by Google Assistant but not by Home Assistant, or broadcast messages to Google Assistant speakers and displays without interrupting music/video playback, take a look at the [Google Assistant SDK](/integrations/google_assistant_sdk) integration.
+
+## Automatic setup via Home Assistant Cloud
+
+With [Home Assistant Cloud](/cloud/), you can connect your Home Assistant instance in a few simple clicks to Google Assistant. With Home Assistant Cloud you don&#x27;t have to deal with dynamic DNS, SSL certificates, or opening ports on your router. Just log in via the user interface and a secure connection with the cloud will be established. Home Assistant Cloud requires a paid subscription after a 30-day free trial.
+
+For Home Assistant Cloud users, documentation can be found [here](https://www.nabucasa.com/config/google_assistant/).
+
+## Manual setup (if you don&#x27;t have Home Assistant Cloud)
+
+The Google Assistant integration (without Home Assistant Cloud) requires a bit more setup than most due to the way Google requires Assistant Apps to be set up.
+
+### Prerequisites
+
+To use Google Assistant, your Home Assistant configuration has to be [externally accessible with a hostname and SSL certificate](/docs/configuration/remote/).
+
+- If you haven&#x27;t already configured that, you should do so before continuing.
+- If you make DNS changes to accomplish this, ensure you have allowed up to the full 48 hours for DNS changes to propagate, otherwise, Google may not be able to reach your server.
+- Once you have confirmed you can reach your Home Assistant from outside your home network, you can set up the Google integration:
+
+### Google Cloud Platform configuration
+
+1. Create a new project in the [Google Home Developer Console](https://console.home.google.com/projects).
+    1. Select **Create a Project**
+    2. On the **Get started** page, select **Create project**.
+       - Give your project a name and select **Create project**.
+    3. Save your Project ID (it&#x27;s under the main project name) for use below.
+    4. Select **Add a Cloud-to-Cloud integration**.
+    5. In the bottom right corner, select **Next: Develop**, then select **Next: Setup**.
+    6. Select all applicable device types (you can select them all).
+    7. Create an app icon 144 x 144 pixels and upload it.
+    8. Under **Account Linking**, in the **OAuth Client ID** field, enter `https://oauth-redirect.googleusercontent.com/r/[YOUR_PROJECT_ID]`.
+    9. Replace `[YOUR_PROJECT_ID]` with your project ID from above.
+    10. Fill in the details:
+        - In the **Client Secret** field, add any string (without special characters).Home Assistant doesn&#x27;t need this field.
+        - In the **Authorization URL** field, enter `https://[yourdomain:port]/auth/authorize`.
+        - In the **Token URL** field, enter `https://[yourdomain:port]/auth/token`.
+        - In the **Cloud fulfillment URL** field, enter `https://[yourdomain:port]/api/google_assistant`.
+        - For now, skip **Local fulfillment** and **App Flip**.
+        - Under **Scope(s)**, enter `email`. Select **Add scope** and enter `name`.
+        - Leave the checkbox **Have Google transmit Client ID and secret via HTTP basic auth header** unchecked/cleared.
+        - Select **Save**.
+          - **Result**: You will see your project saved with the status **Draft**.
+          - You do not need to test.
+
+2. In the left hand menu of your project, select the **Analytics** link.
+   - Select the hamburger {% icon &quot;mdi:hamburger-menu&quot; %} menu on the top left and select **APIs and Services**.
+3. Enable device sync ([see below for more information](#utilize-device-sync)).
+    1. In the left hand menu, select **Credentials**.
+    2. In the **Credentials** view, select **Create credentials** and next **Service account**.
+        1. **Service account name**: Give your account a self-selected name.
+        2. Select **Create and Continue**.
+        3. Under **Select a role**, select **Service Accounts** &gt; **Service Account Token Creator**.
+        4. Select **Continue** and then **Done**.
+    3. Under **Service Accounts**, there should now be an account called [name from 3.2.1]@[projectname].iam.gserviceaccount.com.
+    4. Select the pencil button of that service account.
+    5. Go to **Keys** and **Add key**.
+    6. Create a private key in JSON format.
+    7. This will start a download of a JSON file.
+        1. Rename the file to `SERVICE_ACCOUNT.json`.
+        2. In Home Assistant, add this file to your config-folder. This will be the same folder as your {% term &quot;`configuration.yaml`&quot; %}.
+    8. In the navigation bar in Google Cloud, select the **magnifier** icon, search for **Homegraph API**, and select it.
+    9. Enable the HomeGraph API.
+
+4. Add the `google_assistant` integration configuration to your {% term &quot;`configuration.yaml`&quot; %} file and restart Home Assistant following the [configuration guide](#yaml-configuration) below.
+5. Add services in the Google Home App (note that app versions may be slightly different).
+    1. Open the Google Home app.
+    2. Select the Devices tab at the bottom and select the `+ Add` button on the bottom right corner.
+    3. In the **Choose a device** screen, select **Works with Google Home**. You should have `[test] &lt;Action Name&gt;` listed under **Add new**. Selecting that should lead you to a browser to log in to your Home Assistant instance, then redirect back to a screen where you can set rooms and nicknames for your devices if you wish.
+
+{% important %}
+If you&#x27;ve added Home Assistant to your phone&#x27;s home screen, you have to first remove it from the home screen. Otherwise, this HTML5 app will show up instead of a browser. Using it would prevent Home Assistant redirecting back to the Google Home app.
+{% endimportant %}
+
+### Allow other users
+
+If you want to allow other household users to control the devices:
+
+1. Open the project you created in the [Google Home Developer Console](https://console.home.google.com/projects).
+2. Select **Members** on the top of the page. This redirects you to the Google Cloud Platform IAM permissions page.
+3. Select **Grant access** at the middle of the page.
+    1. Enter the email address of the user you want to add.
+    2. Select **Select a role** and choose **Project** &gt; **Viewer**.
+    3. Select **Save**.
+    4. Copy and share the project link (`https://console.home.google.com/projects/YOUR_PROJECT_ID`) with the new user.
+4. Have the new user open the link with their own Google account, agree to the **Terms of Service** popup(s).
+5. Have the new user go to their **Google Assistant** app to add `[test] your app name` to their account.
+
+### Utilize device sync
+
+You are now able to support active reporting of state to Google&#x27;s server (configuration option `report_state`) and synchronize Home Assistant devices with the Google Home app (`google_assistant.request_sync` service).
+
+Try it with &quot;OK Google, sync my devices&quot; - the Google Home app should import your exposed Home Assistant devices and prompt you to assign them to rooms.
+
+### Enable local fulfillment
+
+Google Assistant devices can send their commands locally to Home Assistant allowing them to respond faster.
+
+Your Home Assistant instance needs to be connected to the same network as the Google Assistant device that you’re talking to so that it can be discovered via mDNS discovery (UDP broadcasts).
+
+Your Google Assistant devices will still communicate via the internet to:
+
+- Get credentials to establish a local connection.
+- Send commands that involve a [secure device](#secure-devices).
+- Send commands if local fulfillment fails.
+
+{% important %}
+The [HTTP integration](/integrations/http) must **not** be configured to use an SSL certificate with the [`ssl_certificate` option](/integrations/http/#ssl_certificate).
+
+This is because the Google Assistant device will connect directly to the IP of your Home Assistant instance and will fail if it encounters an invalid SSL certificate.
+
+For secure remote access, use a reverse proxy such as the {% my supervisor_addon addon=&quot;core_nginx_proxy&quot; title=&quot;NGINX SSL&quot; %} app (formerly known as NGINX SSL add-on) instead of directing external traffic straight to Home Assistant.
+{% endimportant %}
+
+1. Open the project you created in the [Google Home Developer Console](https://console.home.google.com/projects).
+2. Expand the **Cloud-to-cloud** menu on the left and select **Develop**, then select **Edit** next to your integration.
+3. Scroll down and enable **Local fulfillment**
+4. Upload JavaScript files
+   1. Download `app.js` from [here](https://github.com/NabuCasa/home-assistant-google-assistant-local-sdk/releases/latest)
+   2. Select **Upload your JavaScript targeting Node** and upload the `app.js` from step 4.1.
+   3. Select **Upload your JavaScript targeting Chrome (browser)** and upload the same `app.js` from step 4.1.
+5. Check the box **Support local queries**.
+6. Add device scan configuration:
+   1. Select **+ Add scan configuration** if no configuration exists.
+   2. For Discovery protocol select **mDNS**.
+   3. Set **Enter mDNS service name** to `_home-assistant._tcp.local`
+   4. Select **Add field**, then under **Select a field**, choose **Name**.
+   5. Enter a new **Value** field set to `.*\._home-assistant\._tcp\.local`
+7. Scroll to bottom of page and **Save** your changes.
+8. Either wait for 30 minutes, or restart all your Google Assistant devices.
+9. Restart Home Assistant Core.
+10. With a Google Assistant device, try saying &quot;OK Google, sync my devices.&quot; This can be helpful to avoid issues, especially if you are enabling local fulfillment sometime after adding cloud Google Assistant support.
+
+You can debug the setup by following [these instructions](https://developers.home.google.com/local-home/test#debugging_from_chrome).
+
+### YAML configuration
+
+Now add your setup to your {% term &quot;`configuration.yaml`&quot; %} file, such as:
+
+```yaml
+# Example configuration.yaml entry
+google_assistant:
+  project_id: YOUR_PROJECT_ID
+  service_account: !include SERVICE_ACCOUNT.json
+  report_state: true
+  exposed_domains:
+    - switch
+    - light
+  entity_config:
+    switch.kitchen:
+      name: CUSTOM_NAME_FOR_GOOGLE_ASSISTANT
+      aliases:
+        - BRIGHT_LIGHTS
+        - ENTRY_LIGHTS
+    light.living_room:
+      expose: false
+      room: LIVING_ROOM
+```
+
+{% configuration %}
+project_id:
+  description: &quot;Project ID from the Google Home Developer Console (looks like `words-2ab12`).&quot;
+  required: true
+  type: string
+secure_devices_pin:
+  description: &quot;Pin code to say when you want to interact with a secure device.&quot;
+  required: false
+  type: string
+  default: &quot;&quot;
+service_account:
+  description: Service account information. You can use an include statement with your downloaded JSON file, enter data here directly or use secrets file to populate.
+  required: true
+  type: map
+  keys:
+    private_key:
+      description: Private key in PEM format
+      required: true
+      type: string
+    client_email:
+      description: Service email address
+      required: true
+      type: string
+report_state:
+  description: Actively report state changes on entities. This speeds up response time for actions affecting multiple entities since Google Assistant knows beforehand what state they are. It is also required for some features on visual controls.
+  required: false
+  default: false
+  type: boolean
+expose_by_default:
+  description: &quot;Expose devices in all supported domains by default. If `exposed_domains` domains is set, only these domains are exposed by default. If `expose_by_default` is set to false, devices have to be manually exposed in `entity_config`.&quot;
+  required: false
+  default: true
+  type: boolean
+exposed_domains:
+  description: List of entity domains to expose to Google Assistant if `expose_by_default` is set to true. This has no effect if `expose_by_default` is set to false.
+  required: false
+  type: list
+entity_config:
+  description: Entity specific configuration for Google Assistant
+  required: false
+  type: map
+  keys:
+    YOUR_ENTITY_ID:
+      description: Entity to configure
+      required: false
+      type: map
+      keys:
+        name:
+          description: Name of the entity to show in Google Assistant
+          required: false
+          type: string
+        expose:
+          description: Force an entity to be exposed/excluded.
+          required: false
+          type: boolean
+          default: true
+        aliases:
+          description: Aliases that can also be used to refer to this entity
+          required: false
+          type: list
+        room:
+          description: Allows for associating this device to a Room in Google Assistant.
+          required: false
+          type: string
+{% endconfiguration %}
+
+To apply changes to this configuration without restarting Home Assistant, use the [`google_assistant.reload`](/actions/google_assistant.reload/) action. Changing `project_id` or `service_account` still requires a restart.
+
+### Available domains
+
+Currently, the following domains are available to be used with Google Assistant, listed with their default types:
+
+- alarm_control_panel (arm/disarm)
+- binary_sensor (entities with device class: `carbon_monoxide`, `door`, `garage_door`, `lock`, `moisture`, `opening`, `smoke`, `window`)
+- button (scene)
+- camera (streaming, requires compatible camera)
+- climate (on/off, temperature setting, hvac_mode)
+- cover (on/off/set position/stop/start=toggle cover)
+- event (only entities with device class `doorbell` are supported)
+- fan (on/off/speed percentage/preset mode)
+- group (on/off)
+- humidifier (humidity setting/on/off/mode)
+- input_boolean (on/off)
+- input_button (scene)
+- input_select (option/setting/mode/value)
+- light (on/off/brightness/rgb color/color temp)
+- lawn_mower (dock/start/pause)
+- lock
+- media_player (on/off/set volume (via set volume)/source (via set input source)/control playback)
+- scene
+- script (scene)
+- select
+- sensor (entities with device class: `aqi`, `carbon_dioxide`, `carbon_monoxide`, `humidity`, `pm10`, `pm25`, `temperature`, `volatile_organic_compounds`)
+- switch (on/off)
+- vacuum (dock/start/stop/pause)
+- valve (open/close/set position/stop/start=toggle valve)
+- water_heater (on-off/temperature setting/operation mode)
+
+{% note %}
+Some of these devices may not display correctly in the Google Home app, such as media_player, however voice commands will still work.
+{% endnote %}
+
+### Secure devices
+
+Certain devices are considered secure. This includes devices in the `lock` domain, the `alarm_control_panel` domain, as well as `covers` with device types `door`, `garage`, or `gate`.
+
+By default, secure devices cannot be opened by Google Assistant unless a `secure_devices_pin` code is set up. To allow opening, set the `secure_devices_pin` to something. You will then be prompted to speak the pin when opening the device. Closing or locking these devices does not require a pin.
+
+If a code is set for the Alarm control panel, it must be the same as the `secure_devices_pin`. If `code_arm_required` is set to `false`, the system will arm without prompting for the pin.
+
+### Room/Area support
+
+Entities that have not been explicitly assigned to rooms but have been placed in Home Assistant areas will return room hints to Google with the devices in those areas.
+
+{% note %}
+Some devices, such as `scene` or `script`, must be assigned to an `area` before other members of a shared Google Home Household can use them. This is because household members in a shared Google Home will not be able to view devices that are not assigned to a room _unless_ they were the user who linked the service to Google Home. This issue isn&#x27;t immediately apparent because `script` and `scene` devices aren&#x27;t visible in the main Google Home dashboard.
+&#32;&#32;
+The automatic room assignment will not work when multiple homes are set up in your Google account.
+{% endnote %}
+
+### Climate operation modes
+
+There is not an exact 1-1 match between Home Assistant and Google Assistant for the available operation modes.
+Here are the modes that are currently available:
+
+- off
+- heat
+- cool
+- heatcool (auto)
+- fan-only
+- dry
+- eco
+
+### TV Channels
+
+There is no TV channel object in Home Assistant. TV channel can only be changed by number, not by name (for example, `Turn to channel two`).
+
+### Troubleshooting
+
+{% note %}
+
+Some of the troubleshooting steps below reference the legacy [Actions on Google console](https://console.actions.google.com/). This console is separate from the [Google Home Developer Console](https://console.home.google.com/projects) used in the setup steps above. If you configured the integration following the current setup instructions, your project lives in the Google Home Developer Console and some of the legacy steps may not apply.
+
+{% endnote %}
+
+#### 404 errors on request sync
+
+Syncing from Google Assistant may fail after a period of time, likely around 30 days, due to the fact that your Actions on Google app is technically in testing mode and has never been published. Eventually, it seems that the test expires. Control of devices will continue to work but syncing may not. If you say &quot;Ok Google, sync my devices&quot; and get the response &quot;Unable to sync Home Assistant&quot; (or whatever you named your project), this can usually be resolved by going back to your test app in the [Actions on Google console](https://console.actions.google.com/) and clicking `Simulator` under `TEST`. Regenerate the draft version Test App and try asking Google to sync your devices again. If regenerating the draft does not work, go back to the `Action` section and just hit the `enter` key for the URL to recreate the Preview.
+
+Syncing from Home Assistant will always work and will automatically update entity changes.
+
+The `request_sync` service requires that the initial sync from Google includes the `agent_user_id`. If not, the service will log an error that reads something like &quot;Request contains an invalid argument&quot;. If this happens, then [unlink the account](https://support.google.com/googlenest/answer/7126338) from Home Control and relink.
+
+The `request_sync` service may fail with a 404 if the `project_id` of the HomeGraph API differs from the `project_id` of the Actions SDK found in the preferences of your project on [Actions on Google console](https://console.actions.google.com). Resolve this by:
+
+  1. Removing your project from the [Google Cloud API Console](https://console.cloud.google.com).
+  2. Add a new project to the [Actions on Google console](https://console.actions.google.com) Here you get a new `project_id`.
+  3. Run through the previously mentioned [Actions on Google console] setup instructions until the step to create a `service_account`.
+  4. Once you begin to create a new `service_account` in the [Google Cloud API Console], ensure you select the project created in  [Actions on Google console] by verifying the `project_id`.
+  5. Enable HomeGraph API to the new project.
+
+Verify that the Google Assistant is available on `https://[YOUR HOME ASSISTANT URL:PORT]/api/google_assistant` If it is working it should return `405: Method Not Allowed` when opened in a browser or via curl.
+
+#### 403 errors on request sync
+
+The `request_sync` action may fail with a 403 if the HomeGraph API is not enabled. Go to [Google API Console](https://console.cloud.google.com/apis/api/homegraph.googleapis.com/overview) and verify that HomeGraph API is enabled for your project.
+
+#### 404 errors on report state
+
+If you receive 404 errors linked to reporting state in your log, Home Assistant is reporting state for entities that were never synced to Google. Ask your Google Home to `Sync my devices` or run the `google_assistant.request_sync` action.
+
+#### Error during linking: &quot;Could not update the setting. Please check your connection&quot;
+
+Your **Cloud fulfillment URL** may be invalid or unreachable. Recheck the **Cloud fulfillment URL** as specified in [Manual setup](#manual-setup-if-you-dont-have-home-assistant-cloud) and verify that it&#x27;s publicly reachable.
+
+#### 500 / 429 error on request sync
+
+This error may occur if the service key is invalid. Try deleting and creating a new service account and key.
+
+#### NGINX
+
+When using NGINX, ensure that your `proxy_pass` line _does not_ have a trailing `/`, as this will result in errors. Your line should look like:
+
+    proxy_pass http://localhost:8123;
+
+### Unlink and relink
+
+If you&#x27;re having trouble with _Account linking failed_ after you unlinked your service, try clearing the browser history and cache.
+
+### Failed linking - Could not update the setting. Please check your connection
+
+If you&#x27;re having trouble linking your account, with the error message `Could not update the setting. Please check your connection` after logging into your Home Assistant instance, try setting `expose_by_default: false` then exposing a single simple device (light or switch preferably). It is also worth checking if any home ad blocker is disabled if you are having issues.
+
+{% include integrations/actions.md %}
+
+## Google Assistant automation examples
+
+With the manual setup, Google doesn&#x27;t always notice right away when your devices change. These examples keep the Google Home app up to date for you.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: sync with Google after Home Assistant starts
+
+When you add or remove devices in your YAML configuration, use the [`google_assistant.reload`](/actions/google_assistant.reload/) action, which asks Google to sync right away. This automation covers restarts: it asks Google to sync after Home Assistant starts, so the Google Home app shows your devices.
+
+- **Trigger**: Home Assistant
+  - **Event**: Start
+- **Action**: Google Assistant: Request sync
+  - **Agent user ID**: Your Home Assistant user ID
+
+{% details &quot;YAML example for syncing with Google after a restart&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Sync devices with Google after a restart&quot;
+  triggers:
+    - trigger: homeassistant
+      event: start
+  actions:
+    - action: google_assistant.request_sync
+      data:
+        agent_user_id: &quot;YOUR_USER_ID&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: sync with Google when you add a new entity
+
+When a new entity is added to Home Assistant, ask Google to sync, so a new device shows up in the Google Home app without saying &quot;Hey Google, sync my devices&quot;.
+
+- **Trigger**: Manual event received
+  - **Event type**: `entity_registry_updated`
+  - **Event data**: `action: create`
+- **Action**: Google Assistant: Request sync
+  - **Agent user ID**: Your Home Assistant user ID
+
+{% details &quot;YAML example for syncing with Google when an entity is added&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Sync devices with Google when an entity is added&quot;
+  triggers:
+    - trigger: event
+      event_type: entity_registry_updated
+      event_data:
+        action: create
+  actions:
+    - action: google_assistant.request_sync
+      data:
+        agent_user_id: &quot;YOUR_USER_ID&quot;
+{% endexample %}
+
+{% enddetails %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Google Assistant in Home Assistant is <code>google_assistant</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li></ul><h3>Documented actions</h3><ul class="chips"><li>reload</li><li>request sync</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Automatic setup via Home Assistant Cloud</li><li>Manual setup (if you don&#x27;t have Home Assistant Cloud)</li><li>Google Assistant automation examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/google_assistant/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/google_assistant</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/google_assistant</code></dd></dl></section><p><a href="../../integrations/google_assistant/">Return to the Google Assistant guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

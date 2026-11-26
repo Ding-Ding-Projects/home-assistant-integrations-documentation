@@ -1,1 +1,640 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nobø Ecohub reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:17" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/nobo_hub/">Nobø Ecohub guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Nobø Ecohub</h1><p>Instructions on how to integrate Nobø Ecohub into Home Assistant.</p><section><h2>Overview</h2><p>The Nobø Ecohub integration connects Home Assistant to your Nobø Ecohub, a Norwegian heating controller from Glen Dimplex Nordic AS. The hub manages electric panel heaters, floor heating, and on/off receivers grouped into zones, and lets you follow weekly heating schedules with eco, comfort, and away setpoints.</p></section><section><h2>How you can use this integration</h2><p>The Nobø Ecohub is mainly used in homes and cabins with electric heating in the Nordic region. Typical things you can do with this integration are:</p></section><section><h2>Supported devices</h2><p>The integration is built around the Nobø Ecohub and supports the devices that the hub itself manages:</p></section><section><h2>Prerequisites</h2><p>Before adding the integration, make sure the following is in place:</p></section><section><h2>Reconfiguration</h2><p>You can update the IP address without removing and re-adding the integration.</p></section><section><h2>Supported functionality</h2><p>The integration creates entities for every zone in the hub, a global override selector for the hub itself, and a temperature sensor for every Nobø Switch and thermostat that reports a temperature. Each zone also gets a switch to exclude it from the global override.</p></section><section><h2>Climate entities</h2><p>Each zone in your hub is exposed as a climate entity. You can use it to set the HVAC mode, change the preset, and adjust the eco and comfort target temperatures.</p></section><section><h2>Examples</h2><p>A few practical ways to use the integration:</p></section><section><h2>Following presence with the global override</h2><p>This pair of automations sets the global override to Away when everyone leaves home, and clears it again when the first person returns so every zone goes back to its normal week profile. Replace group.family with your own presence group or person entity, and select.my_eco_hub_global_override with the name of your hub&#x27;s global override selector.</p></section><section><h2>Turning a zone fully off</h2><p>The Nobø system does not expose an off preset, because the away preset doubles as frost protection and is fixed at 7°C. To turn a zone fully off, for example outside of the heating season or while a cabin is empty for a longer time, use a dedicated week profile:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Nobø Ecohub.</p><p>The <strong>manual</strong> configuration step lists <code>ip_address</code>, <code>serial</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>ip_address</code>.</p><p>The <strong>selected</strong> configuration step lists <code>serial_suffix</code>.</p><p>The <strong>user</strong> configuration step lists <code>device</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>climate</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use this integration</li><li>Supported devices</li><li>Prerequisites</li><li>Reconfiguration</li><li>Configuration options</li><li>Supported functionality</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/nobo_hub/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/nobo_hub</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/nobo_hub</code></dd></dl></section><p><a href="../../integrations/nobo_hub/">Return to the Nobø Ecohub guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nobø Ecohub reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:17" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/nobo_hub/">Nobø Ecohub guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Nobø Ecohub</h1><p>Instructions on how to integrate Nobø Ecohub into Home Assistant.</p><div class="reader-body"><p>The <strong>Nobø Ecohub</strong> integration connects Home Assistant to your <a>Nobø Ecohub</a>, a Norwegian heating controller from Glen Dimplex Nordic AS. The hub manages electric panel heaters, floor heating, and on/off receivers grouped into zones, and lets you follow weekly heating schedules with eco, comfort, and away setpoints.</p>
+<p>With this integration, you can control your heating zones, switch between week profiles, and read temperatures from any connected Nobø Switch—all locally over your network, without depending on a cloud service.</p>
+<p>This integration is not officially supported or endorsed by Glen Dimplex Nordic AS, and the authors and maintainers are not official partners of Glen Dimplex Nordic AS.</p>
+<h2>How you can use this integration</h2>
+<p>The Nobø Ecohub is mainly used in homes and cabins with electric heating in the Nordic region. Typical things you can do with this integration are:</p>
+<ul>
+<li>Control heating zones directly from your dashboard, with the same eco, comfort, and away presets you have in the Nobø Energy mobile app.</li>
+<li>Switch the active week profile for a zone from an automation. For example, switch a cabin to its weekend profile when you leave for a trip on Friday.</li>
+<li>Trigger a global override (such as away or eco) when everyone leaves home, and clear it again when someone returns.</li>
+<li>Use the temperature reading from a Nobø Switch as a trigger in your automations, or display it on a dashboard alongside other room sensors.</li>
+<li>Coordinate the Nobø heaters with other heat sources, such as a heat pump, by switching presets or week profiles based on outdoor temperature, electricity price, or solar production.</li>
+<li>Turn heaters fully off in a zone, for example to switch off cabin heating outside of the heating season. See <a>Turning a zone fully off</a> for the recommended approach.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The integration is built around the Nobø Ecohub and supports the devices that the hub itself manages:</p>
+<ul>
+<li><strong>Nobø Ecohub</strong>: The bridge between your Nobø system and Home Assistant. Each zone you have configured in the hub is exposed in Home Assistant.</li>
+<li><strong>Heaters and on/off receivers</strong>: Floor and wall-mounted heaters, and any on/off receivers in a zone, are controlled through their zone's climate entity. Heaters with a built-in thermostat that supports remote control let you change the zone's eco and comfort temperatures from Home Assistant.</li>
+<li><strong>Nobø Switch (SW4)</strong>: Exposed as a temperature sensor. If the switch is linked to a zone in the Nobø Energy app, its temperature is also shown as the current temperature of that zone.</li>
+</ul>
+<p>Individual heaters, switches, and zones must be added and configured using the Nobø Energy mobile app. Home Assistant reads whatever the hub already knows about.</p>
+<p>Each zone is added as a device in Home Assistant, and its zone name is offered as a suggested <a>area</a>. You can accept the suggestion to group the zone's entities with the rest of that room, or pick a different area.</p>
+<h2>Prerequisites</h2>
+<p>Before adding the integration, make sure the following is in place:</p>
+<ul>
+<li>Your Nobø Ecohub is powered up and connected to your network.</li>
+<li>Your zones, heaters, and any Nobø Switches are set up in the Nobø Energy mobile app, and you can control them from the app.</li>
+<li>You know the last 3 digits of your hub's serial number. The full 12-digit serial number is printed on a label on the back of the hub.</li>
+<li>If your hub is on a different network than Home Assistant, for example on an IoT VLAN, make sure that network is routable from Home Assistant and that you know the hub's IP address.</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Nobø Ecohub</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Nobø Ecohub</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>In most cases, the hub is discovered automatically on your network, and you only need to enter the 3-digit serial number suffix. If the hub is not discovered, choose <strong>Manual</strong> in the device list and enter the full 12-digit serial number together with the hub's IP address.</p>
+<pre><code>
+Discovered hubs:
+  description: "Select the Nobø Ecohub discovered on your local network, or choose **Manual** to enter the details by hand."
+Serial number suffix (3 digits):
+  description: "The last 3 digits of the serial number printed on the back of your Nobø Ecohub. Used to confirm that you own the discovered hub."
+Serial number (12 digits):
+  description: "The full 12-digit serial number printed on the back of your Nobø Ecohub. Only required when adding the hub manually."
+IP address:
+  description: "The IP address of your Nobø Ecohub. Only required when adding the hub manually, for example when the hub is on a different network than Home Assistant."
+
+</code></pre>
+<h2>Reconfiguration</h2>
+<p>You can update the IP address without removing and re-adding the integration.</p>
+<p>This is useful when:</p>
+<ul>
+<li>The hub has moved to a new network and the stored IP address no longer reaches it.</li>
+<li>You want to switch between internal and external addresses (for example, when the hub is reachable on multiple subnets).</li>
+</ul>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>On the <strong>Nobø Ecohub</strong> integration, select the three dots menu  and choose <strong>Reconfigure</strong>.</li>
+<li>Enter the new IP address.</li>
+<li>Select <strong>Submit</strong> to save.</li>
+</ol>
+<h2>Configuration options</h2>
+<p>The integration provides one configuration option that you can change later under <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> by selecting <strong>Configure</strong> on the Nobø Ecohub entry:</p>
+<pre><code>
+Override type:
+  description: "Controls how long overrides stay active when you change the preset of a zone or trigger a global override. Select **Constant** to keep the override until you clear it manually, or **Now** to end the override at the next week profile change (the same as duration **Now** in the Nobø Energy app). The default is **Constant**."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<p>The integration creates entities for every zone in the hub, a global override selector for the hub itself, and a temperature sensor for every Nobø Switch and thermostat that reports a temperature. Each zone also gets a switch to exclude it from the global override.</p>
+<h3>Climate entities</h3>
+<p>Each zone in your hub is exposed as a climate entity. You can use it to set the HVAC mode, change the preset, and adjust the eco and comfort target temperatures.</p>
+<ul>
+<li><strong>HVAC modes</strong>:<ul>
+<li><strong>Auto</strong>: The zone follows the active week profile. The preset reflects the state the zone is currently in.</li>
+<li><strong>Heat</strong>: The zone is overridden and stays in the selected preset (away, eco, or comfort) until the override ends.</li>
+<li><strong>Off</strong>: Shown only when the current week profile sets the zone to off. You cannot select this mode manually. See <a>Turning a zone fully off</a>.</li>
+</ul>
+</li>
+<li><strong>Presets</strong>: <strong>None</strong>, <strong>Comfort</strong>, <strong>Eco</strong>, and <strong>Away</strong>. In <strong>Away</strong>, the setpoint is fixed at 7°C for frost protection and cannot be changed, and any on/off receivers in the zone are switched off.</li>
+<li><strong>Target temperatures</strong>: Eco (low) and comfort (high) setpoints, between 7°C and 30°C, in steps of 1°C. You can change these setpoints on any zone, but a new value only takes effect if the zone contains a thermostat that supports remote control of its eco or comfort temperature.</li>
+</ul>
+<p>The HVAC mode and preset are linked, so a change to one updates the other:</p>
+<ul>
+<li>Selecting a preset of <strong>Away</strong>, <strong>Eco</strong>, or <strong>Comfort</strong> switches the HVAC mode to <strong>Heat</strong>.</li>
+<li>Selecting preset <strong>None</strong> switches the HVAC mode to <strong>Auto</strong> and updates the preset to match the active week profile.</li>
+<li>Selecting HVAC mode <strong>Auto</strong> clears the override and updates the preset to match the active week profile.</li>
+<li>Selecting HVAC mode <strong>Heat</strong> sets the preset to <strong>Comfort</strong>.</li>
+</ul>
+<h3>Select entities</h3>
+<ul>
+<li><strong>Week profile</strong>: Per zone. Lets you change which week profile is active. Week profiles must be created and edited in the Nobø Energy mobile app. The selector lists the profiles the hub currently knows about.</li>
+<li><strong>Global override</strong>: One per hub. Overrides every zone to the selected preset, except zones that have <strong>Disable global overrides</strong> turned on. The available options are <strong>None</strong>, <strong>Away</strong>, <strong>Eco</strong>, and <strong>Comfort</strong>. The global override uses the same override type as preset changes.</li>
+</ul>
+<h3>Sensor entities</h3>
+<ul>
+<li><strong>Temperature</strong>: One per device that reports a temperature, such as a Nobø Switch (SW4) or a thermostat with a temperature sensor. The reading is in degrees Celsius. If the device is linked to a zone, the same temperature is also shown as the current temperature on that zone's climate entity.</li>
+</ul>
+<h3>Switch entities</h3>
+<ul>
+<li><strong>Disable global overrides</strong>: Per zone. This configuration entity controls whether the zone reacts to the hub's <strong>Global override</strong> selector. When turned on, the zone ignores the global override and keeps following its own week profile and presets; when off, the zone follows the global override. This mirrors the <strong>Disable global overrides</strong> setting for the zone in the Nobø Energy mobile app.</li>
+</ul>
+<h2>Examples</h2>
+<p>A few practical ways to use the integration:</p>
+<ul>
+<li>Activate away mode when nobody is home: use a state change on your home and away group or a person entity as the trigger, and have the automation select <strong>Away</strong> on the global override selector. When someone returns, change the global override back to <strong>None</strong> to follow the normal week profiles again.</li>
+<li>Preheat before arrival: when you start the drive to a cabin, set the relevant zones to preset <strong>Comfort</strong>. On arrival, switch them back to preset <strong>None</strong> to let the week profile take over again.</li>
+<li>Pause heating when the heat pump can carry the load: when your heat pump is producing enough heat, switch the Nobø zones to preset <strong>Eco</strong> to avoid double-heating. Switch back to <strong>None</strong> when the heat pump stops.</li>
+<li>Show room temperatures on a dashboard: add the temperature sensors from your Nobø Switches to a dashboard alongside your other room sensors to keep an eye on every zone at a glance.</li>
+</ul>
+<h3>Following presence with the global override</h3>
+<p>This pair of automations sets the global override to <strong>Away</strong> when everyone leaves home, and clears it again when the first person returns so every zone goes back to its normal week profile. Replace <code>group.family</code> with your own presence group or person entity, and <code>select.my_eco_hub_global_override</code> with the name of your hub's global override selector.</p>
+<h4>Example</h4>
+<p>automation: |</p>
+<ul>
+<li>alias: "Nobø: set away when everyone leaves"
+triggers:<ul>
+<li>trigger: state
+entity_id: group.family
+from: "home"
+actions:</li>
+<li>action: select.select_option
+target:
+entity_id: select.my_eco_hub_global_override
+data:
+option: "away"</li>
+</ul>
+</li>
+<li>alias: "Nobø: clear away when someone comes home"
+triggers:<ul>
+<li>trigger: state
+entity_id: group.family
+to: "home"
+actions:</li>
+<li>action: select.select_option
+target:
+entity_id: select.my_eco_hub_global_override
+data:
+option: "none"</li>
+</ul>
+</li>
+</ul>
+<h3>Turning a zone fully off</h3>
+<p>The Nobø system does not expose an off preset, because the away preset doubles as frost protection and is fixed at 7°C. To turn a zone fully off, for example outside of the heating season or while a cabin is empty for a longer time, use a dedicated week profile:</p>
+<ol>
+<li>In the Nobø Energy mobile app, create a new week profile and set every day to state off.</li>
+<li>To turn a zone off, switch that zone to the new week profile. You can do this from Home Assistant by changing the <strong>Week profile</strong> select entity for the zone.</li>
+<li>To turn the zone on again, switch back to your normal week profile.</li>
+</ol>
+<p>To automate this, use a <code>select.select_option</code> action on the zone's week profile selector. Replace <code>select.cabin_week_profile</code> with the week profile selector for your zone, and <code>Off</code> with the exact name of the profile you created in the Nobø Energy app.</p>
+<h4>Example</h4>
+<p>action: |</p>
+<ul>
+<li>action: select.select_option
+target:
+entity_id: select.cabin_week_profile
+data:
+option: "Off"</li>
+</ul>
+<p>The climate entity for the zone shows HVAC mode <strong>Off</strong> while the active week profile keeps the zone off. On/off receivers in the zone are switched off, and heaters with their own thermostat are no longer driven by the hub.</p>
+<p>For more background on week profiles, see the <a>Nobø Ecohub manual</a>.</p>
+<h2>Data updates</h2>
+<p>The integration uses a local push connection to your Nobø Ecohub. When you set up the integration, Home Assistant opens a persistent TCP connection to the hub and registers for live updates. Any change made on the hub—for example, when a week profile changes state, when the temperature reported by a Nobø Switch changes, or when someone presses a Nobø Switch—is pushed to Home Assistant within seconds.</p>
+<p>The current preset of a zone can also change on its own, when the active week profile moves from one scheduled state to the next. The hub does not send an event for this. To keep the zone's preset accurate, the integration re-checks the active week profile against the clock every 60 seconds. This check is local and does not add any traffic to the hub.</p>
+<p>If the connection to the hub is lost, for example because the hub's IP address has changed, the integration tries to rediscover the hub on your local network using a UDP broadcast and reconnects automatically when it finds the hub again. This rediscovery only works if Home Assistant and the hub are on the same network segment.</p>
+<h2>Known limitations</h2>
+<p>The integration cannot manage the configuration of your Nobø system. The following must be done in the Nobø Energy mobile app:</p>
+<ul>
+<li>Registering or deregistering Nobø devices: Heaters, on/off receivers, and Nobø Switches have to be paired with and removed from the hub in the Nobø Energy app.</li>
+<li>Creating or deleting zones: Zones, including their name and which devices belong to them, are defined in the Nobø Energy app.</li>
+<li>Creating, updating, or deleting week profiles: Week profile schedules can only be edited in the Nobø Energy app. In Home Assistant, you can only select which existing profile is active for a zone.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Setup fails with "Failed to connect - check serial number"</h3>
+<p>The hub was reachable on the network, but it rejected the serial number you entered. Re-check the last 3 digits of the serial number on the label on the back of the hub and try again. If you set up the hub manually, also check that the full 12-digit serial number matches.</p>
+<h3>Setup fails with "Failed to connect - check IP address"</h3>
+<p>Home Assistant could not open a connection to the IP address you entered. Make sure that:</p>
+<ul>
+<li>The hub is powered up and connected to your network.</li>
+<li>The IP address is correct. To confirm the hub is reachable, check <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Logs</strong> for connection errors, or ping the hub's IP address from another device on your network.</li>
+<li>No firewall rule blocks the traffic between Home Assistant and the hub, especially if the hub is on a different VLAN.</li>
+</ul>
+<h3>The hub becomes unavailable after its IP address changes</h3>
+<p>The integration tries to rediscover the hub automatically when it cannot reach the stored IP address. This uses a UDP broadcast that only works on the same network segment.</p>
+<ul>
+<li>If Home Assistant and the hub are on the same network, the integration usually picks up the new IP address on its own.</li>
+<li>If the hub is on a different network, the rediscovery does not reach it. In that case, update the stored address using <a>Reconfiguration</a>.</li>
+</ul>
+<p>To avoid this issue, give the hub a static IP address or a DHCP reservation on your router.</p>
+<h3>Setting a target temperature does not seem to do anything</h3>
+<p>The eco and comfort setpoints always update, but they only take effect on zones that include a thermostat that supports remote control of the temperature setpoints. Zones that contain only on/off receivers or heaters without this support keep following their own temperature settings and ignore the new setpoint.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/nobo_hub.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Nobø Ecohub into Home Assistant.
+ha_release: &#x27;2022.10&#x27;
+ha_domain: nobo_hub
+related:
+  - docs: /docs/organizing/areas/#creating-an-area
+    title: Areas in Home Assistant
+  - docs: /docs/automation/
+    title: Automations
+---
+
+The **Nobø Ecohub** {% term integration %} connects Home Assistant to your [Nobø Ecohub](https://en.nobo.no/product/nobo-hub), a Norwegian heating controller from Glen Dimplex Nordic AS. The hub manages electric panel heaters, floor heating, and on/off receivers grouped into zones, and lets you follow weekly heating schedules with eco, comfort, and away setpoints.
+
+With this integration, you can control your heating zones, switch between week profiles, and read temperatures from any connected Nobø Switch—all locally over your network, without depending on a cloud service.
+
+This integration is not officially supported or endorsed by Glen Dimplex Nordic AS, and the authors and maintainers are not official partners of Glen Dimplex Nordic AS.
+
+## How you can use this integration
+
+The Nobø Ecohub is mainly used in homes and cabins with electric heating in the Nordic region. Typical things you can do with this integration are:
+
+- Control heating zones directly from your dashboard, with the same eco, comfort, and away presets you have in the Nobø Energy mobile app.
+- Switch the active week profile for a zone from an automation. For example, switch a cabin to its weekend profile when you leave for a trip on Friday.
+- Trigger a global override (such as away or eco) when everyone leaves home, and clear it again when someone returns.
+- Use the temperature reading from a Nobø Switch as a trigger in your automations, or display it on a dashboard alongside other room sensors.
+- Coordinate the Nobø heaters with other heat sources, such as a heat pump, by switching presets or week profiles based on outdoor temperature, electricity price, or solar production.
+- Turn heaters fully off in a zone, for example to switch off cabin heating outside of the heating season. See [Turning a zone fully off](#turning-a-zone-fully-off) for the recommended approach.
+
+## Supported devices
+
+The integration is built around the Nobø Ecohub and supports the devices that the hub itself manages:
+
+- **Nobø Ecohub**: The bridge between your Nobø system and Home Assistant. Each zone you have configured in the hub is exposed in Home Assistant.
+- **Heaters and on/off receivers**: Floor and wall-mounted heaters, and any on/off receivers in a zone, are controlled through their zone&#x27;s climate entity. Heaters with a built-in thermostat that supports remote control let you change the zone&#x27;s eco and comfort temperatures from Home Assistant.
+- **Nobø Switch (SW4)**: Exposed as a temperature {% term sensor %}. If the switch is linked to a zone in the Nobø Energy app, its temperature is also shown as the current temperature of that zone.
+
+Individual heaters, switches, and zones must be added and configured using the Nobø Energy mobile app. Home Assistant reads whatever the hub already knows about.
+
+Each zone is added as a device in Home Assistant, and its zone name is offered as a suggested [area](/docs/organizing/areas/#creating-an-area). You can accept the suggestion to group the zone&#x27;s entities with the rest of that room, or pick a different area.
+
+## Prerequisites
+
+Before adding the integration, make sure the following is in place:
+
+- Your Nobø Ecohub is powered up and connected to your network.
+- Your zones, heaters, and any Nobø Switches are set up in the Nobø Energy mobile app, and you can control them from the app.
+- You know the last 3 digits of your hub&#x27;s serial number. The full 12-digit serial number is printed on a label on the back of the hub.
+- If your hub is on a different network than Home Assistant, for example on an IoT VLAN, make sure that network is routable from Home Assistant and that you know the hub&#x27;s IP address.
+
+{% include integrations/config_flow.md %}
+
+In most cases, the hub is discovered automatically on your network, and you only need to enter the 3-digit serial number suffix. If the hub is not discovered, choose **Manual** in the device list and enter the full 12-digit serial number together with the hub&#x27;s IP address.
+
+{% configuration_basic %}
+Discovered hubs:
+  description: &quot;Select the Nobø Ecohub discovered on your local network, or choose **Manual** to enter the details by hand.&quot;
+Serial number suffix (3 digits):
+  description: &quot;The last 3 digits of the serial number printed on the back of your Nobø Ecohub. Used to confirm that you own the discovered hub.&quot;
+Serial number (12 digits):
+  description: &quot;The full 12-digit serial number printed on the back of your Nobø Ecohub. Only required when adding the hub manually.&quot;
+IP address:
+  description: &quot;The IP address of your Nobø Ecohub. Only required when adding the hub manually, for example when the hub is on a different network than Home Assistant.&quot;
+{% endconfiguration_basic %}
+
+## Reconfiguration
+
+You can update the IP address without removing and re-adding the integration.
+
+This is useful when:
+
+- The hub has moved to a new network and the stored IP address no longer reaches it.
+- You want to switch between internal and external addresses (for example, when the hub is reachable on multiple subnets).
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. On the **Nobø Ecohub** integration, select the three dots menu {% icon &quot;mdi:dots-vertical&quot; %} and choose **Reconfigure**.
+3. Enter the new IP address.
+4. Select **Submit** to save.
+
+## Configuration options
+
+The integration provides one configuration option that you can change later under {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} by selecting **Configure** on the Nobø Ecohub entry:
+
+{% configuration_basic %}
+Override type:
+  description: &quot;Controls how long overrides stay active when you change the preset of a zone or trigger a global override. Select **Constant** to keep the override until you clear it manually, or **Now** to end the override at the next week profile change (the same as duration **Now** in the Nobø Energy app). The default is **Constant**.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+The integration creates entities for every zone in the hub, a global override selector for the hub itself, and a temperature sensor for every Nobø Switch and thermostat that reports a temperature. Each zone also gets a switch to exclude it from the global override.
+
+### Climate entities
+
+Each zone in your hub is exposed as a climate entity. You can use it to set the HVAC mode, change the preset, and adjust the eco and comfort target temperatures.
+
+- **HVAC modes**:
+  - **Auto**: The zone follows the active week profile. The preset reflects the state the zone is currently in.
+  - **Heat**: The zone is overridden and stays in the selected preset (away, eco, or comfort) until the override ends.
+  - **Off**: Shown only when the current week profile sets the zone to off. You cannot select this mode manually. See [Turning a zone fully off](#turning-a-zone-fully-off).
+- **Presets**: **None**, **Comfort**, **Eco**, and **Away**. In **Away**, the setpoint is fixed at 7°C for frost protection and cannot be changed, and any on/off receivers in the zone are switched off.
+- **Target temperatures**: Eco (low) and comfort (high) setpoints, between 7°C and 30°C, in steps of 1°C. You can change these setpoints on any zone, but a new value only takes effect if the zone contains a thermostat that supports remote control of its eco or comfort temperature.
+
+The HVAC mode and preset are linked, so a change to one updates the other:
+
+- Selecting a preset of **Away**, **Eco**, or **Comfort** switches the HVAC mode to **Heat**.
+- Selecting preset **None** switches the HVAC mode to **Auto** and updates the preset to match the active week profile.
+- Selecting HVAC mode **Auto** clears the override and updates the preset to match the active week profile.
+- Selecting HVAC mode **Heat** sets the preset to **Comfort**.
+
+### Select entities
+
+- **Week profile**: Per zone. Lets you change which week profile is active. Week profiles must be created and edited in the Nobø Energy mobile app. The selector lists the profiles the hub currently knows about.
+- **Global override**: One per hub. Overrides every zone to the selected preset, except zones that have **Disable global overrides** turned on. The available options are **None**, **Away**, **Eco**, and **Comfort**. The global override uses the same override type as preset changes.
+
+### Sensor entities
+
+- **Temperature**: One per device that reports a temperature, such as a Nobø Switch (SW4) or a thermostat with a temperature sensor. The reading is in degrees Celsius. If the device is linked to a zone, the same temperature is also shown as the current temperature on that zone&#x27;s climate entity.
+
+### Switch entities
+
+- **Disable global overrides**: Per zone. This configuration entity controls whether the zone reacts to the hub&#x27;s **Global override** selector. When turned on, the zone ignores the global override and keeps following its own week profile and presets; when off, the zone follows the global override. This mirrors the **Disable global overrides** setting for the zone in the Nobø Energy mobile app.
+
+## Examples
+
+A few practical ways to use the integration:
+
+- Activate away mode when nobody is home: use a state change on your home and away group or a person {% term entity %} as the trigger, and have the automation select **Away** on the global override selector. When someone returns, change the global override back to **None** to follow the normal week profiles again.
+- Preheat before arrival: when you start the drive to a cabin, set the relevant zones to preset **Comfort**. On arrival, switch them back to preset **None** to let the week profile take over again.
+- Pause heating when the heat pump can carry the load: when your heat pump is producing enough heat, switch the Nobø zones to preset **Eco** to avoid double-heating. Switch back to **None** when the heat pump stops.
+- Show room temperatures on a dashboard: add the temperature sensors from your Nobø Switches to a dashboard alongside your other room sensors to keep an eye on every zone at a glance.
+
+### Following presence with the global override
+
+This pair of automations sets the global override to **Away** when everyone leaves home, and clears it again when the first person returns so every zone goes back to its normal week profile. Replace `group.family` with your own presence group or person {% term entity %}, and `select.my_eco_hub_global_override` with the name of your hub&#x27;s global override selector.
+
+{% example %}
+automation: |
+  - alias: &quot;Nobø: set away when everyone leaves&quot;
+    triggers:
+      - trigger: state
+        entity_id: group.family
+        from: &quot;home&quot;
+    actions:
+      - action: select.select_option
+        target:
+          entity_id: select.my_eco_hub_global_override
+        data:
+          option: &quot;away&quot;
+  - alias: &quot;Nobø: clear away when someone comes home&quot;
+    triggers:
+      - trigger: state
+        entity_id: group.family
+        to: &quot;home&quot;
+    actions:
+      - action: select.select_option
+        target:
+          entity_id: select.my_eco_hub_global_override
+        data:
+          option: &quot;none&quot;
+{% endexample %}
+
+### Turning a zone fully off
+
+The Nobø system does not expose an off preset, because the away preset doubles as frost protection and is fixed at 7°C. To turn a zone fully off, for example outside of the heating season or while a cabin is empty for a longer time, use a dedicated week profile:
+
+1. In the Nobø Energy mobile app, create a new week profile and set every day to state off.
+2. To turn a zone off, switch that zone to the new week profile. You can do this from Home Assistant by changing the **Week profile** select entity for the zone.
+3. To turn the zone on again, switch back to your normal week profile.
+
+To automate this, use a `select.select_option` action on the zone&#x27;s week profile selector. Replace `select.cabin_week_profile` with the week profile selector for your zone, and `Off` with the exact name of the profile you created in the Nobø Energy app.
+
+{% example %}
+action: |
+  - action: select.select_option
+    target:
+      entity_id: select.cabin_week_profile
+    data:
+      option: &quot;Off&quot;
+{% endexample %}
+
+The climate entity for the zone shows HVAC mode **Off** while the active week profile keeps the zone off. On/off receivers in the zone are switched off, and heaters with their own thermostat are no longer driven by the hub.
+
+For more background on week profiles, see the [Nobø Ecohub manual](https://help.nobo.no/en/user-manual/before-you-start/what-is-a-weekly-program/).
+
+## Data updates
+
+The integration uses a local push connection to your Nobø Ecohub. When you set up the integration, Home Assistant opens a persistent TCP connection to the hub and registers for live updates. Any change made on the hub—for example, when a week profile changes state, when the temperature reported by a Nobø Switch changes, or when someone presses a Nobø Switch—is pushed to Home Assistant within seconds.
+
+The current preset of a zone can also change on its own, when the active week profile moves from one scheduled state to the next. The hub does not send an event for this. To keep the zone&#x27;s preset accurate, the integration re-checks the active week profile against the clock every 60 seconds. This check is local and does not add any traffic to the hub.
+
+If the connection to the hub is lost, for example because the hub&#x27;s IP address has changed, the integration tries to rediscover the hub on your local network using a UDP broadcast and reconnects automatically when it finds the hub again. This rediscovery only works if Home Assistant and the hub are on the same network segment.
+
+## Known limitations
+
+The integration cannot manage the configuration of your Nobø system. The following must be done in the Nobø Energy mobile app:
+
+- Registering or deregistering Nobø devices: Heaters, on/off receivers, and Nobø Switches have to be paired with and removed from the hub in the Nobø Energy app.
+- Creating or deleting zones: Zones, including their name and which devices belong to them, are defined in the Nobø Energy app.
+- Creating, updating, or deleting week profiles: Week profile schedules can only be edited in the Nobø Energy app. In Home Assistant, you can only select which existing profile is active for a zone.
+
+## Troubleshooting
+
+### Setup fails with &quot;Failed to connect - check serial number&quot;
+
+The hub was reachable on the network, but it rejected the serial number you entered. Re-check the last 3 digits of the serial number on the label on the back of the hub and try again. If you set up the hub manually, also check that the full 12-digit serial number matches.
+
+### Setup fails with &quot;Failed to connect - check IP address&quot;
+
+Home Assistant could not open a connection to the IP address you entered. Make sure that:
+
+- The hub is powered up and connected to your network.
+- The IP address is correct. To confirm the hub is reachable, check {% my logs title=&quot;**Settings** &gt; **System** &gt; **Logs**&quot; %} for connection errors, or ping the hub&#x27;s IP address from another device on your network.
+- No firewall rule blocks the traffic between Home Assistant and the hub, especially if the hub is on a different VLAN.
+
+### The hub becomes unavailable after its IP address changes
+
+The integration tries to rediscover the hub automatically when it cannot reach the stored IP address. This uses a UDP broadcast that only works on the same network segment.
+
+- If Home Assistant and the hub are on the same network, the integration usually picks up the new IP address on its own.
+- If the hub is on a different network, the rediscovery does not reach it. In that case, update the stored address using [Reconfiguration](#reconfiguration).
+
+To avoid this issue, give the hub a static IP address or a DHCP reservation on your router.
+
+### Setting a target temperature does not seem to do anything
+
+The eco and comfort setpoints always update, but they only take effect on zones that include a thermostat that supports remote control of the temperature setpoints. Zones that contain only on/off receivers or heaters without this support keep following their own temperature settings and ignore the new setpoint.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Nobø Ecohub.</p><p>The <strong>manual</strong> configuration step lists <code>ip_address</code>, <code>serial</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>ip_address</code>.</p><p>The <strong>selected</strong> configuration step lists <code>serial_suffix</code>.</p><p>The <strong>user</strong> configuration step lists <code>device</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>climate</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use this integration</li><li>Supported devices</li><li>Prerequisites</li><li>Reconfiguration</li><li>Configuration options</li><li>Supported functionality</li><li>Examples</li><li>Data updates</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/nobo_hub/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/nobo_hub</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/nobo_hub</code></dd></dl></section><p><a href="../../integrations/nobo_hub/">Return to the Nobø Ecohub guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

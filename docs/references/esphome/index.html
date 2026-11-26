@@ -1,1 +1,689 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ESPHome reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:276" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/esphome/">ESPHome guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>ESPHome</h1><p>Support for ESPHome devices using the native ESPHome API.</p><section><h2>Overview</h2><p>The ESPHome integration allows ESPHome devices to connect directly to Home Assistant with the native ESPHome API.</p></section><section><h2>Key features</h2><p>ESPHome supports a variety of microcontrollers beyond just the ESP family. These include:</p></section><section><h2>Required manual input</h2><p>To configure an ESPHome device, enter the following information:</p></section><section><h2>Supported devices</h2><p>The ESPHome integration works with devices that run ESPHome firmware and expose their functionality through the native ESPHome API. This API is designed for tight, efficient integration with Home Assistant, enabling ESPHome devices to push updates directly to Home Assistant in near real time.</p></section><section><h2>About ESPHome remote adapters (proxies)</h2><p>An ESPHome device can act as a remote adapter, also called a proxy. It picks up a signal or a connection where your device is, and makes it available to Home Assistant over your network. This way, you can use devices that are nowhere near the system that runs Home Assistant.</p></section><section><h2>Updating data</h2><p>Rather than polling for sensor values or device states, Home Assistant maintains a persistent connection to each ESPHome device using the native API. This allows state changes—such as a temperature sensor update, a button press, or a binary sensor trigger—to be sent immediately as they happen, reducing latency and improving responsiveness in automations.</p></section><section><h2>Additional technical details</h2><p>This real-time behavior enables fast, reactive automations and a smooth user experience compared to traditional polling-based integrations.</p></section><section><h2>Entities</h2><p>The available entities depend on the components defined in the ESPHome YAML configuration for each device. These entities are exposed through the Native API Component.</p></section><section><h2>Firing events on the Home Assistant event bus</h2><p>When using the native API with Home Assistant, you can trigger events on the Home Assistant event bus directly from ESPHome. For more details, see the homeassistant.event Action.</p></section><section><h2>Actions</h2><p>Each device can define Home Assistant Actions based on its ESPHome YAML configuration. For more information, refer to the Actions section in the Native API Component documentation.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for ESPHome.</p><p>The <strong>authenticate</strong> configuration step lists <code>password</code>.</p><p>The <strong>encryption key</strong> configuration step lists <code>noise_psk</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>noise_psk</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>camera</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>text</li><li>update</li><li>valve</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>esphome</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Overview</li><li>Supported devices</li><li>About ESPHome remote adapters (proxies)</li><li>Updating data</li><li>Supported functionality</li><li>Entity naming and IDs</li><li>Troubleshooting</li><li>Reconfiguration and Device Replacement</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/esphome/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/esphome</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/esphome</code></dd></dl></section><p><a href="../../integrations/esphome/">Return to the ESPHome guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ESPHome reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:276" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/esphome/">ESPHome guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>ESPHome</h1><p>Support for ESPHome devices using the native ESPHome API.</p><div class="reader-body"><h2>Overview</h2>
+<p>The <strong>ESPHome</strong> integration allows <a>ESPHome</a> devices to connect directly to Home Assistant with the <a>native ESPHome API</a>.</p>
+<p>ESPHome is a firmware generator and configuration system that enables the transformation of microcontrollers into fully customizable smart home devices. Using a simple YAML configuration file, ESPHome allows users to define hardware components like sensors, actuators, and peripherals. These configurations are then compiled into custom firmware that can be flashed onto the target device.</p>
+<h3>Key features</h3>
+<ul>
+<li><strong>YAML Configuration</strong>: Specify hardware components, sensors, actuators, and integrations using a clean and straightforward YAML syntax.</li>
+<li><strong>Custom Firmware Generation</strong>: ESPHome compiles the provided configuration into a highly optimized, device-specific firmware image that is ready to be flashed onto microcontrollers.</li>
+<li><strong>Seamless Integration</strong>: After flashing, ESPHome devices can integrate seamlessly with Home Assistant using the ESPHome native API. This documentation page focuses on the <a>native API</a>, which allows devices to communicate directly with Home Assistant for real-time automation and monitoring. For other integrations, such as MQTT or HTTP, please refer to the relevant sections of the <a>ESPHome documentation</a>.</li>
+</ul>
+<p>ESPHome supports a variety of microcontrollers beyond just the ESP family. These include:</p>
+<ul>
+<li><strong>ESP32</strong>: A powerful microcontroller with Wi-Fi and Bluetooth capabilities.</li>
+<li><strong>ESP8266</strong>: A low-cost microcontroller with Wi-Fi support.</li>
+<li><strong>BK72xx</strong>: A series of microcontrollers from Beken, commonly used in smart home applications.</li>
+<li><strong>RP2040</strong>: A microcontroller developed by Raspberry Pi, known for its flexibility and cost-effectiveness.</li>
+<li><strong>RTL87xx</strong>: A series of microcontrollers from Realtek, supporting various wireless communication protocols.</li>
+</ul>
+<p>For a list of officially supported microcontrollers and devices, refer to the <a>ESPHome device database</a>. Keep in mind that this database represents only a portion of the ecosystem—many other devices and peripherals are supported but may not appear in the database.</p>
+<p>For inspiration and examples of complete, ready-to-use configurations, check out the <a>ESPHome ready-made projects</a>. These include proxies, which extend what Home Assistant can reach. For more details, refer to <a>ESPHome remote adapters (proxies)</a>.</p>
+<p>If you're looking for pre-built solutions, the <a>Voice PE</a> is an excellent example. It's a pre-built voice assistant device powered by ESPHome, offering an easy way to integrate voice control into your Home Assistant system. Many pre-built solutions, like the Voice PE, are open-source and can be customized, giving you flexibility to adapt them to your needs.</p>
+<p>For detailed information on configuring unsupported or custom devices, consult the official <a>ESPHome documentation</a>, which provides in-depth guides on expanding and customizing your setup beyond the pre-configured devices.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>ESPHome</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>ESPHome</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h3>Required manual input</h3>
+<p>To configure an ESPHome device, enter the following information:</p>
+<pre><code>
+
+host:
+  description: "IP address or hostname of the ESPHome device. &lt;br&gt; This will be pre-filled if the device was auto-discovered."
+port:
+  description: "Port used by the ESPHome native API (default: 6053). &lt;br&gt; This will be pre-filled if the device was auto-discovered."
+noise_psk:
+  description: "The pre-shared key used for encryption. &lt;br&gt; This is a 32‑byte base64‑encoded string. Leave blank if native encryption is not enabled."
+password:
+  description: "Device password (deprecated). &lt;br&gt; Use a Noise PSK (encryption key) instead – password support will be removed in a future release."
+
+
+</code></pre>
+<p>For more information, see the <a>ESPHome Native API Component documentation</a>.</p>
+<h2>Options</h2>
+<p>To define options for ESPHome, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of ESPHome are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this device.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<p>These options are disabled by default and not required—only set them if specifically needed.</p>
+<pre><code>
+Allow the device to perform Home Assistant actions:
+  description: "No/Yes &lt;br&gt; When enabled, ESPHome devices can perform Home Assistant actions, such as calling services or sending events. Only enable this if you trust the device."
+Subscribe to logs from the device:
+  description: "No/Yes &lt;br&gt; When enabled, the device will send logs to Home Assistant and you can view them in the logs panel."
+
+</code></pre>
+<h2>Supported devices</h2>
+<p>The ESPHome integration works with devices that run ESPHome firmware and expose their functionality through the <a>native ESPHome API</a>. This API is designed for tight, efficient integration with Home Assistant, enabling ESPHome devices to push updates directly to Home Assistant in <strong>near real time</strong>.</p>
+<h2>About ESPHome remote adapters (proxies)</h2>
+<p>An ESPHome device can act as a remote adapter, also called a proxy. It picks up a signal or a connection where your device is, and makes it available to Home Assistant over your network. This way, you can use devices that are nowhere near the system that runs Home Assistant.</p>
+<p>An ESPHome device can provide capabilities to the following integrations:</p>
+<ul>
+<li><strong>Bluetooth</strong> integration: extends the range of Home Assistant, so that it can see and connect to Bluetooth devices all over your home. For more details, refer to the <a>Bluetooth</a> integration.</li>
+<li><strong>Infrared</strong> integration: sends commands to infrared-controlled devices, such as TVs and air conditioners, and receives signals from handheld remotes. For more details, refer to the <a href="../infrared/">Infrared</a> integration.</li>
+<li><strong>Radio frequency</strong> integration: sends commands to devices that use sub-GHz radio frequencies, such as remote outlets and string lights. For more details, refer to the <a href="../radio_frequency/">Radio frequency</a> integration.</li>
+<li><strong>Serial</strong> integration: shares one of the serial ports of the ESPHome device over your network, so that integrations can reach a serial-connected device such as an AV receiver or an energy meter. For more details, refer to <a>serial proxy</a>.</li>
+</ul>
+<p>Once you add the ESPHome device to Home Assistant, its proxy capabilities become available to the related integrations. You still need to configure the integration that uses the capability, such as selecting the shared serial port.</p>
+<p>To set up a proxy, add the matching component to the configuration of your ESPHome device:</p>
+<ul>
+<li><a>Bluetooth proxy</a>, which also has <a>ready-made projects</a> that you can install from your browser</li>
+<li><a>Infrared and radio frequency proxy</a>, which also has <a>ready-made projects</a></li>
+<li><a>Serial proxy</a>, which also has <a>ready-made projects</a></li>
+</ul>
+<h2>Updating data</h2>
+<p>Rather than polling for sensor values or device states, Home Assistant maintains a persistent connection to each ESPHome device using the native API. This allows state changes—such as a temperature sensor update, a button press, or a binary sensor trigger—to be sent immediately as they happen, reducing latency and improving responsiveness in automations.</p>
+<h3>Additional technical details</h3>
+<ul>
+<li><strong>Efficient Communication Protocol</strong>: ESPHome uses a lightweight, bi-directional protocol over TCP, optimized for microcontrollers. This protocol is implemented in <a>aioesphomeapi</a>, the async Python library used by Home Assistant to handle real-time communication with ESPHome devices. It enables low-latency updates and near instant command execution.</li>
+<li><strong>Automatic Reconnection</strong>: Home Assistant maintains a persistent connection to each ESPHome device and will automatically attempt to reconnect if the connection is lost. This includes support for "sleepy" or battery-powered devices that periodically wake from deep sleep. When such a device comes online, Home Assistant quickly re-establishes the connection—especially when <strong>mDNS</strong> (Multicast DNS) is available—allowing the device to be discovered and connected without requiring static IPs or manual configuration.</li>
+</ul>
+<p>This real-time behavior enables fast, reactive automations and a smooth user experience compared to traditional polling-based integrations.</p>
+<h2>Supported functionality</h2>
+<h3>Entities</h3>
+<p>The available entities depend on the components defined in the ESPHome YAML configuration for each device. These entities are exposed through the <a>Native API Component</a>.</p>
+<h3>Firing events on the Home Assistant event bus</h3>
+<p>When using the native API with Home Assistant, you can trigger events on the Home Assistant event bus directly from ESPHome. For more details, see the <a>homeassistant.event Action</a>.</p>
+<h3>Actions</h3>
+<p>Each device can define Home Assistant Actions based on its ESPHome YAML configuration. For more information, refer to the <a>Actions</a> section in the <a>Native API Component</a> documentation.</p>
+<h3>Retrieving data from Home Assistant</h3>
+<p>ESPHome can retrieve the state of Home Assistant entities using the <a>Native API</a> with <a>User-Defined Actions</a>.</p>
+<h3>Home Assistant actions</h3>
+<p>ESPHome devices can call any <a>Home Assistant Action</a>. This feature is not enabled by default for newly added devices but can be enabled through the options flow on a per-device basis.</p>
+<h3>Tag scanning support</h3>
+<p>The <a>Native API Component</a> also supports sending tag scan events to Home Assistant. See the <a>homeassistant.tag_scanned Action</a> for more information.</p>
+<h3>Bluetooth proxy scanning mode</h3>
+<p>For ESPHome devices running the <a>Bluetooth proxy</a> on a recent firmware, you can choose how the proxy scans for Bluetooth devices. The default is <strong>Auto</strong>, which is recommended for most setups. To change it, open the device in <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, select <strong>Configure</strong>, and pick a <strong>Bluetooth scanning mode</strong>:</p>
+<ul>
+<li><strong>Auto</strong>: Listens passively most of the time and only briefly switches to active scanning when a device or integration needs more details. Compared to running continuously active, this saves around 95 to 96 percent of the scan-related battery drain on your Bluetooth devices while still discovering devices and updates quickly.</li>
+<li><strong>Active</strong>: Continuously asks devices for full information. Updates are the fastest, but it uses more battery on the devices around you.</li>
+<li><strong>Passive</strong>: Only listens; never asks devices for extra information. Uses the least battery on your devices, but some details may be missing because some integrations need active scanning to work.</li>
+</ul>
+<p>The first time Home Assistant connects to a proxy, the device's YAML mode is honored if it was set to passive; otherwise the proxy starts in <strong>Auto</strong>. After that, the choice saved in Home Assistant takes ownership of the running mode and changing <code>bluetooth_proxy:</code> <code>mode:</code> in the device YAML no longer affects the running mode.</p>
+<h2>Entity naming and IDs</h2>
+<ul>
+<li>Entity name is a combination of the friendly name (or name if unset) and component name</li>
+<li>Entity ID is derived from the entity name</li>
+<li>Unicode characters in names are transliterated to their closest ASCII equivalents for compatibility</li>
+</ul>
+<p>Example with <code>friendly_name</code> set:</p>
+<pre><code>esphome:
+   name: "livingroomdesk"
+   friendly_name: "Living room desk"
+
+sensor:
+   name: "Temperature"
+</code></pre>
+<p>The entity will be named <code>Living room desk Temperature</code> and will default to having an entity ID of <code>sensor.living_room_desk_temperature</code>.</p>
+<p>Example without <code>friendly_name</code> set:</p>
+<pre><code>esphome:
+   name: "livingroomdesk"
+
+sensor:
+   name: "Temperature"
+</code></pre>
+<p>The entity will be named <code>livingroomdesk Temperature</code> and will default to having an entity ID of <code>sensor.livingroomdesk_temperature</code>.</p>
+<p>Example with Unicode characters:</p>
+<pre><code>esphome:
+   name: "haloszoba-klima"
+   friendly_name: "Hálószoba klíma"
+
+sensor:
+   name: "Árvíztűrő tükörfúrógép"
+</code></pre>
+<p>The entity will be named <code>Hálószoba klíma Árvíztűrő tükörfúrógép</code> and will default to having an entity ID of <code>sensor.haloszoba_klima_arvizturo_tukorfurogep</code>. Note how the Unicode characters are transliterated rather than replaced with underscores.</p>
+<h2>Troubleshooting</h2>
+<h3>Viewing live logs</h3>
+<p>To troubleshoot your ESPHome devices, you can easily view live logs, whether you're using the <a><strong>ESPHome Device Builder</strong></a> or the <strong>ESPHome CLI</strong>. The logs contain detailed information such as Wi-Fi connection status, errors, and debug messages, which can help you identify and resolve issues with your device.</p>
+<h4>Using the <a><strong>ESPHome Device Builder</strong></a></h4>
+<ol>
+<li>In the <a><strong>ESPHome Device Builder</strong></a> app, find the device you're working with.</li>
+<li>Click the <strong>LOGS</strong> button to open the log view.</li>
+</ol>
+<h4>Using the <strong>ESPHome CLI</strong></h4>
+<p>If you're using the <strong>ESPHome CLI</strong>, follow the instructions for the <a>logs Command</a> to access the logs.</p>
+<h3>Obtaining logs from the device</h3>
+<p>If you want the device to send logs without requiring you to be actively monitoring, follow these steps:</p>
+<ol>
+<li><p>To have the device send logs to Home Assistant, in the <a>options flow</a>, enable <code>Subscribe to logs from the device</code>.</p>
+<ul>
+<li>They are logged under the <code>homeassistant.components.esphome</code> logger at the equivalent level.</li>
+</ul>
+</li>
+<li><p>To adjust the logging level, there are two options:</p>
+<ul>
+<li><p>enable <a>debug logging</a>,</p>
+</li>
+<li><p>or use the <a>Actions tab</a> in <strong>Settings</strong> &gt; <strong>Tools</strong> to call the <a href="../logger/"><code>logger.set_level</code></a> action to specify the desired level:</p>
+<pre><code>action: logger.set_level
+data:
+  homeassistant.components.esphome: debug
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2>Reconfiguration and Device Replacement</h2>
+<p>This integration supports reconfiguration, allowing you to make changes—such as updating the IP address—even after a device has already been set up.</p>
+<h3>Name conflict resolution</h3>
+<p>If Home Assistant detects multiple devices with the same <a><strong>name</strong></a>, it will automatically initiate <strong>Name Conflict Resolution</strong>. This process is designed to help you seamlessly replace a failed or retired device with new hardware, while preserving your existing configuration if desired.</p>
+<p>This process gives you two options:</p>
+<ul>
+<li><strong>Migrate</strong>: Transfers the existing entity configuration to the new device. This preserves all your settings, entity names, and history. Use this when you're replacing the hardware but keeping the same YAML configuration.</li>
+<li><strong>Overwrite</strong>: Replaces the existing configuration with the new device.
+<strong>Caution:</strong> This will <strong>erase all existing settings</strong> for the old device including entity names, customizations, and history will be lost. Use this only if the new device is completely different and you don’t need anything from the previous setup.</li>
+</ul>
+<p><strong>Tip</strong></p>
+<p>If you’re using the same YAML file on the new device, choose <strong>Migrate</strong>. If it’s a totally different device (even if it shares the same name), <strong>Overwrite</strong> is the safer option.</p>
+<hr>
+<h3>Requirements for name conflict resolution</h3>
+<p>To trigger Name Conflict Resolution, all of the following must be true:</p>
+<ul>
+<li>The new device must be running <strong>ESPHome 2025.4.0 or later</strong>.</li>
+<li>The new device must use the same <a><strong>name</strong></a> (not just the friendly name).</li>
+<li>The original (old) device must be <strong>offline</strong>.</li>
+</ul>
+<hr>
+<h3>How to trigger name conflict resolution</h3>
+<p>You can trigger Name Conflict Resolution in several ways:</p>
+<ul>
+<li>Connecting a new device with the same name and a <strong>static IP address</strong> will automatically launch a repair flow.</li>
+<li>Using the <strong>Reconfigure</strong> option in the UI to point to a different IP that hosts a device with the same name.</li>
+<li>Configuring a <strong>newly discovered device</strong> that uses the same name.</li>
+<li><strong>Manually adding</strong> a device with the same name via the integration setup.</li>
+</ul>
+<h2>Known limitations</h2>
+<p>Each ESPHome device must have a <strong>unique name</strong>. This name is important for mDNS announcements, ensuring that the device can be properly discovered, quickly reconnected when it comes online or wakes from deep sleep (for devices that support deep sleep), and correctly linked to the <a><strong>ESPHome Device Builder</strong></a> app. It's also crucial for <strong>DHCP discovery</strong> if mDNS is not available.</p>
+<p>Using duplicate names can lead to connection issues, failed discovery, and unexpected behavior with both the integration and the app for Home Assistant (formerly known as add-on).</p>
+<h2>Removing the integration</h2>
+<p>This integration follows the standard integration removal process; no extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/esphome.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Support for ESPHome devices using the native ESPHome API.
+featured: true
+ha_release: 0.85
+ha_domain: esphome
+---
+
+## Overview
+
+The **ESPHome** {% term integration %} allows [ESPHome](https://esphome.io) devices to connect directly to Home Assistant with the [native ESPHome API](https://esphome.io/components/api/).
+
+ESPHome is a firmware generator and configuration system that enables the transformation of microcontrollers into fully customizable smart home devices. Using a simple YAML configuration file, ESPHome allows users to define hardware components like sensors, actuators, and peripherals. These configurations are then compiled into custom firmware that can be flashed onto the target device.
+
+### Key features
+
+- **YAML Configuration**: Specify hardware components, sensors, actuators, and integrations using a clean and straightforward YAML syntax.
+- **Custom Firmware Generation**: ESPHome compiles the provided configuration into a highly optimized, device-specific firmware image that is ready to be flashed onto microcontrollers.
+- **Seamless Integration**: After flashing, ESPHome devices can integrate seamlessly with Home Assistant using the ESPHome native API. This documentation page focuses on the [native API](https://esphome.io/components/api/), which allows devices to communicate directly with Home Assistant for real-time automation and monitoring. For other integrations, such as MQTT or HTTP, please refer to the relevant sections of the [ESPHome documentation](https://esphome.io/).
+
+ESPHome supports a variety of microcontrollers beyond just the ESP family. These include:
+
+- **ESP32**: A powerful microcontroller with Wi-Fi and Bluetooth capabilities.
+- **ESP8266**: A low-cost microcontroller with Wi-Fi support.
+- **BK72xx**: A series of microcontrollers from Beken, commonly used in smart home applications.
+- **RP2040**: A microcontroller developed by Raspberry Pi, known for its flexibility and cost-effectiveness.
+- **RTL87xx**: A series of microcontrollers from Realtek, supporting various wireless communication protocols.
+
+For a list of officially supported microcontrollers and devices, refer to the [ESPHome device database](https://devices.esphome.io/). Keep in mind that this database represents only a portion of the ecosystem—many other devices and peripherals are supported but may not appear in the database.
+
+For inspiration and examples of complete, ready-to-use configurations, check out the [ESPHome ready-made projects](https://esphome.io/projects/). These include proxies, which extend what Home Assistant can reach. For more details, refer to [ESPHome remote adapters (proxies)](#about-esphome-remote-adapters-proxies).
+
+If you&#x27;re looking for pre-built solutions, the [Voice PE](/voice-pe/) is an excellent example. It&#x27;s a pre-built voice assistant device powered by ESPHome, offering an easy way to integrate voice control into your Home Assistant system. Many pre-built solutions, like the Voice PE, are open-source and can be customized, giving you flexibility to adapt them to your needs.
+
+For detailed information on configuring unsupported or custom devices, consult the official [ESPHome documentation](https://esphome.io/), which provides in-depth guides on expanding and customizing your setup beyond the pre-configured devices.
+
+{% include integrations/config_flow.md %}
+
+### Required manual input
+
+To configure an ESPHome device, enter the following information:
+
+{% configuration_basic %}
+
+host:
+  description: &quot;IP address or hostname of the ESPHome device. &lt;br&gt; This will be pre-filled if the device was auto-discovered.&quot;
+port:
+  description: &quot;Port used by the ESPHome native API (default: 6053). &lt;br&gt; This will be pre-filled if the device was auto-discovered.&quot;
+noise_psk:
+  description: &quot;The pre-shared key used for encryption. &lt;br&gt; This is a 32‑byte base64‑encoded string. Leave blank if native encryption is not enabled.&quot;
+password:
+  description: &quot;Device password (deprecated). &lt;br&gt; Use a Noise PSK (encryption key) instead – password support will be removed in a future release.&quot;
+
+{% endconfiguration_basic %}
+
+For more information, see the [ESPHome Native API Component documentation](https://esphome.io/components/api/).
+
+{% include integrations/option_flow.md %}
+
+These options are disabled by default and not required—only set them if specifically needed.
+
+{% configuration_basic %}
+Allow the device to perform Home Assistant actions:
+  description: &quot;No/Yes &lt;br&gt; When enabled, ESPHome devices can perform Home Assistant actions, such as calling services or sending events. Only enable this if you trust the device.&quot;
+Subscribe to logs from the device:
+  description: &quot;No/Yes &lt;br&gt; When enabled, the device will send logs to Home Assistant and you can view them in the logs panel.&quot;
+{% endconfiguration_basic %}
+
+## Supported devices
+
+The ESPHome {% term integration %} works with devices that run ESPHome firmware and expose their functionality through the [native ESPHome API](https://esphome.io/components/api/). This API is designed for tight, efficient integration with Home Assistant, enabling ESPHome devices to push updates directly to Home Assistant in **near real time**.
+
+## About ESPHome remote adapters (proxies)
+
+An ESPHome device can act as a remote adapter, also called a proxy. It picks up a signal or a connection where your device is, and makes it available to Home Assistant over your network. This way, you can use devices that are nowhere near the system that runs Home Assistant.
+
+An ESPHome device can provide capabilities to the following integrations:
+
+- **Bluetooth** integration: extends the range of Home Assistant, so that it can see and connect to Bluetooth devices all over your home. For more details, refer to the [Bluetooth](/connectivity/bluetooth/#remote-adapters-bluetooth-proxies) integration.
+- **Infrared** integration: sends commands to infrared-controlled devices, such as TVs and air conditioners, and receives signals from handheld remotes. For more details, refer to the [Infrared](/integrations/infrared/) integration.
+- **Radio frequency** integration: sends commands to devices that use sub-GHz radio frequencies, such as remote outlets and string lights. For more details, refer to the [Radio frequency](/integrations/radio_frequency/) integration.
+- **Serial** integration: shares one of the serial ports of the ESPHome device over your network, so that integrations can reach a serial-connected device such as an AV receiver or an energy meter. For more details, refer to [serial proxy](/connectivity/serial/#serial-proxy).
+
+Once you add the ESPHome device to Home Assistant, its proxy capabilities become available to the related integrations. You still need to configure the integration that uses the capability, such as selecting the shared serial port.
+
+To set up a proxy, add the matching component to the configuration of your ESPHome device:
+
+- [Bluetooth proxy](https://esphome.io/components/bluetooth_proxy/), which also has [ready-made projects](https://esphome.io/projects/?type=bluetooth) that you can install from your browser
+- [Infrared and radio frequency proxy](https://esphome.io/components/ir_rf_proxy/), which also has [ready-made projects](https://esphome.io/projects/?type=irrf)
+- [Serial proxy](https://esphome.io/components/serial_proxy/), which also has [ready-made projects](https://esphome.io/projects/?type=serial)
+
+## Updating data
+
+Rather than polling for sensor values or device states, Home Assistant maintains a persistent connection to each ESPHome device using the native API. This allows state changes—such as a temperature sensor update, a button press, or a binary sensor trigger—to be sent immediately as they happen, reducing latency and improving responsiveness in automations.
+
+### Additional technical details
+
+- **Efficient Communication Protocol**: ESPHome uses a lightweight, bi-directional protocol over TCP, optimized for microcontrollers. This protocol is implemented in [aioesphomeapi](https://github.com/esphome/aioesphomeapi), the async Python library used by Home Assistant to handle real-time communication with ESPHome devices. It enables low-latency updates and near instant command execution.
+- **Automatic Reconnection**: Home Assistant maintains a persistent connection to each ESPHome device and will automatically attempt to reconnect if the connection is lost. This includes support for &quot;sleepy&quot; or battery-powered devices that periodically wake from deep sleep. When such a device comes online, Home Assistant quickly re-establishes the connection—especially when **mDNS** (Multicast DNS) is available—allowing the device to be discovered and connected without requiring static IPs or manual configuration.
+
+This real-time behavior enables fast, reactive automations and a smooth user experience compared to traditional polling-based integrations.
+
+## Supported functionality
+
+### Entities
+
+The available entities depend on the components defined in the ESPHome YAML configuration for each device. These entities are exposed through the [Native API Component](https://esphome.io/components/api/).
+
+### Firing events on the Home Assistant event bus
+
+When using the native API with Home Assistant, you can trigger events on the Home Assistant event bus directly from ESPHome. For more details, see the [homeassistant.event Action](https://esphome.io/components/api/#homeassistantevent-action).
+
+### Actions
+
+Each device can define Home Assistant Actions based on its ESPHome YAML configuration. For more information, refer to the [Actions](https://esphome.io/components/api/#actions) section in the [Native API Component](https://esphome.io/components/api/) documentation.
+
+### Retrieving data from Home Assistant
+
+ESPHome can retrieve the state of Home Assistant entities using the [Native API](https://esphome.io/components/api/) with [User-Defined Actions](https://esphome.io/components/api/#user-defined-actions).
+
+### Home Assistant actions
+
+ESPHome devices can call any [Home Assistant Action](https://esphome.io/components/api/#homeassistantaction-action). This feature is not enabled by default for newly added devices but can be enabled through the options flow on a per-device basis.
+
+### Tag scanning support
+
+The [Native API Component](https://esphome.io/components/api/) also supports sending tag scan events to Home Assistant. See the [homeassistant.tag_scanned Action](https://esphome.io/components/api/#homeassistanttag_scanned-action) for more information.
+
+### Bluetooth proxy scanning mode
+
+For ESPHome devices running the [Bluetooth proxy](https://esphome.io/components/bluetooth_proxy/) on a recent firmware, you can choose how the proxy scans for Bluetooth devices. The default is **Auto**, which is recommended for most setups. To change it, open the device in {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, select **Configure**, and pick a **Bluetooth scanning mode**:
+
+- **Auto**: Listens passively most of the time and only briefly switches to active scanning when a device or integration needs more details. Compared to running continuously active, this saves around 95 to 96 percent of the scan-related battery drain on your Bluetooth devices while still discovering devices and updates quickly.
+- **Active**: Continuously asks devices for full information. Updates are the fastest, but it uses more battery on the devices around you.
+- **Passive**: Only listens; never asks devices for extra information. Uses the least battery on your devices, but some details may be missing because some integrations need active scanning to work.
+
+The first time Home Assistant connects to a proxy, the device&#x27;s YAML mode is honored if it was set to passive; otherwise the proxy starts in **Auto**. After that, the choice saved in Home Assistant takes ownership of the running mode and changing `bluetooth_proxy:` `mode:` in the device YAML no longer affects the running mode.
+
+## Entity naming and IDs
+
+- Entity name is a combination of the friendly name (or name if unset) and component name
+- Entity ID is derived from the entity name
+- Unicode characters in names are transliterated to their closest ASCII equivalents for compatibility
+
+Example with `friendly_name` set:
+
+```yaml
+esphome:
+   name: &quot;livingroomdesk&quot;
+   friendly_name: &quot;Living room desk&quot;
+
+sensor:
+   name: &quot;Temperature&quot;
+```
+
+The entity will be named `Living room desk Temperature` and will default to having an entity ID of `sensor.living_room_desk_temperature`.
+
+Example without `friendly_name` set:
+
+```yaml
+esphome:
+   name: &quot;livingroomdesk&quot;
+
+sensor:
+   name: &quot;Temperature&quot;
+```
+
+The entity will be named `livingroomdesk Temperature` and will default to having an entity ID of `sensor.livingroomdesk_temperature`.
+
+Example with Unicode characters:
+
+```yaml
+esphome:
+   name: &quot;haloszoba-klima&quot;
+   friendly_name: &quot;Hálószoba klíma&quot;
+
+sensor:
+   name: &quot;Árvíztűrő tükörfúrógép&quot;
+```
+
+The entity will be named `Hálószoba klíma Árvíztűrő tükörfúrógép` and will default to having an entity ID of `sensor.haloszoba_klima_arvizturo_tukorfurogep`. Note how the Unicode characters are transliterated rather than replaced with underscores.
+
+## Troubleshooting
+
+### Viewing live logs
+
+To troubleshoot your ESPHome devices, you can easily view live logs, whether you&#x27;re using the [**ESPHome Device Builder**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&amp;repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon) or the **ESPHome CLI**. The logs contain detailed information such as Wi-Fi connection status, errors, and debug messages, which can help you identify and resolve issues with your device.
+
+#### Using the [**ESPHome Device Builder**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&amp;repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon)
+
+1. In the [**ESPHome Device Builder**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&amp;repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon) app, find the device you&#x27;re working with.
+2. Click the **LOGS** button to open the log view.
+
+#### Using the **ESPHome CLI**
+
+If you&#x27;re using the **ESPHome CLI**, follow the instructions for the [logs Command](https://esphome.io/guides/cli/#logs-command) to access the logs.
+
+### Obtaining logs from the device
+
+If you want the device to send logs without requiring you to be actively monitoring, follow these steps:
+
+1. To have the device send logs to Home Assistant, in the [options flow](#options), enable `Subscribe to logs from the device`.&#32;
+   - They are logged under the `homeassistant.components.esphome` logger at the equivalent level.
+
+2. To adjust the logging level, there are two options:
+    - enable [debug logging](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics),
+    - or use the [Actions tab](/docs/tools/dev-tools/#actions-tab) in **Settings** &gt; **Tools** to call the [`logger.set_level`](/integrations/logger/#action-set-level) action to specify the desired level:
+
+      ```yaml
+      action: logger.set_level
+      data:
+        homeassistant.components.esphome: debug
+      ```
+
+## Reconfiguration and Device Replacement
+
+This integration supports reconfiguration, allowing you to make changes—such as updating the IP address—even after a device has already been set up.
+
+### Name conflict resolution
+
+If Home Assistant detects multiple devices with the same [**name**](https://esphome.io/components/esphome/#configuration-variables), it will automatically initiate **Name Conflict Resolution**. This process is designed to help you seamlessly replace a failed or retired device with new hardware, while preserving your existing configuration if desired.
+
+This process gives you two options:
+
+- **Migrate**: Transfers the existing entity configuration to the new device. This preserves all your settings, entity names, and history. Use this when you&#x27;re replacing the hardware but keeping the same YAML configuration.
+- **Overwrite**: Replaces the existing configuration with the new device.
+  **Caution:** This will **erase all existing settings** for the old device including entity names, customizations, and history will be lost. Use this only if the new device is completely different and you don’t need anything from the previous setup.
+
+{% tip %}
+If you’re using the same YAML file on the new device, choose **Migrate**. If it’s a totally different device (even if it shares the same name), **Overwrite** is the safer option.
+{% endtip %}
+
+---
+
+### Requirements for name conflict resolution
+
+To trigger Name Conflict Resolution, all of the following must be true:
+
+- The new device must be running **ESPHome 2025.4.0 or later**.
+- The new device must use the same [**name**](https://esphome.io/components/esphome/#configuration-variables) (not just the friendly name).
+- The original (old) device must be **offline**.
+
+---
+
+### How to trigger name conflict resolution
+
+You can trigger Name Conflict Resolution in several ways:
+
+- Connecting a new device with the same name and a **static IP address** will automatically launch a repair flow.
+- Using the **Reconfigure** option in the UI to point to a different IP that hosts a device with the same name.
+- Configuring a **newly discovered device** that uses the same name.
+- **Manually adding** a device with the same name via the integration setup.
+
+## Known limitations
+
+Each ESPHome device must have a **unique name**. This name is important for mDNS announcements, ensuring that the device can be properly discovered, quickly reconnected when it comes online or wakes from deep sleep (for devices that support deep sleep), and correctly linked to the [**ESPHome Device Builder**](https://my.home-assistant.io/redirect/supervisor_addon/?addon=5c53de3b_esphome&amp;repository_url=https%3A%2F%2Fgithub.com%2Fesphome%2Fhome-assistant-addon) app. It&#x27;s also crucial for **DHCP discovery** if mDNS is not available.
+
+Using duplicate names can lead to connection issues, failed discovery, and unexpected behavior with both the integration and the app for Home Assistant (formerly known as add-on).
+
+## Removing the integration
+
+This integration follows the standard integration removal process; no extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for ESPHome.</p><p>The <strong>authenticate</strong> configuration step lists <code>password</code>.</p><p>The <strong>encryption key</strong> configuration step lists <code>noise_psk</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>noise_psk</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>, <code>port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>button</li><li>camera</li><li>climate</li><li>cover</li><li>event</li><li>fan</li><li>light</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>text</li><li>update</li><li>valve</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>esphome</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Overview</li><li>Supported devices</li><li>About ESPHome remote adapters (proxies)</li><li>Updating data</li><li>Supported functionality</li><li>Entity naming and IDs</li><li>Troubleshooting</li><li>Reconfiguration and Device Replacement</li><li>Known limitations</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/esphome/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/esphome</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/esphome</code></dd></dl></section><p><a href="../../integrations/esphome/">Return to the ESPHome guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

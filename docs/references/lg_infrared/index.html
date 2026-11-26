@@ -1,1 +1,746 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LG Infrared reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:123" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/lg_infrared/">LG Infrared guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>LG Infrared</h1><p>Integration to control LG TVs and LG split air conditioners using an infrared emitter and to receive commands from an LG remote using an infrared receiver.</p><section><h2>Overview</h2><p>The LG Infrared integration lets you control an LG TV or a compatible LG split air conditioner using any infrared emitter previously configured in Home Assistant. It can also receive commands from an LG remote when you have an infrared receiver set up, allowing you to use the remote to trigger automations in Home Assistant.</p></section><section><h2>How you can use the integration</h2><p>After setup, you can control your LG TV or air conditioner from Home Assistant the same way you would with its remote, and make it part of your automations. For example, you can:</p></section><section><h2>Prerequisites</h2><p>To send commands, you need an infrared emitter. To capture commands from your LG remote, you also need an infrared receiver. For example, you can use an ESPHome device with an IR LED pointed at your LG device to send commands, and an IR receiver module to capture commands from your remote.</p></section><section><h2>Reconfiguring the integration</h2><p>If you replace your infrared emitter, add a receiver later, or want to change the modes of your air conditioner, you can update the device without removing and re-adding the integration.</p></section><section><h2>Buttons</h2><p>Button entities are created when an infrared emitter is configured. Each button sends the corresponding infrared command to the TV when pressed.</p></section><section><h2>Events</h2><p>An event entity is created when an infrared receiver is configured. It fires an event each time an LG TV remote command is received, so you can use the remote to trigger automations in Home Assistant.</p></section><section><h2>Media player</h2><p>A media player entity is created when an infrared emitter is configured.</p></section><section><h2>Air conditioner</h2><p>A climate entity is created for each LG air conditioner device you set up.</p></section><section><h2>Supported modes</h2><p>The climate entity offers the modes you selected during setup. Turning the air conditioner on resumes the mode it was last in, or the first mode you selected if it has not been on yet.</p></section><section><h2>Swing modes</h2><p>The climate entity has two independent swing controls, one for the vertical vanes and one for the horizontal vanes. Your air conditioner might not have both.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for LG Infrared.</p><p>The <strong>ac</strong> configuration step lists <code>hvac_modes</code>, <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>hvac_modes</code>, <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><p>The <strong>tv</strong> configuration step lists <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>climate</li><li>event</li><li>media player</li><li>select</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>infrared</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use the integration</li><li>Supported devices</li><li>Prerequisites</li><li>Reconfiguring the integration</li><li>Supported functionality</li><li>LG Infrared automation examples</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/lg_infrared/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/lg_infrared</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/lg_infrared</code></dd></dl></section><p><a href="../../integrations/lg_infrared/">Return to the LG Infrared guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LG Infrared reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:123" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/lg_infrared/">LG Infrared guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>LG Infrared</h1><p>Integration to control LG TVs and LG split air conditioners using an infrared emitter and to receive commands from an LG remote using an infrared receiver.</p><div class="reader-body"><p>The <strong>LG Infrared</strong> integration lets you control an LG TV or a compatible LG split air conditioner using any infrared emitter previously configured in Home Assistant. It can also receive commands from an LG remote when you have an infrared receiver set up, allowing you to use the remote to trigger automations in Home Assistant.</p>
+<p>Because the integration communicates over infrared, it operates in a one-way, fire-and-forget fashion: commands are sent to the device but there is no feedback channel to confirm the current state. The integration therefore uses assumed states.</p>
+<h2>How you can use the integration</h2>
+<p>After setup, you can control your LG TV or air conditioner from Home Assistant the same way you would with its remote, and make it part of your automations. For example, you can:</p>
+<ul>
+<li>Turn the air conditioner off when a window opens.</li>
+<li>Cool a room before you get home.</li>
+<li>Use spare buttons on your LG TV remote, like the color buttons, to control lights or run scenes.</li>
+<li>Keep using the physical air conditioner remote. With an infrared receiver, the climate entity follows the changes you make with it.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The integration supports:</p>
+<ul>
+<li>LG TVs that can be controlled via the standard LG infrared protocol.</li>
+<li>Compatible LG split air conditioners that can be controlled via the standard LG air conditioner infrared protocol.</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>This integration requires an infrared remote adapter (proxy) that is already set up in Home Assistant and provides an <a href="../infrared/">infrared</a> entity. For the remote adapters that you can use, refer to <a>Infrared remote adapters</a>.</p>
+<p>To send commands, you need an infrared emitter. To capture commands from your LG remote, you also need an infrared receiver. For example, you can use an ESPHome device with an IR LED pointed at your LG device to send commands, and an IR receiver module to capture commands from your remote.</p>
+<p>For an air conditioner, an infrared emitter is required. The <strong>Air conditioner</strong> option only appears once you have at least one infrared emitter available.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>LG Infrared</strong> device to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>LG Infrared</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>The first step asks which type of LG device you want to set up: <strong>TV</strong> or <strong>Air conditioner</strong>. The remaining options depend on that choice. To set up both, add the integration twice.</p>
+<pre><code>
+Infrared emitter:
+  description: "The infrared emitter entity to use for sending commands to your LG device. This must be an entity provided by a hardware integration (such as ESPHome) that has already been set up with an IR emitter. It is required for an air conditioner."
+Infrared receiver:
+  description: "The infrared receiver entity to use for receiving commands from your LG remote. This must be an entity provided by a hardware integration (such as ESPHome) that has already been set up with an IR receiver. For a TV, received commands are available as events you can use in automations. For an air conditioner, they keep the climate entity in sync with the physical remote."
+Supported modes:
+  description: "The operating modes your air conditioner supports. Select at least one of **Cool**, **Heat**, **Dry**, and **Fan only**. Check your remote or the manual of your unit to see which modes it has. Selecting a mode your unit does not have breaks nothing. Your air conditioner simply does not respond to it. This option is shown for an air conditioner only."
+
+</code></pre>
+<p>For a TV, select at least one of <strong>Infrared emitter</strong> or <strong>Infrared receiver</strong>. Select both if you want to be able to send commands to your TV and react to commands from the remote.</p>
+<h2>Reconfiguring the integration</h2>
+<p>If you replace your infrared emitter, add a receiver later, or want to change the modes of your air conditioner, you can update the device without removing and re-adding the integration.</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>Find the <strong>LG Infrared</strong> integration and select it.</li>
+<li>Next to the device you want to change, select the three dots  menu and choose <strong>Reconfigure</strong>.</li>
+<li>Change the options and select <strong>Submit</strong>.</li>
+</ol>
+<p>The same rules as during setup apply: an air conditioner needs an infrared emitter, and a TV needs at least one infrared emitter or receiver. The device type cannot be changed. To switch between a TV and an air conditioner, add the integration again.</p>
+<p>If you remove the infrared emitter or receiver from a TV, the entities that depend on it are no longer provided. For example, the media player and buttons need an emitter, and the events need a receiver. You can delete those entities from the entity settings. If you remove the mode your air conditioner is currently in, its climate entity shows <strong>Off</strong> until you select another mode.</p>
+<h2>Supported functionality</h2>
+<h3>TV</h3>
+<h4>Buttons</h4>
+<p>Button entities are created when an infrared emitter is configured. Each button sends the corresponding infrared command to the TV when pressed.</p>
+<ul>
+<li><strong>Power on</strong>, <strong>Power off</strong></li>
+<li><strong>HDMI 1</strong>, <strong>HDMI 2</strong>, <strong>HDMI 3</strong>, <strong>HDMI 4</strong></li>
+<li><strong>Input</strong></li>
+<li><strong>Up</strong>, <strong>Down</strong>, <strong>Left</strong>, <strong>Right</strong>, <strong>OK</strong></li>
+<li><strong>Back</strong>, <strong>Exit</strong>, <strong>Home</strong>, <strong>Menu</strong></li>
+<li><strong>Info</strong>, <strong>Guide</strong></li>
+<li><strong>0</strong> through <strong>9</strong></li>
+</ul>
+<h4>Events</h4>
+<p>An event entity is created when an infrared receiver is configured. It fires an event each time an LG TV remote command is received, so you can use the remote to trigger automations in Home Assistant.</p>
+<ul>
+<li><strong>Received command</strong><ul>
+<li><strong>Description</strong>: Fires when a command from an LG TV remote is decoded from the infrared receiver. The fired event type matches the button pressed on the remote.</li>
+<li><strong>Event types</strong>:<ul>
+<li>Navigation: <code>back</code>, <code>exit</code>, <code>guide</code>, <code>home</code>, <code>info</code>, <code>list</code>, <code>menu</code>, <code>nav_down</code>, <code>nav_left</code>, <code>nav_right</code>, <code>nav_up</code>, <code>ok</code>, <code>settings</code></li>
+<li>Inputs and channels: <code>channel_down</code>, <code>channel_up</code>, <code>hdmi_1</code>, <code>hdmi_2</code>, <code>hdmi_3</code>, <code>hdmi_4</code>, <code>input</code></li>
+<li>Playback: <code>fast_forward</code>, <code>pause</code>, <code>play</code>, <code>rewind</code>, <code>stop</code></li>
+<li>Volume and audio: <code>mute</code>, <code>sap</code>, <code>subtitle</code>, <code>text</code>, <code>volume_down</code>, <code>volume_up</code></li>
+<li>Power: <code>power</code>, <code>power_off</code>, <code>power_on</code></li>
+<li>Number keys: <code>num_0</code> through <code>num_9</code></li>
+<li>Color buttons: <code>blue</code>, <code>green</code>, <code>red</code>, <code>yellow</code></li>
+<li>Other LG commands: <code>aspect</code>, <code>ez_adjust</code>, <code>in_start</code></li>
+<li><code>unknown</code> for any LG command that is not recognized</li>
+</ul>
+</li>
+<li><strong>Remarks</strong>: Only commands using the LG infrared address are processed. Signals from other remotes are ignored.</li>
+</ul>
+</li>
+</ul>
+<h4>Media player</h4>
+<p>A media player entity is created when an infrared emitter is configured.</p>
+<ul>
+<li><strong>LG TV</strong><ul>
+<li><strong>Description</strong>: Represents the LG TV and allows you to control it via IR commands.</li>
+<li><strong>Supported features</strong>: Turn on, turn off, volume up, volume down, mute, channel up, channel down, play, pause, and stop.</li>
+</ul>
+</li>
+</ul>
+<h3>Air conditioner</h3>
+<p>A climate entity is created for each LG air conditioner device you set up.</p>
+<ul>
+<li><strong>LG AC</strong><ul>
+<li><strong>Description</strong>: Represents the LG split air conditioner and allows you to control it via IR commands.</li>
+<li><strong>Supported features</strong>: Turn on, turn off, set HVAC mode, set fan mode, set swing mode, and set horizontal swing mode. Set target temperature is also available when <strong>Cool</strong> or <strong>Heat</strong> is one of the supported modes you selected during setup.</li>
+</ul>
+</li>
+</ul>
+<h4>Supported modes</h4>
+<p>The climate entity offers the modes you selected during setup. Turning the air conditioner on resumes the mode it was last in, or the first mode you selected if it has not been on yet.</p>
+<ul>
+<li><strong>Cool</strong>: Cools to a set temperature.</li>
+<li><strong>Heat</strong>: Heats to a set temperature. Not all LG air conditioner models have it.</li>
+<li><strong>Dry</strong>: Dehumidify mode. The temperature is fixed at 24 °C by the protocol.</li>
+<li><strong>Fan only</strong>: Fan circulation without heating or cooling.</li>
+</ul>
+<h4>Fan speeds</h4>
+<ul>
+<li><strong>Auto</strong>: The unit selects the speed automatically.</li>
+<li><strong>Quiet</strong>: Lowest noise level.</li>
+<li><strong>Low</strong>: Low fan speed.</li>
+<li><strong>Medium low</strong>: Between low and medium.</li>
+<li><strong>Medium</strong>: Medium fan speed.</li>
+<li><strong>Medium high</strong>: Between medium and high.</li>
+<li><strong>High</strong>: High fan speed.</li>
+</ul>
+<h4>Swing modes</h4>
+<p>The climate entity has two independent swing controls, one for the vertical vanes and one for the horizontal vanes. Your air conditioner might not have both.</p>
+<p>Vertical swing positions the airflow up or down:</p>
+<ul>
+<li><strong>Off</strong>: The vanes stay in their current position.</li>
+<li><strong>Lowest</strong>, <strong>Low</strong>, <strong>Middle low</strong>, <strong>Middle high</strong>, <strong>High</strong>, <strong>Highest</strong>: Fixed vane positions from the lowest to the highest.</li>
+<li><strong>Swing</strong>: The vanes move up and down continuously.</li>
+</ul>
+<p>Horizontal swing positions the airflow left or right:</p>
+<ul>
+<li><strong>Off</strong>: The vanes stay in their current position.</li>
+<li><strong>Left</strong>, <strong>Middle left</strong>, <strong>Middle</strong>, <strong>Middle right</strong>, <strong>Right</strong>: Fixed vane positions from left to right.</li>
+<li><strong>Left half</strong>, <strong>Right half</strong>: The vanes swing in the left or right half of the range.</li>
+<li><strong>Swing</strong>: The vanes move left and right continuously.</li>
+</ul>
+<h4>Temperature range</h4>
+<p>Supported range: 16 °C to 30 °C in 1 °C steps.</p>
+<h4>Buttons</h4>
+<p>When an infrared emitter is configured, these button entities are created for the air conditioner. Each button sends a single infrared command. The protocol has no separate on and off codes for these features, so they are buttons rather than switches.</p>
+<ul>
+<li><strong>Jet mode</strong>: Runs the unit at maximum power for fast cooling or heating.</li>
+<li><strong>Eco mode</strong>: Reduces the unit's power draw. Some remotes label this button Diet.</li>
+<li><strong>Viraat mode</strong>: Runs an extra boost mode, separate from <strong>Jet mode</strong>. Only LG India models offer it, so this button is <a>disabled by default</a>. Enable it if your remote has a Viraat button.</li>
+<li><strong>AI mode</strong>: Turns on the automatic AI operating mode.</li>
+</ul>
+<p>To turn one of these modes off, select any other mode, such as <strong>Cool</strong>.</p>
+<ul>
+<li><strong>Toggle light</strong>: Turns the unit's display light on or off.</li>
+<li><strong>Toggle beep</strong>: Turns the unit's confirmation sound on or off.</li>
+<li><strong>Start Wi-Fi pairing</strong>: Puts the unit into Wi-Fi pairing mode.</li>
+<li><strong>Diagnose</strong>: Triggers the unit's self-diagnosis routine.</li>
+<li><strong>Toggle vertical swing</strong>: Switches the vertical vanes between swing and off. This button is disabled by default because the climate entity's swing mode control offers the same feature with more positions. Enable it only if your model does not respond to the swing mode control.</li>
+</ul>
+<h4>Select</h4>
+<p>When an infrared emitter is configured, an <strong>Energy limit</strong> select entity is created for each configured air conditioner. It caps the unit's power draw at a percentage of its maximum.</p>
+<ul>
+<li><strong>Off</strong>: No limit.</li>
+<li><strong>40%</strong>, <strong>60%</strong>, <strong>80%</strong>: Cap the power draw at the selected percentage.</li>
+</ul>
+<h4>Switches</h4>
+<p>When an infrared emitter is configured, these switch entities are created for the air conditioner. Each uses a separate infrared code to turn the feature on or off.</p>
+<ul>
+<li><strong>Ion generator</strong>: Turns the ionizer or plasma air-purifying feature on or off.</li>
+<li><strong>Auto clean</strong>: Turns the self-cleaning drying cycle on or off.</li>
+</ul>
+<h4>Physical remote state tracking</h4>
+<p>If you also have an infrared receiver entity (from an IR blaster that can also listen), you can optionally select it during setup. When selected, the integration decodes signals from the physical LG air conditioner remote and updates the climate entity to match, so the mode, fan speed, target temperature, and swing modes stay in sync.</p>
+<h2>LG Infrared automation examples</h2>
+<p>The following examples show how to automate an LG TV and an LG air conditioner. For more ideas, refer to the media player <a href="../media_player/">actions reference</a> and the climate platform <a href="../climate/">actions reference</a>.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: Toggling the lights with the red button on the TV remote</h3>
+<ul>
+<li><strong>Trigger</strong>: Event received<ul>
+<li><strong>Target</strong>: LG TV received command (<code>event.lg_tv_received_command</code>)</li>
+<li><strong>Event type</strong>: Red</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Toggle light<ul>
+<li><strong>Target</strong>: Living room (<code>light.living_room</code>)</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for toggling the lights with the red button</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Toggle the living room lights with the red button"
+triggers:
+- trigger: event.received
+target:
+entity_id: event.lg_tv_received_command
+options:
+event_type:
+- red
+actions:
+- action: light.toggle
+target:
+entity_id: light.living_room</p>
+<h3>Automation: Turning off the air conditioner when a window opens</h3>
+<ul>
+<li><strong>Trigger</strong>: Window opened<ul>
+<li><strong>Target</strong>: Living room window (<code>binary_sensor.living_room_window</code>)</li>
+</ul>
+</li>
+<li><strong>Action</strong>: Set thermostat HVAC mode<ul>
+<li><strong>Target</strong>: LG AC (<code>climate.lg_ac</code>)</li>
+<li><strong>HVAC mode</strong>: Off</li>
+</ul>
+</li>
+</ul>
+<h4>YAML example for turning off the air conditioner when a window opens</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Turn off the air conditioner when the window opens"
+triggers:
+- trigger: window.opened
+target:
+entity_id: binary_sensor.living_room_window
+actions:
+- action: climate.set_hvac_mode
+target:
+entity_id: climate.lg_ac
+data:
+hvac_mode: "off"</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The TV media player and button entities use assumed state, meaning Home Assistant cannot verify the actual state of the TV. Commands received from the physical remote are exposed as events only and do not update the TV entity state.</li>
+<li>The climate entity for the air conditioner also uses assumed state, even with physical remote state tracking enabled. The receiver reports what the remote sent, not what the unit is actually doing, so the two can still drift apart, for example if something blocks the line of sight.</li>
+<li>Turning on and turning off the TV both send the same IR power toggle command, as is standard with infrared remotes.</li>
+<li>Volume control for the TV is step-based only; there is no way to set an absolute volume level.</li>
+<li>For the air conditioner, the dry mode temperature is fixed at 24 °C by the LG air conditioner infrared protocol and cannot be changed. Fan only mode has no target temperature at all. Changing the target temperature in either mode is remembered for the next time you switch to cool or heat, but nothing is sent to the unit.</li>
+<li>Changing the fan speed while the air conditioner is off is also remembered rather than sent. It is applied with the next command that turns the unit on.</li>
+<li>The air conditioner button entities each send a single command and have no state. The unit does not report whether a feature is currently on or off, so features like <strong>Jet mode</strong> or <strong>Eco mode</strong> cannot be shown as active.</li>
+<li>The <strong>Energy limit</strong> select for each air conditioner also uses assumed state. It sends a discrete infrared code, but Home Assistant cannot confirm that the unit received it, so the shown option reflects the last command sent.</li>
+<li>The air conditioner switch entities also use assumed state. Each sends a discrete infrared code, but Home Assistant cannot confirm that the unit received it, so the shown state reflects the last command sent.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>The TV or air conditioner does not respond to commands</h3>
+<p>If the entity changes in Home Assistant but your TV or air conditioner does not react, the infrared signal is probably not reaching the device. Make sure the infrared emitter points at the receiver window of the device and that nothing blocks the path between them. For more steps, refer to <a>The device does not respond to commands</a>.</p>
+<p>If your air conditioner reacts to most commands but not to one mode or button, your model probably does not have that feature. Check your remote or the manual of your unit.</p>
+<h3>The event entity does not fire when I press a button on the TV remote</h3>
+<p>The event entity only fires for commands it receives from an LG TV remote. Signals from other remotes, including universal remotes set to another brand, are ignored.</p>
+<ol>
+<li>Make sure the TV has an infrared receiver selected. If it does not, add one by <a>reconfiguring the integration</a>.</li>
+<li>Check that the infrared receiver entity updates when you press a button. If it does not, refer to <a>An infrared receiver does not pick up signals</a>.</li>
+</ol>
+<h3>Reporting an issue</h3>
+<p>If you need to report an issue, enable <a>debug logging</a>, then reload the integration. Reproduce the issue, disable debug logging, and attach the automatically downloaded debug log to your report.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/lg_infrared.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Integration to control LG TVs and LG split air conditioners using an infrared emitter and to receive commands from an LG remote using an infrared receiver.
+ha_release: 2026.4
+ha_domain: lg_infrared
+---
+
+The **LG Infrared** {% term integration %} lets you control an LG TV or a compatible LG split air conditioner using any infrared emitter previously configured in Home Assistant. It can also receive commands from an LG remote when you have an infrared receiver set up, allowing you to use the remote to trigger automations in Home Assistant.
+
+Because the integration communicates over infrared, it operates in a one-way, fire-and-forget fashion: commands are sent to the device but there is no feedback channel to confirm the current state. The integration therefore uses assumed states.
+
+## How you can use the integration
+
+After setup, you can control your LG TV or air conditioner from Home Assistant the same way you would with its remote, and make it part of your automations. For example, you can:
+
+- Turn the air conditioner off when a window opens.
+- Cool a room before you get home.
+- Use spare buttons on your LG TV remote, like the color buttons, to control lights or run scenes.
+- Keep using the physical air conditioner remote. With an infrared receiver, the climate entity follows the changes you make with it.
+
+## Supported devices
+
+The integration supports:
+
+- LG TVs that can be controlled via the standard LG infrared protocol.
+- Compatible LG split air conditioners that can be controlled via the standard LG air conditioner infrared protocol.
+
+## Prerequisites
+
+{% include integrations/infrared_controlled.md %}
+
+To send commands, you need an infrared emitter. To capture commands from your LG remote, you also need an infrared receiver. For example, you can use an ESPHome device with an IR LED pointed at your LG device to send commands, and an IR receiver module to capture commands from your remote.
+
+For an air conditioner, an infrared emitter is required. The **Air conditioner** option only appears once you have at least one infrared emitter available.
+
+{% include integrations/config_flow.md %}
+
+The first step asks which type of LG device you want to set up: **TV** or **Air conditioner**. The remaining options depend on that choice. To set up both, add the integration twice.
+
+{% configuration_basic %}
+Infrared emitter:
+  description: &quot;The infrared emitter entity to use for sending commands to your LG device. This must be an entity provided by a hardware integration (such as ESPHome) that has already been set up with an IR emitter. It is required for an air conditioner.&quot;
+Infrared receiver:
+  description: &quot;The infrared receiver entity to use for receiving commands from your LG remote. This must be an entity provided by a hardware integration (such as ESPHome) that has already been set up with an IR receiver. For a TV, received commands are available as events you can use in automations. For an air conditioner, they keep the climate entity in sync with the physical remote.&quot;
+Supported modes:
+  description: &quot;The operating modes your air conditioner supports. Select at least one of **Cool**, **Heat**, **Dry**, and **Fan only**. Check your remote or the manual of your unit to see which modes it has. Selecting a mode your unit does not have breaks nothing. Your air conditioner simply does not respond to it. This option is shown for an air conditioner only.&quot;
+{% endconfiguration_basic %}
+
+For a TV, select at least one of **Infrared emitter** or **Infrared receiver**. Select both if you want to be able to send commands to your TV and react to commands from the remote.
+
+## Reconfiguring the integration
+
+If you replace your infrared emitter, add a receiver later, or want to change the modes of your air conditioner, you can update the device without removing and re-adding the integration.
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. Find the **LG Infrared** integration and select it.
+3. Next to the device you want to change, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu and choose **Reconfigure**.
+4. Change the options and select **Submit**.
+
+The same rules as during setup apply: an air conditioner needs an infrared emitter, and a TV needs at least one infrared emitter or receiver. The device type cannot be changed. To switch between a TV and an air conditioner, add the integration again.
+
+If you remove the infrared emitter or receiver from a TV, the entities that depend on it are no longer provided. For example, the media player and buttons need an emitter, and the events need a receiver. You can delete those entities from the entity settings. If you remove the mode your air conditioner is currently in, its climate entity shows **Off** until you select another mode.
+
+## Supported functionality
+
+### TV
+
+#### Buttons
+
+Button entities are created when an infrared emitter is configured. Each button sends the corresponding infrared command to the TV when pressed.
+
+- **Power on**, **Power off**
+- **HDMI 1**, **HDMI 2**, **HDMI 3**, **HDMI 4**
+- **Input**
+- **Up**, **Down**, **Left**, **Right**, **OK**
+- **Back**, **Exit**, **Home**, **Menu**
+- **Info**, **Guide**
+- **0** through **9**
+
+#### Events
+
+An event entity is created when an infrared receiver is configured. It fires an event each time an LG TV remote command is received, so you can use the remote to trigger automations in Home Assistant.
+
+- **Received command**
+  - **Description**: Fires when a command from an LG TV remote is decoded from the infrared receiver. The fired event type matches the button pressed on the remote.
+  - **Event types**:
+    - Navigation: `back`, `exit`, `guide`, `home`, `info`, `list`, `menu`, `nav_down`, `nav_left`, `nav_right`, `nav_up`, `ok`, `settings`
+    - Inputs and channels: `channel_down`, `channel_up`, `hdmi_1`, `hdmi_2`, `hdmi_3`, `hdmi_4`, `input`
+    - Playback: `fast_forward`, `pause`, `play`, `rewind`, `stop`
+    - Volume and audio: `mute`, `sap`, `subtitle`, `text`, `volume_down`, `volume_up`
+    - Power: `power`, `power_off`, `power_on`
+    - Number keys: `num_0` through `num_9`
+    - Color buttons: `blue`, `green`, `red`, `yellow`
+    - Other LG commands: `aspect`, `ez_adjust`, `in_start`
+    - `unknown` for any LG command that is not recognized
+  - **Remarks**: Only commands using the LG infrared address are processed. Signals from other remotes are ignored.
+
+#### Media player
+
+A media player entity is created when an infrared emitter is configured.
+
+- **LG TV**
+  - **Description**: Represents the LG TV and allows you to control it via IR commands.
+  - **Supported features**: Turn on, turn off, volume up, volume down, mute, channel up, channel down, play, pause, and stop.
+
+### Air conditioner
+
+A climate entity is created for each LG air conditioner device you set up.
+
+- **LG AC**
+  - **Description**: Represents the LG split air conditioner and allows you to control it via IR commands.
+  - **Supported features**: Turn on, turn off, set HVAC mode, set fan mode, set swing mode, and set horizontal swing mode. Set target temperature is also available when **Cool** or **Heat** is one of the supported modes you selected during setup.
+
+#### Supported modes
+
+The climate entity offers the modes you selected during setup. Turning the air conditioner on resumes the mode it was last in, or the first mode you selected if it has not been on yet.
+
+- **Cool**: Cools to a set temperature.
+- **Heat**: Heats to a set temperature. Not all LG air conditioner models have it.
+- **Dry**: Dehumidify mode. The temperature is fixed at 24 °C by the protocol.
+- **Fan only**: Fan circulation without heating or cooling.
+
+#### Fan speeds
+
+- **Auto**: The unit selects the speed automatically.
+- **Quiet**: Lowest noise level.
+- **Low**: Low fan speed.
+- **Medium low**: Between low and medium.
+- **Medium**: Medium fan speed.
+- **Medium high**: Between medium and high.
+- **High**: High fan speed.
+
+#### Swing modes
+
+The climate entity has two independent swing controls, one for the vertical vanes and one for the horizontal vanes. Your air conditioner might not have both.
+
+Vertical swing positions the airflow up or down:
+
+- **Off**: The vanes stay in their current position.
+- **Lowest**, **Low**, **Middle low**, **Middle high**, **High**, **Highest**: Fixed vane positions from the lowest to the highest.
+- **Swing**: The vanes move up and down continuously.
+
+Horizontal swing positions the airflow left or right:
+
+- **Off**: The vanes stay in their current position.
+- **Left**, **Middle left**, **Middle**, **Middle right**, **Right**: Fixed vane positions from left to right.
+- **Left half**, **Right half**: The vanes swing in the left or right half of the range.
+- **Swing**: The vanes move left and right continuously.
+
+#### Temperature range
+
+Supported range: 16 °C to 30 °C in 1 °C steps.
+
+#### Buttons
+
+When an infrared emitter is configured, these button entities are created for the air conditioner. Each button sends a single infrared command. The protocol has no separate on and off codes for these features, so they are buttons rather than switches.
+
+- **Jet mode**: Runs the unit at maximum power for fast cooling or heating.
+- **Eco mode**: Reduces the unit&#x27;s power draw. Some remotes label this button Diet.
+- **Viraat mode**: Runs an extra boost mode, separate from **Jet mode**. Only LG India models offer it, so this button is [disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity). Enable it if your remote has a Viraat button.
+- **AI mode**: Turns on the automatic AI operating mode.
+
+To turn one of these modes off, select any other mode, such as **Cool**.
+
+- **Toggle light**: Turns the unit&#x27;s display light on or off.
+- **Toggle beep**: Turns the unit&#x27;s confirmation sound on or off.
+- **Start Wi-Fi pairing**: Puts the unit into Wi-Fi pairing mode.
+- **Diagnose**: Triggers the unit&#x27;s self-diagnosis routine.
+- **Toggle vertical swing**: Switches the vertical vanes between swing and off. This button is disabled by default because the climate entity&#x27;s swing mode control offers the same feature with more positions. Enable it only if your model does not respond to the swing mode control.
+
+#### Select
+
+When an infrared emitter is configured, an **Energy limit** select entity is created for each configured air conditioner. It caps the unit&#x27;s power draw at a percentage of its maximum.
+
+- **Off**: No limit.
+- **40%**, **60%**, **80%**: Cap the power draw at the selected percentage.
+
+#### Switches
+
+When an infrared emitter is configured, these switch entities are created for the air conditioner. Each uses a separate infrared code to turn the feature on or off.
+
+- **Ion generator**: Turns the ionizer or plasma air-purifying feature on or off.
+- **Auto clean**: Turns the self-cleaning drying cycle on or off.
+
+#### Physical remote state tracking
+
+If you also have an infrared receiver entity (from an IR blaster that can also listen), you can optionally select it during setup. When selected, the integration decodes signals from the physical LG air conditioner remote and updates the climate entity to match, so the mode, fan speed, target temperature, and swing modes stay in sync.
+
+## LG Infrared automation examples
+
+The following examples show how to automate an LG TV and an LG air conditioner. For more ideas, refer to the media player [actions reference](/integrations/media_player/#list-of-actions) and the climate platform [actions reference](/integrations/climate/#list-of-actions).
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: Toggling the lights with the red button on the TV remote
+
+- **Trigger**: Event received
+  - **Target**: LG TV received command (`event.lg_tv_received_command`)
+  - **Event type**: Red
+- **Action**: Toggle light
+  - **Target**: Living room (`light.living_room`)
+
+{% details &quot;YAML example for toggling the lights with the red button&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Toggle the living room lights with the red button&quot;
+  triggers:
+    - trigger: event.received
+      target:
+        entity_id: event.lg_tv_received_command
+      options:
+        event_type:
+          - red
+  actions:
+    - action: light.toggle
+      target:
+        entity_id: light.living_room
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Turning off the air conditioner when a window opens
+
+- **Trigger**: Window opened
+  - **Target**: Living room window (`binary_sensor.living_room_window`)
+- **Action**: Set thermostat HVAC mode
+  - **Target**: LG AC (`climate.lg_ac`)
+  - **HVAC mode**: Off
+
+{% details &quot;YAML example for turning off the air conditioner when a window opens&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Turn off the air conditioner when the window opens&quot;
+  triggers:
+    - trigger: window.opened
+      target:
+        entity_id: binary_sensor.living_room_window
+  actions:
+    - action: climate.set_hvac_mode
+      target:
+        entity_id: climate.lg_ac
+      data:
+        hvac_mode: &quot;off&quot;
+{% endexample %}
+
+{% enddetails %}
+
+## Known limitations
+
+- The TV media player and button entities use assumed state, meaning Home Assistant cannot verify the actual state of the TV. Commands received from the physical remote are exposed as events only and do not update the TV entity state.
+- The climate entity for the air conditioner also uses assumed state, even with physical remote state tracking enabled. The receiver reports what the remote sent, not what the unit is actually doing, so the two can still drift apart, for example if something blocks the line of sight.
+- Turning on and turning off the TV both send the same IR power toggle command, as is standard with infrared remotes.
+- Volume control for the TV is step-based only; there is no way to set an absolute volume level.
+- For the air conditioner, the dry mode temperature is fixed at 24 °C by the LG air conditioner infrared protocol and cannot be changed. Fan only mode has no target temperature at all. Changing the target temperature in either mode is remembered for the next time you switch to cool or heat, but nothing is sent to the unit.
+- Changing the fan speed while the air conditioner is off is also remembered rather than sent. It is applied with the next command that turns the unit on.
+- The air conditioner button entities each send a single command and have no state. The unit does not report whether a feature is currently on or off, so features like **Jet mode** or **Eco mode** cannot be shown as active.
+- The **Energy limit** select for each air conditioner also uses assumed state. It sends a discrete infrared code, but Home Assistant cannot confirm that the unit received it, so the shown option reflects the last command sent.
+- The air conditioner switch entities also use assumed state. Each sends a discrete infrared code, but Home Assistant cannot confirm that the unit received it, so the shown state reflects the last command sent.
+
+## Troubleshooting
+
+### The TV or air conditioner does not respond to commands
+
+If the entity changes in Home Assistant but your TV or air conditioner does not react, the infrared signal is probably not reaching the device. Make sure the infrared emitter points at the receiver window of the device and that nothing blocks the path between them. For more steps, refer to [The device does not respond to commands](/connectivity/infrared/#the-device-does-not-respond-to-commands).
+
+If your air conditioner reacts to most commands but not to one mode or button, your model probably does not have that feature. Check your remote or the manual of your unit.
+
+### The event entity does not fire when I press a button on the TV remote
+
+The event entity only fires for commands it receives from an LG TV remote. Signals from other remotes, including universal remotes set to another brand, are ignored.
+
+1. Make sure the TV has an infrared receiver selected. If it does not, add one by [reconfiguring the integration](#reconfiguring-the-integration).
+2. Check that the infrared receiver entity updates when you press a button. If it does not, refer to [An infrared receiver does not pick up signals](/connectivity/infrared/#an-infrared-receiver-does-not-pick-up-signals).
+
+### Reporting an issue
+
+If you need to report an issue, enable [debug logging](/docs/configuration/troubleshooting/#debug-logs-and-diagnostics), then reload the integration. Reproduce the issue, disable debug logging, and attach the automatically downloaded debug log to your report.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for LG Infrared.</p><p>The <strong>ac</strong> configuration step lists <code>hvac_modes</code>, <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>hvac_modes</code>, <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><p>The <strong>tv</strong> configuration step lists <code>infrared_entity_id</code>, <code>infrared_receiver_entity_id</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>button</li><li>climate</li><li>event</li><li>media player</li><li>select</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>infrared</li></ul></section><section><h2>Topics in the original article</h2><ul><li>How you can use the integration</li><li>Supported devices</li><li>Prerequisites</li><li>Reconfiguring the integration</li><li>Supported functionality</li><li>LG Infrared automation examples</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/lg_infrared/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/lg_infrared</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/lg_infrared</code></dd></dl></section><p><a href="../../integrations/lg_infrared/">Return to the LG Infrared guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,1651 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compit reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:156" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/compit/">Compit guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Compit</h1><p>Instructions on how to integrate Compit devices within Home Assistant.</p><section><h2>Overview</h2><p>The Compit integration allows you to integrate air conditioning, ventilation, and heating controllers with Home Assistant. You need a Compit iNext account, which you can set up at inext.compit.pl.</p></section><section><h2>Prerequisites</h2><p>1. Create an account on inext.compit.pl. 2. Configure your Compit devices in your account.</p></section><section><h2>Supported devices</h2><p>This integration supports most of Compit device models across thermostats, controllers, and sensors.</p></section><section><h2>Sensors</h2><p>When the SPM sensor is connected to a Nano Color thermostat, it is displayed as SPM - Nano Color in Home Assistant. When connected to a Nano Color 2 thermostat, it is displayed as SPM - Nano Color 2.</p></section><section><h2>Supported functionality</h2><p>The Compit integration provides the following entities.</p></section><section><h2>Diagnostic sensors</h2><p>The available sensors depend on your specific Compit device configuration. Not all sensors will be available for every device.</p></section><section><h2>Binary sensors</h2><p>Binary sensors provide status information about your Compit devices.</p></section><section><h2>Switches</h2><p>Switch entities let you turn device modes and features on or off.</p></section><section><h2>Climate</h2><p>The climate entity reflects the current heating or cooling state and the active target temperature. Use the climate entity when you want to change the target temperature temporarily or for the current session (for example, turning up the heat for the evening). The climate entity is where you set what temperature the device is aiming for right now.</p></section><section><h2>Numbers</h2><p>Number entities let you set default temperature setpoints and other configuration values. These are the preset target temperatures used for each operating mode (such as Comfort, Eco, or Holiday). They are not used for temporary or one-off changes; for those, use the climate entity instead.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Compit.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>email</code>, <code>password</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported devices</li><li>Supported functionality</li><li>Data updates</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/compit/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/compit</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/compit</code></dd></dl></section><p><a href="../../integrations/compit/">Return to the Compit guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Compit reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:156" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/compit/">Compit guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Compit</h1><p>Instructions on how to integrate Compit devices within Home Assistant.</p><div class="reader-body"><p>The <strong>Compit</strong> integration allows you to integrate air conditioning, ventilation, and heating controllers with Home Assistant. You need a Compit iNext account, which you can set up at <a>inext.compit.pl</a>.</p>
+<h2>Prerequisites</h2>
+<ol>
+<li>Create an account on <a>inext.compit.pl</a>.</li>
+<li>Configure your Compit devices in your account.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Compit</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Compit</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Username:
+    description: "The username of your Compit iNext account."
+Password:
+    description: "The password of your Compit iNext account."
+
+</code></pre>
+<h2>Supported devices</h2>
+<p>This integration supports most of Compit device models across thermostats, controllers, and sensors.</p>
+<h3>Thermostats</h3>
+<ul>
+<li><a>Nano Color</a> – Room thermostat</li>
+<li><a>Nano Color 2</a> – Room thermostat</li>
+<li><a>Nano One</a> – Room thermostat</li>
+</ul>
+<h3>Controllers</h3>
+<ul>
+<li><a>AF-1</a> – Anti-freeze system</li>
+<li><a>BioMax742</a> – Pellet boiler controller</li>
+<li><a>BioMax775</a>, BioMax772 – Pellet boiler controllers</li>
+<li><a>BWC310</a> – Mixing valve controller</li>
+<li><a>COMBO</a> – Combo module</li>
+<li><a>EL750</a> – Electric boiler controller</li>
+<li><a>L2</a> – Floor heating controller</li>
+<li><a>R350.CWU</a> – Universal controller</li>
+<li><a>R350 T3</a> – Universal controller</li>
+<li><a>R350.M</a> – Universal controller</li>
+<li><a>R377B</a> – Heat pump cascade controller</li>
+<li><a>R470</a>, R480 – Heat pump controllers</li>
+<li><a>R490</a> – Heat pump controller</li>
+<li><a>R770RS</a>, <a>R771RS</a> – Boiler controllers</li>
+<li><a>R810</a> – Heating circuit controller</li>
+<li><a>R900</a> – Heat pump controller</li>
+<li><a>SolarComp951</a> – Solar system controller</li>
+<li><a>SolarComp971</a> – Solar system controller</li>
+<li><a>SolarComp971C</a> – Solar system controller</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li><a>SHC</a> – CO₂, humidity, and temperature sensor</li>
+<li><a>SPM</a> – Air quality sensor</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>When the SPM sensor is connected to a Nano Color thermostat, it is displayed as <code>SPM - Nano Color</code> in Home Assistant. When connected to a Nano Color 2 thermostat, it is displayed as <code>SPM - Nano Color 2</code>.</p>
+<h2>Supported functionality</h2>
+<p>The <strong>Compit</strong> integration provides the following entities.</p>
+<h3>Sensors</h3>
+<p>The integration provides various sensors depending on your device model. Below is a complete list of available sensors and the devices that support them.</p>
+<p><strong>Note</strong></p>
+<p>When the SPM sensor is connected to a Nano Color thermostat, it is displayed as <code>SPM - Nano Color</code> in Home Assistant. When connected to a Nano Color 2 thermostat, it is displayed as <code>SPM - Nano Color 2</code>.</p>
+<h4>Temperature sensors</h4>
+<ul>
+<li><p><strong>Outdoor temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Current outdoor temperature.</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>R810 (Heating circuit controller)</li>
+<li>R350 T3 (Universal controller)</li>
+<li>Nano Color (Room thermostat)</li>
+<li>CO2 SHC (CO₂, humidity, and temperature sensor)</li>
+<li>R470 (Heat pump controller)</li>
+<li>BioMax742 (Pellet boiler controller)</li>
+<li>R350.CWU (Universal controller)</li>
+<li>BioMax772 (Pellet boiler controller)</li>
+<li>R770RS / R771RS (Boiler controllers)</li>
+<li>BioMax775 (Pellet boiler controller)</li>
+<li>R350.M (Universal controller)</li>
+<li>Nano Color 2 (Room thermostat)</li>
+<li>R900 (Heat pump controller)</li>
+<li>SPM (Air quality sensor)</li>
+<li>AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Boiler temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Current temperature of the boiler.</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>BioMax742 (Pellet boiler controller)</li>
+<li>BioMax772 (Pellet boiler controller)</li>
+<li>R770RS / R771RS (Boiler controllers)</li>
+<li>BioMax775 (Pellet boiler controller)</li>
+<li>EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Calculated heating temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Calculated target heating temperature.</li>
+<li><strong>Available for devices</strong>: R810 (Heating circuit controller), BWC310 (Mixing valve controller)</li>
+</ul>
+</li>
+<li><p><strong>Target heating temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target heating temperature setting.</li>
+<li><strong>Available for devices</strong>: R810 (Heating circuit controller), BWC310 (Mixing valve controller)</li>
+</ul>
+</li>
+<li><p><strong>Return circuit temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature of the return circuit.</li>
+<li><strong>Available for devices</strong>: R810 (Heating circuit controller), AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>Calculated target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Calculated target temperature for the system.</li>
+<li><strong>Available for devices</strong>: R350 T3 (Universal controller), R350.CWU (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Circuit target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target temperature for the heating circuit.</li>
+<li><strong>Available for devices</strong>: R350 T3 (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature at the mixer valve.</li>
+<li><strong>Available for devices</strong>: R350 T3 (Universal controller), R350.M (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer temperature zone 1</strong></p>
+<ul>
+<li><strong>Description</strong>: Mixer temperature for zone 1.</li>
+<li><strong>Available for devices</strong>: R770RS / R771RS (Boiler controllers)</li>
+</ul>
+</li>
+<li><p><strong>Mixer temperature zone 2</strong></p>
+<ul>
+<li><strong>Description</strong>: Mixer temperature for zone 2.</li>
+<li><strong>Available for devices</strong>: R770RS / R771RS (Boiler controllers)</li>
+</ul>
+</li>
+<li><p><strong>Collector temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature of the solar collector.</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>SolarComp 951 (Solar system controller)</li>
+<li>SolarComp971 (Solar system controller)</li>
+<li>SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Tank temperature T2 (bottom)</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature at the bottom of the tank (sensor T2).</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>SolarComp 951 (Solar system controller)</li>
+<li>SolarComp971 (Solar system controller)</li>
+<li>SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Tank temperature T3 (top)</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature at the top of the tank (sensor T3).</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>SolarComp 951 (Solar system controller)</li>
+<li>SolarComp971 (Solar system controller)</li>
+<li>SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Tank temperature T4</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature at sensor T4 location.</li>
+<li><strong>Available for devices</strong>: SolarComp 951 (Solar system controller)</li>
+</ul>
+</li>
+<li><p><strong>DHW temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Domestic hot water temperature.</li>
+<li><strong>Available for devices</strong>: EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>DHW measured temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Measured domestic hot water temperature.</li>
+<li><strong>Available for devices</strong>: R350.CWU (Universal controller), R480 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Buffer return temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature of the buffer return.</li>
+<li><strong>Available for devices</strong>: EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Lower source temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature of the lower heat source.</li>
+<li><strong>Available for devices</strong>: R490 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Upper source temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Temperature of the upper heat source.</li>
+<li><strong>Available for devices</strong>: R490 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual buffer temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Current buffer temperature.</li>
+<li><strong>Available for devices</strong>: R480 (Heat pump controller), R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual DHW temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Current domestic hot water temperature.</li>
+<li><strong>Available for devices</strong>: R480 (Heat pump controller), R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Protection temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Protection temperature sensor reading.</li>
+<li><strong>Available for devices</strong>: R350.M (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Buffer set temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Buffer temperature setpoint.</li>
+<li><strong>Available for devices</strong>: R377B (Controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual heating circuit temperature zone 1</strong></p>
+<ul>
+<li><strong>Description</strong>: Current temperature in heating circuit zone 1.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual heating circuit temperature zone 2</strong></p>
+<ul>
+<li><strong>Description</strong>: Current temperature in heating circuit zone 2.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual heating circuit temperature zone 3</strong></p>
+<ul>
+<li><strong>Description</strong>: Current temperature in heating circuit zone 3.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual heating circuit temperature zone 4</strong></p>
+<ul>
+<li><strong>Description</strong>: Current temperature in heating circuit zone 4.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Actual upper source temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Current upper source temperature.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Calculated buffer temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Calculated buffer temperature.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Calculated DHW temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Calculated domestic hot water temperature.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Calculated upper source temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Calculated upper source temperature.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating target temperature zone 1</strong></p>
+<ul>
+<li><strong>Description</strong>: Target heating temperature for zone 1.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating target temperature zone 2</strong></p>
+<ul>
+<li><strong>Description</strong>: Target heating temperature for zone 2.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating target temperature zone 3</strong></p>
+<ul>
+<li><strong>Description</strong>: Target heating temperature for zone 3.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating target temperature zone 4</strong></p>
+<ul>
+<li><strong>Description</strong>: Target heating temperature for zone 4.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+</ul>
+<h4>Air quality sensors</h4>
+<ul>
+<li><p><strong>PM2.5 level</strong></p>
+<ul>
+<li><strong>Description</strong>: PM2.5 particulate matter status level (normal, warning, exceeded).</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>PM10 level</strong></p>
+<ul>
+<li><strong>Description</strong>: PM10 particulate matter status level (normal, warning, exceeded).</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>PM2.5 measured</strong></p>
+<ul>
+<li><strong>Description</strong>: PM2.5 particulate matter concentration in µg/m³.</li>
+<li><strong>Available for devices</strong>: SPM (Air quality sensor)</li>
+</ul>
+</li>
+<li><p><strong>PM10 measured</strong></p>
+<ul>
+<li><strong>Description</strong>: PM10 particulate matter concentration in µg/m³.</li>
+<li><strong>Available for devices</strong>: SPM (Air quality sensor)</li>
+</ul>
+</li>
+<li><p><strong>PM1 level measured</strong></p>
+<ul>
+<li><strong>Description</strong>: PM1 particulate matter concentration in µg/m³.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>PM4 level measured</strong></p>
+<ul>
+<li><strong>Description</strong>: PM4 particulate matter concentration in µg/m³.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>CO₂ level</strong></p>
+<ul>
+<li><strong>Description</strong>: Carbon dioxide concentration in ppm.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>CO₂ percent</strong></p>
+<ul>
+<li><strong>Description</strong>: Carbon dioxide level as percentage.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+</ul>
+<h4>Humidity sensors</h4>
+<ul>
+<li><strong>Humidity</strong><ul>
+<li><strong>Description</strong>: Relative humidity in percent.</li>
+<li><strong>Available for devices</strong>: SHC (CO₂, humidity, and temperature sensor), SPM (Air quality sensor)</li>
+</ul>
+</li>
+</ul>
+<h4>Power and energy sensors</h4>
+<ul>
+<li><p><strong>Collector power</strong></p>
+<ul>
+<li><strong>Description</strong>: Current power output from solar collector in kW.</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>SolarComp 951 (Solar system controller)</li>
+<li>SolarComp971 (Solar system controller)</li>
+<li>SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Energy today</strong></p>
+<ul>
+<li><strong>Description</strong>: Energy collected today in kWh.</li>
+<li><strong>Available for devices</strong>: SolarComp971 (Solar system controller), SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+<li><p><strong>Energy consumption</strong></p>
+<ul>
+<li><strong>Description</strong>: Current energy consumption in MW.</li>
+<li><strong>Available for devices</strong>: SolarComp 971SD1 (Solar system controller)</li>
+</ul>
+</li>
+<li><p><strong>Energy total</strong></p>
+<ul>
+<li><strong>Description</strong>: Total energy consumed in kWh.</li>
+<li><strong>Available for devices</strong>: R350.CWU (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Energy yesterday</strong></p>
+<ul>
+<li><strong>Description</strong>: Energy consumed yesterday in kWh.</li>
+<li><strong>Available for devices</strong>: R350.CWU (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Energy smart grid yesterday</strong></p>
+<ul>
+<li><strong>Description</strong>: Energy consumed via smart grid yesterday in kWh.</li>
+<li><strong>Available for devices</strong>: R350.CWU (Universal controller)</li>
+</ul>
+</li>
+</ul>
+<h4>Fuel and battery sensors</h4>
+<ul>
+<li><p><strong>Fuel level</strong></p>
+<ul>
+<li><strong>Description</strong>: Current fuel level in percent.</li>
+<li><strong>Available for devices</strong>:<ul>
+<li>BioMax742 (Pellet boiler controller)</li>
+<li>BioMax772 (Pellet boiler controller)</li>
+<li>BioMax775 (Pellet boiler controller)</li>
+<li>R770RS (Boiler controller)</li>
+<li>R771RS (Boiler controller)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Battery level</strong></p>
+<ul>
+<li><strong>Description</strong>: Battery charge level in percent.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>Charging power</strong></p>
+<ul>
+<li><strong>Description</strong>: Battery charging current in mA.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+</ul>
+<h4>Diagnostic sensors</h4>
+<ul>
+<li><p><strong>Ventilation alarm</strong></p>
+<ul>
+<li><strong>Description</strong>: Ventilation system alarm status.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Ventilation gear</strong></p>
+<ul>
+<li><strong>Description</strong>: Current ventilation gear setting.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Alarm code</strong></p>
+<ul>
+<li><strong>Description</strong>: System alarm code.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>PK1 function</strong></p>
+<ul>
+<li><strong>Description</strong>: PK1 function mode status.</li>
+<li><strong>Available for devices</strong>: Combo (Combo module)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>The available sensors depend on your specific Compit device configuration. Not all sensors will be available for every device.</p>
+<h3>Binary sensors</h3>
+<ul>
+<li><p><strong>Airing</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether a window is open for airing.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Battery charging</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the battery is currently charging.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>CO₂ alert</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the CO₂ level has exceeded the threshold.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>CO₂ level</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the CO₂ level is problematic.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat), SPM (Air quality sensor), SHC (CO₂, humidity, and temperature sensor)</li>
+</ul>
+</li>
+<li><p><strong>Dust alert</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the dust level has exceeded the threshold.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>Ground Heat Exchanger attached</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether a ground heat exchanger is connected.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Has battery</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the device has a battery installed.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>Has external power</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the device is connected to external power.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>Mixer pump</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the mixer pump is currently running.</li>
+<li><strong>Available for devices</strong>: R810 (Heating circuit controller)</li>
+</ul>
+</li>
+<li><p><strong>Pump status</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the pump is currently running.</li>
+<li><strong>Available for devices</strong>: AF-1 (Anti-freeze system)</li>
+</ul>
+</li>
+<li><p><strong>Temperature alert</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the temperature has exceeded the threshold.</li>
+<li><strong>Available for devices</strong>: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)</li>
+</ul>
+</li>
+<li><p><strong>Ventilation filter dirty</strong></p>
+<ul>
+<li><strong>Description</strong>: Indicates whether the ventilation filter is dirty and needs to be cleaned or replaced. When it does, the sensor shows <strong>Problem</strong>. Otherwise, it shows <strong>OK</strong>. The controller reports a dirty filter when the filter cleaning period set on the thermostat has elapsed. With AERO 3 and AERO 5 modules, it reports when the pressure switch reports a dirty filter.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+</ul>
+<p>Binary sensors provide status information about your Compit devices.</p>
+<h3>Switches</h3>
+<p>Switch entities let you turn device modes and features on or off.</p>
+<ul>
+<li><p><strong>Device on/off</strong></p>
+<ul>
+<li><strong>Description</strong>: Turns the device on or off.</li>
+<li><strong>Available for devices</strong>: EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Force domestic hot water</strong></p>
+<ul>
+<li><strong>Description</strong>: Forces domestic hot water production.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+</ul>
+<h3>Climate</h3>
+<p>The climate entity reflects the current heating or cooling state and the <strong>active</strong> target temperature. Use the climate entity when you want to change the target temperature temporarily or for the current session (for example, turning up the heat for the evening). The climate entity is where you set what temperature the device is aiming for right now.</p>
+<p>The following devices provide a climate entity:</p>
+<ul>
+<li><strong>Nano Color</strong> (Room thermostat)</li>
+<li><strong>Nano Color 2</strong> (Room thermostat)</li>
+<li><strong>Nano One</strong> (Room thermostat)</li>
+<li><strong>R900</strong> (Heat pump controller)</li>
+</ul>
+<p>The available features depend on the device:</p>
+<ul>
+<li><strong>Nano Color</strong>, <strong>Nano Color 2</strong>, and <strong>Nano One</strong> support target temperature, preset mode, fan mode, and HVAC mode.<ul>
+<li>Presets: Home, Eco, None, Away</li>
+<li>Fan modes: Off, Auto, Low, Medium, High</li>
+<li>HVAC modes: Cool, Heat, Off</li>
+</ul>
+</li>
+<li><strong>R900</strong> supports preset mode and HVAC mode.<ul>
+<li>Presets: Home, Away</li>
+<li>HVAC modes: Heat, Off</li>
+</ul>
+</li>
+</ul>
+<h3>Fans</h3>
+<ul>
+<li><strong>Ventilation</strong><ul>
+<li><strong>Description</strong>: Controls the ventilation fan. You can turn the fan on or off and set the speed.</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat).</li>
+<li><strong>Remarks</strong>: The fan has 5 speed levels, shown as a percentage in Home Assistant.</li>
+</ul>
+</li>
+</ul>
+<h3>Numbers</h3>
+<p>Number entities let you set <strong>default</strong> temperature setpoints and other configuration values. These are the preset target temperatures used for each operating mode (such as Comfort, Eco, or Holiday). They are not used for temporary or one-off changes; for those, use the climate entity instead.</p>
+<ul>
+<li><p><strong>Comfort target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature for comfort mode.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano One (Room thermostat), Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Eco target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature for eco mode.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano One (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Holiday target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature while you are on holiday.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano One (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Eco winter target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature for eco mode during the winter
+season.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Eco cooling target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature for eco mode during cooling.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Out-of-home target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target room temperature when nobody is at home.</li>
+<li><strong>Range</strong>: 0–40 °C</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Constant target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Constant target temperature for the heating circuit.</li>
+<li><strong>Range</strong>: 0–95 °C</li>
+<li><strong>Available for devices</strong>: R810 (Heating circuit controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating constant target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Constant target temperature for the heat pump heating
+circuit.</li>
+<li><strong>Range</strong>: 0–95 °C</li>
+<li><strong>Available for devices</strong>: R470 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target temperature for the mixing valve circuit.</li>
+<li><strong>Range</strong>: 0–90 °C</li>
+<li><strong>Available for devices</strong>: R350.M (Universal controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer target temperature zone 1</strong></p>
+<ul>
+<li><strong>Description</strong>: Target temperature for mixing valve circuit in zone 1.</li>
+<li><strong>Range</strong>: 0–95 °C</li>
+<li><strong>Available for devices</strong>: R770RS (Boiler controller), R771RS (Boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer target temperature zone 2</strong></p>
+<ul>
+<li><strong>Description</strong>: Target temperature for mixing valve circuit in zone 2.</li>
+<li><strong>Range</strong>: 0–95 °C</li>
+<li><strong>Available for devices</strong>: R770RS (Boiler controller), R771RS (Boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Boiler target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Target temperature for the boiler.</li>
+<li><strong>Range</strong>: 0–95 °C</li>
+<li><strong>Available for devices</strong>: BioMax742 (Pellet boiler controller), EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Boiler constant target temperature</strong></p>
+<ul>
+<li><strong>Description</strong>: Constant target temperature for the boiler.</li>
+<li><strong>Range</strong>: 0–90 °C</li>
+<li><strong>Available for devices</strong>: BioMax742 (Pellet boiler controller), BioMax772 (Pellet boiler controller), BioMax775 (Pellet boiler controller)</li>
+</ul>
+</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><p><strong>Language</strong></p>
+<ul>
+<li><strong>Description</strong>: Language of the device interface.</li>
+<li><strong>Options</strong>: Polish, English</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat), Nano One (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Aero by pass</strong></p>
+<ul>
+<li><strong>Description</strong>: Bypass mode for ventilation systems.</li>
+<li><strong>Options</strong>: Off, Auto, On</li>
+<li><strong>Available for devices</strong>: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Nano work mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Operating mode for the thermostat.</li>
+<li><strong>Options</strong>: Manual 3, Manual 2, Manual 1, Manual 0, Schedule, Christmas, Out of home</li>
+<li><strong>Available for devices</strong>: Nano One (Room thermostat)</li>
+</ul>
+</li>
+<li><p><strong>Operating mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Primary operating mode of the device.</li>
+<li><strong>Options</strong>: Disabled, Eco, Hybrid (for R900, R490, R480); Disabled, Auto, Eco (for R470)</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller), R490 (Heat pump controller), R470 (Heat pump controller), R480 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Work mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Seasonal operating mode.</li>
+<li><strong>Options</strong>: Winter, Summer, Cooling</li>
+<li><strong>Available for devices</strong>: R490 (Heat pump controller)</li>
+</ul>
+</li>
+<li><p><strong>Heating source of correction</strong></p>
+<ul>
+<li><strong>Description</strong>: Source for heating temperature corrections.</li>
+<li><strong>Options</strong>: No corrections, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5</li>
+<li><strong>Available for devices</strong>: R470 (Heat pump controller), BioMax742 (Pellet boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>SolarComp operating mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Operating mode for solar controllers.</li>
+<li><strong>Options</strong>: Auto, De-icing, Holiday, Disabled</li>
+<li><strong>Available for devices</strong>: SolarComp951 (Solar system controller), SolarComp971 (Solar system controller) and SolarComp971C (Solar system controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer mode zone 1</strong></p>
+<ul>
+<li><strong>Description</strong>: Zone 1 mixing valve operating mode.</li>
+<li><strong>Options</strong>: Disabled, Without thermostat, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5</li>
+<li><strong>Available for devices</strong>: BioMax775 (Pellet boiler controller), BioMax772 (Pellet boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer mode zone 2</strong></p>
+<ul>
+<li><strong>Description</strong>: Zone 2 mixing valve operating mode.</li>
+<li><strong>Options</strong>: Disabled, Without thermostat, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5</li>
+<li><strong>Available for devices</strong>: BioMax775 (Pellet boiler controller), BioMax772 (Pellet boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Mixer mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Mixing valve operating mode.</li>
+<li><strong>Options</strong>: No corrections, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5</li>
+<li><strong>Available for devices</strong>: R350 T3 (Universal controller), BioMax742 (Pellet boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>DHW circulation</strong></p>
+<ul>
+<li><strong>Description</strong>: Domestic hot water circulation mode.</li>
+<li><strong>Options</strong>: Disabled, Constant, Schedule</li>
+<li><strong>Available for devices</strong>: BioMax775 (Pellet boiler controller), BioMax742 (Pellet boiler controller), BioMax772 (Pellet boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Buffer mode</strong></p>
+<ul>
+<li><strong>Description</strong>: Buffer tank operating mode.</li>
+<li><strong>Options</strong>: Schedule, Manual, Disabled</li>
+<li><strong>Available for devices</strong>: R480 (Heat pump controller)</li>
+</ul>
+</li>
+</ul>
+<h3>Switches</h3>
+<p>Switch entities let you turn device modes and features on or off.</p>
+<ul>
+<li><p><strong>Device on/off</strong></p>
+<ul>
+<li><strong>Description</strong>: Turns the device on or off.</li>
+<li><strong>Available for devices</strong>: EL750 (Electric boiler controller)</li>
+</ul>
+</li>
+<li><p><strong>Force domestic hot water</strong></p>
+<ul>
+<li><strong>Description</strong>: Forces domestic hot water production.</li>
+<li><strong>Available for devices</strong>: R900 (Heat pump controller)</li>
+</ul>
+</li>
+</ul>
+<h3>Water heaters</h3>
+<ul>
+<li><strong>Water heater</strong><ul>
+<li><strong>Description</strong>: Controls the domestic hot water parameters.</li>
+<li><strong>Available for devices</strong>: BioMax742, BioMax772, BioMax775, EL750, R350.CWU, R377B, R470, R480, R490, R770RS, R771RS, R900, SolarComp951, SolarComp971, SolarComp971C</li>
+<li><strong>Remarks</strong>:<ul>
+<li>Solar controllers and R350.CWU only support setting the target temperature.</li>
+<li>Other devices also support On/Off and operation modes.<ul>
+<li>State <code>off</code> maps to <code>off</code> in Compit</li>
+<li>State <code>performance</code> maps to <code>on</code> in Compit</li>
+<li>State <code>eco</code> maps to <code>schedule</code> in Compit</li>
+</ul>
+</li>
+<li>Solar controllers don't support current temperature attribute.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Data updates</h2>
+<p>The integration polling polls your Compit iNext account every 30 seconds.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/compit.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Compit devices within Home Assistant.
+ha_release: &#x27;2025.10&#x27;
+ha_domain: compit
+---
+
+The **Compit** {% term integration %} allows you to integrate air conditioning, ventilation, and heating controllers with Home Assistant. You need a Compit iNext account, which you can set up at [inext.compit.pl](https://inext.compit.pl).
+
+## Prerequisites
+
+1. Create an account on [inext.compit.pl](https://inext.compit.pl).
+2. Configure your Compit devices in your account.
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Username:
+    description: &quot;The username of your Compit iNext account.&quot;
+Password:
+    description: &quot;The password of your Compit iNext account.&quot;
+{% endconfiguration_basic %}
+
+## Supported devices
+
+This integration supports most of Compit device models across thermostats, controllers, and sensors.
+
+### Thermostats
+
+- [Nano Color](https://compit.pl/produkty/termostaty-pokojowe/8-termostat-pokojowy-nano-color.html?ic=1) – Room thermostat
+- [Nano Color 2](https://compit.pl/produkty/termostaty-pokojowe/88-termostat-pokojowy-nano-color-2.html?ic=1) – Room thermostat
+- [Nano One](https://compit.pl/produkty/termostaty-pokojowe/24-termostat-pokojowy-nano-one.html?ic=1) – Room thermostat
+
+### Controllers
+
+- [AF-1](https://compit.pl/produkty/osprzet/91-af-1.html?ic=1) – Anti-freeze system
+- [BioMax742](https://compit.pl/dokumenty-do-pobrania/sterowniki-do-kot%C5%82%C3%B2w-dokumenty-do-pobrania/category/50-sterownik-kot%C5%82a-pelletowego-biomax-742.html?download=90:sterownik-kot%C5%82a-pelletowego-biomax-742-wersja-u7) – Pellet boiler controller
+- [BioMax775](https://compit.pl/dokumenty-do-pobrania/sterowniki-do-kot%C5%82%C3%B3w-dokumenty-do-pobrania/category/126-sterownik-kotla-pelletowego-biomax-775.html?download=313:sterownik-kotla-pelletowego-biomax-775-wersja-7), BioMax772 – Pellet boiler controllers
+- [BWC310](https://compit.pl/produkty/sterowniki-ogrzewania-podlogowego/40-sterownik-ogrzewania-podlogowego-l2.html?ic=1) – Mixing valve controller
+- [COMBO](https://compit.pl/produkty/osprzet/92-combo.html?ic=1) – Combo module
+- [EL750](https://compit.pl/produkty/sterowniki-do-kotlow/73-sterownik-kotla-elektrycznego-el750-1.html?ic=1) – Electric boiler controller
+- [L2](https://compit.pl/produkty/sterowniki-ogrzewania-podlogowego/40-sterownik-ogrzewania-podlogowego-l2.html?ic=1) – Floor heating controller
+- [R350.CWU](https://compit.pl/produkty/sterowniki-uniwerslane/78-sterownik-do-podgrzewania-wody-r350-cwu.html?ic=1) – Universal controller
+- [R350 T3](https://compit.pl/produkty/sterowniki-instalacji/42-dwustopniowy-sterownik-temperatury-regulator-pi-regulator-krokowy-sterowanie-3-punktowe-r350-07.html?ic=1) – Universal controller
+- [R350.M](https://compit.pl/produkty/sterowniki-uniwerslane/85-pogodowy-regulator-temperatury-obiegu-grzewczego-z-mieszaczem-r350m.html?ic=1) – Universal controller
+- [R377B](https://compit.pl/produkty/sterowniki-pomp-ciepla/86-sterownik-kaskady-pomp-ciepla-r377-wersja-2.html) – Heat pump cascade controller&#32;
+- [R470](https://compit.pl/produkty/sterowniki-pomp-ciepla/10-sterownik-pompy-ciepla-r470-one.html?ic=1), R480 – Heat pump controllers
+- [R490](https://compit.pl/produkty/sterowniki-pomp-ciepla/12-sterownik-pompy-ciepla-R490-one.html?ic=1) – Heat pump controller
+- [R770RS](https://compit.pl/produkty/sterowniki-do-kotlow/83-pogodowy-regulator-kotla-retortowego-i-instalacji-grzewczej-r771-2.html?ic=1), [R771RS](https://compit.pl/produkty/sterowniki-do-kotlow/83-pogodowy-regulator-kotla-retortowego-i-instalacji-grzewczej-r771-2.html?ic=1) – Boiler controllers
+- [R810](https://compit.pl/produkty/sterowniki-instalacji/43-pogodowy-regulator-temperatury-obiegu-grzewczego-r810.html?ic=1) – Heating circuit controller
+- [R900](https://compit.pl/produkty/sterowniki-pomp-ciepla/89-r900.html?ic=1) – Heat pump controller
+- [SolarComp951](https://compit.pl/produkty/regulatory-solarne/22-sterownik-ukladu-solarnego-solarcomp-951.html) – Solar system controller
+- [SolarComp971](https://compit.pl/produkty/regulatory-solarne/23-sterownik-ukladu-solarnego-z-pwm-solarcomp-971.html) – Solar system controller
+- [SolarComp971C](https://compit.pl/produkty/regulatory-solarne/70-sterownik-ukladu-solarnego-z-pwm-solarcomp-971c.html) – Solar system controller
+
+### Sensors
+
+- [SHC](https://compit.pl/produkty/osprzet/67-czujnik-stezenia-dwutlenku-wegla-wilgotnosci-i-temperatury-w-pomieszczeniach-shc.html?ic=1) – CO₂, humidity, and temperature sensor
+- [SPM](https://compit.pl/produkty/osprzet/87-czujnik-jakosci-powietrza-spm.html?ic=1) – Air quality sensor
+
+{% note %}
+When the SPM sensor is connected to a Nano Color thermostat, it is displayed as `SPM - Nano Color` in Home Assistant. When connected to a Nano Color 2 thermostat, it is displayed as `SPM - Nano Color 2`.
+{% endnote %}
+
+## Supported functionality
+
+The **Compit** integration provides the following entities.
+
+### Sensors
+
+The integration provides various sensors depending on your device model. Below is a complete list of available sensors and the devices that support them.
+
+{% note %}
+When the SPM sensor is connected to a Nano Color thermostat, it is displayed as `SPM - Nano Color` in Home Assistant. When connected to a Nano Color 2 thermostat, it is displayed as `SPM - Nano Color 2`.
+{% endnote %}
+
+#### Temperature sensors
+
+- **Outdoor temperature**
+  - **Description**: Current outdoor temperature.
+  - **Available for devices**:
+    - R810 (Heating circuit controller)
+    - R350 T3 (Universal controller)
+    - Nano Color (Room thermostat)
+    - CO2 SHC (CO₂, humidity, and temperature sensor)
+    - R470 (Heat pump controller)
+    - BioMax742 (Pellet boiler controller)
+    - R350.CWU (Universal controller)
+    - BioMax772 (Pellet boiler controller)
+    - R770RS / R771RS (Boiler controllers)
+    - BioMax775 (Pellet boiler controller)
+    - R350.M (Universal controller)
+    - Nano Color 2 (Room thermostat)
+    - R900 (Heat pump controller)
+    - SPM (Air quality sensor)
+    - AF-1 (Anti-freeze system)
+
+- **Boiler temperature**
+  - **Description**: Current temperature of the boiler.
+  - **Available for devices**:
+    - BioMax742 (Pellet boiler controller)
+    - BioMax772 (Pellet boiler controller)
+    - R770RS / R771RS (Boiler controllers)
+    - BioMax775 (Pellet boiler controller)
+    - EL750 (Electric boiler controller)
+
+- **Calculated heating temperature**
+  - **Description**: Calculated target heating temperature.
+  - **Available for devices**: R810 (Heating circuit controller), BWC310 (Mixing valve controller)
+
+- **Target heating temperature**
+  - **Description**: Target heating temperature setting.
+  - **Available for devices**: R810 (Heating circuit controller), BWC310 (Mixing valve controller)
+
+- **Return circuit temperature**
+  - **Description**: Temperature of the return circuit.
+  - **Available for devices**: R810 (Heating circuit controller), AF-1 (Anti-freeze system)
+
+- **Calculated target temperature**
+  - **Description**: Calculated target temperature for the system.
+  - **Available for devices**: R350 T3 (Universal controller), R350.CWU (Universal controller)
+
+- **Circuit target temperature**
+  - **Description**: Target temperature for the heating circuit.
+  - **Available for devices**: R350 T3 (Universal controller)
+
+- **Mixer temperature**
+  - **Description**: Temperature at the mixer valve.
+  - **Available for devices**: R350 T3 (Universal controller), R350.M (Universal controller)
+
+- **Mixer temperature zone 1**
+  - **Description**: Mixer temperature for zone 1.
+  - **Available for devices**: R770RS / R771RS (Boiler controllers)
+
+- **Mixer temperature zone 2**
+  - **Description**: Mixer temperature for zone 2.
+  - **Available for devices**: R770RS / R771RS (Boiler controllers)
+
+- **Collector temperature**
+  - **Description**: Temperature of the solar collector.
+  - **Available for devices**:
+    - SolarComp 951 (Solar system controller)
+    - SolarComp971 (Solar system controller)
+    - SolarComp971C (Solar system controller)
+
+- **Tank temperature T2 (bottom)**
+  - **Description**: Temperature at the bottom of the tank (sensor T2).
+  - **Available for devices**:
+    - SolarComp 951 (Solar system controller)
+    - SolarComp971 (Solar system controller)
+    - SolarComp971C (Solar system controller)
+
+- **Tank temperature T3 (top)**
+  - **Description**: Temperature at the top of the tank (sensor T3).
+  - **Available for devices**:
+    - SolarComp 951 (Solar system controller)
+    - SolarComp971 (Solar system controller)
+    - SolarComp971C (Solar system controller)
+
+- **Tank temperature T4**
+  - **Description**: Temperature at sensor T4 location.
+  - **Available for devices**: SolarComp 951 (Solar system controller)
+
+- **DHW temperature**
+  - **Description**: Domestic hot water temperature.
+  - **Available for devices**: EL750 (Electric boiler controller)
+
+- **DHW measured temperature**
+  - **Description**: Measured domestic hot water temperature.
+  - **Available for devices**: R350.CWU (Universal controller), R480 (Heat pump controller)
+
+- **Buffer return temperature**
+  - **Description**: Temperature of the buffer return.
+  - **Available for devices**: EL750 (Electric boiler controller)
+
+- **Lower source temperature**
+  - **Description**: Temperature of the lower heat source.
+  - **Available for devices**: R490 (Heat pump controller)
+
+- **Upper source temperature**
+  - **Description**: Temperature of the upper heat source.
+  - **Available for devices**: R490 (Heat pump controller)
+
+- **Actual buffer temperature**
+  - **Description**: Current buffer temperature.
+  - **Available for devices**: R480 (Heat pump controller), R900 (Heat pump controller)
+
+- **Actual DHW temperature**
+  - **Description**: Current domestic hot water temperature.
+  - **Available for devices**: R480 (Heat pump controller), R900 (Heat pump controller)
+
+- **Protection temperature**
+  - **Description**: Protection temperature sensor reading.
+  - **Available for devices**: R350.M (Universal controller)
+
+- **Buffer set temperature**
+  - **Description**: Buffer temperature setpoint.
+  - **Available for devices**: R377B (Controller)
+
+- **Actual heating circuit temperature zone 1**
+  - **Description**: Current temperature in heating circuit zone 1.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Actual heating circuit temperature zone 2**
+  - **Description**: Current temperature in heating circuit zone 2.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Actual heating circuit temperature zone 3**
+  - **Description**: Current temperature in heating circuit zone 3.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Actual heating circuit temperature zone 4**
+  - **Description**: Current temperature in heating circuit zone 4.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Actual upper source temperature**
+  - **Description**: Current upper source temperature.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Calculated buffer temperature**
+  - **Description**: Calculated buffer temperature.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Calculated DHW temperature**
+  - **Description**: Calculated domestic hot water temperature.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Calculated upper source temperature**
+  - **Description**: Calculated upper source temperature.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Heating target temperature zone 1**
+  - **Description**: Target heating temperature for zone 1.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Heating target temperature zone 2**
+  - **Description**: Target heating temperature for zone 2.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Heating target temperature zone 3**
+  - **Description**: Target heating temperature for zone 3.
+  - **Available for devices**: R900 (Heat pump controller)
+
+- **Heating target temperature zone 4**
+  - **Description**: Target heating temperature for zone 4.
+  - **Available for devices**: R900 (Heat pump controller)
+
+#### Air quality sensors
+
+- **PM2.5 level**
+  - **Description**: PM2.5 particulate matter status level (normal, warning, exceeded).
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **PM10 level**
+  - **Description**: PM10 particulate matter status level (normal, warning, exceeded).
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **PM2.5 measured**
+  - **Description**: PM2.5 particulate matter concentration in µg/m³.
+  - **Available for devices**: SPM (Air quality sensor)
+
+- **PM10 measured**
+  - **Description**: PM10 particulate matter concentration in µg/m³.
+  - **Available for devices**: SPM (Air quality sensor)
+
+- **PM1 level measured**
+  - **Description**: PM1 particulate matter concentration in µg/m³.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **PM4 level measured**
+  - **Description**: PM4 particulate matter concentration in µg/m³.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **CO₂ level**
+  - **Description**: Carbon dioxide concentration in ppm.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **CO₂ percent**
+  - **Description**: Carbon dioxide level as percentage.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+#### Humidity sensors
+
+- **Humidity**
+  - **Description**: Relative humidity in percent.
+  - **Available for devices**: SHC (CO₂, humidity, and temperature sensor), SPM (Air quality sensor)
+
+#### Power and energy sensors
+
+- **Collector power**
+  - **Description**: Current power output from solar collector in kW.
+  - **Available for devices**:
+    - SolarComp 951 (Solar system controller)
+    - SolarComp971 (Solar system controller)
+    - SolarComp971C (Solar system controller)
+
+- **Energy today**
+  - **Description**: Energy collected today in kWh.
+  - **Available for devices**: SolarComp971 (Solar system controller), SolarComp971C (Solar system controller)
+
+- **Energy consumption**
+  - **Description**: Current energy consumption in MW.
+  - **Available for devices**: SolarComp 971SD1 (Solar system controller)
+
+- **Energy total**
+  - **Description**: Total energy consumed in kWh.
+  - **Available for devices**: R350.CWU (Universal controller)
+
+- **Energy yesterday**
+  - **Description**: Energy consumed yesterday in kWh.
+  - **Available for devices**: R350.CWU (Universal controller)
+
+- **Energy smart grid yesterday**
+  - **Description**: Energy consumed via smart grid yesterday in kWh.
+  - **Available for devices**: R350.CWU (Universal controller)
+
+#### Fuel and battery sensors
+
+- **Fuel level**
+  - **Description**: Current fuel level in percent.
+  - **Available for devices**:
+    - BioMax742 (Pellet boiler controller)
+    - BioMax772 (Pellet boiler controller)
+    - BioMax775 (Pellet boiler controller)
+    - R770RS (Boiler controller)
+    - R771RS (Boiler controller)
+
+- **Battery level**
+  - **Description**: Battery charge level in percent.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **Charging power**
+  - **Description**: Battery charging current in mA.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+#### Diagnostic sensors
+
+- **Ventilation alarm**
+  - **Description**: Ventilation system alarm status.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Ventilation gear**
+  - **Description**: Current ventilation gear setting.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Alarm code**
+  - **Description**: System alarm code.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **PK1 function**
+  - **Description**: PK1 function mode status.
+  - **Available for devices**: Combo (Combo module)
+
+{% note %}
+The available sensors depend on your specific Compit device configuration. Not all sensors will be available for every device.
+{% endnote %}
+
+### Binary sensors
+
+- **Airing**
+  - **Description**: Indicates whether a window is open for airing.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Battery charging**
+  - **Description**: Indicates whether the battery is currently charging.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **CO₂ alert**
+  - **Description**: Indicates whether the CO₂ level has exceeded the threshold.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **CO₂ level**
+  - **Description**: Indicates whether the CO₂ level is problematic.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat), SPM (Air quality sensor), SHC (CO₂, humidity, and temperature sensor)
+
+- **Dust alert**
+  - **Description**: Indicates whether the dust level has exceeded the threshold.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **Ground Heat Exchanger attached**
+  - **Description**: Indicates whether a ground heat exchanger is connected.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Has battery**
+  - **Description**: Indicates whether the device has a battery installed.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **Has external power**
+  - **Description**: Indicates whether the device is connected to external power.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **Mixer pump**
+  - **Description**: Indicates whether the mixer pump is currently running.
+  - **Available for devices**: R810 (Heating circuit controller)
+
+- **Pump status**
+  - **Description**: Indicates whether the pump is currently running.
+  - **Available for devices**: AF-1 (Anti-freeze system)
+
+- **Temperature alert**
+  - **Description**: Indicates whether the temperature has exceeded the threshold.
+  - **Available for devices**: SPM - Nano Color 2 (Air quality sensor connected to Nano Color 2)
+
+- **Ventilation filter dirty**
+  - **Description**: Indicates whether the ventilation filter is dirty and needs to be cleaned or replaced. When it does, the sensor shows **Problem**. Otherwise, it shows **OK**. The controller reports a dirty filter when the filter cleaning period set on the thermostat has elapsed. With AERO 3 and AERO 5 modules, it reports when the pressure switch reports a dirty filter.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+Binary sensors provide status information about your Compit devices.
+
+### Switches
+
+Switch entities let you turn device modes and features on or off.
+
+- **Device on/off**
+  - **Description**: Turns the device on or off.
+  - **Available for devices**: EL750 (Electric boiler controller)
+
+- **Force domestic hot water**
+  - **Description**: Forces domestic hot water production.
+  - **Available for devices**: R900 (Heat pump controller)
+
+### Climate
+
+The climate entity reflects the current heating or cooling state and the **active** target temperature. Use the climate entity when you want to change the target temperature temporarily or for the current session (for example, turning up the heat for the evening). The climate entity is where you set what temperature the device is aiming for right now.
+
+The following devices provide a climate entity:
+
+- **Nano Color** (Room thermostat)
+- **Nano Color 2** (Room thermostat)
+- **Nano One** (Room thermostat)
+- **R900** (Heat pump controller)
+
+The available features depend on the device:
+
+- **Nano Color**, **Nano Color 2**, and **Nano One** support target temperature, preset mode, fan mode, and HVAC mode.
+  - Presets: Home, Eco, None, Away
+  - Fan modes: Off, Auto, Low, Medium, High
+  - HVAC modes: Cool, Heat, Off
+- **R900** supports preset mode and HVAC mode.
+  - Presets: Home, Away
+  - HVAC modes: Heat, Off
+
+### Fans
+
+- **Ventilation**
+  - **Description**: Controls the ventilation fan. You can turn the fan on or off and set the speed.
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat).
+  - **Remarks**: The fan has 5 speed levels, shown as a percentage in Home Assistant.
+
+### Numbers
+
+Number entities let you set **default** temperature setpoints and other configuration values. These are the preset target temperatures used for each operating mode (such as Comfort, Eco, or Holiday). They are not used for temporary or one-off changes; for those, use the climate entity instead.
+
+- **Comfort target temperature**
+  - **Description**: Target room temperature for comfort mode.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano One (Room thermostat), Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Eco target temperature**
+  - **Description**: Target room temperature for eco mode.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano One (Room thermostat)
+
+- **Holiday target temperature**
+  - **Description**: Target room temperature while you are on holiday.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano One (Room thermostat)
+
+- **Eco winter target temperature**
+  - **Description**: Target room temperature for eco mode during the winter
+    season.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Eco cooling target temperature**
+  - **Description**: Target room temperature for eco mode during cooling.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Out-of-home target temperature**
+  - **Description**: Target room temperature when nobody is at home.
+  - **Range**: 0–40 °C
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Constant target temperature**
+  - **Description**: Constant target temperature for the heating circuit.
+  - **Range**: 0–95 °C
+  - **Available for devices**: R810 (Heating circuit controller)
+
+- **Heating constant target temperature**
+  - **Description**: Constant target temperature for the heat pump heating
+    circuit.
+  - **Range**: 0–95 °C
+  - **Available for devices**: R470 (Heat pump controller)
+
+- **Mixer target temperature**
+  - **Description**: Target temperature for the mixing valve circuit.
+  - **Range**: 0–90 °C
+  - **Available for devices**: R350.M (Universal controller)
+
+- **Mixer target temperature zone 1**
+  - **Description**: Target temperature for mixing valve circuit in zone 1.
+  - **Range**: 0–95 °C
+  - **Available for devices**: R770RS (Boiler controller), R771RS (Boiler controller)
+
+- **Mixer target temperature zone 2**
+  - **Description**: Target temperature for mixing valve circuit in zone 2.
+  - **Range**: 0–95 °C
+  - **Available for devices**: R770RS (Boiler controller), R771RS (Boiler controller)
+
+- **Boiler target temperature**
+  - **Description**: Target temperature for the boiler.
+  - **Range**: 0–95 °C
+  - **Available for devices**: BioMax742 (Pellet boiler controller), EL750 (Electric boiler controller)
+
+- **Boiler constant target temperature**
+  - **Description**: Constant target temperature for the boiler.
+  - **Range**: 0–90 °C
+  - **Available for devices**: BioMax742 (Pellet boiler controller), BioMax772 (Pellet boiler controller), BioMax775 (Pellet boiler controller)
+
+### Selects
+
+- **Language**
+  - **Description**: Language of the device interface.
+  - **Options**: Polish, English
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat), Nano One (Room thermostat)
+
+- **Aero by pass**
+  - **Description**: Bypass mode for ventilation systems.
+  - **Options**: Off, Auto, On
+  - **Available for devices**: Nano Color (Room thermostat), Nano Color 2 (Room thermostat)
+
+- **Nano work mode**
+  - **Description**: Operating mode for the thermostat.
+  - **Options**: Manual 3, Manual 2, Manual 1, Manual 0, Schedule, Christmas, Out of home
+  - **Available for devices**: Nano One (Room thermostat)
+
+- **Operating mode**
+  - **Description**: Primary operating mode of the device.
+  - **Options**: Disabled, Eco, Hybrid (for R900, R490, R480); Disabled, Auto, Eco (for R470)
+  - **Available for devices**: R900 (Heat pump controller), R490 (Heat pump controller), R470 (Heat pump controller), R480 (Heat pump controller)
+
+- **Work mode**
+  - **Description**: Seasonal operating mode.
+  - **Options**: Winter, Summer, Cooling
+  - **Available for devices**: R490 (Heat pump controller)
+
+- **Heating source of correction**
+  - **Description**: Source for heating temperature corrections.
+  - **Options**: No corrections, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5
+  - **Available for devices**: R470 (Heat pump controller), BioMax742 (Pellet boiler controller)
+
+- **SolarComp operating mode**
+  - **Description**: Operating mode for solar controllers.
+  - **Options**: Auto, De-icing, Holiday, Disabled
+  - **Available for devices**: SolarComp951 (Solar system controller), SolarComp971 (Solar system controller) and SolarComp971C (Solar system controller)
+
+- **Mixer mode zone 1**
+  - **Description**: Zone 1 mixing valve operating mode.
+  - **Options**: Disabled, Without thermostat, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5
+  - **Available for devices**: BioMax775 (Pellet boiler controller), BioMax772 (Pellet boiler controller)
+
+- **Mixer mode zone 2**
+  - **Description**: Zone 2 mixing valve operating mode.
+  - **Options**: Disabled, Without thermostat, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5
+  - **Available for devices**: BioMax775 (Pellet boiler controller), BioMax772 (Pellet boiler controller)
+
+- **Mixer mode**
+  - **Description**: Mixing valve operating mode.
+  - **Options**: No corrections, Schedule, Thermostat, Nano nr 1, Nano nr 2, Nano nr 3, Nano nr 4, Nano nr 5
+  - **Available for devices**: R350 T3 (Universal controller), BioMax742 (Pellet boiler controller)
+
+- **DHW circulation**
+  - **Description**: Domestic hot water circulation mode.
+  - **Options**: Disabled, Constant, Schedule
+  - **Available for devices**: BioMax775 (Pellet boiler controller), BioMax742 (Pellet boiler controller), BioMax772 (Pellet boiler controller)
+
+- **Buffer mode**
+  - **Description**: Buffer tank operating mode.
+  - **Options**: Schedule, Manual, Disabled
+  - **Available for devices**: R480 (Heat pump controller)
+
+### Switches
+
+Switch entities let you turn device modes and features on or off.
+
+- **Device on/off**
+  - **Description**: Turns the device on or off.
+  - **Available for devices**: EL750 (Electric boiler controller)
+
+- **Force domestic hot water**
+  - **Description**: Forces domestic hot water production.
+  - **Available for devices**: R900 (Heat pump controller)
+
+### Water heaters
+
+- **Water heater**
+  - **Description**: Controls the domestic hot water parameters.
+  - **Available for devices**: BioMax742, BioMax772, BioMax775, EL750, R350.CWU, R377B, R470, R480, R490, R770RS, R771RS, R900, SolarComp951, SolarComp971, SolarComp971C
+  - **Remarks**:
+    - Solar controllers and R350.CWU only support setting the target temperature.
+    - Other devices also support On/Off and operation modes.
+      - State `off` maps to `off` in Compit
+      - State `performance` maps to `on` in Compit
+      - State `eco` maps to `schedule` in Compit
+    - Solar controllers don&#x27;t support current temperature attribute.
+
+## Data updates
+
+The integration {% term polling polls %} your Compit iNext account every 30 seconds.
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Compit.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>.</p><p>The <strong>user</strong> configuration step lists <code>email</code>, <code>password</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>fan</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Supported devices</li><li>Supported functionality</li><li>Data updates</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/compit/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/compit</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/compit</code></dd></dl></section><p><a href="../../integrations/compit/">Return to the Compit guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

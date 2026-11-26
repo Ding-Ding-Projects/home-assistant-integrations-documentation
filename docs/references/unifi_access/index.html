@@ -1,1 +1,719 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UniFi Access reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:155" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/unifi_access/">UniFi Access guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>UniFi Access</h1><p>Instructions on how to integrate UniFi Access with Home Assistant.</p><section><h2>Overview</h2><p>The UniFi Access integration allows you to control and monitor Ubiquiti UniFi Access devices from Home Assistant.</p></section><section><h2>Supported devices</h2><p>This integration supports any door managed by a UniFi Access controller, including doors equipped with:</p></section><section><h2>Prerequisites</h2><p>Before setting up this integration, make sure you have the following:</p></section><section><h2>Entities</h2><p>The UniFi Access integration provides the following entities.</p></section><section><h2>Buttons</h2><p>Each door registered in your UniFi Access controller is represented as an unlock button entity in Home Assistant.</p></section><section><h2>Binary sensors</h2><p>Each door registered in your UniFi Access controller is represented by a binary sensor entity that reports the door position.</p></section><section><h2>Switches</h2><p>The integration provides two switch entities for controlling the emergency modes of your UniFi Access controller.</p></section><section><h2>Selects</h2><p>For controllers that support temporary lock rules, each door exposes the following select entity:</p></section><section><h2>Sensors</h2><p>For controllers that support temporary lock rules, each door also exposes the following diagnostic sensor entity:</p></section><section><h2>Data updates</h2><p>The integration uses a local push architecture via WebSocket. When a door&#x27;s lock or position status changes, or when the emergency mode (evacuation or lockdown) is updated, the UniFi Access controller pushes updates to Home Assistant in real time. No polling is performed.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for UniFi Access.</p><p>The <strong>discovery confirm</strong> configuration step lists <code>api_token</code>, <code>verify_ssl</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_token</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_token</code>, <code>host</code>, <code>verify_ssl</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_token</code>, <code>host</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>event</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set lock rule</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Data updates</li><li>Examples</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/unifi_access/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/unifi_access</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/unifi_access</code></dd></dl></section><p><a href="../../integrations/unifi_access/">Return to the UniFi Access guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UniFi Access reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:155" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/unifi_access/">UniFi Access guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>UniFi Access</h1><p>Instructions on how to integrate UniFi Access with Home Assistant.</p><div class="reader-body"><p>The <strong>UniFi Access</strong> integration allows you to control and monitor <a>Ubiquiti UniFi Access</a> devices from Home Assistant.</p>
+<p>UniFi Access is a modern, IP-based door access control system by <a>Ubiquiti</a>. It supports a range of access readers, door locks, and hubs that can be managed through a local UniFi Access controller (such as a UniFi Dream Machine Pro or a dedicated UniFi Access application host).</p>
+<p>With this integration, you can unlock doors, see whether doors are open or closed, receive doorbell notifications, and track access events directly from your Home Assistant dashboards and automations.</p>
+<p>This integration communicates with the UniFi Access controller over the local network using its REST API and WebSocket interface, providing real-time door status updates without polling.</p>
+<h2>Supported devices</h2>
+<p>This integration supports any door managed by a UniFi Access controller, including doors equipped with:</p>
+<ul>
+<li>UniFi Access Reader (UA Reader, UA Reader Pro, UA Reader Lite)</li>
+<li>UniFi Access Lock (UA Lock)</li>
+<li>UniFi Access Hub (UA Hub, UA Hub Ultra)</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>Before setting up this integration, make sure you have the following:</p>
+<ul>
+<li><p>A running UniFi Access controller (for example, on a UniFi Dream Machine Pro or Cloud Key Gen2 Plus with the Access application installed).</p>
+</li>
+<li><p>An API token generated in the UniFi Access controller's web interface:</p>
+<ol>
+<li>Open your console's IP address in a browser and select <strong>Access</strong> at the top.</li>
+<li>In the left menu, go to <strong>Settings</strong> &gt; <strong>General</strong>, then under <strong>API Token</strong>, select <strong>Create New</strong>.</li>
+<li>Give the token a descriptive name, for example <em>Home Assistant</em>, and copy it — you will need it during setup.</li>
+</ol>
+<p>For full details, see Ubiquiti's <a>Getting Started with the Official UniFi API</a> and the <a>UniFi Access API reference (PDF)</a>, section "1.1 Create API Token &amp; Download API Documentation".</p>
+</li>
+<li><p>Your Home Assistant instance must be able to reach the UniFi Access controller on your local network.</p>
+</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>Create the token in the <strong>UniFi Access</strong> controller's web interface, as shown above. Do not use the console's <strong>Integrations</strong> page (the UniFi OS Control Plane), where UniFi Protect API keys are created. A key made there belongs to the console, and UniFi Access rejects it with a message that the key is associated with UniFi Protect. On newer consoles, the two pages look similar, so it is easy to pick the wrong one.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>UniFi Access</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>UniFi Access</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: "The hostname or IP address of the UniFi Access controller."
+API Token:
+  description: "The API token generated in the UniFi Access controller settings. See [Prerequisites](#prerequisites) for how to create one."
+Verify SSL:
+  description: "Whether to verify the SSL certificate of the controller. Disable this if you are using a self-signed certificate. Disabled by default."
+
+</code></pre>
+<h2>Supported functionality</h2>
+<h3>Entities</h3>
+<p>The <strong>UniFi Access</strong> integration provides the following entities.</p>
+<h4>Buttons</h4>
+<p>Each door registered in your UniFi Access controller is represented as an <strong>unlock button</strong> entity in Home Assistant.</p>
+<ul>
+<li><strong>Unlock</strong>: Triggers the configured door lock relay to open the door for its configured duration.</li>
+</ul>
+<h4>Events</h4>
+<p>Each door provides two <strong>event</strong> entities:</p>
+<ul>
+<li><strong>Doorbell</strong>: Fires a <code>ring</code> event when someone presses the doorbell at the door.</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Doorbell entities are created for all doors because the UniFi Access API does not expose per-door doorbell capability information. Not every hardware combination supports doorbell ring events, and there is currently no official list of supported combinations. If you do not receive ring events, your device may not support this feature.</p>
+<ul>
+<li><p><strong>Access</strong>: Fires an event when someone attempts to unlock a door:</p>
+<ul>
+<li><code>access_granted</code>: The door was successfully unlocked (API result: <code>ACCESS</code>).</li>
+<li><code>access_denied</code>: The access attempt was denied (API result: <code>BLOCKED</code> or any other non-<code>ACCESS</code> value).</li>
+</ul>
+<p>The event includes the following additional attributes when available:</p>
+<ul>
+<li><code>actor</code>: The name of the person who attempted access.</li>
+<li><code>authentication</code>: The authentication method used (for example, NFC, PIN code, Face).</li>
+<li><code>result</code>: The raw result from the UniFi Access controller (for example, <code>ACCESS</code>, <code>BLOCKED</code>).</li>
+</ul>
+</li>
+</ul>
+<h4>Images</h4>
+<ul>
+<li><strong>Door thumbnail</strong><ul>
+<li><strong>Description</strong>: Shows the most recent snapshot captured by the door's camera. The image is updated automatically whenever the UniFi Access controller sends a new thumbnail via WebSocket, for example after an access event.</li>
+</ul>
+</li>
+</ul>
+<h4>Binary sensors</h4>
+<p>Each door registered in your UniFi Access controller is represented by a <strong>binary sensor</strong> entity that reports the door position.</p>
+<ul>
+<li><strong>Door</strong>: Turns on when the door is open and off when the door is closed.</li>
+</ul>
+<h4>Switches</h4>
+<p>The integration provides two switch entities for controlling the emergency modes of your UniFi Access controller.</p>
+<p><strong>Important</strong></p>
+<p>These switches affect <em>all</em> doors managed by the controller at once and have direct physical security and safety implications. Make sure to restrict access to these switches in your dashboards and avoid triggering them accidentally in automations.</p>
+<ul>
+<li><strong>Evacuation</strong><ul>
+<li><strong>Description</strong>: Activates or deactivates the evacuation mode on your UniFi Access controller. When turned on, all doors managed by the controller are unlocked to allow evacuation.</li>
+</ul>
+</li>
+<li><strong>Lockdown</strong><ul>
+<li><strong>Description</strong>: Activates or deactivates the lockdown mode on your UniFi Access controller. When turned on, the controller triggers a facility-wide lockdown, locking all doors to restrict access.</li>
+</ul>
+</li>
+</ul>
+<h4>Selects</h4>
+<p>For controllers that support temporary lock rules, each door exposes the following select entity:</p>
+<ul>
+<li><strong>Door Lock Rule</strong>: Sets the active temporary lock rule for the door. Available options are <code>custom</code>, <code>keep_lock</code>, <code>keep_unlock</code>, <code>lock_early</code>, <code>lock_now</code>, <code>reset</code>, and <code>schedule</code>. Returns <code>unknown</code> when no temporary rule is active.</li>
+</ul>
+<h4>Sensors</h4>
+<p>For controllers that support temporary lock rules, each door also exposes the following diagnostic sensor entity:</p>
+<ul>
+<li><strong>Rule End Time</strong>: Reports the date and time when the active temporary lock rule expires. Returns <code>unknown</code> when no temporary rule is active or when the rule has no expiry.</li>
+</ul>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Data updates</h2>
+<p>The integration uses a local push architecture via WebSocket. When a door's lock or position status changes, or when the emergency mode (evacuation or lockdown) is updated, the UniFi Access controller pushes updates to Home Assistant in real time. No polling is performed.</p>
+<h2>Examples</h2>
+<h3>Send a notification when the doorbell rings</h3>
+<p>Get notified on your phone or trigger any action when someone rings a UniFi Access doorbell.</p>
+<pre><code>blueprint:
+  name: UniFi Access doorbell notification
+  description: &gt;
+    Send a notification to your phone when someone rings
+    a UniFi Access doorbell.
+  domain: automation
+  author: RaHehl
+  homeassistant:
+    min_version: 2026.7.0
+
+  input:
+    doorbell_entity:
+      name: Doorbell
+      description: &gt;
+        The UniFi Access doorbell event entity to monitor.
+      selector:
+        entity:
+          filter:
+            - integration: unifi_access
+              domain: event
+              device_class: doorbell
+
+    actions:
+      name: Actions
+      description: &gt;
+        The actions to run when the doorbell rings (for
+        example, send a notification or turn on a light).
+      default: []
+      selector:
+        action:
+
+triggers:
+  - trigger: event.received
+    target:
+      entity_id: !input doorbell_entity
+    options:
+      event_type:
+        - ring
+
+actions: !input actions
+
+mode: single
+</code></pre>
+<h3>React to door access events</h3>
+<p>Send a notification or trigger an action when someone unlocks a door or when an access attempt is denied.</p>
+<pre><code>blueprint:
+  name: UniFi Access door access notification
+  description: &gt;
+    Send a notification when someone unlocks a door or
+    when an access attempt is denied at a UniFi Access
+    door.
+  domain: automation
+  author: RaHehl
+  homeassistant:
+    min_version: 2026.7.0
+
+  input:
+    access_entity:
+      name: Access event
+      description: &gt;
+        The UniFi Access door access event entity to
+        monitor.
+      selector:
+        entity:
+          filter:
+            - integration: unifi_access
+              domain: event
+
+    event_type:
+      name: Event type
+      description: &gt;
+        The type of access event to react to.
+      selector:
+        select:
+          options:
+            - label: "Access granted"
+              value: "access_granted"
+            - label: "Access denied"
+              value: "access_denied"
+
+    actions:
+      name: Actions
+      description: &gt;
+        The actions to run when the selected access event
+        occurs (for example, send a notification or log
+        the event).
+      default: []
+      selector:
+        action:
+
+triggers:
+  - trigger: event.received
+    target:
+      entity_id: !input access_entity
+    options:
+      event_type:
+        - !input event_type
+
+actions: !input actions
+
+mode: single
+</code></pre>
+<h3>Use a UniFi Access unlock button as a HomeKit lock</h3>
+<p>HomeKit natively supports door locks, which lets you unlock doors with Siri or from the Home app. Because a door strike only supports a momentary unlock pulse — there is no physical lock state to read back — the UniFi Access integration correctly models door openers as <strong>button</strong> entities. This is by design and cannot be changed within the integration itself. As a result, HomeKit Bridge cannot expose them as locks directly.</p>
+<p>You can work around this by creating a <strong>Template Lock</strong> helper that wraps the unlock button. The lock always reports as <em>locked</em> (because the door re-locks itself after the momentary pulse), and the unlock action calls the button. HomeKit handles this pattern gracefully.</p>
+<h4>Step 1: Create a Template Lock helper</h4>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Helpers</strong>.</li>
+<li>Select <strong>+ Create helper</strong>.</li>
+<li>Select <strong>Template</strong>, then select <strong>Template Lock</strong>.</li>
+<li>Fill in the form:<ul>
+<li><strong>Name</strong>: for example, <code>Front door</code>.</li>
+<li><strong>Value template</strong>: enter <code>true</code> (this makes the lock always report as <em>locked</em>, which is correct for a door that re-locks itself after each pulse).</li>
+<li><strong>Lock action</strong>: leave empty (no-op).</li>
+<li><strong>Unlock action</strong>: use the action picker to select <code>button.press</code>, then choose your UniFi Access unlock button entity, for example <code>button.front_door_unlock</code>.</li>
+<li><strong>Open action</strong>: leave empty.</li>
+</ul>
+</li>
+<li>Select <strong>Submit</strong>.</li>
+</ol>
+<h4>Step 2: Expose the lock to HomeKit Bridge</h4>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and open your <strong>HomeKit Bridge</strong> integration.</li>
+<li>Select <strong>Configure</strong> on your bridge instance.</li>
+<li>Verify that the newly created <code>lock.front_door</code> entity is not filtered out. If needed, add it explicitly under the entity filter.</li>
+<li>Restart Home Assistant so the new lock entity is picked up by HomeKit Bridge.</li>
+</ol>
+<p>After restarting, HomeKit Bridge automatically exposes the entity as a <strong>Door Lock</strong> accessory in the Home app.</p>
+<h4>How it works</h4>
+<ul>
+<li>Saying <em>"Hey Siri, unlock the front door"</em> sends an unlock command to Home Assistant, which calls <code>button.press</code> on the UniFi Access unlock button.</li>
+<li>The door opens momentarily and then re-locks itself.</li>
+<li>Because the value template always returns <code>true</code> (locked), HomeKit correctly shows the door as locked again after the pulse — no extra automation is needed.</li>
+</ul>
+<h2>Known limitations</h2>
+<ul>
+<li><strong>No per-door lock command</strong>: The UniFi Access API only supports unlocking individual door entities. The controller-wide lockdown emergency mode is a separate feature and can lock all doors simultaneously.</li>
+<li><strong>Single controller</strong>: Each configuration entry connects to one UniFi Access controller. If you have multiple controllers, add a separate integration entry for each.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Cannot connect to the controller</h3>
+<h4>Symptom: "Could not connect" error during setup</h4>
+<p>When trying to set up the integration, the form shows a connection error.</p>
+<h5>Description</h5>
+<p>This means your Home Assistant instance cannot reach the UniFi Access controller on the network.</p>
+<h5>Resolution</h5>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Verify that the UniFi Access controller is reachable from your Home Assistant instance (check the host or IP address).</li>
+<li>Make sure no firewall is blocking the connection.</li>
+<li>Ensure the UniFi Access application is running on the controller.</li>
+</ol>
+<h3>Invalid authentication</h3>
+<h4>Symptom: "Invalid authentication" error during setup</h4>
+<p>The integration reports invalid authentication when trying to connect.</p>
+<h5>Description</h5>
+<p>The API token may have been revoked, expired, or entered incorrectly.</p>
+<h5>Resolution</h5>
+<p>To resolve this issue, try the following steps:</p>
+<ol>
+<li>Verify that the API token has not been revoked or expired in the UniFi Access controller settings.</li>
+<li>Re-enter the token or generate a new one.</li>
+<li>If the integration was already set up, use the <strong>Reconfigure</strong> option in the integration settings.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<p>After removal, you may also want to revoke the API token in your UniFi Access controller settings.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/unifi_access.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate UniFi Access with Home Assistant.
+ha_release: 2026.4
+ha_domain: unifi_access
+---
+
+The **UniFi Access** {% term integration %} allows you to control and monitor [Ubiquiti UniFi Access](https://ui.com/door-access) devices from Home Assistant.
+
+UniFi Access is a modern, IP-based door access control system by [Ubiquiti](https://ui.com). It supports a range of access readers, door locks, and hubs that can be managed through a local UniFi Access controller (such as a UniFi Dream Machine Pro or a dedicated UniFi Access application host).
+
+With this integration, you can unlock doors, see whether doors are open or closed, receive doorbell notifications, and track access events directly from your Home Assistant dashboards and automations.
+
+This integration communicates with the UniFi Access controller over the local network using its REST API and WebSocket interface, providing real-time door status updates without polling.
+
+## Supported devices
+
+This integration supports any door managed by a UniFi Access controller, including doors equipped with:
+
+- UniFi Access Reader (UA Reader, UA Reader Pro, UA Reader Lite)
+- UniFi Access Lock (UA Lock)
+- UniFi Access Hub (UA Hub, UA Hub Ultra)
+
+## Prerequisites
+
+Before setting up this integration, make sure you have the following:
+
+- A running UniFi Access controller (for example, on a UniFi Dream Machine Pro or Cloud Key Gen2 Plus with the Access application installed).
+- An API token generated in the UniFi Access controller&#x27;s web interface:
+  1. Open your console&#x27;s IP address in a browser and select **Access** at the top.
+  2. In the left menu, go to **Settings** &gt; **General**, then under **API Token**, select **Create New**.
+  3. Give the token a descriptive name, for example _Home Assistant_, and copy it — you will need it during setup.
+
+  For full details, see Ubiquiti&#x27;s [Getting Started with the Official UniFi API](https://help.ui.com/hc/en-us/articles/30076656117655-Getting-Started-with-the-Official-UniFi-API) and the [UniFi Access API reference (PDF)](https://assets.identity.ui.com/unifi-access/api_reference.pdf), section &quot;1.1 Create API Token &amp; Download API Documentation&quot;.
+- Your Home Assistant instance must be able to reach the UniFi Access controller on your local network.
+
+{% important %}
+Create the token in the **UniFi Access** controller&#x27;s web interface, as shown above. Do not use the console&#x27;s **Integrations** page (the UniFi OS Control Plane), where UniFi Protect API keys are created. A key made there belongs to the console, and UniFi Access rejects it with a message that the key is associated with UniFi Protect. On newer consoles, the two pages look similar, so it is easy to pick the wrong one.
+{% endimportant %}
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: &quot;The hostname or IP address of the UniFi Access controller.&quot;
+API Token:
+  description: &quot;The API token generated in the UniFi Access controller settings. See [Prerequisites](#prerequisites) for how to create one.&quot;
+Verify SSL:
+  description: &quot;Whether to verify the SSL certificate of the controller. Disable this if you are using a self-signed certificate. Disabled by default.&quot;
+{% endconfiguration_basic %}
+
+## Supported functionality
+
+### Entities
+
+The **UniFi Access** integration provides the following entities.
+
+#### Buttons
+
+Each door registered in your UniFi Access controller is represented as an **unlock button** entity in Home Assistant.
+
+- **Unlock**: Triggers the configured door lock relay to open the door for its configured duration.
+
+#### Events
+
+Each door provides two **event** entities:
+
+- **Doorbell**: Fires a `ring` event when someone presses the doorbell at the door.
+
+  {% note %}
+  Doorbell entities are created for all doors because the UniFi Access API does not expose per-door doorbell capability information. Not every hardware combination supports doorbell ring events, and there is currently no official list of supported combinations. If you do not receive ring events, your device may not support this feature.
+  {% endnote %}
+
+- **Access**: Fires an event when someone attempts to unlock a door:
+  - `access_granted`: The door was successfully unlocked (API result: `ACCESS`).
+  - `access_denied`: The access attempt was denied (API result: `BLOCKED` or any other non-`ACCESS` value).
+
+  The event includes the following additional attributes when available:
+  - `actor`: The name of the person who attempted access.
+  - `authentication`: The authentication method used (for example, NFC, PIN code, Face).
+  - `result`: The raw result from the UniFi Access controller (for example, `ACCESS`, `BLOCKED`).
+
+#### Images
+
+- **Door thumbnail**
+  - **Description**: Shows the most recent snapshot captured by the door&#x27;s camera. The image is updated automatically whenever the UniFi Access controller sends a new thumbnail via WebSocket, for example after an access event.
+
+#### Binary sensors
+
+Each door registered in your UniFi Access controller is represented by a **binary sensor** entity that reports the door position.
+
+- **Door**: Turns on when the door is open and off when the door is closed.
+
+#### Switches
+
+The integration provides two switch entities for controlling the emergency modes of your UniFi Access controller.
+
+{% important %}
+These switches affect _all_ doors managed by the controller at once and have direct physical security and safety implications. Make sure to restrict access to these switches in your dashboards and avoid triggering them accidentally in automations.
+{% endimportant %}
+
+- **Evacuation**
+  - **Description**: Activates or deactivates the evacuation mode on your UniFi Access controller. When turned on, all doors managed by the controller are unlocked to allow evacuation.
+- **Lockdown**
+  - **Description**: Activates or deactivates the lockdown mode on your UniFi Access controller. When turned on, the controller triggers a facility-wide lockdown, locking all doors to restrict access.
+
+#### Selects
+
+For controllers that support temporary lock rules, each door exposes the following select entity:
+
+- **Door Lock Rule**: Sets the active temporary lock rule for the door. Available options are `custom`, `keep_lock`, `keep_unlock`, `lock_early`, `lock_now`, `reset`, and `schedule`. Returns `unknown` when no temporary rule is active.
+
+#### Sensors
+
+For controllers that support temporary lock rules, each door also exposes the following diagnostic sensor entity:
+
+- **Rule End Time**: Reports the date and time when the active temporary lock rule expires. Returns `unknown` when no temporary rule is active or when the rule has no expiry.
+
+{% include integrations/actions.md %}
+
+## Data updates
+
+The integration uses a local push architecture via WebSocket. When a door&#x27;s lock or position status changes, or when the emergency mode (evacuation or lockdown) is updated, the UniFi Access controller pushes updates to Home Assistant in real time. No {% term polling %} is performed.
+
+## Examples
+
+### Send a notification when the doorbell rings
+
+Get notified on your phone or trigger any action when someone rings a UniFi Access doorbell.
+
+{% blueprint_example blueprint=&quot;unifi_access/doorbell_notification.yaml&quot; %}
+
+### React to door access events
+
+Send a notification or trigger an action when someone unlocks a door or when an access attempt is denied.
+
+{% blueprint_example blueprint=&quot;unifi_access/door_access_notification.yaml&quot; %}
+
+### Use a UniFi Access unlock button as a HomeKit lock
+
+HomeKit natively supports door locks, which lets you unlock doors with Siri or from the Home app. Because a door strike only supports a momentary unlock pulse — there is no physical lock state to read back — the UniFi Access integration correctly models door openers as **button** entities. This is by design and cannot be changed within the integration itself. As a result, HomeKit Bridge cannot expose them as locks directly.
+
+You can work around this by creating a **Template Lock** helper that wraps the unlock button. The lock always reports as _locked_ (because the door re-locks itself after the momentary pulse), and the unlock action calls the button. HomeKit handles this pattern gracefully.
+
+#### Step 1: Create a Template Lock helper
+
+1. Go to {% my helpers title=&quot;**Settings** &gt; **Devices &amp; services** &gt; **Helpers**&quot; %}.
+2. Select **+ Create helper**.
+3. Select **Template**, then select **Template Lock**.
+4. Fill in the form:
+   - **Name**: for example, `Front door`.
+   - **Value template**: enter `true` (this makes the lock always report as _locked_, which is correct for a door that re-locks itself after each pulse).
+   - **Lock action**: leave empty (no-op).
+   - **Unlock action**: use the action picker to select `button.press`, then choose your UniFi Access unlock button entity, for example `button.front_door_unlock`.
+   - **Open action**: leave empty.
+5. Select **Submit**.
+
+#### Step 2: Expose the lock to HomeKit Bridge
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and open your **HomeKit Bridge** integration.
+2. Select **Configure** on your bridge instance.
+3. Verify that the newly created `lock.front_door` entity is not filtered out. If needed, add it explicitly under the entity filter.
+4. Restart Home Assistant so the new lock entity is picked up by HomeKit Bridge.
+
+After restarting, HomeKit Bridge automatically exposes the entity as a **Door Lock** accessory in the Home app.
+
+#### How it works
+
+- Saying _&quot;Hey Siri, unlock the front door&quot;_ sends an unlock command to Home Assistant, which calls `button.press` on the UniFi Access unlock button.
+- The door opens momentarily and then re-locks itself.
+- Because the value template always returns `true` (locked), HomeKit correctly shows the door as locked again after the pulse — no extra automation is needed.
+
+## Known limitations
+
+- **No per-door lock command**: The UniFi Access API only supports unlocking individual door entities. The controller-wide lockdown emergency mode is a separate feature and can lock all doors simultaneously.
+- **Single controller**: Each configuration entry connects to one UniFi Access controller. If you have multiple controllers, add a separate integration entry for each.
+
+## Troubleshooting
+
+### Cannot connect to the controller
+
+#### Symptom: &quot;Could not connect&quot; error during setup
+
+When trying to set up the integration, the form shows a connection error.
+
+##### Description
+
+This means your Home Assistant instance cannot reach the UniFi Access controller on the network.
+
+##### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Verify that the UniFi Access controller is reachable from your Home Assistant instance (check the host or IP address).
+2. Make sure no firewall is blocking the connection.
+3. Ensure the UniFi Access application is running on the controller.
+
+### Invalid authentication
+
+#### Symptom: &quot;Invalid authentication&quot; error during setup
+
+The integration reports invalid authentication when trying to connect.
+
+##### Description
+
+The API token may have been revoked, expired, or entered incorrectly.
+
+##### Resolution
+
+To resolve this issue, try the following steps:
+
+1. Verify that the API token has not been revoked or expired in the UniFi Access controller settings.
+2. Re-enter the token or generate a new one.
+3. If the integration was already set up, use the **Reconfigure** option in the integration settings.
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+
+After removal, you may also want to revoke the API token in your UniFi Access controller settings.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for UniFi Access.</p><p>The <strong>discovery confirm</strong> configuration step lists <code>api_token</code>, <code>verify_ssl</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_token</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>api_token</code>, <code>host</code>, <code>verify_ssl</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_token</code>, <code>host</code>, <code>verify_ssl</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>event</li><li>select</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>set lock rule</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Supported functionality</li><li>Data updates</li><li>Examples</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/unifi_access/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/unifi_access</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/unifi_access</code></dd></dl></section><p><a href="../../integrations/unifi_access/">Return to the UniFi Access guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

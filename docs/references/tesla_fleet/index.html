@@ -1,1 +1,1493 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tesla Fleet reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:10" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tesla_fleet/">Tesla Fleet guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Tesla Fleet</h1><p>Instructions on how to integrate the Tesla Fleet API within Home Assistant.</p><section><h2>Overview</h2><p>The Tesla Fleet integration lets you control Tesla vehicles and energy sites using the Tesla Fleet API.</p></section><section><h2>Prerequisites</h2><p>You need to configure developer credentials and host a public key file to allow Home Assistant to communicate with your Tesla account.</p></section><section><h2>Tesla Developer Application</h2><p>Create a Tesla Developer Application to connect Home Assistant with the Tesla Fleet API.</p></section><section><h2>Hosting with NGINX app (optional)</h2><p>2. Copy the public key shown during setup to /share/tesla</p></section><section><h2>Data updates</h2><p>The integration polling polls each vehicle every 10 minutes while it&#x27;s awake. This is designed to stay within Tesla&#x27;s $10 monthly credit for most users, which you can monitor usage in the Tesla Developer Dashboard. Energy product APIs are free to use.</p></section><section><h2>Command signing</h2><p>Certain vehicles, including all vehicles manufactured since late 2023, require vehicle commands to be signed with a private key. All actions on vehicle entities will fail with an error if this is required and the key has not been set up correctly.</p></section><section><h2>Generating your own key pair</h2><p>The integration generates a private key automatically at config/tesla_fleet.key. You can replace it with your own key (such as one from another Home Assistant instance) before configuring the integration. You can generate your own key pair following Tesla&#x27;s documentation.</p></section><section><h2>Entities</h2><p>These are the entities available in the Tesla Fleet integration. Not all entities are enabled by default, and not all values are always available.</p></section><section><h2>Tesla Fleet automation examples</h2><p>You can use the navigation actions to get your car ready for the trip before you get in.</p></section><section><h2>Automation: navigate to your next appointment</h2><p>Half an hour before a calendar event starts, send the event&#x27;s location to the car.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Tesla Fleet.</p><p>The <strong>domain input</strong> configuration step lists <code>domain</code>.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><p>The <strong>region</strong> configuration step lists <code>region</code>.</p><p>The <strong>registration complete</strong> configuration step lists <code>qr_code</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>device tracker</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>navigate to coordinates</li><li>navigate to destination</li><li>navigate to waypoints</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Tesla Developer Application</li><li>Hosting with NGINX app (optional)</li><li>Data updates</li><li>Command signing</li><li>Generating your own key pair</li><li>Entities</li><li>Tesla Fleet automation examples</li><li>Vehicle sleep</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tesla_fleet/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tesla_fleet</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tesla_fleet</code></dd></dl></section><p><a href="../../integrations/tesla_fleet/">Return to the Tesla Fleet guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tesla Fleet reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:10" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/tesla_fleet/">Tesla Fleet guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Tesla Fleet</h1><p>Instructions on how to integrate the Tesla Fleet API within Home Assistant.</p><div class="reader-body"><p>The <strong>Tesla Fleet</strong> integration lets you control Tesla vehicles and energy sites using the <a>Tesla Fleet API</a>.</p>
+<h2>Prerequisites</h2>
+<p>You need to configure developer credentials and host a public key file to allow Home Assistant to communicate with your Tesla account.</p>
+<ul>
+<li>A <a>Tesla</a> account with verified email</li>
+<li>A web domain to host your public key file:<ul>
+<li><a>NGINX Home Assistant SSL proxy app</a> (recommended)</li>
+<li>External hosting service, such as <a>FleetKey.net</a> or <a>MyTeslamate.com</a></li>
+</ul>
+</li>
+</ul>
+<p><strong>Warning</strong></p>
+<p>The China region is currently not supported by this integration.</p>
+<h2>Tesla Developer Application</h2>
+<p>Create a Tesla Developer Application to connect Home Assistant with the Tesla Fleet API.</p>
+<ol>
+<li><p>Create a developer application:</p>
+<ul>
+<li>Go to <a>developer.tesla.com/request</a></li>
+<li>Select your Tesla account from the dropdown</li>
+</ul>
+</li>
+<li><p>Enter application details:</p>
+<ul>
+<li>Application name: A name to identify the application</li>
+<li>Description: Enter a brief description of your integration</li>
+<li>Purpose of Usage: Explain how you'll use the API (e.g., "Home Assistant")</li>
+</ul>
+</li>
+<li><p>Configure client details:</p>
+<ul>
+<li>OAuth Grant Type: Select <strong>Authorization Code and Machine-to-Machine</strong></li>
+<li>Allowed Origin URL(s): Enter your domain's URL, for example <code>https://yourdomain.com/</code></li>
+<li>Allowed Redirect URI: Enter one of the following:<ul>
+<li>The literal string <code>https://my.home-assistant.io/redirect/oauth</code> if the <a href="../my/"><code>My Home Assistant</code></a> integration is enabled (it is by default).<ul>
+<li>Home Assistant uses <a>this service</a> by default to redirect requests towards your instance.</li>
+</ul>
+</li>
+<li><code>&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback</code> if you do not have the <a href="../my/"><code>My Home Assistant</code></a> integration enabled.</li>
+</ul>
+</li>
+<li>Allowed Returned URL(s): Leave this field empty (not required)</li>
+</ul>
+</li>
+<li><p>Select desired API scopes:</p>
+<ul>
+<li>Vehicle Information (mandatory for vehicles)</li>
+<li>Vehicle Location (recommended)</li>
+<li>Vehicle Commands (recommended)</li>
+<li>Energy Product Information (mandatory for energy products)</li>
+<li>Energy Product Settings (recommended)</li>
+</ul>
+</li>
+<li><p>Set up billing (optional):</p>
+<ul>
+<li>Tesla provides $10 monthly credit for personal use</li>
+<li>You can add billing details later if needed</li>
+</ul>
+</li>
+<li><p>Save your credentials:</p>
+<ul>
+<li>After creating the application, go to <strong>View Details</strong> &gt; <strong>Credentials &amp; APIs</strong></li>
+<li>Note your <strong>Client ID</strong> and <strong>Client Secret</strong> - you'll need these to configure Home Assistant.</li>
+</ul>
+</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Tesla Fleet</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Tesla Fleet</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<ol>
+<li><p>Add application credentials</p>
+<ul>
+<li>Enter your application Client ID and Client Secret from your Tesla Developer Application.</li>
+<li>This step will be skipped if you already have exactly one Tesla Fleet <a href="../application_credentials/">application credential</a> already configured.</li>
+</ul>
+</li>
+<li><p>Authenticate with Tesla:</p>
+<ul>
+<li>You'll be redirected to Tesla's login page.</li>
+<li>Enter your Tesla account credentials.</li>
+<li>On the authorization page, select <strong>Select All</strong> and then <strong>Allow</strong> to allow all the scopes you previously selected.</li>
+</ul>
+</li>
+<li><p>Redirect to Home Assistant:</p>
+<ul>
+<li>Confirm you want to <strong>Link account to Home Assistant</strong>.</li>
+</ul>
+</li>
+<li><p>Select region:</p>
+<ul>
+<li>Home Assistant detects the region for your Tesla account and selects it for you, so most people can just select <strong>Submit</strong>.</li>
+<li>If your vehicles or energy sites are registered in a different region, select the correct region from the list before continuing.</li>
+</ul>
+</li>
+<li><p>Enter domain:</p>
+<ul>
+<li>Enter the domain name you intend to host your public key on.</li>
+<li>This domain should be the same or a subdomain of your origin domain, and must use a valid SSL certificate.</li>
+</ul>
+</li>
+<li><p>Register public key:</p>
+<ul>
+<li>Upload the public key shown to the domain you entered in step 5 at <code>.well-known/appspecific/com.tesla.3p.public-key.pem</code>.</li>
+</ul>
+</li>
+<li><p>Install virtual key:</p>
+<ul>
+<li>Use your smartphone to scan the QR code or enter the address to install your public key on your vehicles with the Tesla app.</li>
+<li>This process needs to be repeated for each vehicle, excluding Model S and Model X vehicles manufactured before 2021.</li>
+</ul>
+</li>
+</ol>
+<h2>Hosting with NGINX app (optional)</h2>
+<ol>
+<li><p>Create the NGINX configuration:</p>
+<pre><code>echo 'location /.well-known/appspecific/com.tesla.3p.public-key.pem {
+root /share/tesla;
+}' &gt; /share/nginx_proxy_default_tesla.conf
+</code></pre>
+</li>
+<li><p>Copy the public key shown during setup to <code>/share/tesla</code></p>
+</li>
+<li><p>Configure the NGINX app:</p>
+<ul>
+<li>Go to <strong>Settings</strong> &gt; <strong>Apps</strong> &gt; <strong>NGINX Home Assistant SSL proxy</strong> &gt; <strong>Configuration</strong></li>
+<li>Change <code>customize.active</code> from <code>false</code> to <code>true</code></li>
+<li>Leave <code>config.default</code> at its default value: <code>nginx_proxy_default*.conf</code></li>
+</ul>
+</li>
+<li><p>Restart the NGINX app and verify your public key is accessible at:
+<code>https://yourdomain.com/.well-known/appspecific/com.tesla.3p.public-key.pem</code></p>
+</li>
+</ol>
+<h2>Data updates</h2>
+<p>The integration polling polls each vehicle every 10 minutes while it's awake. This is designed to stay within Tesla's $10 monthly credit for most users, which you can monitor usage in the <a>Tesla Developer Dashboard</a>. Energy product APIs are free to use.</p>
+<p>If you need different polling intervals, you can <a>define a custom polling interval</a>.</p>
+<h2>Command signing</h2>
+<p>Certain vehicles, including all vehicles manufactured since late 2023, require vehicle commands to be signed with a private key. All actions on vehicle entities will fail with an error if this is required and the key has not been set up correctly.</p>
+<p>Your public key must be added to each of these vehicles by visiting <code>https://tesla.com/_ak/YOUR_DOMAIN</code> and following the instructions in the Tesla app.
+If you're using an iPhone, you may need to use Safari to open the webpage and finish the setup.</p>
+<p>For more details see <a>Tesla Fleet API vehicle commands documentation</a>.</p>
+<h2>Generating your own key pair</h2>
+<p>The integration generates a private key automatically at <code>config/tesla_fleet.key</code>. You can replace it with your own key (such as one from another Home Assistant instance) before configuring the integration. You can generate your own key pair following <a>Tesla's documentation</a>.</p>
+<h2>Entities</h2>
+<p>These are the entities available in the Tesla Fleet integration. Not all entities are enabled by default, and not all values are always available.</p>
+<h3>Vehicles</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Binary sensor</td>
+  <td>Battery heater</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Cabin overheat protection actively cooling</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charge cable</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Charger has multiple phases</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Dashcam</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front driver door</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front driver window</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front passenger door</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Front passenger window</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Preconditioning enabled</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Preconditioning</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear driver door</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear driver window</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear passenger door</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Rear passenger window</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Scheduled charging pending</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Status</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning front left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning front right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning rear left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Tire pressure warning rear right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Trip charging</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>User present</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Flash lights</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>HomeLink</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Honk horn</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Keyless driving</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Play fart</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Button</td>
+  <td>Wake</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Climate</td>
+  <td>Cabin overheat protection</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Climate</td>
+  <td>Climate</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Charge port door</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Frunk</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Sunroof</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Trunk</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Cover</td>
+  <td>Vent windows</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Device tracker</td>
+  <td>Location</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Device tracker</td>
+  <td>Route</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Lock</td>
+  <td>Charge cable lock</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Lock</td>
+  <td>Lock</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Media player</td>
+  <td>Media player</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Charge current</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Charge limit</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater front left</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater front right</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear center</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater rear right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater third row left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Seat heater third row right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Steering wheel heater</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery level</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery range</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge cable</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge energy added</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charge rate</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger current</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charger voltage</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Charging</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Destination</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Distance to arrival</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Driver temperature setting</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Estimate battery range</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Fast charger type</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Ideal battery range</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Inside temperature</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Odometer</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Outside temperature</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Passenger temperature setting</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Power</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Shift state</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Speed</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>State of charge at arrival</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time to arrival</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Time to full charge</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure front left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure front right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure rear left</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Tire pressure rear right</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Traffic delay</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Usable battery level</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto seat climate left</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto seat climate right</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Auto steering wheel heater</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Charge</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Defrost</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Sentry mode</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Update</td>
+  <td>Update</td>
+  <td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3>Energy sites</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Binary sensor</td>
+  <td>Backup capable</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid services active</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Grid services enabled</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Binary sensor</td>
+  <td>Storm watch active</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Backup reserve</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Number</td>
+  <td>Off grid reserve</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Allow export</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Select</td>
+  <td>Operation mode</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Battery power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from battery</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from generator</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from grid</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Consumer imported from solar</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Energy left</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Generator exported</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Generator power</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from battery</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from generator</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid exported from solar</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid imported</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services exported</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services imported</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Grid services power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Home usage</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Island status</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Load power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Percentage charged</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar exported</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar generated</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Solar power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Total pack energy</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Version</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>VPP backup reserve</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Allow charging from grid</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Switch</td>
+  <td>Storm watch</td>
+  <td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3>Wall connector</h3>
+<table>
+<thead>
+<tr>
+  <th>Domain</th>
+  <th>Name</th>
+  <th>Enabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Sensor</td>
+  <td>Fault state</td>
+  <td>No</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Power</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>State</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Sensor</td>
+  <td>Vehicle</td>
+  <td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Tesla Fleet automation examples</h2>
+<p>You can use the navigation actions to get your car ready for the trip before you get in.</p>
+<p>For a trip with intermediate stops, use <a>Navigate to waypoints</a> and supply Google Place IDs in travel order, with the final destination last.</p>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: navigate to your next appointment</h3>
+<p>Half an hour before a calendar event starts, send the event's location to the car.</p>
+<ul>
+<li><strong>Trigger</strong>: Calendar: 30 minutes before an event starts</li>
+<li><strong>Condition</strong>: The event has a location</li>
+<li><strong>Action</strong>: Navigate to destination</li>
+</ul>
+<h4>YAML example for navigating to your next appointment</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Navigate to next appointment"
+triggers:
+- trigger: calendar
+entity_id: calendar.personal
+event: start
+offset: "-0:30:0"
+conditions:
+- condition: template
+value_template: "{{ trigger.calendar_event.location | default('', true) != '' }}"
+actions:
+- action: tesla_fleet.navigate_to_destination
+data:
+device_id: 0d462c0c4c0b064b1a91cdbd1ffcbd31
+destination: "{{ trigger.calendar_event.location }}"</p>
+<h3>Automation: navigate home when leaving work</h3>
+<p>When you leave the work zone, send your home location to the car.</p>
+<ul>
+<li><strong>Trigger</strong>: Zone: you leave the work zone</li>
+<li><strong>Action</strong>: Navigate to coordinates</li>
+</ul>
+<h4>YAML example for navigating home when leaving work</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Navigate home when leaving work"
+triggers:
+- trigger: zone
+entity_id: person.alex
+zone: zone.work
+event: leave
+actions:
+- action: tesla_fleet.navigate_to_coordinates
+data:
+device_id: 0d462c0c4c0b064b1a91cdbd1ffcbd31
+gps:
+latitude: "{{ state_attr('zone.home', 'latitude') }}"
+longitude: "{{ state_attr('zone.home', 'longitude') }}"</p>
+<h2>Vehicle sleep</h2>
+<p>Constant API polling will prevent most Model S and Model X vehicles manufactured before 2021 from sleeping. The integration automatically stops polling these vehicles for 15 minutes after inactivity. You can call the <code>homeassistant.update_entity</code> action to force polling, which will reset the timer.</p>
+<p><strong>Note</strong></p>
+<p>Vehicles manufactured outside of those mentioned above have no issues with prevented sleep.</p>
+<h2>Troubleshooting</h2>
+<h3>Tesla Developer Dashboard does not continue after selecting <strong>Next</strong></h3>
+<h4>Symptom</h4>
+<p>When configuring <strong>Client Details</strong> in the Tesla Developer Dashboard, selecting <strong>Next</strong> does not continue to the next step and no validation error is shown.</p>
+<h4>Resolution</h4>
+<p>Tesla may reject some origin domains without displaying a validation error. <code>ddns.net</code> hostnames have been observed to be rejected. If your origin URL uses <code>ddns.net</code>, use a different hostname that does not end in <code>ddns.net</code>, or use an external hosting service such as <a>FleetKey</a>.</p>
+<ul>
+<li><strong>Setup errors</strong>: Verify your public key is accessible at the correct URL and you've completed all registration steps with Tesla</li>
+<li><strong>Command failures</strong>: Ensure <code>tesla_fleet.key</code> exists in your Home Assistant config directory and add your public key to vehicles via <code>https://tesla.com/_ak/YOUR_DOMAIN</code></li>
+<li><strong>Integration stopped working</strong>: Use the reconfigure option in <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Tesla Fleet</strong></li>
+<li><strong>Access to this resource is not authorized</strong>: Check your <a>Tesla Developer Dashboard</a> to ensure you haven't exceeded your usage limits and add billing information if required. In certain countries, the <em>Fart</em> (remote boombox) command will also throw this error where its usage is illegal.</li>
+</ul>
+<p>If you have an error with your credentials, you can delete them in the Application Credentials user interface.</p>
+<h2>Removing the integration</h2>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>Removing the integration does not delete your Tesla Developer Application - you can remove it manually from the <a>Tesla Developer Dashboard</a> if no longer needed.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/tesla_fleet.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate the Tesla Fleet API within Home Assistant.
+ha_release: 2024.8
+ha_domain: tesla_fleet
+---
+
+The **Tesla Fleet** {% term integration %} lets you control Tesla vehicles and energy sites using the [Tesla Fleet API](https://developer.tesla.com/).
+
+## Prerequisites
+
+You need to configure developer credentials and host a public key file to allow Home Assistant to communicate with your Tesla account.
+
+- A [Tesla](https://tesla.com) account with verified email
+- A web domain to host your public key file:
+  - [NGINX Home Assistant SSL proxy app](https://github.com/home-assistant/addons/blob/master/nginx_proxy/DOCS.md) (recommended)
+  - External hosting service, such as [FleetKey.net](https://fleetkey.net) or [MyTeslamate.com](https://app.myteslamate.com/fleet)
+
+{% warning %}
+The China region is currently not supported by this {% term integration %}.
+{% endwarning %}
+
+## Tesla Developer Application
+
+Create a Tesla Developer Application to connect Home Assistant with the Tesla Fleet API.
+
+1. Create a developer application:
+   - Go to [developer.tesla.com/request](https://developer.tesla.com/request)
+   - Select your Tesla account from the dropdown
+
+2. Enter application details:
+   - Application name: A name to identify the application
+   - Description: Enter a brief description of your integration
+   - Purpose of Usage: Explain how you&#x27;ll use the API (e.g., &quot;Home Assistant&quot;)
+
+3. Configure client details:
+   - OAuth Grant Type: Select **Authorization Code and Machine-to-Machine**
+   - Allowed Origin URL(s): Enter your domain&#x27;s URL, for example `https://yourdomain.com/`
+   - Allowed Redirect URI: Enter one of the following:
+     - The literal string `https://my.home-assistant.io/redirect/oauth` if the [`My Home Assistant`](/integrations/my/) integration is enabled (it is by default).
+       - Home Assistant uses [this service](https://my.home-assistant.io/) by default to redirect requests towards your instance.
+     - `&lt;HOME_ASSISTANT_URL&gt;/auth/external/callback` if you do not have the [`My Home Assistant`](/integrations/my/) integration enabled.
+   - Allowed Returned URL(s): Leave this field empty (not required)
+
+4. Select desired API scopes:
+   - Vehicle Information (mandatory for vehicles)
+   - Vehicle Location (recommended)
+   - Vehicle Commands (recommended)
+   - Energy Product Information (mandatory for energy products)
+   - Energy Product Settings (recommended)
+
+5. Set up billing (optional):
+   - Tesla provides $10 monthly credit for personal use
+   - You can add billing details later if needed
+
+6. Save your credentials:
+   - After creating the application, go to **View Details** &gt; **Credentials &amp; APIs**
+   - Note your **Client ID** and **Client Secret** - you&#x27;ll need these to configure Home Assistant.
+
+{% include integrations/config_flow.md %}
+
+1. Add application credentials
+   - Enter your application Client ID and Client Secret from your Tesla Developer Application.
+   - This step will be skipped if you already have exactly one Tesla Fleet [application credential](/integrations/application_credentials/) already configured.
+
+2. Authenticate with Tesla:
+   - You&#x27;ll be redirected to Tesla&#x27;s login page.
+   - Enter your Tesla account credentials.
+   - On the authorization page, select **Select All** and then **Allow** to allow all the scopes you previously selected.
+
+3. Redirect to Home Assistant:
+   - Confirm you want to **Link account to Home Assistant**.
+
+4. Select region:
+   - Home Assistant detects the region for your Tesla account and selects it for you, so most people can just select **Submit**.
+   - If your vehicles or energy sites are registered in a different region, select the correct region from the list before continuing.
+5. Enter domain:
+   - Enter the domain name you intend to host your public key on.
+   - This domain should be the same or a subdomain of your origin domain, and must use a valid SSL certificate.
+6. Register public key:
+   - Upload the public key shown to the domain you entered in step 5 at `.well-known/appspecific/com.tesla.3p.public-key.pem`.
+7. Install virtual key:
+   - Use your smartphone to scan the QR code or enter the address to install your public key on your vehicles with the Tesla app.
+   - This process needs to be repeated for each vehicle, excluding Model S and Model X vehicles manufactured before 2021.
+
+## Hosting with NGINX app (optional)
+
+1. Create the NGINX configuration:
+
+   ```shell
+   echo &#x27;location /.well-known/appspecific/com.tesla.3p.public-key.pem {
+   root /share/tesla;
+   }&#x27; &gt; /share/nginx_proxy_default_tesla.conf
+   ```
+
+2. Copy the public key shown during setup to `/share/tesla`
+
+3. Configure the NGINX app:
+    - Go to **Settings** &gt; **Apps** &gt; **NGINX Home Assistant SSL proxy** &gt; **Configuration**
+    - Change `customize.active` from `false` to `true`
+    - Leave `config.default` at its default value: `nginx_proxy_default*.conf`
+
+4. Restart the NGINX app and verify your public key is accessible at:
+ `https://yourdomain.com/.well-known/appspecific/com.tesla.3p.public-key.pem`
+
+## Data updates
+
+The {% term integration %} {% term polling polls %} each vehicle every 10 minutes while it&#x27;s awake. This is designed to stay within Tesla&#x27;s $10 monthly credit for most users, which you can monitor usage in the [Tesla Developer Dashboard](https://developer.tesla.com/en_US/dashboard). Energy product APIs are free to use.
+
+If you need different polling intervals, you can [define a custom polling interval](/common-tasks/general/#defining-a-custom-polling-interval).
+
+## Command signing
+
+Certain vehicles, including all vehicles manufactured since late 2023, require vehicle commands to be signed with a private key. All {% term actions %} on vehicle {% term entities %} will fail with an error if this is required and the key has not been set up correctly.
+
+Your public key must be added to each of these vehicles by visiting `https://tesla.com/_ak/YOUR_DOMAIN` and following the instructions in the Tesla app.
+If you&#x27;re using an iPhone, you may need to use Safari to open the webpage and finish the setup.
+
+For more details see [Tesla Fleet API vehicle commands documentation](https://developer.tesla.com/docs/fleet-api/endpoints/vehicle-commands#key-pairing).
+
+## Generating your own key pair
+
+The {% term integration %} generates a private key automatically at `config/tesla_fleet.key`. You can replace it with your own key (such as one from another Home Assistant instance) before configuring the integration. You can generate your own key pair following [Tesla&#x27;s documentation](https://developer.tesla.com/docs/fleet-api/getting-started/what-is-fleet-api#step-3-generate-a-public-private-key-pair).
+
+## Entities
+
+These are the entities available in the Tesla Fleet integration. Not all entities are enabled by default, and not all values are always available.
+
+### Vehicles
+
+| Domain         | Name                                       | Enabled |
+| -------------- | ------------------------------------------ | ------- |
+| Binary sensor  | Battery heater                             | No      |
+| Binary sensor  | Cabin overheat protection actively cooling | No      |
+| Binary sensor  | Charge cable                               | Yes     |
+| Binary sensor  | Charger has multiple phases                | No      |
+| Binary sensor  | Dashcam                                    | No      |
+| Binary sensor  | Front driver door                          | Yes     |
+| Binary sensor  | Front driver window                        | Yes     |
+| Binary sensor  | Front passenger door                       | Yes     |
+| Binary sensor  | Front passenger window                     | Yes     |
+| Binary sensor  | Preconditioning enabled                    | No      |
+| Binary sensor  | Preconditioning                            | No      |
+| Binary sensor  | Rear driver door                           | Yes     |
+| Binary sensor  | Rear driver window                         | Yes     |
+| Binary sensor  | Rear passenger door                        | Yes     |
+| Binary sensor  | Rear passenger window                      | Yes     |
+| Binary sensor  | Scheduled charging pending                 | No      |
+| Binary sensor  | Status                                     | Yes     |
+| Binary sensor  | Tire pressure warning front left           | No      |
+| Binary sensor  | Tire pressure warning front right          | No      |
+| Binary sensor  | Tire pressure warning rear left            | No      |
+| Binary sensor  | Tire pressure warning rear right           | No      |
+| Binary sensor  | Trip charging                              | No      |
+| Binary sensor  | User present                               | Yes     |
+| Button         | Flash lights                               | Yes     |
+| Button         | HomeLink                                   | Yes     |
+| Button         | Honk horn                                  | Yes     |
+| Button         | Keyless driving                            | Yes     |
+| Button         | Play fart                                  | Yes     |
+| Button         | Wake                                       | Yes     |
+| Climate        | Cabin overheat protection                  | No      |
+| Climate        | Climate                                    | Yes     |
+| Cover          | Charge port door                           | Yes     |
+| Cover          | Frunk                                      | Yes     |
+| Cover          | Sunroof                                    | No      |
+| Cover          | Trunk                                      | Yes     |
+| Cover          | Vent windows                               | Yes     |
+| Device tracker | Location                                   | Yes     |
+| Device tracker | Route                                      | Yes     |
+| Lock           | Charge cable lock                          | Yes     |
+| Lock           | Lock                                       | Yes     |
+| Media player   | Media player                               | Yes     |
+| Number         | Charge current                             | Yes     |
+| Number         | Charge limit                               | Yes     |
+| Select         | Seat heater front left                     | Yes     |
+| Select         | Seat heater front right                    | Yes     |
+| Select         | Seat heater rear center                    | No      |
+| Select         | Seat heater rear left                      | No      |
+| Select         | Seat heater rear right                     | No      |
+| Select         | Seat heater third row left                 | No      |
+| Select         | Seat heater third row right                | No      |
+| Select         | Steering wheel heater                      | Yes     |
+| Sensor         | Battery level                              | Yes     |
+| Sensor         | Battery range                              | Yes     |
+| Sensor         | Charge cable                               | No      |
+| Sensor         | Charge energy added                        | Yes     |
+| Sensor         | Charge rate                                | Yes     |
+| Sensor         | Charger current                            | Yes     |
+| Sensor         | Charger power                              | Yes     |
+| Sensor         | Charger voltage                            | Yes     |
+| Sensor         | Charging                                   | Yes     |
+| Sensor         | Destination                                | No      |
+| Sensor         | Distance to arrival                        | Yes     |
+| Sensor         | Driver temperature setting                 | No      |
+| Sensor         | Estimate battery range                     | No      |
+| Sensor         | Fast charger type                          | No      |
+| Sensor         | Ideal battery range                        | No      |
+| Sensor         | Inside temperature                         | Yes     |
+| Sensor         | Odometer                                   | No      |
+| Sensor         | Outside temperature                        | Yes     |
+| Sensor         | Passenger temperature setting              | No      |
+| Sensor         | Power                                      | No      |
+| Sensor         | Shift state                                | No      |
+| Sensor         | Speed                                      | No      |
+| Sensor         | State of charge at arrival                 | No      |
+| Sensor         | Time to arrival                            | Yes     |
+| Sensor         | Time to full charge                        | Yes     |
+| Sensor         | Tire pressure front left                   | No      |
+| Sensor         | Tire pressure front right                  | No      |
+| Sensor         | Tire pressure rear left                    | No      |
+| Sensor         | Tire pressure rear right                   | No      |
+| Sensor         | Traffic delay                              | No      |
+| Sensor         | Usable battery level                       | No      |
+| Switch         | Auto seat climate left                     | Yes     |
+| Switch         | Auto seat climate right                    | Yes     |
+| Switch         | Auto steering wheel heater                 | Yes     |
+| Switch         | Charge                                     | Yes     |
+| Switch         | Defrost                                    | Yes     |
+| Switch         | Sentry mode                                | Yes     |
+| Update         | Update                                     | Yes     |
+
+### Energy sites
+
+| Domain        | Name                           | Enabled |
+|--------------|--------------------------------|---------|
+| Binary sensor | Backup capable                 | Yes     |
+| Binary sensor | Grid services active           | Yes     |
+| Binary sensor | Grid services enabled          | Yes     |
+| Binary sensor | Storm watch active             | Yes     |
+| Number        | Backup reserve                 | Yes     |
+| Number        | Off grid reserve               | Yes     |
+| Select        | Allow export                   | Yes     |
+| Select        | Operation mode                 | Yes     |
+| Sensor        | Battery power                  | Yes     |
+| Sensor        | Consumer imported from battery | No      |
+| Sensor        | Consumer imported from generator| No      |
+| Sensor        | Consumer imported from grid    | No      |
+| Sensor        | Consumer imported from solar   | No      |
+| Sensor        | Energy left                    | Yes     |
+| Sensor        | Generator exported             | Yes     |
+| Sensor        | Generator power                | No      |
+| Sensor        | Grid exported                  | Yes     |
+| Sensor        | Grid exported from battery     | No      |
+| Sensor        | Grid exported from generator   | No      |
+| Sensor        | Grid exported from solar       | No      |
+| Sensor        | Grid imported                  | No      |
+| Sensor        | Grid power                     | Yes     |
+| Sensor        | Grid services exported         | No      |
+| Sensor        | Grid services imported         | No      |
+| Sensor        | Grid services power            | Yes     |
+| Sensor        | Home usage                     | Yes     |
+| Sensor        | Island status                  | Yes     |
+| Sensor        | Load power                     | Yes     |
+| Sensor        | Percentage charged             | Yes     |
+| Sensor        | Solar exported                 | No      |
+| Sensor        | Solar generated                | Yes     |
+| Sensor        | Solar power                    | Yes     |
+| Sensor        | Total pack energy              | No      |
+| Sensor        | Version                        | Yes     |
+| Sensor        | VPP backup reserve             | Yes     |
+| Switch        | Allow charging from grid       | Yes     |
+| Switch        | Storm watch                    | Yes     |
+
+### Wall connector
+
+| Domain | Name        | Enabled |
+| ------ | ----------- | ------- |
+| Sensor | Fault state | No      |
+| Sensor | Power       | Yes     |
+| Sensor | State       | Yes     |
+| Sensor | Vehicle     | Yes     |
+
+{% include integrations/actions.md %}
+
+## Tesla Fleet automation examples
+
+You can use the navigation actions to get your car ready for the trip before you get in.
+
+For a trip with intermediate stops, use [Navigate to waypoints](/actions/tesla_fleet.navigate_to_waypoints/) and supply Google Place IDs in travel order, with the final destination last.
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: navigate to your next appointment
+
+Half an hour before a calendar event starts, send the event&#x27;s location to the car.
+
+- **Trigger**: Calendar: 30 minutes before an event starts
+- **Condition**: The event has a location
+- **Action**: Navigate to destination
+
+{% details &quot;YAML example for navigating to your next appointment&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Navigate to next appointment&quot;
+  triggers:
+    - trigger: calendar
+      entity_id: calendar.personal
+      event: start
+      offset: &quot;-0:30:0&quot;
+  conditions:
+    - condition: template
+      value_template: &quot;{{ trigger.calendar_event.location | default(&#x27;&#x27;, true) != &#x27;&#x27; }}&quot;
+  actions:
+    - action: tesla_fleet.navigate_to_destination
+      data:
+        device_id: 0d462c0c4c0b064b1a91cdbd1ffcbd31
+        destination: &quot;{{ trigger.calendar_event.location }}&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: navigate home when leaving work
+
+When you leave the work zone, send your home location to the car.
+
+- **Trigger**: Zone: you leave the work zone
+- **Action**: Navigate to coordinates
+
+{% details &quot;YAML example for navigating home when leaving work&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Navigate home when leaving work&quot;
+  triggers:
+    - trigger: zone
+      entity_id: person.alex
+      zone: zone.work
+      event: leave
+  actions:
+    - action: tesla_fleet.navigate_to_coordinates
+      data:
+        device_id: 0d462c0c4c0b064b1a91cdbd1ffcbd31
+        gps:
+          latitude: &quot;{{ state_attr(&#x27;zone.home&#x27;, &#x27;latitude&#x27;) }}&quot;
+          longitude: &quot;{{ state_attr(&#x27;zone.home&#x27;, &#x27;longitude&#x27;) }}&quot;
+{% endexample %}
+
+{% enddetails %}
+
+## Vehicle sleep
+
+Constant API {% term polling %} will prevent most Model S and Model X vehicles manufactured before 2021 from sleeping. The {% term integration %} automatically stops {% term polling %} these vehicles for 15 minutes after inactivity. You can call the `homeassistant.update_entity` {% term action %} to force {% term polling %}, which will reset the timer.
+
+{% note %} Vehicles manufactured outside of those mentioned above have no issues with prevented sleep. {% endnote %}
+
+## Troubleshooting
+
+### Tesla Developer Dashboard does not continue after selecting **Next**
+
+#### Symptom
+
+When configuring **Client Details** in the Tesla Developer Dashboard, selecting **Next** does not continue to the next step and no validation error is shown.
+
+#### Resolution
+
+Tesla may reject some origin domains without displaying a validation error. `ddns.net` hostnames have been observed to be rejected. If your origin URL uses `ddns.net`, use a different hostname that does not end in `ddns.net`, or use an external hosting service such as [FleetKey](https://fleetkey.net).
+
+- **Setup errors**: Verify your public key is accessible at the correct URL and you&#x27;ve completed all registration steps with Tesla
+- **Command failures**: Ensure `tesla_fleet.key` exists in your Home Assistant config directory and add your public key to vehicles via `https://tesla.com/_ak/YOUR_DOMAIN`
+- **{% term Integration %} stopped working**: Use the reconfigure option in {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} &gt; **Tesla Fleet**
+- **Access to this resource is not authorized**: Check your [Tesla Developer Dashboard](https://developer.tesla.com/dashboard) to ensure you haven&#x27;t exceeded your usage limits and add billing information if required. In certain countries, the *Fart* (remote boombox) command will also throw this error where its usage is illegal.
+
+If you have an error with your credentials, you can delete them in the {% my application_credentials title=&quot;Application Credentials&quot; %} user interface.
+
+## Removing the integration
+
+{% include integrations/remove_device_service.md %}
+
+- Removing the {% term integration %} does not delete your Tesla Developer Application - you can remove it manually from the [Tesla Developer Dashboard](https://developer.tesla.com/dashboard) if no longer needed.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Tesla Fleet.</p><p>The <strong>domain input</strong> configuration step lists <code>domain</code>.</p><p>The <strong>pick implementation</strong> configuration step lists <code>implementation</code>.</p><p>The <strong>region</strong> configuration step lists <code>region</code>.</p><p>The <strong>registration complete</strong> configuration step lists <code>qr_code</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>button</li><li>climate</li><li>cover</li><li>device tracker</li><li>lock</li><li>media player</li><li>number</li><li>select</li><li>sensor</li><li>switch</li><li>update</li></ul><h3>Documented actions</h3><ul class="chips"><li>navigate to coordinates</li><li>navigate to destination</li><li>navigate to waypoints</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Prerequisites</li><li>Tesla Developer Application</li><li>Hosting with NGINX app (optional)</li><li>Data updates</li><li>Command signing</li><li>Generating your own key pair</li><li>Entities</li><li>Tesla Fleet automation examples</li><li>Vehicle sleep</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/tesla_fleet/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/tesla_fleet</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/tesla_fleet</code></dd></dl></section><p><a href="../../integrations/tesla_fleet/">Return to the Tesla Fleet guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

@@ -1,1 +1,579 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Assistant frontend reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:151" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/frontend/">Home Assistant frontend guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Home Assistant frontend</h1><p>Provides the official frontend for Home Assistant.</p><section><h2>Overview</h2><p>The Frontend integration provides the official frontend to control Home Assistant. It is enabled by default unless you&#x27;ve disabled or removed the default_config: line from your configuration.yaml file. If that is the case, enable it manually by adding the following to your configuration:</p></section><section><h2>Theme format</h2><p>The frontend integration allows you to create custom themes to influence the look and feel of the user interface. Example of a configuration entry in the configuration.yaml file:</p></section><section><h2>Primary and accent color</h2><p>Primary and accent colors are the main colors of the application. They can be modified using the primary-color and accent-color variables.</p></section><section><h2>State color</h2><p>Each entity has its own color, based on domain, device_class, and state, so it is easily recognizable. These colors are used in dashboards and history. Home Assistant has default color rules that fit most use cases.</p></section><section><h2>Panel, toolbar and table backgrounds</h2><p>The following variables are not set by default. If you leave them unset, the existing backgrounds remain unchanged.</p></section><section><h2>Unsupported theme variables</h2><p>Although we do our best to keep things working, the behavior of other theme variables can change between releases. For a partial list of variables used by the main frontend see color.globals.ts.</p></section><section><h2>Dark mode support</h2><p>You can also create themes that are based on the default dark mode theme. New themes can also support both light and dark mode and let you switch between them on the user profile page:</p></section><section><h2>Theme configuration splitting</h2><p>As with all configuration, you can either:</p></section><section><h2>Applying themes</h2><p>When themes are enabled in your configuration.yaml file, you can apply them in two ways.</p></section><section><h2>Loading extra JavaScript</h2><p>The ES5 and module versions are never both loaded. Depending on whether the device supports import, either the module or the ES5 version is loaded.</p></section><section><h2>Configuration details</h2><p>The domain used to identify Home Assistant frontend in Home Assistant is <code>frontend</code>.</p><h3>Documented actions</h3><ul class="chips"><li>reload themes</li><li>set theme</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Defining themes</li><li>Applying themes</li><li>Loading extra JavaScript</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/frontend/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/frontend</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/frontend</code></dd></dl></section><p><a href="../../integrations/frontend/">Return to the Home Assistant frontend guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home Assistant frontend reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:151" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/frontend/">Home Assistant frontend guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Home Assistant frontend</h1><p>Provides the official frontend for Home Assistant.</p><div class="reader-body"><p>The <strong>Frontend</strong> integration provides the official frontend to control Home Assistant. It is enabled by default unless you've disabled or removed the <a href="../default_config/"><code>default_config:</code></a> line from your <code>configuration.yaml</code> file. If that is the case, enable it manually by adding the following to your configuration:</p>
+<pre><code># Example configuration.yaml entry
+frontend:
+</code></pre>
+<pre><code>
+  themes:
+    description: Allows you to define different themes. See [Defining themes](#defining-themes) for details.
+    required: false
+    type: map
+    keys:
+      "[identifier]":
+        description: Name to use in the frontend.
+        required: true
+        type: [list, map]
+        keys:
+          "[css-identifier]":
+            description: The CSS identifier.
+            required: true
+            type: [list, string]
+  extra_module_url:
+    description: "List of additional JavaScript modules to load in `latest` JavaScript mode."
+    required: false
+    type: list
+  extra_js_url_es5:
+    description: "List of additional JavaScript code to load in `es5` JavaScript mode."
+    required: false
+    type: list
+  development_repo:
+    description: "Allows you to point to a directory containing frontend files instead of taking them from a prebuilt PyPI package. Useful for Frontend development. For more information, see [Frontend development](https://contributors.home-assistant.io/frontend/development/)."
+    required: false
+    type: string
+  development_pr:
+    description: "Allows you to point to a specific frontend [pull request](https://github.com/home-assistant/frontend/pulls) containing frontend files instead of taking them from a prebuilt PyPI package. Useful for Frontend development. This requires `github_token` to be set. For more information, see [Frontend development](https://contributors.home-assistant.io/frontend/development/builds/#try-out-a-pull-request)."
+    required: false
+    type: integer
+  github_token:
+    description: "GitHub token to use when fetching frontend files from a specific pull request. Required when `development_pr` is set. For more information, see [Creating a GitHub token](https://contributors.home-assistant.io/frontend/development/builds/#create-a-github-token)."
+    required: false
+    type: string
+
+</code></pre>
+<h2>Defining themes</h2>
+<h3>Theme format</h3>
+<p>The frontend integration allows you to create custom themes to influence the look and feel of the user interface.
+Example of a configuration entry in the <code>configuration.yaml</code> file:</p>
+<pre><code># Example configuration.yaml entry
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+      accent-color: orange
+    sad:
+      primary-color: steelblue
+      accent-color: darkred
+</code></pre>
+<p>The example above defines two themes named <code>happy</code> and <code>sad</code>. For each theme, you can set values for CSS variables. If you want to provide hex color values, wrap those in quotation marks, since otherwise, YAML would consider them a comment (<code>primary-color: "#123456"</code>).</p>
+<h3>Supported theme variables</h3>
+<h4>Primary and accent color</h4>
+<p>Primary and accent colors are the main colors of the application.
+They can be modified using the <code>primary-color</code> and <code>accent-color</code> variables.</p>
+<h4>State color</h4>
+<p>Each entity has its own color, based on <code>domain</code>, <code>device_class</code>, and <code>state</code>, so it is easily recognizable. These colors are used in <a>dashboards</a> and <a href="../history/">history</a>. Home Assistant has default color rules that fit most use cases.</p>
+<p>Here is a list of domains that support colors: <code>alarm_control_panel</code>, <code>alert</code>, <code>automation</code>, <code>binary_sensor</code>, <code>calendar</code>, <code>camera</code>, <code>climate</code>, <code>cover</code>, <code>device_tracker</code>, <code>fan</code>, <code>group</code>, <code>humidifier</code>, <code>input_boolean</code>, <code>light</code>, <code>lock</code>, <code>media_player</code>, <code>person</code>, <code>plant</code>, <code>remote</code>, <code>schedule</code>, <code>script</code>, <code>siren</code>, <code>sun</code>, <code>switch</code>, <code>timer</code>, <code>update</code>, and <code>vacuum</code>.</p>
+<p>The color rules can be customized using theme variables:</p>
+<ol>
+<li><code>state-{domain}-{device_class}-{state}-color</code></li>
+<li><code>state-{domain}-{state}-color</code></li>
+<li><code>state-{domain}-(active|inactive)-color</code></li>
+<li><code>state-(active|inactive)-color</code></li>
+</ol>
+<p>The variables are evaluated in the listed order, so if multiple variables match your entity, the first match (the most specific one) is used.</p>
+<pre><code># Example configuration.yaml entry
+frontend:
+  themes:
+    my_theme:
+      state-cover-garage-open-color: "#ff0000"
+      state-media_player-inactive-color: "#795548"
+</code></pre>
+<p>The example above defines red color for open garage doors and brown color for inactive media players.</p>
+<h3>Panel, toolbar and table backgrounds</h3>
+<p>The following variables are not set by default. If you leave them unset, the existing backgrounds remain unchanged.</p>
+<table>
+<thead>
+<tr>
+  <th>Variable</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ha-panel-background</code></td>
+  <td>Background of the area behind all panels, such as Settings, History, Logbook, Energy, Map and Profile. Accepts any CSS <code>background</code> value (color, gradient, image, including <code>fixed</code>). Dashboards are not affected, they keep using <code>lovelace-background</code>.</td>
+</tr>
+<tr>
+  <td><code>ha-panel-toolbar-background</code></td>
+  <td>Background of the sticky search bars (Integrations, Installed apps) and of the tab bars in the automation and script traces.</td>
+</tr>
+<tr>
+  <td><code>ha-data-table-background</code></td>
+  <td>Background of data tables, including the group headers of grouped tables.</td>
+</tr>
+</tbody>
+</table>
+<pre><code>frontend:
+  themes:
+    my_theme:
+      ha-panel-background: "linear-gradient(135deg, #1e3c72, #2a5298) fixed"
+      ha-panel-toolbar-background: "rgba(0, 0, 0, 0.3)"
+      ha-data-table-background: "transparent"
+</code></pre>
+<p>Surfaces such as cards, menus and form fields keep their own colors. To see the panel background through cards, also set <code>ha-card-background</code> to a semi-transparent value.</p>
+<h3>Unsupported theme variables</h3>
+<p>Although we do our best to keep things working, the behavior of other theme variables can change between releases. For a partial list of variables used by the main frontend see <a>color.globals.ts</a>.</p>
+<h3>Dark mode support</h3>
+<p>You can also create themes that are based on the default dark mode theme. New themes can also support both light and dark mode and let you switch between them on the user profile page:</p>
+<p>Profile</p>
+<p>Here's an extended example showing the mode definitions:</p>
+<pre><code># Example configuration.yaml entry
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+      text-primary-color: purple
+    sad:
+      primary-color: steelblue
+      modes:
+        dark:
+          secondary-text-color: slategray
+    day_and_night:
+      primary-color: coral
+      modes:
+        light:
+          secondary-text-color: olive
+        dark:
+          secondary-text-color: slategray
+</code></pre>
+<p>Theme <code>happy</code>: Same as in the previous example. This legacy format is still supported and automatically uses the default light theme as the base.</p>
+<p>Theme <code>sad</code>: By using the new <code>modes</code> key plus the subkey <code>dark</code> this theme will now be based on the default dark theme. The final theme rules are determined in three steps: First, the default dark theme CSS variables will be applied, then second the CSS variables from the top level of the theme that are mode-independent (<code>primary-color: steelblue</code> in this example) and lastly the mode-specific CSS variables will be layered on top (<code>secondary-text-color: slategray</code>).</p>
+<p>Note: Since this example theme only has a <code>dark</code> mode defined, this mode will automatically be used.</p>
+<p>Theme <code>day_and_night</code>: This theme has both a <code>light</code> and a <code>dark</code> mode section. That tells the frontend to allow the user to choose which mode to use from the user profile (default selection is based on the system settings). Independent of the selection, the primary color will be set to coral, but based on the chosen mode either the default light or dark theme will be used as the basis for rendering, plus the secondary text color will be either olive or slategray.</p>
+<h3>Theme configuration splitting</h3>
+<p>As with all configuration, you can either:</p>
+<ul>
+<li>Directly specify the themes inside your <code>configuration.yaml</code> file.</li>
+<li>Put them into a separate file (for example, <code>themes.yaml</code>) and include that in your configuration (<code>themes: !include themes.yaml</code>).</li>
+<li>Create a dedicated folder (for example, <code>my_themes</code>) and include all files from within this folder (<code>themes: !include_dir_merge_named my_themes</code>).</li>
+</ul>
+<p>For more details, see <a>Splitting up the configuration</a>.</p>
+<p>Check our <a>community forums</a> to find themes to use.</p>
+<h2>Applying themes</h2>
+<p>When themes are enabled in your <code>configuration.yaml</code> file, you can apply them in two ways.</p>
+<p>The first is per user. A theme selector appears on the <strong>User profile</strong> page, which you can access by selecting your name at the bottom of the sidebar. Choose any installed theme from the dropdown list, and it is applied immediately. This choice is saved to your user profile, so it applies across your devices. It also overrides any theme set through the actions below.</p>
+<p>
+&#32;&#32;
+  Set a theme
+</p>
+
+<p>The second is system-wide, using actions. The <a>Set theme</a> action sets the default light and dark theme for everyone, for example to switch automatically between a lighter look during the day and a darker one at night. The <a>Reload themes</a> action reloads your theme definitions after you edit them in YAML.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Loading extra JavaScript</h2>
+<p>You can load extra custom JavaScript.</p>
+<p>Example:</p>
+<pre><code># Example configuration.yaml entry
+frontend:
+  extra_module_url:
+    - /local/my_module.js
+  extra_js_url_es5:
+    - /local/my_es5.js
+</code></pre>
+<p>Modules will be loaded with <code>import('{{ extra_module_url }}')</code>, on devices that support it (<code>latest</code> mode).
+For other devices (<code>es5</code> mode) you can use <code>extra_js_url_es5</code>, this will be loaded with <code>&lt;script defer src='{{ extra_js_url_es5 }}'&gt;&lt;/script&gt;</code>.</p>
+<p>The ES5 and module versions are never both loaded. Depending on whether the device supports <code>import</code>, either the module or the ES5 version is loaded.</p>
+<h3>Manual language selection</h3>
+<p>The browser language is automatically detected. To use a different language, go to <strong>User profile</strong> &gt; <strong>Localization</strong> and select one. It is applied immediately.</p>
+<p>
+&#32;&#32;
+  Choose a language
+</p>
+
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/frontend.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Provides the official frontend for Home Assistant.
+ha_release: 0.7
+ha_domain: frontend
+---
+
+The **Frontend** {% term integration %} provides the official frontend to control Home Assistant. It is enabled by default unless you&#x27;ve disabled or removed the [`default_config:`](/integrations/default_config/) line from your {% term &quot;`configuration.yaml`&quot; %} file. If that is the case, enable it manually by adding the following to your configuration:
+
+```yaml
+# Example configuration.yaml entry
+frontend:
+```
+
+{% configuration %}
+  themes:
+    description: Allows you to define different themes. See [Defining themes](#defining-themes) for details.
+    required: false
+    type: map
+    keys:
+      &quot;[identifier]&quot;:
+        description: Name to use in the frontend.
+        required: true
+        type: [list, map]
+        keys:
+          &quot;[css-identifier]&quot;:
+            description: The CSS identifier.
+            required: true
+            type: [list, string]
+  extra_module_url:
+    description: &quot;List of additional JavaScript modules to load in `latest` JavaScript mode.&quot;
+    required: false
+    type: list
+  extra_js_url_es5:
+    description: &quot;List of additional JavaScript code to load in `es5` JavaScript mode.&quot;
+    required: false
+    type: list
+  development_repo:
+    description: &quot;Allows you to point to a directory containing frontend files instead of taking them from a prebuilt PyPI package. Useful for Frontend development. For more information, see [Frontend development](https://contributors.home-assistant.io/frontend/development/).&quot;
+    required: false
+    type: string
+  development_pr:
+    description: &quot;Allows you to point to a specific frontend [pull request](https://github.com/home-assistant/frontend/pulls) containing frontend files instead of taking them from a prebuilt PyPI package. Useful for Frontend development. This requires `github_token` to be set. For more information, see [Frontend development](https://contributors.home-assistant.io/frontend/development/builds/#try-out-a-pull-request).&quot;
+    required: false
+    type: integer
+  github_token:
+    description: &quot;GitHub token to use when fetching frontend files from a specific pull request. Required when `development_pr` is set. For more information, see [Creating a GitHub token](https://contributors.home-assistant.io/frontend/development/builds/#create-a-github-token).&quot;
+    required: false
+    type: string
+{% endconfiguration %}
+
+## Defining themes
+
+### Theme format
+
+The frontend integration allows you to create custom themes to influence the look and feel of the user interface.
+Example of a configuration entry in the {% term &quot;`configuration.yaml`&quot; %} file:
+
+```yaml
+# Example configuration.yaml entry
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+      accent-color: orange
+    sad:
+      primary-color: steelblue
+      accent-color: darkred
+```
+
+The example above defines two themes named `happy` and `sad`. For each theme, you can set values for CSS variables. If you want to provide hex color values, wrap those in quotation marks, since otherwise, YAML would consider them a comment (`primary-color: &quot;#123456&quot;`).
+
+### Supported theme variables
+
+#### Primary and accent color
+
+Primary and accent colors are the main colors of the application.
+They can be modified using the `primary-color` and `accent-color` variables.
+
+#### State color
+
+Each entity has its own color, based on `domain`, `device_class`, and `state`, so it is easily recognizable. These colors are used in [dashboards](/dashboards/) and [history](/integrations/history/). Home Assistant has default color rules that fit most use cases.
+
+Here is a list of domains that support colors: `alarm_control_panel`, `alert`, `automation`, `binary_sensor`, `calendar`, `camera`, `climate`, `cover`, `device_tracker`, `fan`, `group`, `humidifier`, `input_boolean`, `light`, `lock`, `media_player`, `person`, `plant`, `remote`, `schedule`, `script`, `siren`, `sun`, `switch`, `timer`, `update`, and `vacuum`.
+
+The color rules can be customized using theme variables:
+
+1. `state-{domain}-{device_class}-{state}-color`
+2. `state-{domain}-{state}-color`
+3. `state-{domain}-(active|inactive)-color`
+4. `state-(active|inactive)-color`
+
+The variables are evaluated in the listed order, so if multiple variables match your entity, the first match (the most specific one) is used.
+
+```yaml
+# Example configuration.yaml entry
+frontend:
+  themes:
+    my_theme:
+      state-cover-garage-open-color: &quot;#ff0000&quot;
+      state-media_player-inactive-color: &quot;#795548&quot;
+```
+
+The example above defines red color for open garage doors and brown color for inactive media players.
+
+### Panel, toolbar and table backgrounds
+
+The following variables are not set by default. If you leave them unset, the existing backgrounds remain unchanged.
+
+| Variable | Description |
+| -------- | ----------- |
+| `ha-panel-background` | Background of the area behind all panels, such as Settings, History, Logbook, Energy, Map and Profile. Accepts any CSS `background` value (color, gradient, image, including `fixed`). Dashboards are not affected, they keep using `lovelace-background`. |
+| `ha-panel-toolbar-background` | Background of the sticky search bars (Integrations, Installed apps) and of the tab bars in the automation and script traces. |&#32;
+| `ha-data-table-background` | Background of data tables, including the group headers of grouped tables. |
+
+```yaml
+frontend:
+  themes:
+    my_theme:
+      ha-panel-background: &quot;linear-gradient(135deg, #1e3c72, #2a5298) fixed&quot;
+      ha-panel-toolbar-background: &quot;rgba(0, 0, 0, 0.3)&quot;
+      ha-data-table-background: &quot;transparent&quot;
+```
+
+Surfaces such as cards, menus and form fields keep their own colors. To see the panel background through cards, also set `ha-card-background` to a semi-transparent value.
+
+### Unsupported theme variables
+
+Although we do our best to keep things working, the behavior of other theme variables can change between releases. For a partial list of variables used by the main frontend see [color.globals.ts](https://github.com/home-assistant/frontend/blob/master/src/resources/theme/color/color.globals.ts).
+
+### Dark mode support
+
+You can also create themes that are based on the default dark mode theme. New themes can also support both light and dark mode and let you switch between them on the user profile page:
+
+{% my profile badge %}
+
+Here&#x27;s an extended example showing the mode definitions:
+
+```yaml
+# Example configuration.yaml entry
+frontend:
+  themes:
+    happy:
+      primary-color: pink
+      text-primary-color: purple
+    sad:
+      primary-color: steelblue
+      modes:
+        dark:
+          secondary-text-color: slategray
+    day_and_night:
+      primary-color: coral
+      modes:
+        light:
+          secondary-text-color: olive
+        dark:
+          secondary-text-color: slategray
+```
+
+Theme `happy`: Same as in the previous example. This legacy format is still supported and automatically uses the default light theme as the base.
+
+Theme `sad`: By using the new `modes` key plus the subkey `dark` this theme will now be based on the default dark theme. The final theme rules are determined in three steps: First, the default dark theme CSS variables will be applied, then second the CSS variables from the top level of the theme that are mode-independent (`primary-color: steelblue` in this example) and lastly the mode-specific CSS variables will be layered on top (`secondary-text-color: slategray`).
+
+Note: Since this example theme only has a `dark` mode defined, this mode will automatically be used.
+
+Theme `day_and_night`: This theme has both a `light` and a `dark` mode section. That tells the frontend to allow the user to choose which mode to use from the user profile (default selection is based on the system settings). Independent of the selection, the primary color will be set to coral, but based on the chosen mode either the default light or dark theme will be used as the basis for rendering, plus the secondary text color will be either olive or slategray.
+
+### Theme configuration splitting
+
+As with all configuration, you can either:
+
+- Directly specify the themes inside your {% term &quot;`configuration.yaml`&quot; %} file.
+- Put them into a separate file (for example, `themes.yaml`) and include that in your configuration (`themes: !include themes.yaml`).
+- Create a dedicated folder (for example, `my_themes`) and include all files from within this folder (`themes: !include_dir_merge_named my_themes`).
+
+For more details, see [Splitting up the configuration](/docs/configuration/splitting_configuration/).
+
+Check our [community forums](https://community.home-assistant.io/c/29) to find themes to use.
+
+## Applying themes
+
+When themes are enabled in your {% term &quot;`configuration.yaml`&quot; %} file, you can apply them in two ways.
+
+The first is per user. A theme selector appears on the {% my profile title=&quot;**User profile**&quot; %} page, which you can access by selecting your name at the bottom of the sidebar. Choose any installed theme from the dropdown list, and it is applied immediately. This choice is saved to your user profile, so it applies across your devices. It also overrides any theme set through the actions below.
+
+&lt;p class=&#x27;img&#x27;&gt;
+  &lt;img src=&#x27;/images/frontend/user-theme.png&#x27; alt=&#x27;Screenshot showing the theme selector on the user profile page&#x27; /&gt;
+  Set a theme
+&lt;/p&gt;
+
+The second is system-wide, using actions. The [Set theme](/actions/frontend.set_theme/) action sets the default light and dark theme for everyone, for example to switch automatically between a lighter look during the day and a darker one at night. The [Reload themes](/actions/frontend.reload_themes/) action reloads your theme definitions after you edit them in YAML.
+
+{% include integrations/actions.md %}
+
+## Loading extra JavaScript
+
+You can load extra custom JavaScript.
+
+Example:
+
+```yaml
+# Example configuration.yaml entry
+frontend:
+  extra_module_url:
+    - /local/my_module.js
+  extra_js_url_es5:
+    - /local/my_es5.js
+```
+
+Modules will be loaded with `import(&#x27;{{ extra_module_url }}&#x27;)`, on devices that support it (`latest` mode).
+For other devices (`es5` mode) you can use `extra_js_url_es5`, this will be loaded with `&lt;script defer src=&#x27;{{ extra_js_url_es5 }}&#x27;&gt;&lt;/script&gt;`.
+
+The ES5 and module versions are never both loaded. Depending on whether the device supports `import`, either the module or the ES5 version is loaded.
+
+### Manual language selection
+
+The browser language is automatically detected. To use a different language, go to {% my profile_localization title=&quot;**User profile** &gt; **Localization**&quot; %} and select one. It is applied immediately.
+
+&lt;p class=&#x27;img&#x27;&gt;
+  &lt;img src=&#x27;/images/frontend/user-language.png&#x27; alt=&#x27;Screenshot showing the language selector on the user profile page&#x27; /&gt;
+  Choose a language
+&lt;/p&gt;
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Home Assistant frontend in Home Assistant is <code>frontend</code>.</p><h3>Documented actions</h3><ul class="chips"><li>reload themes</li><li>set theme</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Defining themes</li><li>Applying themes</li><li>Loading extra JavaScript</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/frontend/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/frontend</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/frontend</code></dd></dl></section><p><a href="../../integrations/frontend/">Return to the Home Assistant frontend guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

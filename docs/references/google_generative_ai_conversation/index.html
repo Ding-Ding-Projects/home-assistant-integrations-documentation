@@ -1,1 +1,581 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Gemini reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:306" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/google_generative_ai_conversation/">Google Gemini guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Google Gemini</h1><p>Instructions on how to integrate Google Gemini as a conversation agent</p><section><h2>Overview</h2><p>The Google Gemini integration adds a conversation agent, speech-to-text, and text-to-speech entities powered by Google Gemini to Home Assistant. The conversation agent can optionally be allowed to control Home Assistant.</p></section><section><h2>Generate an API Key</h2><p>The API key is used to authenticate requests to the Google Gemini API. To generate an API key take the following steps:</p></section><section><h2>Google Search</h2><p>Due to an API limitation we cannot have the Google Search tool together with other tools. Request fails with 400 INVALID_ARGUMENT. {&#x27;error&#x27;: {&#x27;code&#x27;: 400, &#x27;message&#x27;: &#x27;Tool use with function calling is unsupported&#x27;, &#x27;status&#x27;: &#x27;INVALID_ARGUMENT&#x27;}}. But you can do the following workaround that exposes a script to voice assistants. The script calls a Google Gemini Conversation that only has the Google Search tool enabled.</p></section><section><h2>Using Google Gemini text-to-speech in automations</h2><p>The Google Gemini integration adds a text-to-speech entity. To play a spoken message from an automation or script, use the Speak action and select your Google Gemini text-to-speech entity as the target.</p></section><section><h2>Google Gemini text-to-speech action options</h2><p>Google Gemini detects the input language automatically. For supported languages, see the Google AI speech generation documentation.</p></section><section><h2>Talking to Super Mario</h2><p>You can use Google Gemini to follow the Super Mario voice assistant tutorial and let him control devices in your home.</p></section><section><h2>Video tutorial</h2><p>This video tutorial explains how Google Gemini can be set up, how you can send an AI-generated message to your smart speaker when you arrive home, and how you can analyze an image taken from your doorbell camera as soon as someone rings the doorbell.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Google Gemini.</p><p>The <strong>api</strong> configuration step lists <code>api_key</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Generate an API Key</li><li>Google Search</li><li>Using Google Gemini text-to-speech in automations</li><li>Talking to Super Mario</li><li>Video tutorial</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/google_generative_ai_conversation/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/google_generative_ai_conversation</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/google_generative_ai_conversation</code></dd></dl></section><p><a href="../../integrations/google_generative_ai_conversation/">Return to the Google Gemini guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Google Gemini reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:306" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/google_generative_ai_conversation/">Google Gemini guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Google Gemini</h1><p>Instructions on how to integrate Google Gemini as a conversation agent</p><div class="reader-body"><p>The <strong>Google Gemini</strong> integration adds a conversation agent, speech-to-text, and text-to-speech entities powered by <a>Google Gemini</a> to Home Assistant. The conversation agent can optionally be allowed to control Home Assistant.</p>
+<p>Controlling Home Assistant is done by providing the AI access to the <strong>Device control</strong> set of tools. You can control what devices and entities it can access from the exposed entities page. The AI can provide you information about your devices and control them.</p>
+<p>When you talk to a Google Gemini conversation agent through an assistant, Home Assistant first checks your <a>sentence triggers</a>. If one of them matches, the sentence trigger answers, and the conversation agent doesn't get the sentence. Sentence triggers don't run when you call the conversation agent directly, for example with the <code>conversation.process</code> action. They also don't run when you answer a follow-up question from the conversation agent.</p>
+<p>This integration requires an API key to use, <a>which you can generate here</a>, and to be in one of the <a>available regions</a>.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Google Gemini</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Google Gemini</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<h2>Generate an API Key</h2>
+<p>The API key is used to authenticate requests to the Google Gemini API. To generate an API key take the following steps:</p>
+<ul>
+<li>Visit the <a>API Keys page</a> to retrieve the API key you'll use to configure the integration.</li>
+</ul>
+<p>On the same page, you can see your plan: <em>free of charge</em> if the associated Google Cloud project doesn't have billing, or <em>pay-as-you-go</em> if the associated Google Cloud project has billing enabled.
+Comparison of the plans is available <a>at this pricing page</a>. The major differences include: the free of charge plan is rate limited, and free prompts/responses are used for product improvement.</p>
+<h2>Options</h2>
+<p>To define options for Google Gemini, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Google Gemini are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this service.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+Instructions:
+  description: Instructions for the AI on how it should respond to your requests. It is written using [Home Assistant Templating](/docs/templating/).
+AI tools:
+  description: "**Device control** only accesses the entities you [expose](/voice_control/voice_remote_expose_devices/) to voice assistants. **Home Assistant** accesses everything and only works for administrators, not voice assistant devices."
+Recommended settings:
+  description: If enabled, the recommended model and settings are chosen.
+
+</code></pre>
+<p>If you choose to not use the recommended settings, you can configure the following options:</p>
+<pre><code>
+Model:
+  description: Model used to generate response.
+Temperature:
+  description: Creativity allowed in the responses for models that support custom sampling. Higher values produce a more random and varied response.
+Top P:
+  description: Probability threshold for top-p sampling. This setting applies only to models that support custom sampling.
+Top K:
+  description: Number of top-scored tokens to consider during generation. This setting applies only to models that support custom sampling.
+Maximum Tokens to Return in Response:
+  description: The maximum number of words or "tokens" that the AI model should generate.
+Thinking budget:
+  description: The token budget for internal reasoning before the model generates a response (Gemini 2.5 models only). Set this to `-1` to let the model decide automatically, `0` to disable reasoning (not available for Gemini 2.5 Pro), or a positive number for a custom budget.
+Thinking level:
+  description: The level of internal reasoning for Gemini 3 and later text models, including the latest text aliases. You can select **Minimal**, **Auto**, **Low**, **Medium**, or **High**. **Minimal** is unavailable on Pro models, the latest text aliases, and Gemini 3.6 and later models, except Gemini 3.6 Flash (not Flash-Lite). If your selected level is unsupported, the integration uses the model default and keeps your saved choice. For example, Gemini 3.8 uses the model default when you select **Minimal**. Gemini 2.5 models use the thinking budget instead.
+Safety settings:
+  description: Thresholds for different [harmful categories](https://ai.google.dev/gemini-api/docs/safety-settings).
+Enable Google Search tool:
+  description: Enables the model to [query Google Search](https://ai.google.dev/gemini-api/docs/grounding). This can only be enabled when nothing is selected in **AI tools**. See below for a workaround to use it with **Device control**.
+
+</code></pre>
+<p>Temperature, top-p, and top-k apply to Gemini models with numeric versions before 3.6, except Gemini 3.5 Flash-Lite and Gemini 3.5 Transcribe. They also apply to Gemini Robotics-ER 1.6 and non-Gemini models. For other Gemini models, including the latest text aliases, the integration omits these settings from requests and uses the model defaults. Your saved values remain available when you switch back to a model that supports custom sampling. An unrecognized older Gemini model may use its defaults instead of your saved values.</p>
+<p>For text-to-speech, the same model-specific behavior applies to temperature. Thinking settings apply to supported text models. Switching models keeps your saved settings, while selecting the recommended settings resets the configurable options.</p>
+<h2>Google Search</h2>
+<p>Due to an API limitation we cannot have the <a>Google Search tool</a> together with other tools. Request fails with <code>400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Tool use with function calling is unsupported', 'status': 'INVALID_ARGUMENT'}}</code>.
+But you can do the following workaround that exposes a script to voice assistants. The script calls a Google Gemini Conversation that only has the Google Search tool enabled.</p>
+<h4>Workaround for Google Search tool</h4>
+<ol>
+<li><p>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>, and select <strong>Google Gemini</strong>.</p>
+</li>
+<li><p>Select <strong>Add conversation agent</strong>.</p>
+</li>
+<li><p>Under <strong>AI tools</strong>, clear <strong>Device control</strong> and any other selected sets of AI tools.</p>
+</li>
+<li><p>Clear <strong>Recommended model settings</strong>.</p>
+<ul>
+<li>Result: More options appear.</li>
+</ul>
+</li>
+<li><p>Select <strong>Enable Google Search tool</strong>.</p>
+</li>
+<li><p>Increase <strong>Maximum tokens to return in response</strong>.</p>
+</li>
+<li><p>Select <strong>Submit</strong>.</p>
+</li>
+<li><p>Go to <strong>Settings</strong> &gt; <strong>Automations &amp; scenes</strong> &gt; <strong>Scripts</strong>, and select <strong>Create script</strong> &gt; <strong>Create new script</strong>.</p>
+</li>
+<li><p>Select <strong>Menu</strong>  &gt; <strong>Edit in YAML</strong>, and enter the following. Change <code>conversation.google_generative_ai_2</code> to the entity ID of the conversation agent you added in step 2:</p>
+<pre><code>sequence:
+  - action: conversation.process
+    metadata: {}
+    data:
+      agent_id: conversation.google_generative_ai_2
+      text: "{{ query }}"
+    response_variable: result
+  - variables:
+      result:
+        response: "{{ result.response.speech.plain.speech }}"
+  - stop: ""
+    response_variable: result
+alias: "Assist: Search Google"
+description: &gt;-
+  Uses Google Search to answer questions that are completely unrelated to
+  the smart home, and focus on current events or information in real time,
+  such as the current president, last night's game results, or release
+  dates.
+fields:
+  query:
+    selector:
+      text: null
+    name: Query
+    description: The query to search Google for
+    required: true
+</code></pre>
+</li>
+<li><p>Select <strong>Save</strong>.</p>
+</li>
+<li><p>Select <strong>Menu</strong>  &gt; <strong>Settings</strong> &gt; <strong>Voice assistants</strong>.</p>
+</li>
+<li><p>Under <strong>Expose</strong>, turn on <strong>Assist</strong>.</p>
+</li>
+</ol>
+<h2>Using Google Gemini text-to-speech in automations</h2>
+<p>The <strong>Google Gemini</strong> integration adds a text-to-speech entity. To play a spoken message from an automation or script, use the <a><strong>Speak</strong></a> action and select your Google Gemini text-to-speech entity as the target.</p>
+<p>To speak a message from an automation or a script:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Automations &amp; scenes</strong>.</li>
+<li>Open an existing automation or script, or select <strong>Create automation</strong> &gt; <strong>Create new automation</strong>.</li>
+<li>If you are setting up a new automation, add a trigger in the <strong>When</strong> section. Scripts do not need a trigger. They run when something else calls them.</li>
+<li>In the <strong>Then do</strong> section, select <strong>Add action</strong>.</li>
+<li>Select what you want to control. Under <strong>By target</strong>, select your Google Gemini text-to-speech entity.</li>
+<li>From the actions shown for that target, select <strong>Speak</strong>. To choose a Gemini voice, set <code>voice</code> in <strong>Options</strong>. For supported options, see <a>Google Gemini text-to-speech action options</a>.</li>
+<li>Select the <strong>Media player entity</strong> to play the message on, set the <strong>Message</strong>, and set any other options you want to use.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<h4>Example YAML configuration</h4>
+<pre><code>action: tts.speak
+target:
+  entity_id: tts.google_ai_tts
+data:
+  media_player_entity_id: media_player.living_room
+  message: "Say cheerfully: Have a wonderful day!"
+  options:
+    voice: achernar
+</code></pre>
+<h3>Google Gemini text-to-speech action options</h3>
+<pre><code>
+voice:
+  description: "The voice name to use for the generated speech. The default is `zephyr`. For available voices, see the [Google AI speech generation documentation](https://ai.google.dev/gemini-api/docs/speech-generation#voices)."
+  required: false
+  type: string
+
+</code></pre>
+<p>Google Gemini detects the input language automatically. For supported languages, see the <a>Google AI speech generation documentation</a>.</p>
+<h2>Talking to Super Mario</h2>
+<p>You can use Google Gemini to follow the <a>Super Mario voice assistant tutorial</a> and let him control devices in your home.</p>
+<p>The tutorial uses OpenAI, but you can follow the same approach with the Google Gemini integration.</p>
+<h2>Video tutorial</h2>
+<p>This video tutorial explains how Google Gemini can be set up, how you can send an AI-generated message to your smart speaker when you arrive home, and how you can analyze an image taken from your doorbell camera as soon as someone rings the doorbell.</p>
+<p></p>
+<h2>Troubleshooting</h2>
+<ul>
+<li>To aid in diagnosing issues it may help to turn up verbose logging by adding these to your <code>configuration.yaml</code>:</li>
+</ul>
+<pre><code>logger:
+  logs:
+    homeassistant.components.conversation: debug
+    homeassistant.components.conversation.chat_log: debug
+    homeassistant.components.google_generative_ai_conversation: debug
+</code></pre>
+<h2>Removing the integration</h2>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/google_generative_ai_conversation.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate Google Gemini as a conversation agent
+ha_release: 2023.6
+ha_domain: google_generative_ai_conversation
+related:
+  - docs: /voice_control/voice_remote_expose_devices/
+    title: Exposing entities to voice assistants
+  - docs: /voice_control/assist_create_open_ai_personality/
+    title: Create an AI personality
+  - url: https://aistudio.google.com/app/apikey
+    title: Google Gemini API key
+  - url: https://ai.google.dev/
+    title: Google AI
+---
+
+The **Google Gemini** {% term integration %} adds a conversation agent, speech-to-text, and text-to-speech entities powered by [Google Gemini](https://ai.google.dev/) to Home Assistant. The conversation agent can optionally be allowed to control Home Assistant.
+
+Controlling Home Assistant is done by providing the AI access to the **Device control** set of tools. You can control what devices and entities it can access from the {% my voice_assistants title=&quot;exposed entities page&quot; %}. The AI can provide you information about your devices and control them.
+
+When you talk to a Google Gemini conversation agent through an {% term assistant %}, Home Assistant first checks your [sentence triggers](/triggers/conversation/). If one of them matches, the sentence trigger answers, and the conversation agent doesn&#x27;t get the sentence. Sentence triggers don&#x27;t run when you call the conversation agent directly, for example with the `conversation.process` action. They also don&#x27;t run when you answer a follow-up question from the conversation agent.
+
+This integration requires an API key to use, [which you can generate here](https://aistudio.google.com/app/apikey), and to be in one of the [available regions](https://ai.google.dev/gemini-api/docs/available-regions).
+
+{% include integrations/config_flow.md %}
+
+## Generate an API Key
+
+The API key is used to authenticate requests to the Google Gemini API. To generate an API key take the following steps:
+
+- Visit the [API Keys page](https://aistudio.google.com/app/apikey) to retrieve the API key you&#x27;ll use to configure the integration.
+
+On the same page, you can see your plan: *free of charge* if the associated Google Cloud project doesn&#x27;t have billing, or *pay-as-you-go* if the associated Google Cloud project has billing enabled.
+Comparison of the plans is available [at this pricing page](https://ai.google.dev/pricing). The major differences include: the free of charge plan is rate limited, and free prompts/responses are used for product improvement.
+
+{% include integrations/option_flow.md %}
+
+{% configuration_basic %}
+Instructions:
+  description: Instructions for the AI on how it should respond to your requests. It is written using [Home Assistant Templating](/docs/templating/).
+AI tools:
+  description: &quot;**Device control** only accesses the entities you [expose](/voice_control/voice_remote_expose_devices/) to voice assistants. **Home Assistant** accesses everything and only works for administrators, not voice assistant devices.&quot;
+Recommended settings:
+  description: If enabled, the recommended model and settings are chosen.
+{% endconfiguration_basic %}
+
+If you choose to not use the recommended settings, you can configure the following options:
+
+{% configuration_basic %}
+Model:
+  description: Model used to generate response.
+Temperature:
+  description: Creativity allowed in the responses for models that support custom sampling. Higher values produce a more random and varied response.
+Top P:
+  description: Probability threshold for top-p sampling. This setting applies only to models that support custom sampling.
+Top K:
+  description: Number of top-scored tokens to consider during generation. This setting applies only to models that support custom sampling.
+Maximum Tokens to Return in Response:
+  description: The maximum number of words or &quot;tokens&quot; that the AI model should generate.
+Thinking budget:
+  description: The token budget for internal reasoning before the model generates a response (Gemini 2.5 models only). Set this to `-1` to let the model decide automatically, `0` to disable reasoning (not available for Gemini 2.5 Pro), or a positive number for a custom budget.
+Thinking level:
+  description: The level of internal reasoning for Gemini 3 and later text models, including the latest text aliases. You can select **Minimal**, **Auto**, **Low**, **Medium**, or **High**. **Minimal** is unavailable on Pro models, the latest text aliases, and Gemini 3.6 and later models, except Gemini 3.6 Flash (not Flash-Lite). If your selected level is unsupported, the integration uses the model default and keeps your saved choice. For example, Gemini 3.8 uses the model default when you select **Minimal**. Gemini 2.5 models use the thinking budget instead.
+Safety settings:
+  description: Thresholds for different [harmful categories](https://ai.google.dev/gemini-api/docs/safety-settings).
+Enable Google Search tool:
+  description: Enables the model to [query Google Search](https://ai.google.dev/gemini-api/docs/grounding). This can only be enabled when nothing is selected in **AI tools**. See below for a workaround to use it with **Device control**.
+{% endconfiguration_basic %}
+
+Temperature, top-p, and top-k apply to Gemini models with numeric versions before 3.6, except Gemini 3.5 Flash-Lite and Gemini 3.5 Transcribe. They also apply to Gemini Robotics-ER 1.6 and non-Gemini models. For other Gemini models, including the latest text aliases, the integration omits these settings from requests and uses the model defaults. Your saved values remain available when you switch back to a model that supports custom sampling. An unrecognized older Gemini model may use its defaults instead of your saved values.
+
+For text-to-speech, the same model-specific behavior applies to temperature. Thinking settings apply to supported text models. Switching models keeps your saved settings, while selecting the recommended settings resets the configurable options.
+
+## Google Search
+
+Due to an API limitation we cannot have the [Google Search tool](https://ai.google.dev/gemini-api/docs/grounding) together with other tools. Request fails with `400 INVALID_ARGUMENT. {&#x27;error&#x27;: {&#x27;code&#x27;: 400, &#x27;message&#x27;: &#x27;Tool use with function calling is unsupported&#x27;, &#x27;status&#x27;: &#x27;INVALID_ARGUMENT&#x27;}}`.
+But you can do the following workaround that exposes a script to voice assistants. The script calls a Google Gemini Conversation that only has the Google Search tool enabled.
+
+{% details &quot;Workaround for Google Search tool&quot; %}
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}, and select **Google Gemini**.
+2. Select **Add conversation agent**.
+3. Under **AI tools**, clear **Device control** and any other selected sets of AI tools.
+4. Clear **Recommended model settings**.
+   - Result: More options appear.
+5. Select **Enable Google Search tool**.
+6. Increase **Maximum tokens to return in response**.
+7. Select **Submit**.
+8. Go to {% my scripts title=&quot;**Settings** &gt; **Automations &amp; scenes** &gt; **Scripts**&quot; %}, and select **Create script** &gt; **Create new script**.
+9. Select **Menu** {% icon &quot;mdi:dots-vertical&quot; %} &gt; **Edit in YAML**, and enter the following. Change `conversation.google_generative_ai_2` to the entity ID of the conversation agent you added in step 2:
+
+    ```yaml
+    sequence:
+      - action: conversation.process
+        metadata: {}
+        data:
+          agent_id: conversation.google_generative_ai_2
+          text: &quot;{{ query }}&quot;
+        response_variable: result
+      - variables:
+          result:
+            response: &quot;{{ result.response.speech.plain.speech }}&quot;
+      - stop: &quot;&quot;
+        response_variable: result
+    alias: &quot;Assist: Search Google&quot;
+    description: &gt;-
+      Uses Google Search to answer questions that are completely unrelated to
+      the smart home, and focus on current events or information in real time,
+      such as the current president, last night&#x27;s game results, or release
+      dates.
+    fields:
+      query:
+        selector:
+          text: null
+        name: Query
+        description: The query to search Google for
+        required: true
+    ```
+
+10. Select **Save**.
+11. Select **Menu** {% icon &quot;mdi:dots-vertical&quot; %} &gt; **Settings** &gt; **Voice assistants**.
+12. Under **Expose**, turn on **Assist**.
+
+{% enddetails %}
+
+## Using Google Gemini text-to-speech in automations
+
+The **Google Gemini** integration adds a text-to-speech entity. To play a spoken message from an automation or script, use the [**Speak**](/actions/tts.speak/) action and select your Google Gemini text-to-speech entity as the target.
+
+To speak a message from an automation or a script:
+
+1. Go to {% my automations title=&quot;**Settings** &gt; **Automations &amp; scenes**&quot; %}.
+2. Open an existing automation or script, or select **Create automation** &gt; **Create new automation**.
+3. If you are setting up a new automation, add a trigger in the **When** section. Scripts do not need a trigger. They run when something else calls them.
+4. In the **Then do** section, select **Add action**.
+5. Select what you want to control. Under **By target**, select your Google Gemini text-to-speech entity.
+6. From the actions shown for that target, select **Speak**. To choose a Gemini voice, set `voice` in **Options**. For supported options, see [Google Gemini text-to-speech action options](#google-gemini-text-to-speech-action-options).
+7. Select the **Media player entity** to play the message on, set the **Message**, and set any other options you want to use.
+8. Select **Save**.
+
+{% details &quot;Example YAML configuration&quot; %}
+
+```yaml
+action: tts.speak
+target:
+  entity_id: tts.google_ai_tts
+data:
+  media_player_entity_id: media_player.living_room
+  message: &quot;Say cheerfully: Have a wonderful day!&quot;
+  options:
+    voice: achernar
+```
+
+{% enddetails %}
+
+### Google Gemini text-to-speech action options
+
+{% configuration %}
+voice:
+  description: &quot;The voice name to use for the generated speech. The default is `zephyr`. For available voices, see the [Google AI speech generation documentation](https://ai.google.dev/gemini-api/docs/speech-generation#voices).&quot;
+  required: false
+  type: string
+{% endconfiguration %}
+
+Google Gemini detects the input language automatically. For supported languages, see the [Google AI speech generation documentation](https://ai.google.dev/gemini-api/docs/speech-generation#languages).
+
+## Talking to Super Mario
+
+You can use Google Gemini to follow the [Super Mario voice assistant tutorial](/voice_control/assist_create_open_ai_personality/) and let him control devices in your home.
+
+The tutorial uses OpenAI, but you can follow the same approach with the Google Gemini integration.
+
+## Video tutorial
+
+This video tutorial explains how Google Gemini can be set up, how you can send an AI-generated message to your smart speaker when you arrive home, and how you can analyze an image taken from your doorbell camera as soon as someone rings the doorbell.
+
+&lt;lite-youtube videoid=&quot;ivoYNd2vMR0&quot; videotitle=&quot;AI in Home Assistant - A Complete Guide!&quot; posterquality=&quot;maxresdefault&quot;&gt;&lt;/lite-youtube&gt;
+
+## Troubleshooting
+
+- To aid in diagnosing issues it may help to turn up verbose logging by adding these to your {% term &quot;`configuration.yaml`&quot; %}:
+
+```yaml
+logger:
+  logs:
+    homeassistant.components.conversation: debug
+    homeassistant.components.conversation.chat_log: debug
+    homeassistant.components.google_generative_ai_conversation: debug
+```
+
+## Removing the integration
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Google Gemini.</p><p>The <strong>api</strong> configuration step lists <code>api_key</code>.</p><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Generate an API Key</li><li>Google Search</li><li>Using Google Gemini text-to-speech in automations</li><li>Talking to Super Mario</li><li>Video tutorial</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/google_generative_ai_conversation/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/google_generative_ai_conversation</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/google_generative_ai_conversation</code></dd></dl></section><p><a href="../../integrations/google_generative_ai_conversation/">Return to the Google Gemini guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

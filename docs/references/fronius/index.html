@@ -1,1 +1,889 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fronius reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:54" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/fronius/">Fronius guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Fronius</h1><p>Instructions on how to connect your Fronius SolarAPI devices to Home Assistant.</p><section><h2>Overview</h2><p>The Fronius integration polls a Fronius solar inverter or datalogger for details of a Fronius SolarNet setup and integrate it in your Home Assistant installation.</p></section><section><h2>Supported devices</h2><p>The integration supports all inverters with integrated Datamanager or external &quot;Datalogger Web&quot; providing the Fronius SolarAPI (JSON) interface of version v0 or v1. This includes among others:</p></section><section><h2>Prerequisites</h2><p>You should either set a static IP or assign a static DHCP lease for the Fronius device, or alternatively access it through the local DNS name if your network is configured accordingly.</p></section><section><h2>Monitored data</h2><p>Each device adds a set of sensors to Home Assistant.</p></section><section><h2>Modbus TCP</h2><p>Most Fronius devices also provide a Modbus TCP interface using the SunSpec information models. It exposes per-string (MPP tracker) data that the Solar API does not, so the integration reads it in addition when it is available.</p></section><section><h2>Controlling the inverter over Modbus</h2><p>Modbus is the only interface that lets Home Assistant change settings on the inverter; the Solar API is read-only. These setpoints are added as number entities, and appear under Configuration on the inverter&#x27;s device page:</p></section><section><h2>Falling back to the inverter&#x27;s own settings</h2><p>The inverter then drops the AC power limit, the Battery charge power limit, and the Battery discharge power limit an hour after it last received them, and hands control back to its own priority list. Home Assistant sends active limits again every 15 minutes, so the hour only ever runs out once Home Assistant has really stopped - a restart or a short outage has plenty of room. An inverter held at 30 % runs unrestricted an hour after Home Assistant stops sending updates.</p></section><section><h2>The battery limits are power, not a charge level</h2><p>Battery charge power limit limits charging _power_. It is not a &quot;charge to 80 %&quot; setting. The inverter exposes no maximum state of charge over Modbus at all; only the minimum reserve.</p></section><section><h2>Forcing the battery to charge or discharge</h2><p>The battery limits range from -100 % to 100 %, and a negative value reverses the direction: it sets a _minimum_ rate in the opposite direction instead of a maximum. A Battery discharge power limit of -100 % makes the battery charge at its full rate, and a Battery charge power limit of -50 % makes it discharge at least at half its rate, more if the house needs it and the discharge limit allows. This is how Fronius documents forcing the battery, and what other tools writing these registers set.</p></section><section><h2>Energy dashboard</h2><p>Recommended energy dashboard configuration:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Fronius.</p><p>The <strong>reconfigure</strong> configuration step lists <code>auto_revert_power_limit</code>, <code>host</code>, <code>modbus_port</code>.</p><p>The <strong>user</strong> configuration step lists <code>auto_revert_power_limit</code>, <code>host</code>, <code>modbus_port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Monitored data</li><li>Modbus TCP</li><li>Energy dashboard</li><li>Example automation</li><li>Note</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/fronius/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/fronius</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/fronius</code></dd></dl></section><p><a href="../../integrations/fronius/">Return to the Fronius guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fronius reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:54" data-theme="almanac"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/fronius/">Fronius guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Fronius</h1><p>Instructions on how to connect your Fronius SolarAPI devices to Home Assistant.</p><div class="reader-body"><p>The <strong>Fronius</strong> integration polls a <a>Fronius</a> solar inverter or datalogger for details of a Fronius SolarNet setup and integrate it in your Home Assistant installation.</p>
+<h2>Supported devices</h2>
+<p>The integration supports all inverters with integrated Datamanager or external "Datalogger Web" providing the Fronius SolarAPI (JSON) interface of version <code>v0</code> or <code>v1</code>. This includes among others:</p>
+<ul>
+<li>Agilo</li>
+<li>Eco</li>
+<li>Galvo</li>
+<li>Gen24</li>
+<li>IG Plus</li>
+<li>Primo</li>
+<li>Symo</li>
+<li>Symo Hybrid</li>
+<li>Tauro</li>
+<li>Verto (Plus)</li>
+</ul>
+<p>Devices connected to those inverters or dataloggers are supported as well.</p>
+<ul>
+<li>Energy meter (Fronius Smart Meter or S0 meter connected to the inverter)</li>
+<li>Ohmpilot</li>
+<li>Storage</li>
+</ul>
+<h2>Prerequisites</h2>
+<p>You should either set a static IP or assign a static DHCP lease for the Fronius device, or alternatively access it through the local DNS name if your network is configured accordingly.</p>
+<p><strong>Note</strong></p>
+<p>For Gen24 devices (delivered with Firmware &gt;= 1.14.1) make sure to activate "Solar API" in the inverters web interface. For older devices, Solar API should be enabled by default.</p>
+<h2>Configuration</h2>
+<p>To add the <strong>Fronius</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Fronius</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+    description: "The host name or the IP address of the device."
+    required: true
+    type: string
+Modbus port:
+    description: "The port of the device's Modbus TCP interface. Only used when Modbus is enabled on the device, see [Modbus TCP](#modbus-tcp). The default is `502`."
+    required: false
+    type: integer
+Revert the power and battery limits if Home Assistant stops:
+    description: "Whether the inverter should give up the power and battery limits set by Home Assistant when it stops hearing them, see [Falling back to the inverter's own settings](#falling-back-to-the-inverters-own-settings). Off by default."
+    required: false
+    type: boolean
+
+</code></pre>
+<h2>Monitored data</h2>
+<p>Each device adds a set of sensors to Home Assistant.</p>
+<ul>
+<li><p>SolarNet device</p>
+<ul>
+<li><p>Logger information</p>
+<p>General information about the Fronius Datalogger. Not available on "Gen24" devices.
+Updated every hour.</p>
+<ul>
+<li>Serial number, software and hardware platforms</li>
+<li>Current price of energy consumed and returned to grid and the CO₂ factor as set in the Dataloggers settings</li>
+</ul>
+</li>
+<li><p>Power flow</p>
+<p>Cumulative data of the SolarNet system.
+Updated every 10 seconds.</p>
+<ul>
+<li>Energy produced on the current day, year and total produced energy</li>
+<li>Power fed to the grid (if positive) or consumed from the grid (if negative)</li>
+<li>Power load as a generator (if positive) or consumer (if negative)</li>
+<li>Battery charging power (if positive) or discharging power (if negative)</li>
+<li>Whether the battery is in standby, on Gen24 devices with a battery</li>
+<li>Whether the system is currently supplying backup power during a grid outage, on Gen24, Tauro, and Verto devices with backup power configured</li>
+<li>Photovoltaic production</li>
+<li>Current relative self-consumption of produced energy</li>
+<li>Current relative autonomy</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Inverter</p>
+<p>The energy produced on the current day, year (not for Gen24 devices), and total produced energy, power, current, voltage, frequency, and status for an individual inverter.
+Updated every minute.</p>
+</li>
+<li><p>Meter</p>
+<p>Detailed information about power, current, and voltage, if supported, split among the phases.
+Updated every minute.</p>
+</li>
+<li><p>Ohmpilot</p>
+<p>Detailed information about energy, power, and temperature of your Ohmpilots.
+Updated every minute.</p>
+</li>
+<li><p>Storage</p>
+<p>Detailed information about current, voltage, state, cycle count, capacity and more about installed batteries.
+Updated every minute.</p>
+</li>
+</ul>
+<p>When an endpoint is not responding correctly the update interval will increase to 10 minutes (3 minutes for power flow) until valid data is received again. This reduces the number of requests to Fronius devices using night mode (shutdown when no PV power is produced).</p>
+<h2>Modbus TCP</h2>
+<p>Most Fronius devices also provide a Modbus TCP interface using the <a>SunSpec</a> information models. It exposes per-string (MPP tracker) data that the Solar API does not, so the integration reads it in addition when it is available.</p>
+<p>Modbus is optional. If it isn't enabled, or the inverter is powered down, no Modbus entities are created and the rest of the integration is unaffected. The integration checks again every hour, so entities appear on their own once the device answers.</p>
+<p>To enable it on the device's web interface:</p>
+<ul>
+<li>Gen24, Tauro, and Verto: go to <strong>Communication</strong> &gt; <strong>Modbus</strong> and turn on the Modbus TCP server.</li>
+<li>Devices with a Datamanager: go to <strong>Settings</strong> &gt; <strong>Modbus</strong> and set <strong>Data output via Modbus</strong> to <strong>TCP</strong>. One Datamanager serves every inverter in its SolarNet ring.</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>Leave the data format setting (<strong>float</strong> or <strong>int + SF</strong>) as it is. The integration detects it automatically.</p>
+<p>These entities are added per inverter and updated every minute:</p>
+<ul>
+<li><code>MPPT &lt;n&gt; DC power</code> and <code>MPPT &lt;n&gt; energy</code> for each MPP tracker.</li>
+<li><code>MPPT &lt;n&gt; DC current</code> and <code>MPPT &lt;n&gt; DC voltage</code> for each MPP tracker. <a>Disabled by default</a>.</li>
+<li><code>PV energy total</code>: lifetime energy from the photovoltaic strings only. Whether this is a DC measurement depends on the device, see below.</li>
+<li><code>Battery charging energy total</code> and <code>Battery discharging energy total</code>: on hybrid inverters that expose their battery as dedicated MPP trackers, such as Gen24 with a battery.</li>
+</ul>
+<p><code>MPPT &lt;n&gt; DC power</code> is a DC measurement on every device tested, and matches <code>MPPT &lt;n&gt; DC current</code> times <code>MPPT &lt;n&gt; DC voltage</code>.</p>
+<p><code>MPPT &lt;n&gt; energy</code> is not consistent between devices, which is why its name does not claim a side. A Gen24 reports the lifetime energy of each string, which is a DC value and therefore a few percent above <code>Total energy</code>, the AC counter. A SnapINverter reports the same value as <code>Total energy</code> instead, so <code>PV energy total</code> matches it exactly rather than adding anything. Comparing the two entities on your own system shows which the inverter provides.</p>
+<h3>Controlling the inverter over Modbus</h3>
+<p>Modbus is the only interface that lets Home Assistant change settings on the inverter; the Solar API is read-only. These setpoints are added as <code>number</code> entities, and appear under <strong>Configuration</strong> on the inverter's device page:</p>
+<ul>
+<li><code>AC power limit</code>: caps the power the inverter puts out on AC, as a percentage of its nominal power output. This is <em>not</em> a feed-in limit. Everything the inverter delivers counts against it, whether it is used in the house or exported to the grid.</li>
+<li><code>Battery charge power limit</code> and <code>Battery discharge power limit</code>: cap how fast the battery may charge or discharge, as a percentage of its maximum rate. A negative value reverses the direction and forces the battery, see <a>Forcing the battery to charge or discharge</a>.</li>
+<li><code>Battery minimum reserve</code>: the state of charge the battery is not discharged below.</li>
+</ul>
+<p>The <code>AC power limit</code>, <code>Battery charge power limit</code>, and <code>Battery discharge power limit</code> setpoints each have a <code>switch</code> that turns the limit on and off: <code>AC power limiting</code>, <code>Battery charge power limiting</code>, and <code>Battery discharge power limiting</code>. <code>Battery grid charging</code> is a separate switch that allows or prevents charging the battery from the grid.</p>
+<p><strong>Warning</strong></p>
+<p><strong>Dynamic power reduction</strong> is what implements an export cap agreed with your grid operator, because it measures at the grid connection point. The <code>AC power limit</code> cannot do that, as it only knows the inverter's own output. If Modbus outranks <strong>Dynamic power reduction</strong>, holding the <code>AC power limit</code> on at <code>100 %</code> overrides that cap, which may put the installation outside what the grid operator allows.</p>
+<p><strong>Important</strong></p>
+<p>Writing has to be allowed on the device first. Go to <strong>Communication</strong> &gt; <strong>Modbus</strong> (Gen24, Tauro, and Verto) or <strong>Settings</strong> &gt; <strong>Modbus</strong> (Datamanager), and turn on <strong>Inverter control via Modbus</strong>.</p>
+<p>Until it is, the inverter rejects every write, and the integration creates no control entities at all rather than ones that fail when used. Turn it on, then reload the integration.</p>
+<p>A setpoint is only applied while its switch is on. Setting one while the switch is off stores the value on the inverter without applying it, and turning the switch on then applies what is stored, which is the order Fronius documents.</p>
+<p>Turning a limit <strong>off</strong> does not lift it. The inverter hands control back to the next source in its priority list, which may impose a limit of its own, such as <strong>Dynamic power reduction</strong>. To override such a source instead, leave the limit <strong>on</strong> and set it to <code>100 %</code>. That is an active instruction to run unrestricted, where off is "someone else decides".</p>
+<p>The inverter decides which control source wins. If <strong>IO control</strong> or <strong>Dynamic power reduction</strong> has a higher priority than Modbus in the DNO Editor, the inverter may refuse or ignore what Home Assistant sends.</p>
+<p>Depending on the inverter's firmware, an <code>AC power limit</code> below <code>10 %</code> may force the inverter into standby, stopping feed-in altogether rather than throttling it.</p>
+<p>On a hybrid inverter, the <code>AC power limit</code> does not restrict <strong>charging</strong> the battery. Charging is not AC output. Surplus photovoltaic power goes into the battery instead of being wasted, which makes the limit useful for peak shaving. <strong>Discharging</strong> does count against it, because that power leaves the inverter on AC.</p>
+<h4>Falling back to the inverter's own settings</h4>
+<p>A setpoint stays on the inverter until it is changed, including while Home Assistant is shut down or unreachable. Removing the integration leaves it behind as well, with nothing left to take it back. To have the inverter recover on its own instead, turn on <strong>Revert the power and battery limits if Home Assistant stops</strong>. It is offered when the integration is set up, and can be changed later: go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> &gt; <strong>Fronius</strong>, select the three dots menu  next to the entry, and choose <strong>Reconfigure</strong>.</p>
+<p>The inverter then drops the <code>AC power limit</code>, the <code>Battery charge power limit</code>, and the <code>Battery discharge power limit</code> an hour after it last received them, and hands control back to its own priority list. Home Assistant sends active limits again every 15 minutes, so the hour only ever runs out once Home Assistant has really stopped - a restart or a short outage has plenty of room. An inverter held at <code>30 %</code> runs unrestricted an hour after Home Assistant stops sending updates.</p>
+<p>This applies to these three limits only. The <code>Battery minimum reserve</code> and <code>Battery grid charging</code> keep their value whatever happens to Home Assistant.</p>
+<h4>The battery limits are power, not a charge level</h4>
+<p><code>Battery charge power limit</code> limits charging <em>power</em>. It is not a "charge to 80 %" setting. The inverter exposes no maximum state of charge over Modbus at all; only the minimum reserve.</p>
+<p>A charge ceiling can be built as an automation instead, using the battery's state of charge sensor and the charge power limit:</p>
+<pre><code>automation:
+  - alias: "Stop charging the battery at 80%"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.byd_battery_box_premium_hv_state_of_charge
+        above: 80
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_charge_power_limit
+        data:
+          value: 0
+  - alias: "Allow charging the battery again below 75%"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.byd_battery_box_premium_hv_state_of_charge
+        below: 75
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_charge_power_limit
+        data:
+          value: 100
+</code></pre>
+<p><code>Battery charge power limiting</code> has to be on for this to take effect. Discharging is limited by its own setpoint, so the battery still supplies the house while charging is held at <code>0 %</code>. If Home Assistant stops running, the inverter keeps the last setpoint and switch state until you change them again, unless <strong>Revert the power and battery limits if Home Assistant stops</strong> is on. See <a>Falling back to the inverter's own settings</a>.</p>
+<h4>Forcing the battery to charge or discharge</h4>
+<p>The battery limits range from <code>-100 %</code> to <code>100 %</code>, and a negative value reverses the direction: it sets a <em>minimum</em> rate in the opposite direction instead of a maximum. A <code>Battery discharge power limit</code> of <code>-100 %</code> makes the battery <strong>charge</strong> at its full rate, and a <code>Battery charge power limit</code> of <code>-50 %</code> makes it <strong>discharge</strong> at least at half its rate, more if the house needs it and the discharge limit allows. This is how Fronius documents forcing the battery, and what other tools writing these registers set.</p>
+<ul>
+<li>The limit only takes effect while its switch is on: <code>Battery discharge power limiting</code> for forced charging, <code>Battery charge power limiting</code> for forced discharging.</li>
+<li>With <code>Battery grid charging</code> on, a negative discharge limit charges at least at that rate, from the grid or photovoltaic power if available. With it off, forced charging can only use photovoltaic power. The inverter also has to allow grid charging in its own settings, on a GEN24 under <strong>Device configuration</strong> &gt; <strong>Components</strong> &gt; <strong>Battery</strong>: it only charges from the grid when both are on. Depending on your model and firmware version, this setting may require the technician login, so your installer might have to enable it.</li>
+<li>With both limits on, the charge limit plus the discharge limit must not be below <code>0 %</code>. The inverter refuses anything else, including both limits negative at once, and Home Assistant rejects such a change with an error before sending it. With a <code>Battery charge power limit</code> of <code>40 %</code> on, for example, a discharge limit of <code>-100 %</code> is refused, while <code>-40 %</code> will force a charge at <code>40 %</code>.</li>
+<li>Forcing replaces the value of the limit it uses. If that limit was set to something else before, set it back yourself afterwards.</li>
+</ul>
+<p>To charge the battery from the grid during a cheap night tariff, with grid charging allowed on the inverter (see above) and <code>Battery charge power limiting</code> off or at <code>100 %</code>:</p>
+<pre><code>automation:
+  - alias: "Charge the battery from the grid at night"
+    triggers:
+      - trigger: time
+        at: "02:00:00"
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_discharge_power_limit
+        data:
+          value: -100
+      - action: switch.turn_on
+        target:
+          entity_id:
+            - switch.gen24_battery_discharge_power_limiting
+            - switch.gen24_battery_grid_charging
+  - alias: "Stop charging the battery from the grid in the morning"
+    triggers:
+      - trigger: time
+        at: "06:00:00"
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_discharge_power_limit
+        data:
+          value: 100
+      - action: switch.turn_off
+        target:
+          entity_id:
+            - switch.gen24_battery_discharge_power_limiting
+            - switch.gen24_battery_grid_charging
+</code></pre>
+<p>With a lower charge limit on, the <code>-100 %</code> is refused, as the two limits would add up to less than <code>0 %</code>. That includes the charge ceiling example above, which holds the charge limit at <code>0 %</code>, so the two examples can't be combined unchanged: either turn <code>Battery charge power limiting</code> off for the night, or force with no more than the charge limit, for example <code>-40 %</code> at a charge limit of <code>40 %</code>.</p>
+<p>Unless <strong>Revert the power and battery limits if Home Assistant stops</strong> is on, a forced charge stays on the inverter if Home Assistant stops running, so the battery keeps charging from the grid until the limit is changed again. See <a>Falling back to the inverter's own settings</a>.</p>
+<h2>Energy dashboard</h2>
+<p>Recommended <a>energy dashboard</a> configuration:</p>
+<ul>
+<li>For <em>"Solar production"</em>:<ul>
+<li>If no battery is connected to an inverter: Add each inverters <code>Energy total</code> entity.</li>
+<li>If a battery is connected to an inverter: Use <a href="../integration/">Riemann sum</a> over <code>SolarNet Power photovoltaics</code> entity.</li>
+</ul>
+</li>
+<li><em>"Battery systems"</em> energy values aren't supported directly by the Solar API. Use <a href="../integration/">Riemann sum</a> to integrate <code>SolarNet Power battery charge</code> and <code>SolarNet Power battery discharge</code> into energy values (kWh).</li>
+<li>For <em>"Devices"</em> use the Ohmpilots <code>Energy consumed</code> entity.</li>
+</ul>
+<p><strong>Important</strong></p>
+<p>For <em>"Solar production"</em>, prefer the inverter's <code>Energy total</code>. That is the AC energy you can use or sell.</p>
+<p>Where the device reports per-string energy, <code>PV energy total</code> is what the panels delivered before inverter conversion losses, so it reads a few percent higher. Where it does not, it is the same value as <code>Energy total</code> and adds nothing. Either way, the AC value is the one to use.</p>
+<p><code>Battery charging energy total</code> and <code>Battery discharging energy total</code> are DC values measured at the battery. They are counters read from the device rather than values integrated over time, so they don't drift and are unaffected by Home Assistant restarts. For the same reason, they don't exactly match a Riemann sum of <code>SolarNet Power battery charge</code> and <code>SolarNet Power battery discharge</code>.</p>
+<p>The energy meter integrated with Fronius devices can be installed (and configured) in two different installation positions: <em>"feed in path"</em> (grid interconnection point) or <em>"consumption path"</em>.</p>
+<h3>Feed in path meter</h3>
+<p>Recommended energy dashboard configuration for meter location in feed in path:</p>
+<ul>
+<li>For <em>"Grid consumption"</em> use the meters <code>Energy real consumed</code> entity.</li>
+<li>For <em>"Return to grid"</em> use the meters <code>Energy real produced</code> entity.</li>
+</ul>
+<h3>Consumption path meter</h3>
+<p>Recommended energy dashboard configuration for meter location in consumption path:</p>
+<ol>
+<li>Use <a href="../integration/">Riemann sum</a> to integrate <code>SolarNet Power grid import</code> and <code>SolarNet Power grid export</code> entities into energy values (Wh or kWh).</li>
+<li>Use these energy entities for <code>Grid consumption</code> and <code>Return to grid</code> in the energy dashboard configuration.</li>
+</ol>
+<h2>Example automation</h2>
+<p>The following automation toggles a switch when the solar production crosses certain thresholds:</p>
+<pre><code>description: "Turn on switch when PV power is above 1000 W and turn it off below 50 W."
+mode: single
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.solarnet_power_photovoltaics
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.solarnet_power_photovoltaics
+            above: 1000
+        sequence:
+          - action: switch.turn_on
+            metadata: {}
+            data: {}
+            target:
+              entity_id: switch.swtest
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.solarnet_power_photovoltaics
+            below: 50
+        sequence:
+          - action: switch.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: switch.swtest
+
+</code></pre>
+<h2>Note</h2>
+<p>Fronius often provides firmware updates for the datamanager interfaces and the devices in their system, it's recommended to check and apply them regularly. This integration relies on functionality present in rather recent firmware.</p>
+<h2>Known limitations</h2>
+<p>The Solar API is read-only, so everything this integration changes on a device goes over <a>Modbus TCP</a>, and only what the SunSpec models expose: the output power limit and the battery charge, discharge, and reserve setpoints. Every setpoint is a percentage. Fronius exposes no absolute watt setting, and no maximum state of charge.</p>
+<p>Details about Modbus registers can be found in the device documentation or at the <a>Fronius website</a>.</p>
+<h2>Troubleshooting</h2>
+<h3>Can’t set up the device</h3>
+<ul>
+<li>Make sure the device is not in a power-saving mode when currently not producing energy.</li>
+<li>Make sure the device is connected to the network and is reachable from the Home Assistant instance.</li>
+<li>Check the device's settings to ensure that the <strong>Solar API</strong> is enabled.</li>
+</ul>
+<h3>Some devices are missing after setup or restart of Home Assistant</h3>
+<ul>
+<li>Make sure inverters are not in a power-saving mode when currently not producing energy - or wait until they start producing energy.</li>
+</ul>
+<h3>Some entities are missing after setup</h3>
+<p>Some data, like photovoltaic production, is only provided by the Fronius device when non-zero.
+When the integration is added at night, there might be no entities added providing photovoltaic related data. Entities will be added on sunrise, when the Fronius devices begin to provide more data.</p>
+<h3>No power limit or battery setpoints</h3>
+<p>These are the <code>number</code> entities described under <a>Modbus TCP</a>.</p>
+<ul>
+<li>Check that <strong>Inverter control via Modbus</strong> is enabled on the device's web interface, under the same <strong>Modbus</strong> settings where Modbus TCP is turned on. Without it the inverter rejects every write, so the integration doesn't offer the entities.</li>
+<li>Reload the integration after changing the setting.</li>
+</ul>
+<h3>No MPPT, PV energy, or battery energy entities</h3>
+<p>These come from the device's <a>Modbus TCP</a> interface.</p>
+<ul>
+<li>Check that Modbus TCP is enabled on the device's web interface.</li>
+<li>Check that the Modbus port configured in Home Assistant matches the device. Reconfigure the integration to change it.</li>
+<li>Make sure the inverter is not in a power-saving mode. An inverter that is powered down doesn't answer, and the entities are added once it wakes up.</li>
+</ul>
+<h2>Removing the integration</h2>
+<p>This integration can be removed by following these steps:</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/fronius.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to connect your Fronius SolarAPI devices to Home Assistant.
+ha_release: 0.96
+ha_domain: fronius
+related:
+  - docs: /integrations/modbus/
+    title: Modbus
+---
+
+The **Fronius** {% term integration %} polls a [Fronius](https://www.fronius.com/) solar inverter or datalogger for details of a Fronius SolarNet setup and integrate it in your Home Assistant installation.
+
+## Supported devices
+
+The integration supports all inverters with integrated Datamanager or external &quot;Datalogger Web&quot; providing the Fronius SolarAPI (JSON) interface of version `v0` or `v1`. This includes among others:
+
+- Agilo
+- Eco
+- Galvo
+- Gen24
+- IG Plus
+- Primo
+- Symo
+- Symo Hybrid
+- Tauro
+- Verto (Plus)&#32;
+
+Devices connected to those inverters or dataloggers are supported as well.
+
+- Energy meter (Fronius Smart Meter or S0 meter connected to the inverter)
+- Ohmpilot
+- Storage
+
+## Prerequisites
+
+You should either set a static IP or assign a static DHCP lease for the Fronius device, or alternatively access it through the local DNS name if your network is configured accordingly.
+
+{% note %}
+For Gen24 devices (delivered with Firmware &gt;= 1.14.1) make sure to activate &quot;Solar API&quot; in the inverters web interface. For older devices, Solar API should be enabled by default.
+{% endnote %}
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+    description: &quot;The host name or the IP address of the device.&quot;
+    required: true
+    type: string
+Modbus port:
+    description: &quot;The port of the device&#x27;s Modbus TCP interface. Only used when Modbus is enabled on the device, see [Modbus TCP](#modbus-tcp). The default is `502`.&quot;
+    required: false
+    type: integer
+Revert the power and battery limits if Home Assistant stops:
+    description: &quot;Whether the inverter should give up the power and battery limits set by Home Assistant when it stops hearing them, see [Falling back to the inverter&#x27;s own settings](#falling-back-to-the-inverters-own-settings). Off by default.&quot;
+    required: false
+    type: boolean
+{% endconfiguration_basic %}
+
+## Monitored data
+
+Each device adds a set of sensors to Home Assistant.
+
+- SolarNet device
+&#32;&#32;
+  - Logger information
+
+    General information about the Fronius Datalogger. Not available on &quot;Gen24&quot; devices.
+    Updated every hour.
+
+    - Serial number, software and hardware platforms
+    - Current price of energy consumed and returned to grid and the CO₂ factor as set in the Dataloggers settings
+
+  - Power flow
+
+    Cumulative data of the SolarNet system.
+    Updated every 10 seconds.
+
+    - Energy produced on the current day, year and total produced energy
+    - Power fed to the grid (if positive) or consumed from the grid (if negative)
+    - Power load as a generator (if positive) or consumer (if negative)
+    - Battery charging power (if positive) or discharging power (if negative)
+    - Whether the battery is in standby, on Gen24 devices with a battery
+    - Whether the system is currently supplying backup power during a grid outage, on Gen24, Tauro, and Verto devices with backup power configured
+    - Photovoltaic production
+    - Current relative self-consumption of produced energy
+    - Current relative autonomy
+
+- Inverter
+
+  The energy produced on the current day, year (not for Gen24 devices), and total produced energy, power, current, voltage, frequency, and status for an individual inverter.
+  Updated every minute.
+
+- Meter
+
+  Detailed information about power, current, and voltage, if supported, split among the phases.
+  Updated every minute.
+
+- Ohmpilot
+
+  Detailed information about energy, power, and temperature of your Ohmpilots.
+  Updated every minute.
+
+- Storage
+
+  Detailed information about current, voltage, state, cycle count, capacity and more about installed batteries.
+  Updated every minute.
+
+When an endpoint is not responding correctly the update interval will increase to 10 minutes (3 minutes for power flow) until valid data is received again. This reduces the number of requests to Fronius devices using night mode (shutdown when no PV power is produced).
+
+## Modbus TCP
+
+Most Fronius devices also provide a Modbus TCP interface using the [SunSpec](https://sunspec.org/) information models. It exposes per-string (MPP tracker) data that the Solar API does not, so the integration reads it in addition when it is available.
+
+Modbus is optional. If it isn&#x27;t enabled, or the inverter is powered down, no Modbus entities are created and the rest of the integration is unaffected. The integration checks again every hour, so entities appear on their own once the device answers.
+
+To enable it on the device&#x27;s web interface:
+
+- Gen24, Tauro, and Verto: go to **Communication** &gt; **Modbus** and turn on the Modbus TCP server.
+- Devices with a Datamanager: go to **Settings** &gt; **Modbus** and set **Data output via Modbus** to **TCP**. One Datamanager serves every inverter in its SolarNet ring.
+
+{% note %}
+Leave the data format setting (**float** or **int + SF**) as it is. The integration detects it automatically.
+{% endnote %}
+
+These entities are added per inverter and updated every minute:
+
+- `MPPT &lt;n&gt; DC power` and `MPPT &lt;n&gt; energy` for each MPP tracker.
+- `MPPT &lt;n&gt; DC current` and `MPPT &lt;n&gt; DC voltage` for each MPP tracker. [Disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+- `PV energy total`: lifetime energy from the photovoltaic strings only. Whether this is a DC measurement depends on the device, see below.
+- `Battery charging energy total` and `Battery discharging energy total`: on hybrid inverters that expose their battery as dedicated MPP trackers, such as Gen24 with a battery.
+
+`MPPT &lt;n&gt; DC power` is a DC measurement on every device tested, and matches `MPPT &lt;n&gt; DC current` times `MPPT &lt;n&gt; DC voltage`.
+
+`MPPT &lt;n&gt; energy` is not consistent between devices, which is why its name does not claim a side. A Gen24 reports the lifetime energy of each string, which is a DC value and therefore a few percent above `Total energy`, the AC counter. A SnapINverter reports the same value as `Total energy` instead, so `PV energy total` matches it exactly rather than adding anything. Comparing the two entities on your own system shows which the inverter provides.
+
+### Controlling the inverter over Modbus
+
+Modbus is the only interface that lets Home Assistant change settings on the inverter; the Solar API is read-only. These setpoints are added as `number` entities, and appear under **Configuration** on the inverter&#x27;s device page:
+
+- `AC power limit`: caps the power the inverter puts out on AC, as a percentage of its nominal power output. This is _not_ a feed-in limit. Everything the inverter delivers counts against it, whether it is used in the house or exported to the grid.
+- `Battery charge power limit` and `Battery discharge power limit`: cap how fast the battery may charge or discharge, as a percentage of its maximum rate. A negative value reverses the direction and forces the battery, see [Forcing the battery to charge or discharge](#forcing-the-battery-to-charge-or-discharge).
+- `Battery minimum reserve`: the state of charge the battery is not discharged below.
+
+The `AC power limit`, `Battery charge power limit`, and `Battery discharge power limit` setpoints each have a `switch` that turns the limit on and off: `AC power limiting`, `Battery charge power limiting`, and `Battery discharge power limiting`. `Battery grid charging` is a separate switch that allows or prevents charging the battery from the grid.
+
+{% warning %}
+**Dynamic power reduction** is what implements an export cap agreed with your grid operator, because it measures at the grid connection point. The `AC power limit` cannot do that, as it only knows the inverter&#x27;s own output. If Modbus outranks **Dynamic power reduction**, holding the `AC power limit` on at `100 %` overrides that cap, which may put the installation outside what the grid operator allows.
+{% endwarning %}
+
+{% important %}
+Writing has to be allowed on the device first. Go to **Communication** &gt; **Modbus** (Gen24, Tauro, and Verto) or **Settings** &gt; **Modbus** (Datamanager), and turn on **Inverter control via Modbus**.
+
+Until it is, the inverter rejects every write, and the integration creates no control entities at all rather than ones that fail when used. Turn it on, then reload the integration.
+{% endimportant %}
+
+A setpoint is only applied while its switch is on. Setting one while the switch is off stores the value on the inverter without applying it, and turning the switch on then applies what is stored, which is the order Fronius documents.
+
+Turning a limit **off** does not lift it. The inverter hands control back to the next source in its priority list, which may impose a limit of its own, such as **Dynamic power reduction**. To override such a source instead, leave the limit **on** and set it to `100 %`. That is an active instruction to run unrestricted, where off is &quot;someone else decides&quot;.
+
+The inverter decides which control source wins. If **IO control** or **Dynamic power reduction** has a higher priority than Modbus in the DNO Editor, the inverter may refuse or ignore what Home Assistant sends.
+
+Depending on the inverter&#x27;s firmware, an `AC power limit` below `10 %` may force the inverter into standby, stopping feed-in altogether rather than throttling it.
+
+On a hybrid inverter, the `AC power limit` does not restrict **charging** the battery. Charging is not AC output. Surplus photovoltaic power goes into the battery instead of being wasted, which makes the limit useful for peak shaving. **Discharging** does count against it, because that power leaves the inverter on AC.
+
+#### Falling back to the inverter&#x27;s own settings
+
+A setpoint stays on the inverter until it is changed, including while Home Assistant is shut down or unreachable. Removing the integration leaves it behind as well, with nothing left to take it back. To have the inverter recover on its own instead, turn on **Revert the power and battery limits if Home Assistant stops**. It is offered when the integration is set up, and can be changed later: go to **Settings** &gt; **Devices &amp; services** &gt; **Fronius**, select the three dots menu {% icon &quot;mdi:dots-vertical&quot; %} next to the entry, and choose **Reconfigure**.
+
+The inverter then drops the `AC power limit`, the `Battery charge power limit`, and the `Battery discharge power limit` an hour after it last received them, and hands control back to its own priority list. Home Assistant sends active limits again every 15 minutes, so the hour only ever runs out once Home Assistant has really stopped - a restart or a short outage has plenty of room. An inverter held at `30 %` runs unrestricted an hour after Home Assistant stops sending updates.
+
+This applies to these three limits only. The `Battery minimum reserve` and `Battery grid charging` keep their value whatever happens to Home Assistant.
+
+#### The battery limits are power, not a charge level
+
+`Battery charge power limit` limits charging _power_. It is not a &quot;charge to 80 %&quot; setting. The inverter exposes no maximum state of charge over Modbus at all; only the minimum reserve.
+
+A charge ceiling can be built as an automation instead, using the battery&#x27;s state of charge sensor and the charge power limit:
+
+```yaml
+automation:
+  - alias: &quot;Stop charging the battery at 80%&quot;
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.byd_battery_box_premium_hv_state_of_charge
+        above: 80
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_charge_power_limit
+        data:
+          value: 0
+  - alias: &quot;Allow charging the battery again below 75%&quot;
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.byd_battery_box_premium_hv_state_of_charge
+        below: 75
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_charge_power_limit
+        data:
+          value: 100
+```
+
+`Battery charge power limiting` has to be on for this to take effect. Discharging is limited by its own setpoint, so the battery still supplies the house while charging is held at `0 %`. If Home Assistant stops running, the inverter keeps the last setpoint and switch state until you change them again, unless **Revert the power and battery limits if Home Assistant stops** is on. See [Falling back to the inverter&#x27;s own settings](#falling-back-to-the-inverters-own-settings).
+
+#### Forcing the battery to charge or discharge
+
+The battery limits range from `-100 %` to `100 %`, and a negative value reverses the direction: it sets a _minimum_ rate in the opposite direction instead of a maximum. A `Battery discharge power limit` of `-100 %` makes the battery **charge** at its full rate, and a `Battery charge power limit` of `-50 %` makes it **discharge** at least at half its rate, more if the house needs it and the discharge limit allows. This is how Fronius documents forcing the battery, and what other tools writing these registers set.
+
+- The limit only takes effect while its switch is on: `Battery discharge power limiting` for forced charging, `Battery charge power limiting` for forced discharging.
+- With `Battery grid charging` on, a negative discharge limit charges at least at that rate, from the grid or photovoltaic power if available. With it off, forced charging can only use photovoltaic power. The inverter also has to allow grid charging in its own settings, on a GEN24 under **Device configuration** &gt; **Components** &gt; **Battery**: it only charges from the grid when both are on. Depending on your model and firmware version, this setting may require the technician login, so your installer might have to enable it.
+- With both limits on, the charge limit plus the discharge limit must not be below `0 %`. The inverter refuses anything else, including both limits negative at once, and Home Assistant rejects such a change with an error before sending it. With a `Battery charge power limit` of `40 %` on, for example, a discharge limit of `-100 %` is refused, while `-40 %` will force a charge at `40 %`.
+- Forcing replaces the value of the limit it uses. If that limit was set to something else before, set it back yourself afterwards.
+
+To charge the battery from the grid during a cheap night tariff, with grid charging allowed on the inverter (see above) and `Battery charge power limiting` off or at `100 %`:
+
+```yaml
+automation:
+  - alias: &quot;Charge the battery from the grid at night&quot;
+    triggers:
+      - trigger: time
+        at: &quot;02:00:00&quot;
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_discharge_power_limit
+        data:
+          value: -100
+      - action: switch.turn_on
+        target:
+          entity_id:
+            - switch.gen24_battery_discharge_power_limiting
+            - switch.gen24_battery_grid_charging
+  - alias: &quot;Stop charging the battery from the grid in the morning&quot;
+    triggers:
+      - trigger: time
+        at: &quot;06:00:00&quot;
+    actions:
+      - action: number.set_value
+        target:
+          entity_id: number.gen24_battery_discharge_power_limit
+        data:
+          value: 100
+      - action: switch.turn_off
+        target:
+          entity_id:
+            - switch.gen24_battery_discharge_power_limiting
+            - switch.gen24_battery_grid_charging
+```
+
+With a lower charge limit on, the `-100 %` is refused, as the two limits would add up to less than `0 %`. That includes the charge ceiling example above, which holds the charge limit at `0 %`, so the two examples can&#x27;t be combined unchanged: either turn `Battery charge power limiting` off for the night, or force with no more than the charge limit, for example `-40 %` at a charge limit of `40 %`.
+
+Unless **Revert the power and battery limits if Home Assistant stops** is on, a forced charge stays on the inverter if Home Assistant stops running, so the battery keeps charging from the grid until the limit is changed again. See [Falling back to the inverter&#x27;s own settings](#falling-back-to-the-inverters-own-settings).
+
+## Energy dashboard
+
+Recommended [energy dashboard](/docs/energy/) configuration:
+
+- For _&quot;Solar production&quot;_:
+  - If no battery is connected to an inverter: Add each inverters `Energy total` entity.
+  - If a battery is connected to an inverter: Use [Riemann sum](/integrations/integration/) over `SolarNet Power photovoltaics` entity.
+- _&quot;Battery systems&quot;_ energy values aren&#x27;t supported directly by the Solar API. Use [Riemann sum](/integrations/integration/) to integrate `SolarNet Power battery charge` and `SolarNet Power battery discharge` into energy values (kWh).
+- For _&quot;Devices&quot;_ use the Ohmpilots `Energy consumed` entity.
+
+{% important %}
+For _&quot;Solar production&quot;_, prefer the inverter&#x27;s `Energy total`. That is the AC energy you can use or sell.
+
+Where the device reports per-string energy, `PV energy total` is what the panels delivered before inverter conversion losses, so it reads a few percent higher. Where it does not, it is the same value as `Energy total` and adds nothing. Either way, the AC value is the one to use.
+
+`Battery charging energy total` and `Battery discharging energy total` are DC values measured at the battery. They are counters read from the device rather than values integrated over time, so they don&#x27;t drift and are unaffected by Home Assistant restarts. For the same reason, they don&#x27;t exactly match a Riemann sum of `SolarNet Power battery charge` and `SolarNet Power battery discharge`.
+{% endimportant %}
+
+The energy meter integrated with Fronius devices can be installed (and configured) in two different installation positions: _&quot;feed in path&quot;_ (grid interconnection point) or _&quot;consumption path&quot;_.
+
+### Feed in path meter
+
+Recommended energy dashboard configuration for meter location in feed in path:
+
+- For _&quot;Grid consumption&quot;_ use the meters `Energy real consumed` entity.
+- For _&quot;Return to grid&quot;_ use the meters `Energy real produced` entity.
+
+### Consumption path meter
+
+Recommended energy dashboard configuration for meter location in consumption path:
+
+1. Use [Riemann sum](/integrations/integration/) to integrate `SolarNet Power grid import` and `SolarNet Power grid export` entities into energy values (Wh or kWh).
+2. Use these energy entities for `Grid consumption` and `Return to grid` in the energy dashboard configuration.
+
+## Example automation
+
+The following {% term automation %} toggles a switch when the solar production crosses certain thresholds:
+
+```yaml
+description: &quot;Turn on switch when PV power is above 1000 W and turn it off below 50 W.&quot;
+mode: single
+triggers:
+  - trigger: state
+    entity_id:
+      - sensor.solarnet_power_photovoltaics
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.solarnet_power_photovoltaics
+            above: 1000
+        sequence:
+          - action: switch.turn_on
+            metadata: {}
+            data: {}
+            target:
+              entity_id: switch.swtest
+      - conditions:
+          - condition: numeric_state
+            entity_id: sensor.solarnet_power_photovoltaics
+            below: 50
+        sequence:
+          - action: switch.turn_off
+            metadata: {}
+            data: {}
+            target:
+              entity_id: switch.swtest
+
+```
+
+## Note
+
+Fronius often provides firmware updates for the datamanager interfaces and the devices in their system, it&#x27;s recommended to check and apply them regularly. This integration relies on functionality present in rather recent firmware.
+
+## Known limitations
+
+The Solar API is read-only, so everything this integration changes on a device goes over [Modbus TCP](#modbus-tcp), and only what the SunSpec models expose: the output power limit and the battery charge, discharge, and reserve setpoints. Every setpoint is a percentage. Fronius exposes no absolute watt setting, and no maximum state of charge.
+
+Details about Modbus registers can be found in the device documentation or at the [Fronius website](https://www.fronius.com/).
+
+## Troubleshooting
+
+### Can’t set up the device
+
+- Make sure the device is not in a power-saving mode when currently not producing energy.
+- Make sure the device is connected to the network and is reachable from the Home Assistant instance.
+- Check the device&#x27;s settings to ensure that the **Solar API** is enabled.
+
+### Some devices are missing after setup or restart of Home Assistant
+
+- Make sure inverters are not in a power-saving mode when currently not producing energy - or wait until they start producing energy.
+
+### Some entities are missing after setup
+
+Some data, like photovoltaic production, is only provided by the Fronius device when non-zero.
+When the integration is added at night, there might be no entities added providing photovoltaic related data. Entities will be added on sunrise, when the Fronius devices begin to provide more data.
+
+### No power limit or battery setpoints
+
+These are the `number` entities described under [Modbus TCP](#modbus-tcp).
+
+- Check that **Inverter control via Modbus** is enabled on the device&#x27;s web interface, under the same **Modbus** settings where Modbus TCP is turned on. Without it the inverter rejects every write, so the integration doesn&#x27;t offer the entities.
+- Reload the integration after changing the setting.
+
+### No MPPT, PV energy, or battery energy entities
+
+These come from the device&#x27;s [Modbus TCP](#modbus-tcp) interface.
+
+- Check that Modbus TCP is enabled on the device&#x27;s web interface.
+- Check that the Modbus port configured in Home Assistant matches the device. Reconfigure the integration to change it.
+- Make sure the inverter is not in a power-saving mode. An inverter that is powered down doesn&#x27;t answer, and the entities are added once it wakes up.
+
+## Removing the integration
+
+This integration can be removed by following these steps:
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Fronius.</p><p>The <strong>reconfigure</strong> configuration step lists <code>auto_revert_power_limit</code>, <code>host</code>, <code>modbus_port</code>.</p><p>The <strong>user</strong> configuration step lists <code>auto_revert_power_limit</code>, <code>host</code>, <code>modbus_port</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>number</li><li>sensor</li><li>switch</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Supported devices</li><li>Prerequisites</li><li>Monitored data</li><li>Modbus TCP</li><li>Energy dashboard</li><li>Example automation</li><li>Note</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/fronius/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/fronius</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/fronius</code></dd></dl></section><p><a href="../../integrations/fronius/">Return to the Fronius guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

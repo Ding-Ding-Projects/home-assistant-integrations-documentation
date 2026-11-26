@@ -1,1 +1,387 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quick actions reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:182" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/quick_action/">Quick actions guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Quick actions</h1><p></p><section><h2>Configuration details</h2><p>The domain used to identify Quick actions in Home Assistant is <code>quick_action</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/quick_action</code></dd></dl></section><p><a href="../../integrations/quick_action/">Return to the Quick actions guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quick actions reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:182" data-theme="folio"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/quick_action/">Quick actions guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Quick actions</h1><p></p><div class="reader-body"><h2>Quick actions</h2>
+<p>A quick action is a short list of steps, written in the guided view or as
+YAML, that runs once and is then thrown away. It is opened with "Run a quick
+action" next to an entity. It is never saved: nothing is written to the
+configuration, to <code>.storage</code> or anywhere else unless you press "Keep as a
+script", which opens the script editor so you can see and name the script
+before saving it.</p>
+<h2>Where it runs</h2>
+<ul>
+<li><strong>Administrators</strong> run it on the server through the built-in <code>quick_action</code>
+component. The steps keep running if you close the page or the browser, so a
+step that waits ten minutes still happens.</li>
+<li><strong>Everyone else</strong> runs it from the page: each step is sent as an ordinary
+action call that the server checks against your permissions, and waits
+happen in the page. If you leave or reload the page during a wait, the steps
+after it do not run.</li>
+<li>With an older server that does not have the <code>quick_action</code> component, an
+administrator's quick action runs once on the server as before and cannot be
+listed or stopped; the dialog says so.</li>
+</ul>
+<h2>Stopping a quick action</h2>
+<ul>
+<li>While a quick action runs, the dialog shows <strong>Stop</strong> next to <strong>Run</strong>.
+Stopping never asks for confirmation, because stopping is the safe direction.</li>
+<li>When any quick action is running on the server, a line at the top of the
+dialog says how many are running and lists each one with when it started,
+what it is doing now (when the server reports it) and its own <strong>Stop</strong>
+button. The same list appears at the top of the Actions tool
+(Settings, Tools, Actions), so a quick action started from another browser
+or a closed page can be stopped there.</li>
+<li>Stopping takes effect at once during a wait. An action call that is already
+in progress finishes; the steps after it do not run.</li>
+<li>Only administrators can start, list or stop server quick actions.</li>
+</ul>
+<h2>What the server keeps</h2>
+<p>The server keeps quick actions in memory only:</p>
+<ul>
+<li>running ones, and ended ones (finished, failed or stopped) for ten minutes;</li>
+<li>for each: a label, the entity it was started from, the id of the user who
+started it, when it started and ended, its state, the number of top-level
+steps, a short description of the action it is on, and the error text when
+it failed;</li>
+<li>at most 20 at a time. When 20 are still running, a new one is refused until
+one is stopped; ended ones make room by themselves.</li>
+</ul>
+<h2>Restarts</h2>
+<p>A quick action does not survive a restart. Every quick action still running
+when Home Assistant stops is stopped, and the list is empty after Home
+Assistant starts again.</p>
+<h2>Websocket commands</h2>
+<p>All are administrator only.</p>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>quick_action/run</code></td>
+  <td>Validates <code>sequence</code> like <code>execute_script</code>, starts it and returns <code>{"id": ...}</code> without waiting. Optional <code>entity_id</code> and <code>label</code> (up to 100 characters).</td>
+</tr>
+<tr>
+  <td><code>quick_action/list</code></td>
+  <td>Returns <code>{"runs": [...]}</code>, newest first.</td>
+</tr>
+<tr>
+  <td><code>quick_action/stop</code></td>
+  <td>Stops the run with <code>run_id</code>. Stopping one that already ended succeeds; an unknown id returns <code>not_found</code>.</td>
+</tr>
+<tr>
+  <td><code>quick_action/subscribe</code></td>
+  <td>Sends the list now and whenever it changes.</td>
+</tr>
+</tbody>
+</table>
+<h2>Verification</h2>
+<ul>
+<li>Server tests: <code>core/tests/components/quick_action/test_init.py</code> (run
+returns at once, list, stop during a wait, failure text, administrator
+only, the limit of 20, stopping at shutdown, forgetting ended runs).</li>
+<li>Interface tests: <code>frontend/test/data/quick-action.test.ts</code> (server run
+states, the running list, label length, a wait that can be stopped).</li>
+<li>Not yet seen in a running build.</li>
+</ul>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Material feature documentation by Ding-Ding-Projects and its contributors under the Apache License, Version 2.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/Ding-Ding-Projects/home-assistant-material/blob/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/docs/features/automations/quick-actions.md</code></p><details><summary>Original Markdown source</summary><pre># Quick actions
+
+A quick action is a short list of steps, written in the guided view or as
+YAML, that runs once and is then thrown away. It is opened with &quot;Run a quick
+action&quot; next to an entity. It is never saved: nothing is written to the
+configuration, to `.storage` or anywhere else unless you press &quot;Keep as a
+script&quot;, which opens the script editor so you can see and name the script
+before saving it.
+
+## Where it runs
+
+- **Administrators** run it on the server through the built-in `quick_action`
+  component. The steps keep running if you close the page or the browser, so a
+  step that waits ten minutes still happens.
+- **Everyone else** runs it from the page: each step is sent as an ordinary
+  action call that the server checks against your permissions, and waits
+  happen in the page. If you leave or reload the page during a wait, the steps
+  after it do not run.
+- With an older server that does not have the `quick_action` component, an
+  administrator&#x27;s quick action runs once on the server as before and cannot be
+  listed or stopped; the dialog says so.
+
+## Stopping a quick action
+
+- While a quick action runs, the dialog shows **Stop** next to **Run**.
+  Stopping never asks for confirmation, because stopping is the safe direction.
+- When any quick action is running on the server, a line at the top of the
+  dialog says how many are running and lists each one with when it started,
+  what it is doing now (when the server reports it) and its own **Stop**
+  button. The same list appears at the top of the Actions tool
+  (Settings, Tools, Actions), so a quick action started from another browser
+  or a closed page can be stopped there.
+- Stopping takes effect at once during a wait. An action call that is already
+  in progress finishes; the steps after it do not run.
+- Only administrators can start, list or stop server quick actions.
+
+## What the server keeps
+
+The server keeps quick actions in memory only:
+
+- running ones, and ended ones (finished, failed or stopped) for ten minutes;
+- for each: a label, the entity it was started from, the id of the user who
+  started it, when it started and ended, its state, the number of top-level
+  steps, a short description of the action it is on, and the error text when
+  it failed;
+- at most 20 at a time. When 20 are still running, a new one is refused until
+  one is stopped; ended ones make room by themselves.
+
+## Restarts
+
+A quick action does not survive a restart. Every quick action still running
+when Home Assistant stops is stopped, and the list is empty after Home
+Assistant starts again.
+
+## Websocket commands
+
+All are administrator only.
+
+| Command | Does |
+| --- | --- |
+| `quick_action/run` | Validates `sequence` like `execute_script`, starts it and returns `{&quot;id&quot;: ...}` without waiting. Optional `entity_id` and `label` (up to 100 characters). |
+| `quick_action/list` | Returns `{&quot;runs&quot;: [...]}`, newest first. |
+| `quick_action/stop` | Stops the run with `run_id`. Stopping one that already ended succeeds; an unknown id returns `not_found`. |
+| `quick_action/subscribe` | Sends the list now and whenever it changes. |
+
+## Verification
+
+- Server tests: `core/tests/components/quick_action/test_init.py` (run
+  returns at once, list, stop during a wait, failure text, administrator
+  only, the limit of 20, stopping at shutdown, forgetting ended runs).
+- Interface tests: `frontend/test/data/quick-action.test.ts` (server run
+  states, the running list, label length, a wait that can be stopped).
+- Not yet seen in a running build.
+</pre></details></section><details><summary>Project notice</summary><pre># Notice
+
+Home Assistant Material is an independent project. It is not affiliated with, sponsored by or
+endorsed by Home Assistant, the Open Home Foundation or Nabu Casa. &quot;Home Assistant&quot; is a
+trademark of its owner and is used here only to say what this project is built from.
+
+This repository contains source code from the following projects, each in its own subfolder
+with its original licence file:
+
+| Subfolder | Project | Licence |
+| --- | --- | --- |
+| `core/` | Home Assistant Core | Apache-2.0 (`core/LICENSE.md`) |
+| `frontend/` | Home Assistant Frontend | Apache-2.0 (`frontend/LICENSE.md`) |
+| `supervisor/` | Home Assistant Supervisor | Apache-2.0 (`supervisor/LICENSE`) |
+| `operating-system/` | Home Assistant Operating System | Apache-2.0 (`operating-system/LICENSE`) |
+| `operating-system/buildroot/` | Buildroot | GPL-2.0-or-later (`operating-system/buildroot/COPYING`) |
+| `landingpage/` | Home Assistant landing page | Apache-2.0 (`landingpage/LICENSE`) |
+| `version/` | Home Assistant version feed | Apache-2.0 |
+
+Files outside those subfolders are licensed under Apache-2.0 (`LICENSE`).
+
+Design files use the Material Design Icons set (Apache-2.0 / Pictogrammers Free License) and
+reference the Google Sans Flex, Roboto Flex and Roboto Mono typefaces (SIL Open Font License 1.1).
+
+`UPSTREAM.md` records the exact upstream commit of every subfolder, and
+`docs/material-changes.md` lists every change made to them.
+</pre></details><details><summary>Source license</summary><pre>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      &quot;control&quot; means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      &quot;Source&quot; form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      &quot;Object&quot; form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      &quot;Work&quot; shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      &quot;Contribution&quot; shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+      &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+      replaced with your own identifying information. (Don&#x27;t include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same &quot;printed page&quot; as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Quick actions in Home Assistant is <code>quick_action</code>.</p></section><section><h2>Source addresses</h2><dl><dt>Component documentation</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/quick_action</code></dd></dl></section><p><a href="../../integrations/quick_action/">Return to the Quick actions guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

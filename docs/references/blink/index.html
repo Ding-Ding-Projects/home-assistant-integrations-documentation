@@ -1,1 +1,423 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blink reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:305" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/blink/">Blink guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Blink</h1><p>Instructions for how to integrate Blink camera/security system within Home Assistant.</p><section><h2>Overview</h2><p>The Blink integration  lets you view camera images and motion events from Blink camera and security systems.</p></section><section><h2>Setup</h2><p>You will need your Blink login information (username, which is usually your email address, and password) to use this module.</p></section><section><h2>Configuration</h2><p>1. You are sent an email asking for you to allow Home Assistant to access Blink. In this case, leave the pin field blank and hit Submit.</p></section><section><h2>Examples</h2><p>The following are some examples showing how to correctly perform an action using Blink:</p></section><section><h2>Snap picture and save locally</h2><p>This example script shows how to take a picture with your camera, named My Camera in your Blink app (this is not necessarily the friendly name in Home Assistant).  After snapping a picture, the image will then be saved to a local directory called /tmp/my_image.jpg.  Note that this example uses actions found in the camera integration</p></section><section><h2>Arm Blink when away</h2><p>This example automation will arm your blink sync module to detect motion on any of your blink cameras that have motion detection enabled. By default, Blink enables motion detection on all cameras so, unless you&#x27;ve changed anything in your app, you&#x27;re all set. If you want to manually enable motion detection for individual cameras, you can use the appropriate camera action but motion will only be captured if the sync module is armed.</p></section><section><h2>Disarm Blink when home</h2><p>Similar to the previous example, this automation will disarm blink when arriving home.</p></section><section><h2>Save most recent video locally when motion detected</h2><p>When motion is detected, you can use the Blink Home Assistant integration to save the last recorded video locally, rather than relying on Blink&#x27;s servers to save your data.</p></section><section><h2>Save all recent clips locally on a schedule</h2><p>A list of all the recent video clips is updated at each refresh of the Blink system. The video clips are available in a download list (per camera) for up to an hour, and they can be downloaded at any time before the one-hour expiration time. After a clip is downloaded it is removed from the list.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Blink.</p><p>The <strong>2fa</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>camera</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>record</li><li>save recent clips</li><li>save video</li><li>trigger camera</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setup</li><li>Configuration</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/blink/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/blink</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/blink</code></dd></dl></section><p><a href="../../integrations/blink/">Return to the Blink guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blink reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:305" data-theme="gallery"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/blink/">Blink guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Blink</h1><p>Instructions for how to integrate Blink camera/security system within Home Assistant.</p><div class="reader-body"><p>The <strong>Blink</strong> integration  lets you view camera images and motion events from <a>Blink</a> camera and security systems.</p>
+<p><strong>Important</strong></p>
+<p>This integration does NOT allow for live viewing of your Blink camera within Home Assistant.</p>
+<h2>Setup</h2>
+<p>You will need your Blink login information (username, which is usually your email address, and password) to use this module.</p>
+<h2>Configuration</h2>
+<p>The preferred method for setting this up is by using the configuration flow. Go to the integrations page in your configuration and click on new integration -&gt; Blink. When you are prompted for your pin, there are (currently) two possibilities:</p>
+<ol>
+<li><p>You are sent an email asking for you to allow Home Assistant to access Blink. In this case, leave the pin field blank and hit <code>Submit</code>.</p>
+</li>
+<li><p>You are sent an email or SMS containing a 2FA pin. In this case, please enter the pin and hit <code>Submit</code>.</p>
+</li>
+</ol>
+<p>Your integration will then set up. Given that setup is asynchronous, you may see your sensors before they have finished extracting data from the Blink servers. After a few minutes (at most) this information should populate.</p>
+<p>Once Home Assistant starts and you authenticate access, the <code>blink</code> integration will create the following platforms (note: Blink Mini cameras do not currently support any of the sensors, nor the battery status binary sensor):</p>
+<ul>
+<li>An <code>alarm_control_panel</code> to arm/disarm the whole blink system (note, <code>alarm_arm_home</code> is not implemented and will not actually do anything, despite it being an option in the GUI).</li>
+<li>A <code>camera</code> for each camera linked to your Blink sync module.</li>
+<li>A <code>sensor</code> per camera for temperature and Wi-Fi strength.</li>
+<li>A <code>binary_sensor</code> motion detection, camera armed status, and battery status.</li>
+<li>A <code>switch</code> per camera to enable/disable motion detection</li>
+</ul>
+<p>Since the cameras are battery operated, polling must be done with care so as to not drain the battery too quickly, or hammer Blink's servers with too many API requests. If an alternate polling rate is desired, disable the "enable poll for updates" option in the Blink integration system options and poll with <code>homeassistant.update_entity</code> action. The cameras can be also manually updated via the <code>trigger_camera</code> action. As a note, all of the camera-specific sensors are only polled when a new image is requested from the camera. This means that relying on any of these sensors to provide timely and accurate data is not recommended.</p>
+<p>Each camera reports two different states: one as <code>sensor.blink_&lt;camera_name&gt;_status</code> and the other as <code>binary_sensor.blink_&lt;camera_name&gt;_motion_enabled</code>. The <code>motion_enabled</code> property reports if the <code>camera</code> is ready to detect motion <strong>regardless if the system is actually armed</strong>.</p>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<p>In addition to these actions, the generic <a href="../camera/">camera</a>, <a href="../alarm_control_panel/">alarm control panel</a>, and <a href="../homeassistant/">Home Assistant Core</a> actions are available. The <code>camera.enable_motion_detection</code> and <code>camera.disable_motion_detection</code> actions enable and disable motion detection for individual cameras. The <code>alarm_control_panel.alarm_arm_away</code> and <code>alarm_control_panel.alarm_disarm</code> actions arm and disarm the whole system. The <code>homeassistant.update_entity</code> action forces an update of the Blink system. Blink Mini cameras linked to an existing sync module cannot be armed or disarmed individually in Home Assistant.</p>
+<h2>Examples</h2>
+<p>The following are some examples showing how to correctly perform an action using Blink:</p>
+<h3>Snap picture and save locally</h3>
+<p>This example script shows how to take a picture with your camera, named <code>My Camera</code> in your Blink app (this is <strong>not necessarily</strong> the friendly name in Home Assistant).  After snapping a picture, the image will then be saved to a local directory called <code>/tmp/my_image.jpg</code>.  Note that this example uses actions found in the <a href="../camera/">camera integration</a></p>
+<pre><code>alias: "Blink Snap Picture"
+sequence:
+  - action: blink.trigger_camera
+    target:
+      entity_id: camera.blink_my_camera
+  - action: camera.snapshot
+    target:
+      entity_id: camera.blink_my_camera
+    data:
+      filename: /tmp/my_image.jpg
+</code></pre>
+<h3>Arm Blink when away</h3>
+<p>This example automation will arm your blink sync module to detect motion on any of your blink cameras that have motion detection enabled. By default, Blink enables motion detection on all cameras so, unless you've changed anything in your app, you're all set. If you want to manually enable motion detection for individual cameras, you can use the <a href="../camera/">appropriate camera action</a> but motion will only be captured if the sync module is armed.</p>
+<p>Here, this example assumes your blink module is named <code>My Sync Module</code> and that you have <a href="../device_tracker/">device trackers</a> set up for presence detection.</p>
+<pre><code>- alias: "Arm Blink When Away"
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: "not_home"
+  actions:
+    - action: alarm_control_panel.alarm_arm_away
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
+</code></pre>
+<h3>Disarm Blink when home</h3>
+<p>Similar to the previous example, this automation will disarm blink when arriving home.</p>
+<pre><code>- alias: "Disarm Blink When Home"
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: "home"
+  actions:
+    - action: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
+</code></pre>
+<h3>Save most recent video locally when motion detected</h3>
+<p>When motion is detected, you can use the Blink Home Assistant integration to save the last recorded video locally, rather than relying on Blink's servers to save your data.</p>
+<p>The following example assumes your camera's name (in the Blink app) is <code>My Camera</code> and your sync module name is <code>My Sync Module</code>.  The file will be saved to <code>/tmp/videos/blink_video_{YYYMMDD_HHmmSS}.mp4</code> where <code>{YYYYMMDD_HHmmSS}</code> will be a timestamp create via the use of <a>templating</a>.</p>
+<pre><code>- alias: "Save Blink Video on Motion"
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.blink_my_camera_motion_detected
+      to: "on"
+  actions:
+    -  action: blink.save_video
+       target:
+         entity_id: camera.blink_my_camera
+       data:
+         filename: "/tmp/videos/blink_video_{{ now().strftime('%Y%m%d_%H%M%S') }}.mp4"
+</code></pre>
+<h3>Save all recent clips locally on a schedule</h3>
+<p>A list of all the recent video clips is updated at each refresh of the Blink system.
+The video clips are available in a download list (per camera) for up to an hour,
+and they can be downloaded at any time before the one-hour expiration time.
+After a clip is downloaded it is removed from the list.</p>
+<p>The following example demonstrates saving recent clips every three minutes.
+It assumes your camera's name (in the Blink app) is <code>My Camera</code>.
+The file will be saved to <code>/tmp/videos/YYYYMMDD_HHmmSS_MyCamera.mp4</code>.
+The file name of the downloaded video file is not configurable.</p>
+<pre><code>- alias: "Save Recent Clips from My Camera"
+  triggers:
+    - trigger: time_pattern
+      minutes: /3
+  actions:
+    - action: blink.save_recent_clips
+      target:
+        entity_id: camera.my_camera
+      data:
+        file_path: /tmp/videos
+</code></pre>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/blink.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions for how to integrate Blink camera/security system within Home Assistant.
+ha_release: &#x27;0.40&#x27;
+ha_domain: blink
+---
+
+The **Blink** {% term integration %}  lets you view camera images and motion events from [Blink](https://blinkforhome.com/) camera and security systems.
+
+{% important %}
+This integration does NOT allow for live viewing of your Blink camera within Home Assistant.
+{% endimportant %}
+
+## Setup
+
+You will need your Blink login information (username, which is usually your email address, and password) to use this module.
+
+## Configuration
+
+The preferred method for setting this up is by using the configuration flow. Go to the integrations page in your configuration and click on new integration -&gt; Blink. When you are prompted for your pin, there are (currently) two possibilities:
+
+1. You are sent an email asking for you to allow Home Assistant to access Blink. In this case, leave the pin field blank and hit `Submit`.
+
+2. You are sent an email or SMS containing a 2FA pin. In this case, please enter the pin and hit `Submit`.
+
+Your integration will then set up. Given that setup is asynchronous, you may see your sensors before they have finished extracting data from the Blink servers. After a few minutes (at most) this information should populate.
+
+Once Home Assistant starts and you authenticate access, the `blink` integration will create the following platforms (note: Blink Mini cameras do not currently support any of the sensors, nor the battery status binary sensor):
+
+- An `alarm_control_panel` to arm/disarm the whole blink system (note, `alarm_arm_home` is not implemented and will not actually do anything, despite it being an option in the GUI).
+- A `camera` for each camera linked to your Blink sync module.
+- A `sensor` per camera for temperature and Wi-Fi strength.
+- A `binary_sensor` motion detection, camera armed status, and battery status.
+- A `switch` per camera to enable/disable motion detection
+
+Since the cameras are battery operated, polling must be done with care so as to not drain the battery too quickly, or hammer Blink&#x27;s servers with too many API requests. If an alternate polling rate is desired, disable the &quot;enable poll for updates&quot; option in the Blink integration system options and poll with `homeassistant.update_entity` action. The cameras can be also manually updated via the `trigger_camera` action. As a note, all of the camera-specific sensors are only polled when a new image is requested from the camera. This means that relying on any of these sensors to provide timely and accurate data is not recommended.
+
+Each camera reports two different states: one as `sensor.blink_&lt;camera_name&gt;_status` and the other as `binary_sensor.blink_&lt;camera_name&gt;_motion_enabled`. The `motion_enabled` property reports if the `camera` is ready to detect motion **regardless if the system is actually armed**.
+
+{% include integrations/actions.md %}
+
+In addition to these actions, the generic [camera](/integrations/camera/), [alarm control panel](/integrations/alarm_control_panel/), and [Home Assistant Core](/integrations/homeassistant/) actions are available. The `camera.enable_motion_detection` and `camera.disable_motion_detection` actions enable and disable motion detection for individual cameras. The `alarm_control_panel.alarm_arm_away` and `alarm_control_panel.alarm_disarm` actions arm and disarm the whole system. The `homeassistant.update_entity` action forces an update of the Blink system. Blink Mini cameras linked to an existing sync module cannot be armed or disarmed individually in Home Assistant.
+
+## Examples
+
+The following are some examples showing how to correctly perform an action using Blink:
+
+### Snap picture and save locally
+
+This example script shows how to take a picture with your camera, named `My Camera` in your Blink app (this is **not necessarily** the friendly name in Home Assistant).  After snapping a picture, the image will then be saved to a local directory called `/tmp/my_image.jpg`.  Note that this example uses actions found in the [camera integration](/integrations/camera#action-snapshot)
+
+```yaml
+alias: &quot;Blink Snap Picture&quot;
+sequence:
+  - action: blink.trigger_camera
+    target:
+      entity_id: camera.blink_my_camera
+  - action: camera.snapshot
+    target:
+      entity_id: camera.blink_my_camera
+    data:
+      filename: /tmp/my_image.jpg
+```
+
+### Arm Blink when away
+
+This example automation will arm your blink sync module to detect motion on any of your blink cameras that have motion detection enabled. By default, Blink enables motion detection on all cameras so, unless you&#x27;ve changed anything in your app, you&#x27;re all set. If you want to manually enable motion detection for individual cameras, you can use the [appropriate camera action](/integrations/camera/#action-enable-motion-detection) but motion will only be captured if the sync module is armed.
+
+Here, this example assumes your blink module is named `My Sync Module` and that you have [device trackers](/integrations/device_tracker) set up for presence detection.
+
+```yaml
+- alias: &quot;Arm Blink When Away&quot;
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: &quot;not_home&quot;
+  actions:
+    - action: alarm_control_panel.alarm_arm_away
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
+```
+
+### Disarm Blink when home
+
+Similar to the previous example, this automation will disarm blink when arriving home.
+
+```yaml
+- alias: &quot;Disarm Blink When Home&quot;
+  triggers:
+    - trigger: state
+      entity_id: all
+      to: &quot;home&quot;
+  actions:
+    - action: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.blink_my_sync_module
+```
+
+### Save most recent video locally when motion detected
+
+When motion is detected, you can use the Blink Home Assistant integration to save the last recorded video locally, rather than relying on Blink&#x27;s servers to save your data.
+
+The following example assumes your camera&#x27;s name (in the Blink app) is `My Camera` and your sync module name is `My Sync Module`.  The file will be saved to `/tmp/videos/blink_video_{YYYMMDD_HHmmSS}.mp4` where `{YYYYMMDD_HHmmSS}` will be a timestamp create via the use of [templating](/docs/templating/).
+
+
+```yaml
+- alias: &quot;Save Blink Video on Motion&quot;
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.blink_my_camera_motion_detected
+      to: &quot;on&quot;
+  actions:
+    -  action: blink.save_video
+       target:
+         entity_id: camera.blink_my_camera
+       data:
+         filename: &quot;/tmp/videos/blink_video_{{ now().strftime(&#x27;%Y%m%d_%H%M%S&#x27;) }}.mp4&quot;
+```
+
+
+### Save all recent clips locally on a schedule
+
+A list of all the recent video clips is updated at each refresh of the Blink system.
+The video clips are available in a download list (per camera) for up to an hour,
+and they can be downloaded at any time before the one-hour expiration time.
+After a clip is downloaded it is removed from the list.
+
+The following example demonstrates saving recent clips every three minutes.
+It assumes your camera&#x27;s name (in the Blink app) is `My Camera`.
+The file will be saved to `/tmp/videos/YYYYMMDD_HHmmSS_MyCamera.mp4`.
+The file name of the downloaded video file is not configurable.
+
+```yaml
+- alias: &quot;Save Recent Clips from My Camera&quot;
+  triggers:
+    - trigger: time_pattern
+      minutes: /3
+  actions:
+    - action: blink.save_recent_clips
+      target:
+        entity_id: camera.my_camera
+      data:
+        file_path: /tmp/videos
+```
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Blink.</p><p>The <strong>2fa</strong> configuration step lists <code>pin</code>.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>password</code>, <code>username</code>.</p><p>The <strong>user</strong> configuration step lists <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>alarm control panel</li><li>binary sensor</li><li>camera</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>record</li><li>save recent clips</li><li>save video</li><li>trigger camera</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Setup</li><li>Configuration</li><li>Examples</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/blink/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/blink</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/blink</code></dd></dl></section><p><a href="../../integrations/blink/">Return to the Blink guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

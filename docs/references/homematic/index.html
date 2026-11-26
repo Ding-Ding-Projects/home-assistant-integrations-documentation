@@ -1,1 +1,1012 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Homematic reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:263" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homematic/">Homematic guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Homematic</h1><p>Instructions for integrating Homematic into Home Assistant.</p><section><h2>Overview</h2><p>The Homematic integration provides bi-directional communication with your CCU/Homegear. It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit. If you are using Homegear with paired Intertechno devices, uni-directional communication is possible as well.</p></section><section><h2>Configuration</h2><p>To set up the integration, add the following information to your configuration.yaml file.</p></section><section><h2>The `resolvenames` option</h2><p>We use three approaches to fetch the names of devices. Each assumes you have properly named your devices in your existing Homematic setup. As a general advice: Use ASCII for your devices names. Home Assistant won&#x27;t include non-ASCII characters in entity-names.</p></section><section><h2>Multiple hosts</h2><p>To allow communication with multiple hosts or different protocols in parallel (wireless, wired and IP), multiple connections will be established, each to the configured destination. The name you choose for the host has to be unique and limited to ASCII letters. Using multiple hosts has the drawback, that the actions (explained below) may not work as expected. Only one connection can be used for actions, which limits the devices/variables an action can use to the scope/protocol of the host. This does *not* affect the entities in Home Assistant. They all use their own connection and work as expected.</p></section><section><h2>Reading attributes of entities</h2><p>Most devices have, besides their state, additional attributes like their battery state or valve position. These can be accessed using templates in automations, or even as their own entities using the template sensor integration. Here&#x27;s an example of a template sensor that exposes the valve position of a thermostat.</p></section><section><h2>Variables</h2><p>It is possible to read and set values of system variables you have set up on the CCU/Homegear. The supported types for setting values are float- and bool-variables. With the CCU a user with Admin-access is required. The states of the variables are available through the attributes of your hub entity (e.g., homematic.ccu2). Use templates (as mentioned above) to make your variables available to automations or as entities. The values of variables are polled from the CCU/Homegear in an interval of 30 seconds. Setting the value of a variable happens instantly and is directly pushed.</p></section><section><h2>Events</h2><p>When Homematic devices change their state or some other internal value, the CCU/Homegear sends event messages to Home Assistant. These events are automatically parsed and the entities in Home Assistant are updated. However, you can also manually use these events to trigger automations. Two event-types are available:</p></section><section><h2>Devices with buttons</h2><p>Devices with buttons (e.g., HM-Sen-MDIR-WM55, remote controls) may not be fully visible in the UI. This is intended, as buttons don&#x27;t serve any value here and all they do is trigger events. As an example: The HM-Sen-MDIR-WM55 motion detector will be displayed as 2 entities. A motion sensor and a brightness sensor. On top of that we have 2 sets (one set per button) of 4 events: PRESS_SHORT, PRESS_LONG, PRESS_CONT, PRESS_LONG_RELEASE. Be aware, that there are devices which don&#x27;t provide all of these events. But in general: if you can press it, it usually at least has PRESS_SHORT.</p></section><section><h2>`homematic.keypress` events for Homematic IP devices</h2><p>To get the homematic.keypress event for some Homematic IP devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) you have to temporary create an empty program for each channel in the CCU:</p></section><section><h2>Integrating HMIP-DLD</h2><p>There is no available default integration for HMIP Doorlock (HMIP-DLD) in the current pyhomematic implementation. A workaround is to define a template lock in your configuration:</p></section><section><h2>Configuration details</h2><p>The domain used to identify Homematic in Home Assistant is <code>homematic</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>light</li><li>lock</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>put paramset</li><li>reconnect</li><li>set device value</li><li>set install mode</li><li>set variable value</li><li>virtualkey</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration</li><li>Integrating HMIP-DLD</li><li>Detecting lost connections</li><li>Notifications</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homematic/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homematic</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homematic</code></dd></dl></section><p><a href="../../integrations/homematic/">Return to the Homematic guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Homematic reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:263" data-theme="workshop"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/homematic/">Homematic guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Homematic</h1><p>Instructions for integrating Homematic into Home Assistant.</p><div class="reader-body"><p>The <a>Homematic</a> integration provides bi-directional communication with your CCU/Homegear. It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
+If you are using Homegear with paired <a>Intertechno</a> devices, uni-directional communication is possible as well.</p>
+<p>There is currently support for the following device types within Home Assistant:</p>
+<ul>
+<li>Binary sensor</li>
+<li>Climate</li>
+<li>Cover</li>
+<li>Light</li>
+<li>Lock</li>
+<li>Notifications</li>
+<li>Sensor</li>
+<li>Switch</li>
+</ul>
+<p>Device support is available for most of the wired and wireless devices, as well as a lot of IP devices. If you have a setup with mixed protocols, you have to configure additional <a href="../homematic/">interfaces</a> with the appropriate ports. The default is using port 2001, which are wireless devices. Wired devices usually are available through port 2000 and IP devices through port 2010. The virtual thermostatgroups the CCU provides use port 9292 <strong>and</strong> require you to set the <code>path</code> setting to <code>/groups</code>. When using SSL on a CCU3, by default the same ports as usual with a prepended 4 are available. So 2001 becomes 42001, 2010 becomes 42010, and so on.</p>
+<p><strong>Important</strong></p>
+<p>Since CCU Version 3, the internal firewalls are enabled by default. You have to grant full access for the <code>XML-RPC API</code> or specify the IP-address of the Home Assistant instance and allowlist it, inside the CCU's security settings.</p>
+<p>If you want to see if a specific device you have is supported, head over to the <a>pyhomematic</a> repository and browse through the source code. A dictionary with the device identifiers (e.g., HM-Sec-SC-2) can be found within the relevant modules near the bottom. If your device is not supported, feel free to contribute.</p>
+<p>We automatically detect all devices we currently support and try to generate useful names. If you enable name-resolving, we try to fetch names from Metadata (Homegear), via JSON-RPC or the XML-API you may have installed on your CCU. Since this may fail this is disabled by default.
+You can manually rename the created entities by using Home Assistant's <a>Customizing</a> feature. The Homematic integration is also supported by the <a>Entity Registry</a>, which allows you to change the friendly name and the entity ID directly in the Home Assistant UI.</p>
+<h2>Configuration</h2>
+<p>To set up the integration, add the following information to your <code>configuration.yaml</code> file.
+After changing the <code>configuration.yaml</code> file, <a>restart Home Assistant</a> to apply the changes.</p>
+<pre><code>homematic:
+  interfaces:
+    wireless:
+      host: 127.0.0.1
+</code></pre>
+<p>Configuration variables (global):</p>
+<pre><code>
+interfaces:
+  description: Configuration for each XML-RPC interface to integrate into Home Assistant.
+  required: true
+  type: list
+hosts:
+  description: Configuration for each Hub (CCU/Homegear) to integrate into Home Assistant.
+  required: false
+  type: list
+local_ip:
+  description: IP of device running Home Assistant. Override auto-detected value for exotic network setups.
+  required: false
+  type: string
+  default: 0.0.0.0
+local_port:
+  description: Port for connection with Home Assistant. By default it is randomly assigned.
+  required: false
+  type: integer
+
+</code></pre>
+<p>Configuration variables (interface):</p>
+<pre><code>
+host:
+  description: IP address or hostname of CCU/Homegear device or app for Home Assistant.
+  required: true
+  type: string
+port:
+  description: "Port of CCU/Homegear XML-RPC Server. Wireless: 2001, wired: 2000, IP: 2010, thermostatgroups: 9292. With enabled SSL on the CCU3 usually a 4 is prepended to the Port. e.g., 2001 becomes 42001 with enabled SSL."
+  required: false
+  type: integer
+ssl:
+  default: false
+  description: Set to `true` if SSL support is enabled on the CCU3.
+  required: false
+  type: boolean
+verify_ssl:
+  default: false
+  description: Set to `true` if a valid certificate is being used. The default is `false` as usually a self-signed certificate is configured.
+  required: false
+  type: boolean
+callback_ip:
+  description: Set this, if Home Assistant is reachable under a different IP from the CCU (such as NAT or Docker).
+  required: false
+  type: string
+callback_port:
+  description: Set this, if Home Assistant is reachable under a different port from the CCU (such as NAT or Docker).
+  required: false
+  type: integer
+resolvenames:
+  description: Try to fetch device names. Defaults to `false` if not specified.
+  required: false
+  type: string
+  default: false
+jsonport:
+  description: Port of CCU JSON-RPC Server. The default is 80, but it may be different when running CCU virtually via Docker or with enabled SSL.
+  required: false
+  type: integer
+username:
+  description: When fetching names via JSON-RPC, you need to specify a user with guest-access to the CCU. Admin-access is required if you work with variables on the CCU.
+  required: false
+  type: string
+password:
+  description: When fetching names via JSON-RPC, you need to specify the password of the user you have configured above.
+  required: false
+  type: string
+path:
+  description: Set to `/groups` when using port 9292.
+  required: false
+  type: string
+
+</code></pre>
+<p>Configuration variables (host):</p>
+<pre><code>
+host:
+  description: IP address of CCU/Homegear device.
+  required: true
+  type: string
+port:
+  description: "Port of CCU/Homegear XML-RPC Server. Wireless: 2001, wired: 2000, IP: 2010"
+  required: false
+  type: integer
+username:
+  description: When fetching names via JSON-RPC, you need to specify a user with guest-access to the CCU.
+  required: false
+  type: string
+password:
+  description: When fetching names via JSON-RPC, you need to specify the password of the user you have configured above.
+  required: false
+  type: string
+
+</code></pre>
+<h3>Example configuration with multiple protocols and some other options set</h3>
+<pre><code>homematic:
+  interfaces:
+    rf:
+      host: 127.0.0.1
+      resolvenames: "json"
+      username: "Admin"
+      password: "secret"
+    wired:
+      host: 127.0.0.1
+      port: 2000
+      resolvenames: "json"
+      username: "Admin"
+      password: "secret"
+    ip:
+      host: 127.0.0.1
+      port: 2010
+    groups:
+      host: 127.0.0.1
+      port: 9292
+      resolvenames: "json"
+      username: "Admin"
+      password: "secret"
+      path: /groups
+  hosts:
+    ccu2:
+      host: 127.0.0.1
+      port: 2001
+      username: "Admin"
+      password: "secret"
+
+</code></pre>
+<h3>The <code>resolvenames</code> option</h3>
+<p>We use three approaches to fetch the names of devices. Each assumes you have properly named your devices in your existing Homematic setup. As a general advice: Use ASCII for your devices names. Home Assistant won't include non-ASCII characters in entity-names.</p>
+<ol>
+<li><code>json</code>: The CCU allows you to fetch details of the paired devices via JSON-RPC. For this to work, you need to add valid credentials to your integration configuration. Guest-access is sufficient to query for device names.</li>
+<li><code>xml</code>: If you use a CCU, there is a Home Assistant app called the "XML-API". With it installed, you can fetch all kinds of information from you CCU using XML-RPC. We can leverage this and fetch the names of devices set within the CCU. We don't support authentication with this method. The <code>json</code> method should be preferred over <code>xml</code>. Support for the XML-API is only available for downwards compatibility and may be disabled in a future release.</li>
+<li><code>metadata</code>: Homegear provides device-names through the metadata devices internally have. When using an HM-CFG-LAN interface, you typically use a configuration software ("HomeMatic-Komponenten konfigurieren" is the name of the shortcut on your desktop by default) to pair and configure your devices. If you have paired devices, you'll see them listed in a table. The leftmost column (Name) is prefilled with default names. You can click such a name and enter whatever you like.</li>
+</ol>
+<p>Resolving names can take some time. So when you start Home Assistant you won't see you devices at first. For a setup with 20+ devices it can take up to a minute until all devices show up in the UI.</p>
+<h3>Multiple hosts</h3>
+<p>To allow communication with multiple hosts or different protocols in parallel (wireless, wired and IP), multiple connections will be established, each to the configured destination. The name you choose for the host has to be unique and limited to ASCII letters.
+Using multiple hosts has the drawback, that the actions (explained below) may not work as expected. Only one connection can be used for actions, which limits the devices/variables an action can use to the scope/protocol of the host.
+This does <em>not</em> affect the entities in Home Assistant. They all use their own connection and work as expected.</p>
+<h3>Reading attributes of entities</h3>
+<p>Most devices have, besides their state, additional attributes like their battery state or valve position. These can be accessed using templates in automations, or even as their own entities using the <a href="../template/">template sensor</a> integration. Here's an example of a template sensor that exposes the valve position of a thermostat.</p>
+<pre><code>template:
+  - sensor:
+    - name: "Bedroom valve"
+      state: "{{ state_attr('climate.leq123456', 'level') }}"
+</code></pre>
+<h3>Variables</h3>
+<p>It is possible to read and set values of system variables you have set up on the CCU/Homegear. The supported types for setting values are float- and bool-variables. With the CCU a user with Admin-access is required.
+The states of the variables are available through the attributes of your hub entity (e.g., <code>homematic.ccu2</code>). Use templates (as mentioned above) to make your variables available to automations or as entities.
+The values of variables are polled from the CCU/Homegear in an interval of 30 seconds. Setting the value of a variable happens instantly and is directly pushed.</p>
+<h3>Events</h3>
+<p>When Homematic devices change their state or some other internal value, the CCU/Homegear sends event messages to Home Assistant. These events are automatically parsed and the entities in Home Assistant are updated. However, you can also manually use these events to trigger automations. Two event-types are available:</p>
+<ul>
+<li><code>homematic.keypress</code>: For devices with buttons, see information below</li>
+<li><code>homematic.impulse</code>: For impulse sensors</li>
+</ul>
+<h4>Devices with buttons</h4>
+<p>Devices with buttons (e.g., HM-Sen-MDIR-WM55, remote controls) may not be fully visible in the UI. This is intended, as buttons don't serve any value here and all they do is trigger events.
+As an example:
+The HM-Sen-MDIR-WM55 motion detector will be displayed as 2 entities. A motion sensor and a brightness sensor. On top of that we have 2 sets (one set per button) of 4 events: PRESS_SHORT, PRESS_LONG, PRESS_CONT, PRESS_LONG_RELEASE. Be aware, that there are devices which don't provide all of these events. But in general: if you can press it, it usually at least has PRESS_SHORT.</p>
+<p>Here's an example of how to use these events for automations:</p>
+<pre><code>automation:
+  triggers:
+    - trigger: event
+      event_type: homematic.keypress
+      event_data:
+        name: "Kitchen Switch"
+        channel: 1
+        param: PRESS_SHORT
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.Kitchen_Ambience
+</code></pre>
+<p>The channel parameter is equal to the channel of the button you are configuring the automation for. You can view the available channels in the UI you use to pair your devices.
+The name depends on if you chose to resolve names or not. If not, it will be the device ID (e.g., LEQ1234657). If you chose to resolve names (and that is successful), it will be the name you have set in your CCU or in the metadata (e.g., "Kitchen Switch").</p>
+<p>You can test whether your button works within Home Assistant if you look at the terminal output. When pressing a button, lines similar to those should appear:</p>
+<pre><code>2018-01-27 11:51:32 INFO (Thread-12) [pyhomematic.devicetypes.generic] HMGeneric.event: address=MEQ1234567:6, interface_id=homeassistant-CCU2, key=PRESS_SHORT, value=True
+2018-01-27 11:51:32 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event homematic.keypress[L]: param=PRESS_SHORT, name=your_nice_name, channel=6&gt;
+2018-01-27 11:51:32 INFO (Thread-12) [pyhomematic.devicetypes.generic] HMGeneric.event: address=MEQ1234567:6, interface_id=homeassistant-CCU2, key=INSTALL_TEST, value=True
+</code></pre>
+<p>It may happen that "your_nice_name" is not resolved correctly; the according message (#2 in the above example) will be missing. This might be due to secure communication between your HM interface and the HM device. You can change the communication from "secure" to "standard" within your HM-interface to solve that issue (in "Einstellungen" - "Geräte" find your device and change "Übertragungsmodus" from secure to standard) - not recommended for devices that should have secure communication.</p>
+<h4><code>homematic.keypress</code> events for Homematic IP devices</h4>
+<p>To get the <code>homematic.keypress</code> event for some Homematic IP devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) you have to temporary create an empty program for each channel in the CCU:</p>
+<ol>
+<li>In the menu of your CCU's admin panel go to <code>Programs and connections</code> &gt; <code>Programs &amp; CCU connection</code></li>
+<li>Go to <code>New</code> in the footer menu</li>
+<li>Click the plus icon below <code>Condition: If...</code> and press the button <code>Device selection</code></li>
+<li>Select one of the device's channels you need (1-2 / 1-6 for WRC2 / WRC6 and 2-3 for SPDR)</li>
+<li>Select short or long key press</li>
+<li>Save the program with the <code>OK</code> button</li>
+<li>Trigger the program by pressing the button as configured in step 5. Your device might indicate success via a green LED or similar. When you select the device in <code>Status and control</code> &gt; <code>Devices</code> on the CCU, the <code>Last Modified</code> field should no longer be empty</li>
+<li>When your channel is working now, you can edit it to select the other channels one by one</li>
+<li>At the end, you can delete this program from the CCU</li>
+</ol>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Integrating HMIP-DLD</h2>
+<p>There is no available default integration for HMIP Doorlock (HMIP-DLD) in the current <code>pyhomematic</code> implementation.
+A workaround is to define a template lock in your configuration:</p>
+<pre><code>lock:
+  - platform: template
+    name: Basedoor
+    unique_id: basedoor
+    value_template: "{{ is_state('sensor.lock_status', 'locked') }}"
+    lock:
+      action: homematic.set_device_value
+      data:
+        address: "002A1BE9A792D2"
+        channel: 1
+        param: LOCK_TARGET_LEVEL
+        value: 0
+    unlock:
+      action: homematic.set_device_value
+      data:
+        address: "002A1BE9A792D2"
+        channel: 1
+        param: LOCK_TARGET_LEVEL
+        value: 1
+</code></pre>
+<h2>Detecting lost connections</h2>
+<p>When the connection to your Homematic CCU or Homegear is lost, Home Assistant will stop getting updates from devices. This may happen after rebooting the CCU for example. Due to the nature of the communication protocol this cannot be handled automatically, so you must call <em>homematic.reconnect</em> in this case. That's why it is usually a good idea to check if your Homematic integrations are still updated properly, to detect connection losses. This can be done in several ways through an automation:</p>
+<ul>
+<li>If you have a sensor which you know will be updated frequently (e.g., an outdoor temperature sensor, voltage sensor or light sensor) you could set up a helper binary sensor and an automation like this:</li>
+</ul>
+<pre><code>template:
+  - binary_sensor:
+      - name: "Homematic is sending updates"
+        state: &gt;-
+          {{ (now() - states.sensor.office_voltage.last_changed).seconds &lt; 600 }}
+
+automation:
+  - alias: "Homematic Reconnect"
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.homematic_is_sending_updates
+        to: "off"
+    actions:
+      # Reconnect, if sensor has not been updated for over 10 minutes
+      - action: homematic.reconnect
+</code></pre>
+<p>The important part is the <code>sensor.time</code> entity (from time_date integration). This will update the binary sensor on every change of the sensor and every minute. If the Homematic sensor does not send any updates anymore, the <code>sensor.time</code> will set the binary sensor to <code>off</code> 10 minutes after the last sensor update. This will trigger the automation.</p>
+<ul>
+<li><p>If you have a CCU you can also create a system variable on the CCU, which stores its last reboot time. Since Home Assistant can still refresh system variables from the CCU (even after a reboot) this is another option to call <em>homematic.reconnect</em>. Even though this option might look preferable to many since it does not rely on a sensor, <strong>it is less fail-safe</strong> than checking for updates of a sensor. Since the variable on the CCU is only changed on boot, any problem that causes the connection between Home Assistant and the CCU to break but will not result in a reboot will not be detected (eg. in case of networking issues). This is how this can be done:</p>
+<ol>
+<li><p>Create a string variable <strong>V_Last_Reboot</strong> on the CCU</p>
+</li>
+<li><p>Create a new program on the CCU <strong>without any conditions</strong>, which executes the following <em>HM-Script</em> with a delay of 30 seconds. The script needs to be implemented within the section <code>Activity: Then</code>.</p>
+<pre><code>var obj = dom.GetObject("V_Last_Reboot");
+string now = system.Date("%d.%m.%Y %H:%M:%S");
+obj.State(now);
+</code></pre>
+<p>The Homematic CCU will execute all active programs which meet their conditions (none in this case) on every reboot.</p>
+</li>
+<li><p>Set up a template sensor in Home Assistant, which contains the value of the system variable:</p>
+<pre><code>template:
+  - sensor:
+    - name: "v last reboot"
+      state: "{{ state_attr('homematic.ccu2', 'V_Last_Reboot') or '01.01.1970 00:00:00' }}"
+      icon: "mdi:clock"
+</code></pre>
+</li>
+<li><p>Set up an automation which calls <em>homematic.reconnect</em> whenever the sensor variable changes:</p>
+<pre><code>automation:
+  - alias: "Homematic CCU Reboot"
+    triggers:
+      - trigger: state
+        entity_id: sensor.v_last_reboot
+    actions:
+      - action: homematic.reconnect
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<h2>Notifications</h2>
+<p>The <code>homematic</code> notification platform enables invoking Homematic devices.</p>
+<p>To use this notification platform in your installation, add the following to your <code>configuration.yaml</code> file:</p>
+<h3>Configuration</h3>
+<pre><code># Example configuration.yaml entry
+notify:
+  - name: my_hm
+    platform: homematic
+    address: "NEQXXXXXXX"
+    channel: 2
+    param: "SUBMIT"
+    value: "1,1,108000,8"
+</code></pre>
+<pre><code>
+address:
+  description: The address of your Homematic device. The address is the serial number of the device shown in the CCU in the `devices` section in the column `serial number`.
+  required: true
+  type: string
+channel:
+  description: The channel of your Homematic device.
+  required: true
+  type: integer
+param:
+  description: An additional parameter for the Homematic device.
+  required: true
+  type: string
+interface:
+  description: Set the name of the interface from the configuration.
+  required: false
+  type: string
+value:
+  description: This is the value that is set on the device. It's device specific.
+  required: true
+  type: string
+
+</code></pre>
+<h3>Usage</h3>
+<p><code>homematic</code> is a notify platform and can be controlled by calling the notify action <a href="../notify/">as described here</a>.</p>
+<p>Only the <code>data</code> part of the event payload is processed. This part can specify or override the value given as configuration variable:</p>
+<pre><code>{
+  "data": {
+    "address": "NEQXXXXXXX",
+    "channel": 2,
+    "param": "SUBMIT",
+    "value": "1,1,108000,8"
+  }
+}
+</code></pre>
+<p>It is possible to provide a template to compute the value:</p>
+<pre><code>{
+  "data": {
+    "value": "1,1,108000{% if is_state('binary_sensor.oeqxxxxxxx_state', 'on') %},1{% endif %}{% if is_state('binary_sensor.oeqxxxxxxx_state', 'on') %},2{% endif %}"
+  }
+}
+</code></pre>
+<p>You can also specify the event payload using a group notification (instead of specifying the value for the notify itself):</p>
+<pre><code>notify:
+  - name: my_hm
+    platform: homematic
+    address: NEQXXXXXXX
+  - name: group_hm
+    platform: group
+    services:
+      - action: my_hm
+        data:
+          data:
+            value: "1,1,108000{% if is_state('binary_sensor.oeqxxxxxxx_state', 'on') %},1{% endif %}{% if is_state('binary_sensor.oeqxxxxxxx_state', 'on') %},2{% endif %}"
+
+alert:
+  temperature:
+    name: Temperature too high
+    done_message: Temperature OK
+    entity_id: binary_sensor.temperature_too_high
+    can_acknowledge: true
+    notifiers:
+      - group_hm
+</code></pre>
+<p>The first <code>data</code> element belongs to the <code>my_hm</code> action, while the second one belongs to the event payload.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/homematic.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions for integrating Homematic into Home Assistant.
+ha_release: 0.23
+ha_domain: homematic
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+The [Homematic](https://www.eq-3.com/products/homematic.html) {% term integration %} provides bi-directional communication with your CCU/Homegear. It uses an XML-RPC connection to set values on devices and subscribes to receive events the devices and the CCU emit.
+If you are using Homegear with paired [Intertechno](https://intertechno.at/) devices, uni-directional communication is possible as well.
+
+There is currently support for the following device types within Home Assistant:
+
+- Binary sensor
+- Climate
+- Cover
+- Light
+- Lock
+- Notifications
+- Sensor
+- Switch
+
+Device support is available for most of the wired and wireless devices, as well as a lot of IP devices. If you have a setup with mixed protocols, you have to configure additional [interfaces](/integrations/homematic#interfaces) with the appropriate ports. The default is using port 2001, which are wireless devices. Wired devices usually are available through port 2000 and IP devices through port 2010. The virtual thermostatgroups the CCU provides use port 9292 **and** require you to set the `path` setting to `/groups`. When using SSL on a CCU3, by default the same ports as usual with a prepended 4 are available. So 2001 becomes 42001, 2010 becomes 42010, and so on.
+
+{% important %}
+Since CCU Version 3, the internal firewalls are enabled by default. You have to grant full access for the `XML-RPC API` or specify the IP-address of the Home Assistant instance and allowlist it, inside the CCU&#x27;s security settings.
+{% endimportant %}
+
+If you want to see if a specific device you have is supported, head over to the [pyhomematic](https://github.com/danielperna84/pyhomematic/tree/master/pyhomematic/devicetypes) repository and browse through the source code. A dictionary with the device identifiers (e.g., HM-Sec-SC-2) can be found within the relevant modules near the bottom. If your device is not supported, feel free to contribute.
+
+We automatically detect all devices we currently support and try to generate useful names. If you enable name-resolving, we try to fetch names from Metadata (Homegear), via JSON-RPC or the XML-API you may have installed on your CCU. Since this may fail this is disabled by default.
+You can manually rename the created entities by using Home Assistant&#x27;s [Customizing](/docs/configuration/customizing-entities/) feature. The Homematic integration is also supported by the [Entity Registry](https://contributors.home-assistant.io/core/entities/registry/), which allows you to change the friendly name and the entity ID directly in the Home Assistant UI.
+
+## Configuration
+
+To set up the integration, add the following information to your {% term &quot;`configuration.yaml`&quot; %} file.
+{% include integrations/restart_ha_after_config_inclusion.md %}
+
+```yaml
+homematic:
+  interfaces:
+    wireless:
+      host: 127.0.0.1
+```
+
+Configuration variables (global):
+
+{% configuration %}
+interfaces:
+  description: Configuration for each XML-RPC interface to integrate into Home Assistant.
+  required: true
+  type: list
+hosts:
+  description: Configuration for each Hub (CCU/Homegear) to integrate into Home Assistant.
+  required: false
+  type: list
+local_ip:
+  description: IP of device running Home Assistant. Override auto-detected value for exotic network setups.
+  required: false
+  type: string
+  default: 0.0.0.0
+local_port:
+  description: Port for connection with Home Assistant. By default it is randomly assigned.
+  required: false
+  type: integer
+{% endconfiguration %}
+
+Configuration variables (interface):
+
+{% configuration %}
+host:
+  description: IP address or hostname of CCU/Homegear device or app for Home Assistant.
+  required: true
+  type: string
+port:
+  description: &quot;Port of CCU/Homegear XML-RPC Server. Wireless: 2001, wired: 2000, IP: 2010, thermostatgroups: 9292. With enabled SSL on the CCU3 usually a 4 is prepended to the Port. e.g., 2001 becomes 42001 with enabled SSL.&quot;
+  required: false
+  type: integer
+ssl:
+  default: false
+  description: Set to `true` if SSL support is enabled on the CCU3.
+  required: false
+  type: boolean
+verify_ssl:
+  default: false
+  description: Set to `true` if a valid certificate is being used. The default is `false` as usually a self-signed certificate is configured.
+  required: false
+  type: boolean
+callback_ip:
+  description: Set this, if Home Assistant is reachable under a different IP from the CCU (such as NAT or Docker).
+  required: false
+  type: string
+callback_port:
+  description: Set this, if Home Assistant is reachable under a different port from the CCU (such as NAT or Docker).
+  required: false
+  type: integer
+resolvenames:
+  description: Try to fetch device names. Defaults to `false` if not specified.
+  required: false
+  type: string
+  default: false
+jsonport:
+  description: Port of CCU JSON-RPC Server. The default is 80, but it may be different when running CCU virtually via Docker or with enabled SSL.
+  required: false
+  type: integer
+username:
+  description: When fetching names via JSON-RPC, you need to specify a user with guest-access to the CCU. Admin-access is required if you work with variables on the CCU.
+  required: false
+  type: string
+password:
+  description: When fetching names via JSON-RPC, you need to specify the password of the user you have configured above.
+  required: false
+  type: string
+path:
+  description: Set to `/groups` when using port 9292.
+  required: false
+  type: string
+{% endconfiguration %}
+
+Configuration variables (host):
+
+{% configuration %}
+host:
+  description: IP address of CCU/Homegear device.
+  required: true
+  type: string
+port:
+  description: &quot;Port of CCU/Homegear XML-RPC Server. Wireless: 2001, wired: 2000, IP: 2010&quot;
+  required: false
+  type: integer
+username:
+  description: When fetching names via JSON-RPC, you need to specify a user with guest-access to the CCU.
+  required: false
+  type: string
+password:
+  description: When fetching names via JSON-RPC, you need to specify the password of the user you have configured above.
+  required: false
+  type: string
+{% endconfiguration %}
+
+### Example configuration with multiple protocols and some other options set
+
+```yaml
+homematic:
+  interfaces:
+    rf:
+      host: 127.0.0.1
+      resolvenames: &quot;json&quot;
+      username: &quot;Admin&quot;
+      password: &quot;secret&quot;
+    wired:
+      host: 127.0.0.1
+      port: 2000
+      resolvenames: &quot;json&quot;
+      username: &quot;Admin&quot;
+      password: &quot;secret&quot;
+    ip:
+      host: 127.0.0.1
+      port: 2010
+    groups:
+      host: 127.0.0.1
+      port: 9292
+      resolvenames: &quot;json&quot;
+      username: &quot;Admin&quot;
+      password: &quot;secret&quot;
+      path: /groups
+  hosts:
+    ccu2:
+      host: 127.0.0.1
+      port: 2001
+      username: &quot;Admin&quot;
+      password: &quot;secret&quot;
+
+```
+
+### The `resolvenames` option
+
+We use three approaches to fetch the names of devices. Each assumes you have properly named your devices in your existing Homematic setup. As a general advice: Use ASCII for your devices names. Home Assistant won&#x27;t include non-ASCII characters in entity-names.
+
+1. `json`: The CCU allows you to fetch details of the paired devices via JSON-RPC. For this to work, you need to add valid credentials to your integration configuration. Guest-access is sufficient to query for device names.
+2. `xml`: If you use a CCU, there is a Home Assistant app called the &quot;XML-API&quot;. With it installed, you can fetch all kinds of information from you CCU using XML-RPC. We can leverage this and fetch the names of devices set within the CCU. We don&#x27;t support authentication with this method. The `json` method should be preferred over `xml`. Support for the XML-API is only available for downwards compatibility and may be disabled in a future release.
+3. `metadata`: Homegear provides device-names through the metadata devices internally have. When using an HM-CFG-LAN interface, you typically use a configuration software (&quot;HomeMatic-Komponenten konfigurieren&quot; is the name of the shortcut on your desktop by default) to pair and configure your devices. If you have paired devices, you&#x27;ll see them listed in a table. The leftmost column (Name) is prefilled with default names. You can click such a name and enter whatever you like.
+
+Resolving names can take some time. So when you start Home Assistant you won&#x27;t see you devices at first. For a setup with 20+ devices it can take up to a minute until all devices show up in the UI.
+
+### Multiple hosts
+
+To allow communication with multiple hosts or different protocols in parallel (wireless, wired and IP), multiple connections will be established, each to the configured destination. The name you choose for the host has to be unique and limited to ASCII letters.
+Using multiple hosts has the drawback, that the actions (explained below) may not work as expected. Only one connection can be used for actions, which limits the devices/variables an action can use to the scope/protocol of the host.
+This does *not* affect the entities in Home Assistant. They all use their own connection and work as expected.
+
+### Reading attributes of entities
+
+Most devices have, besides their state, additional attributes like their battery state or valve position. These can be accessed using templates in automations, or even as their own entities using the [template sensor](/integrations/template) integration. Here&#x27;s an example of a template sensor that exposes the valve position of a thermostat.
+
+```yaml
+template:
+  - sensor:
+    - name: &quot;Bedroom valve&quot;
+      state: &quot;{{ state_attr(&#x27;climate.leq123456&#x27;, &#x27;level&#x27;) }}&quot;
+```
+
+### Variables
+
+It is possible to read and set values of system variables you have set up on the CCU/Homegear. The supported types for setting values are float- and bool-variables. With the CCU a user with Admin-access is required.
+The states of the variables are available through the attributes of your hub entity (e.g., `homematic.ccu2`). Use templates (as mentioned above) to make your variables available to automations or as entities.
+The values of variables are polled from the CCU/Homegear in an interval of 30 seconds. Setting the value of a variable happens instantly and is directly pushed.
+
+### Events
+
+When Homematic devices change their state or some other internal value, the CCU/Homegear sends event messages to Home Assistant. These events are automatically parsed and the entities in Home Assistant are updated. However, you can also manually use these events to trigger automations. Two event-types are available:
+
+- `homematic.keypress`: For devices with buttons, see information below
+- `homematic.impulse`: For impulse sensors
+
+#### Devices with buttons
+
+Devices with buttons (e.g., HM-Sen-MDIR-WM55, remote controls) may not be fully visible in the UI. This is intended, as buttons don&#x27;t serve any value here and all they do is trigger events.
+As an example:
+The HM-Sen-MDIR-WM55 motion detector will be displayed as 2 entities. A motion sensor and a brightness sensor. On top of that we have 2 sets (one set per button) of 4 events: PRESS_SHORT, PRESS_LONG, PRESS_CONT, PRESS_LONG_RELEASE. Be aware, that there are devices which don&#x27;t provide all of these events. But in general: if you can press it, it usually at least has PRESS_SHORT.
+
+Here&#x27;s an example of how to use these events for automations:
+
+```yaml
+automation:
+  triggers:
+    - trigger: event
+      event_type: homematic.keypress
+      event_data:
+        name: &quot;Kitchen Switch&quot;
+        channel: 1
+        param: PRESS_SHORT
+  actions:
+    - action: switch.turn_on
+      target:
+        entity_id: switch.Kitchen_Ambience
+```
+
+The channel parameter is equal to the channel of the button you are configuring the automation for. You can view the available channels in the UI you use to pair your devices.
+The name depends on if you chose to resolve names or not. If not, it will be the device ID (e.g., LEQ1234657). If you chose to resolve names (and that is successful), it will be the name you have set in your CCU or in the metadata (e.g., &quot;Kitchen Switch&quot;).
+
+You can test whether your button works within Home Assistant if you look at the terminal output. When pressing a button, lines similar to those should appear:
+
+```bash
+2018-01-27 11:51:32 INFO (Thread-12) [pyhomematic.devicetypes.generic] HMGeneric.event: address=MEQ1234567:6, interface_id=homeassistant-CCU2, key=PRESS_SHORT, value=True
+2018-01-27 11:51:32 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event homematic.keypress[L]: param=PRESS_SHORT, name=your_nice_name, channel=6&gt;
+2018-01-27 11:51:32 INFO (Thread-12) [pyhomematic.devicetypes.generic] HMGeneric.event: address=MEQ1234567:6, interface_id=homeassistant-CCU2, key=INSTALL_TEST, value=True
+```
+
+It may happen that &quot;your_nice_name&quot; is not resolved correctly; the according message (#2 in the above example) will be missing. This might be due to secure communication between your HM interface and the HM device. You can change the communication from &quot;secure&quot; to &quot;standard&quot; within your HM-interface to solve that issue (in &quot;Einstellungen&quot; - &quot;Geräte&quot; find your device and change &quot;Übertragungsmodus&quot; from secure to standard) - not recommended for devices that should have secure communication.
+
+#### `homematic.keypress` events for Homematic IP devices
+
+To get the `homematic.keypress` event for some Homematic IP devices like WRC2 / WRC6 (wall switch) or SPDR (passage sensor) or the KRC4 (key ring remote control) you have to temporary create an empty program for each channel in the CCU:
+
+1. In the menu of your CCU&#x27;s admin panel go to `Programs and connections` &gt; `Programs &amp; CCU connection`
+2. Go to `New` in the footer menu
+3. Click the plus icon below `Condition: If...` and press the button `Device selection`
+4. Select one of the device&#x27;s channels you need (1-2 / 1-6 for WRC2 / WRC6 and 2-3 for SPDR)
+5. Select short or long key press
+6. Save the program with the `OK` button
+7. Trigger the program by pressing the button as configured in step 5. Your device might indicate success via a green LED or similar. When you select the device in `Status and control` &gt; `Devices` on the CCU, the `Last Modified` field should no longer be empty
+8. When your channel is working now, you can edit it to select the other channels one by one
+9. At the end, you can delete this program from the CCU
+
+{% include integrations/actions.md %}
+
+## Integrating HMIP-DLD
+
+There is no available default integration for HMIP Doorlock (HMIP-DLD) in the current `pyhomematic` implementation.
+A workaround is to define a template lock in your configuration:
+
+```yaml
+lock:
+  - platform: template
+    name: Basedoor
+    unique_id: basedoor
+    value_template: &quot;{{ is_state(&#x27;sensor.lock_status&#x27;, &#x27;locked&#x27;) }}&quot;
+    lock:
+      action: homematic.set_device_value
+      data:
+        address: &quot;002A1BE9A792D2&quot;
+        channel: 1
+        param: LOCK_TARGET_LEVEL
+        value: 0
+    unlock:
+      action: homematic.set_device_value
+      data:
+        address: &quot;002A1BE9A792D2&quot;
+        channel: 1
+        param: LOCK_TARGET_LEVEL
+        value: 1
+```
+
+## Detecting lost connections
+
+When the connection to your Homematic CCU or Homegear is lost, Home Assistant will stop getting updates from devices. This may happen after rebooting the CCU for example. Due to the nature of the communication protocol this cannot be handled automatically, so you must call *homematic.reconnect* in this case. That&#x27;s why it is usually a good idea to check if your Homematic integrations are still updated properly, to detect connection losses. This can be done in several ways through an automation:
+
+- If you have a sensor which you know will be updated frequently (e.g., an outdoor temperature sensor, voltage sensor or light sensor) you could set up a helper binary sensor and an automation like this:
+
+```yaml
+template:
+  - binary_sensor:
+      - name: &quot;Homematic is sending updates&quot;
+        state: &gt;-
+          {{ (now() - states.sensor.office_voltage.last_changed).seconds &lt; 600 }}
+
+automation:
+  - alias: &quot;Homematic Reconnect&quot;
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.homematic_is_sending_updates
+        to: &quot;off&quot;
+    actions:
+      # Reconnect, if sensor has not been updated for over 10 minutes
+      - action: homematic.reconnect
+```
+
+  The important part is the `sensor.time` entity (from time_date integration). This will update the binary sensor on every change of the sensor and every minute. If the Homematic sensor does not send any updates anymore, the `sensor.time` will set the binary sensor to `off` 10 minutes after the last sensor update. This will trigger the automation.
+
+- If you have a CCU you can also create a system variable on the CCU, which stores its last reboot time. Since Home Assistant can still refresh system variables from the CCU (even after a reboot) this is another option to call *homematic.reconnect*. Even though this option might look preferable to many since it does not rely on a sensor, **it is less fail-safe** than checking for updates of a sensor. Since the variable on the CCU is only changed on boot, any problem that causes the connection between Home Assistant and the CCU to break but will not result in a reboot will not be detected (eg. in case of networking issues). This is how this can be done:
+
+  1. Create a string variable **V_Last_Reboot** on the CCU
+
+  2. Create a new program on the CCU **without any conditions**, which executes the following *HM-Script* with a delay of 30 seconds. The script needs to be implemented within the section `Activity: Then`.
+
+     ```javascript
+     var obj = dom.GetObject(&quot;V_Last_Reboot&quot;);
+     string now = system.Date(&quot;%d.%m.%Y %H:%M:%S&quot;);
+     obj.State(now);
+     ```
+
+     The Homematic CCU will execute all active programs which meet their conditions (none in this case) on every reboot.
+
+  3. Set up a template sensor in Home Assistant, which contains the value of the system variable:
+
+     ```yaml
+     template:
+       - sensor:
+         - name: &quot;v last reboot&quot;
+           state: &quot;{{ state_attr(&#x27;homematic.ccu2&#x27;, &#x27;V_Last_Reboot&#x27;) or &#x27;01.01.1970 00:00:00&#x27; }}&quot;
+           icon: &quot;mdi:clock&quot;
+     ```
+
+
+  4. Set up an automation which calls *homematic.reconnect* whenever the sensor variable changes:
+
+     ```yaml
+     automation:
+       - alias: &quot;Homematic CCU Reboot&quot;
+         triggers:
+           - trigger: state
+             entity_id: sensor.v_last_reboot
+         actions:
+           - action: homematic.reconnect
+     ```
+
+## Notifications
+
+The `homematic` notification platform enables invoking Homematic devices.
+
+To use this notification platform in your installation, add the following to your {% term &quot;`configuration.yaml`&quot; %} file:
+
+### Configuration
+
+```yaml
+# Example configuration.yaml entry
+notify:
+  - name: my_hm
+    platform: homematic
+    address: &quot;NEQXXXXXXX&quot;
+    channel: 2
+    param: &quot;SUBMIT&quot;
+    value: &quot;1,1,108000,8&quot;
+```
+
+{% configuration %}
+address:
+  description: The address of your Homematic device. The address is the serial number of the device shown in the CCU in the `devices` section in the column `serial number`.
+  required: true
+  type: string
+channel:
+  description: The channel of your Homematic device.
+  required: true
+  type: integer
+param:
+  description: An additional parameter for the Homematic device.
+  required: true
+  type: string
+interface:
+  description: Set the name of the interface from the configuration.
+  required: false
+  type: string
+value:
+  description: This is the value that is set on the device. It&#x27;s device specific.
+  required: true
+  type: string
+{% endconfiguration %}
+
+### Usage
+
+`homematic` is a notify platform and can be controlled by calling the notify action [as described here](/integrations/notify/).
+
+Only the `data` part of the event payload is processed. This part can specify or override the value given as configuration variable:
+
+```json
+{
+  &quot;data&quot;: {
+    &quot;address&quot;: &quot;NEQXXXXXXX&quot;,
+    &quot;channel&quot;: 2,
+    &quot;param&quot;: &quot;SUBMIT&quot;,
+    &quot;value&quot;: &quot;1,1,108000,8&quot;
+  }
+}
+```
+
+It is possible to provide a template to compute the value:
+
+{% raw %}
+
+```json
+{
+  &quot;data&quot;: {
+    &quot;value&quot;: &quot;1,1,108000{% if is_state(&#x27;binary_sensor.oeqxxxxxxx_state&#x27;, &#x27;on&#x27;) %},1{% endif %}{% if is_state(&#x27;binary_sensor.oeqxxxxxxx_state&#x27;, &#x27;on&#x27;) %},2{% endif %}&quot;
+  }
+}
+```
+
+{% endraw %}
+
+You can also specify the event payload using a group notification (instead of specifying the value for the notify itself):
+
+```yaml
+notify:
+  - name: my_hm
+    platform: homematic
+    address: NEQXXXXXXX
+  - name: group_hm
+    platform: group
+    services:
+      - action: my_hm
+        data:
+          data:
+            value: &quot;1,1,108000{% if is_state(&#x27;binary_sensor.oeqxxxxxxx_state&#x27;, &#x27;on&#x27;) %},1{% endif %}{% if is_state(&#x27;binary_sensor.oeqxxxxxxx_state&#x27;, &#x27;on&#x27;) %},2{% endif %}&quot;
+
+alert:
+  temperature:
+    name: Temperature too high
+    done_message: Temperature OK
+    entity_id: binary_sensor.temperature_too_high
+    can_acknowledge: true
+    notifiers:
+      - group_hm
+```
+
+The first `data` element belongs to the `my_hm` action, while the second one belongs to the event payload.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>The domain used to identify Homematic in Home Assistant is <code>homematic</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>climate</li><li>cover</li><li>light</li><li>lock</li><li>sensor</li><li>switch</li></ul><h3>Documented actions</h3><ul class="chips"><li>put paramset</li><li>reconnect</li><li>set device value</li><li>set install mode</li><li>set variable value</li><li>virtualkey</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Configuration</li><li>Integrating HMIP-DLD</li><li>Detecting lost connections</li><li>Notifications</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/homematic/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/homematic</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/homematic</code></dd></dl></section><p><a href="../../integrations/homematic/">Return to the Homematic guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

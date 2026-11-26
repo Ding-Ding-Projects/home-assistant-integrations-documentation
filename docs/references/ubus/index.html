@@ -1,1 +1,622 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenWrt (ubus) reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:326" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ubus/">OpenWrt (ubus) guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenWrt (ubus)</h1><p>Instructions on how to integrate OpenWrt devices into Home Assistant.</p><section><h2>Overview</h2><p>This is a presence detection scanner for OpenWrt using ubus. It scans for changes in hostapd.*, which will detect and report changes in client devices connected to the access point on the OpenWrt device.</p></section><section><h2>Tracking people</h2><p>The integration creates a device tracker entity for each client device it sees on your OpenWrt device. These entities are disabled by default.</p></section><section><h2>Troubleshooting</h2><p>If you find that this never creates known_devices.yaml, or if you need more information on the communication chain between Home Assistant and OpenWrt, follow these steps to grab the packet stream and gain insight into what&#x27;s happening.</p></section><section><h2>Increase log level</h2><p>1. On your Home Assistant device, stop Home Assistant 2. Adjust configuration.yaml to log more detail for the device_tracker integration.</p></section><section><h2>Inspect packets with TCPDump</h2><p>_These steps require that tcpdump is installed on your Home Assistant device, and that you have a utility such as Wireshark for viewing the packets. It also assumes that Home Assistant is communicating with your router over HTTP and not HTTPS._</p></section><section><h2>Cleanup</h2><p>When you&#x27;re done troubleshooting, remember to reset your logging configuration and delete any capture files that contain sensitive information.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenWrt (ubus).</p><p>The <strong>user</strong> configuration step lists <code>dhcp_software</code>, <code>host</code>, <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>device tracker</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Tracking people</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/ubus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/ubus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ubus</code></dd></dl></section><p><a href="../../integrations/ubus/">Return to the OpenWrt (ubus) guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenWrt (ubus) reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:326" data-theme="console"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/ubus/">OpenWrt (ubus) guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>OpenWrt (ubus)</h1><p>Instructions on how to integrate OpenWrt devices into Home Assistant.</p><div class="reader-body"><p>This is a presence detection scanner for <a>OpenWrt</a> using <a>ubus</a>. It scans for changes in <code>hostapd.*</code>, which will detect and report changes in client devices connected to the access point on the OpenWrt device.</p>
+<p><strong>Important</strong></p>
+<p>The integration should be configured on OpenWrt devices providing wireless access points, not on devices acting only as routers.</p>
+<p>Before this scanner can be used, you have to install the ubus RPC packages on OpenWrt (versions older than 18.06.x do not require the <code>uhttpd-mod-ubus</code> package):</p>
+<pre><code>apk update
+apk add rpcd-mod-file uhttpd-mod-ubus
+</code></pre>
+<p>Add a new system user <code>hass</code> (or do it in any other way that you prefer):</p>
+<ul>
+<li>Add line to <code>/etc/passwd</code>: <code>hass:x:10001:10001:hass:/var:/bin/false</code></li>
+<li>Add line to <code>/etc/shadow</code>: <code>hass:x:0:0:99999:7:::</code></li>
+</ul>
+<p>Then set a password for the <code>hass</code> user:</p>
+<pre><code>passwd hass
+</code></pre>
+<p>Edit the <code>/etc/config/rpcd</code> and add the following lines:</p>
+<pre><code>config login
+        option username 'hass'
+        option password '$p$hass'
+        list read hass
+        list read unauthenticated
+        list write hass
+</code></pre>
+<p>Then, create an ACL file at <code>/usr/share/rpcd/acl.d/hass.json</code> for the user <code>hass</code>:</p>
+<pre><code>{
+  "hass": {
+    "description": "Access role for OpenWrt ubus integration",
+    "read": {
+      "ubus": {
+        "hostapd.*": ["get_clients"],
+        "uci": ["get"],
+        "dhcp": ["ipv4leases"],
+        "file": ["read"]
+      },
+      "uci": ["dhcp"],
+      "file": {
+        "/tmp/dhcp.leases": ["read"]
+      }
+    },
+    "write": {}
+  }
+}
+</code></pre>
+<p><em>Check your lease file path:</em> The entry <code>/tmp/dhcp.leases</code> is the OpenWrt default for dnsmasq. If you have a custom configuration, run <code>uci get dhcp.@dnsmasq[0].leasefile</code> on your device. Should it return a different path, then you must update the <code>hass.json</code> file above to match it, or client device names will not be correctly resolved. This step can be ignored if dnsmasq is disabled on your device.</p>
+<p>Restart the services.</p>
+<pre><code># /etc/init.d/rpcd restart &amp;&amp; /etc/init.d/uhttpd restart
+</code></pre>
+<p>Check if the <code>file</code> namespace is registered with the RPC server.</p>
+<pre><code># ubus list | grep file
+file
+</code></pre>
+<p><strong>Tip</strong></p>
+<p>If not already done, add the ACL file path to <code>/etc/sysupgrade.conf</code> so that the file remains after updating/upgrading your OpenWrt firmware.</p>
+<pre><code># echo "/usr/share/rpcd/acl.d/hass.json" &gt;&gt; /etc/sysupgrade.conf
+</code></pre>
+<h2>Configuration</h2>
+<p>To add the <strong>OpenWrt (ubus)</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>OpenWrt (ubus)</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<pre><code>
+Host:
+  description: The IP address of your OpenWrt device, for example, `192.168.1.1`.
+Username:
+  description: The username for the account you created on your OpenWrt device. Use the dedicated `hass` user rather than `root` to follow the principle of least privilege.
+Password:
+  description: The password for the user above.
+DHCP software:
+  description: "The DHCP software used in your OpenWrt device: `dnsmasq`, `odhcpd`, or `none`. Use `none` if neither service is used on the device, for example, if it's a bridged access point."
+
+</code></pre>
+<p>If you configured multiple OpenWrt devices, add the integration once for each device.</p>
+<p>If you set up this integration in YAML before, Home Assistant imports that configuration automatically. You can then remove the <code>ubus</code> entries from your <code>configuration.yaml</code> file.</p>
+<h2>Tracking people</h2>
+<p>The integration creates a device tracker entity for each client device it sees on your OpenWrt device. These entities are disabled by default.</p>
+<p>To track a person with one of these devices:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select <strong>OpenWrt (ubus)</strong>.</li>
+<li>Select the device you want to track, then <a>enable</a> its device tracker entity.</li>
+<li>Go to <strong>Settings</strong> &gt; <strong>People</strong>, select the person, and add the device tracker entity with <strong>Pick device to track</strong>.</li>
+<li>Select <strong>Save</strong>.</li>
+</ol>
+<h2>Troubleshooting</h2>
+<p>If you find that this never creates <code>known_devices.yaml</code>, or if you need more information on the communication chain between Home Assistant and OpenWrt, follow these steps to grab the packet stream and gain insight into what's happening.</p>
+<h3>Increase log level</h3>
+<ol>
+<li><p>On your Home Assistant device, stop Home Assistant</p>
+</li>
+<li><p>Adjust <code>configuration.yaml</code> to log more detail for the <code>device_tracker</code> integration.</p>
+<pre><code>logger:
+  default: warn
+  logs:
+    homeassistant.components.device_tracker: debug
+</code></pre>
+</li>
+<li><p>In another window, observe the logs.</p>
+<ul>
+<li><p>If using an Home Assistant Supervisor based installation, such as the
+Home Assistant Operating System, log in through the <a>SSH add-on</a> and run the following command:</p>
+<pre><code>ha core logs --follow | grep device_tracker
+</code></pre>
+</li>
+<li><p>If not using the Home Assistant Supervisor tail the log file in the configuration directory:</p>
+<pre><code>tail -f home-assistant.log  | grep device_tracker
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>If you see a Python stack trace like the following, check your configuration for correct username/password.</p>
+<pre><code>17-04-28 10:43:30 INFO (MainThread) [homeassistant.loader] Loaded device_tracker from homeassistant.components.device_tracker
+17-04-28 10:43:30 INFO (MainThread) [homeassistant.loader] Loaded device_tracker.ubus from homeassistant.components.device_tracker.ubus
+17-04-28 10:43:30 INFO (MainThread) [homeassistant.setup] Setting up device_tracker
+17-04-28 10:43:31 INFO (MainThread) [homeassistant.components.device_tracker] Setting up device_tracker.ubus
+17-04-28 10:43:31 ERROR (MainThread) [homeassistant.components.device_tracker] Error setting up platform ubus
+  File "/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/__init__.py", line 152, in async_setup_platform
+  File "/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py", line 36, in get_scanner
+  File "/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py", line 58, in __init__
+  File "/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py", line 156, in _get_session_id
+  File "/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py", line 147, in _req_json_rpc
+17-04-28 10:43:31 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event service_registered[L]: domain=device_tracker, service=see&gt;
+17-04-28 10:43:31 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event component_loaded[L]: component=device_tracker&gt;
+</code></pre>
+</li>
+<li><p>If you see lines like the following repeated at intervals that correspond to the check interval from the configuration (12 seconds by default), then Home Assistant is correctly polling the router, and you'll need to look at what the router is sending back.</p>
+<pre><code>17-04-28 10:50:34 INFO (Thread-7) [homeassistant.components.device_tracker.ubus] Checking ARP
+</code></pre>
+</li>
+</ol>
+<h3>Inspect packets with TCPDump</h3>
+<p><em>These steps require that <code>tcpdump</code> is installed on your Home Assistant device, and that you have a utility such as <a>Wireshark</a> for viewing the packets. It also assumes that Home Assistant is communicating with your router over HTTP and not HTTPS.</em></p>
+<ol>
+<li><p>On your Home Assistant device, stop Home Assistant</p>
+</li>
+<li><p>In another shell on your Home Assistant device, start tcpdump</p>
+<pre><code>sudo tcpdump -nnvXSs 0 -w /var/tmp/dt.out 'host &lt;router_ip&gt; and port 80'
+</code></pre>
+<ul>
+<li>In this example we are only looking for traffic to or from port 80, and we are writing the packet stream out to <code>/var/tmp/dt.out</code></li>
+</ul>
+</li>
+<li><p>Start Home Assistant</p>
+</li>
+<li><p>After a few seconds you should see a line like <code>Got xx</code> where <code>xx</code> is an incrementing number. This indicates that it has captured packets that match our filter. After you see this number increment a few times (&gt;20), you can hit <code>Ctrl-C</code> to cancel the capture.</p>
+</li>
+<li><p>Transfer <code>/var/tmp/dt.out</code> to the machine where you're running Wireshark and either drag/drop it onto the Wireshark window or use File/Open to open the capture file.</p>
+</li>
+<li><p>In the window that opens, look for the first line that reads <code>POST /ubus</code>. Right click on this line, choose Follow and then HTTP Stream to view just the HTTP stream for this connection.</p>
+</li>
+<li><p>The first <code>POST</code> will show Home Assistant logging into ubus and receiving a session identifier back. It will look something like this:</p>
+<pre><code>POST /ubus HTTP/1.1
+Host: 10.68.0.1
+Accept: */*
+User-Agent: python-requests/2.13.0
+Connection: keep-alive
+Accept-Encoding: gzip, deflate
+Content-Length: 161
+
+{"jsonrpc": "2.0", "params": ["00000000000000000000000000000000", "session", "login", {"password": "&lt;password&gt;", "username": "root"}], "method": "call", "id": 1}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+{"jsonrpc":"2.0","id":1,"result":[0,{"ubus_rpc_session":"8b4e1632389fcfd09e96a792e01c332c","timeout":300,"expires":300,"acls":{"access-group":{"unauthenticated":["read"],"user":["read"]},"ubus":{"*":["*"],"session":["access","login"]},"uci":{"*":["read"]}},"data":{"username":"root"}}]}
+</code></pre>
+</li>
+<li><p>In the response above, the portion that reads <code>"result":[0,</code> indicates that ubus accepted the login without issue. If this is not <code>0</code>, search online for what ubus status corresponds to the number you're receiving and address any issues that it brings to light.</p>
+</li>
+<li><p>Otherwise, back in the main Wireshark window click the <code>x</code> in the right side of the filter bar where it reads <code>tcp.stream eq 0</code>. Scroll down until you find the next <code>POST /ubus</code> line and view the HTTP stream again. This request is Home Assistant actually requesting information and will look something like the following:</p>
+<pre><code>POST /ubus HTTP/1.1
+Host: 10.68.0.1
+Accept: */*
+User-Agent: python-requests/2.13.0
+Connection: keep-alive
+Accept-Encoding: gzip, deflate
+Content-Length: 114
+
+{"jsonrpc": "2.0", "params": ["8b4e1632389fcfd09e96a792e01c332c", "hostapd.*", "", {}], "method": "list", "id": 1}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+
+{"jsonrpc":"2.0","id":1,"result":{}}
+</code></pre>
+</li>
+<li><p>In this case we are actually receiving a valid response with no data. The request says that we are looking for ARP information from <code>hostapd.*</code>, which is the access point on the router. In my environment I don't use the AP on the router, and so it was correctly returning no data. Armed with this information, I know that I cannot use this integration for device tracking or presence.</p>
+</li>
+</ol>
+<h3>Cleanup</h3>
+<p>When you're done troubleshooting, remember to reset your logging configuration and delete any capture files that contain sensitive information.</p>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/ubus.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate OpenWrt devices into Home Assistant.
+ha_release: 0.7.6
+ha_domain: ubus
+related:
+  - docs: /docs/configuration/
+    title: Configuration file
+---
+
+This is a presence detection scanner for [OpenWrt](https://openwrt.org/) using [ubus](https://openwrt.org/docs/techref/ubus). It scans for changes in `hostapd.*`, which will detect and report changes in client devices connected to the access point on the OpenWrt device.
+
+{% important %}
+The integration should be configured on OpenWrt devices providing wireless access points, not on devices acting only as routers.
+{% endimportant %}
+
+Before this scanner can be used, you have to install the ubus RPC packages on OpenWrt (versions older than 18.06.x do not require the `uhttpd-mod-ubus` package):
+
+```bash
+apk update
+apk add rpcd-mod-file uhttpd-mod-ubus
+```
+
+Add a new system user `hass` (or do it in any other way that you prefer):
+
+- Add line to `/etc/passwd`: `hass:x:10001:10001:hass:/var:/bin/false`
+- Add line to `/etc/shadow`: `hass:x:0:0:99999:7:::`
+
+Then set a password for the `hass` user:
+
+```bash
+passwd hass
+```
+
+Edit the `/etc/config/rpcd` and add the following lines:
+
+```yaml
+config login
+        option username &#x27;hass&#x27;
+        option password &#x27;$p$hass&#x27;
+        list read hass
+        list read unauthenticated
+        list write hass
+```
+
+Then, create an ACL file at `/usr/share/rpcd/acl.d/hass.json` for the user `hass`:
+
+```json
+{
+  &quot;hass&quot;: {
+    &quot;description&quot;: &quot;Access role for OpenWrt ubus integration&quot;,
+    &quot;read&quot;: {
+      &quot;ubus&quot;: {
+        &quot;hostapd.*&quot;: [&quot;get_clients&quot;],
+        &quot;uci&quot;: [&quot;get&quot;],
+        &quot;dhcp&quot;: [&quot;ipv4leases&quot;],
+        &quot;file&quot;: [&quot;read&quot;]
+      },
+      &quot;uci&quot;: [&quot;dhcp&quot;],
+      &quot;file&quot;: {
+        &quot;/tmp/dhcp.leases&quot;: [&quot;read&quot;]
+      }
+    },
+    &quot;write&quot;: {}
+  }
+}
+```
+
+_Check your lease file path:_ The entry `/tmp/dhcp.leases` is the OpenWrt default for dnsmasq. If you have a custom configuration, run `uci get dhcp.@dnsmasq[0].leasefile` on your device. Should it return a different path, then you must update the `hass.json` file above to match it, or client device names will not be correctly resolved. This step can be ignored if dnsmasq is disabled on your device.
+
+Restart the services.
+
+```bash
+# /etc/init.d/rpcd restart &amp;&amp; /etc/init.d/uhttpd restart
+```
+
+Check if the `file` namespace is registered with the RPC server.
+
+```bash
+# ubus list | grep file
+file
+```
+
+{% tip %}
+If not already done, add the ACL file path to `/etc/sysupgrade.conf` so that the file remains after updating/upgrading your OpenWrt firmware.
+
+```bash
+# echo &quot;/usr/share/rpcd/acl.d/hass.json&quot; &gt;&gt; /etc/sysupgrade.conf
+```
+{% endtip %}
+
+{% include integrations/config_flow.md %}
+
+{% configuration_basic %}
+Host:
+  description: The IP address of your OpenWrt device, for example, `192.168.1.1`.
+Username:
+  description: The username for the account you created on your OpenWrt device. Use the dedicated `hass` user rather than `root` to follow the principle of least privilege.
+Password:
+  description: The password for the user above.
+DHCP software:
+  description: &quot;The DHCP software used in your OpenWrt device: `dnsmasq`, `odhcpd`, or `none`. Use `none` if neither service is used on the device, for example, if it&#x27;s a bridged access point.&quot;
+{% endconfiguration_basic %}
+
+If you configured multiple OpenWrt devices, add the integration once for each device.
+
+If you set up this integration in YAML before, Home Assistant imports that configuration automatically. You can then remove the `ubus` entries from your {% term &quot;`configuration.yaml`&quot; %} file.
+
+## Tracking people
+
+The integration creates a device tracker entity for each client device it sees on your OpenWrt device. These entities are disabled by default.
+
+To track a person with one of these devices:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %} and select **OpenWrt (ubus)**.
+2. Select the device you want to track, then [enable](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity) its device tracker entity.
+3. Go to {% my people title=&quot;**Settings** &gt; **People**&quot; %}, select the person, and add the device tracker entity with **Pick device to track**.
+4. Select **Save**.
+
+## Troubleshooting
+
+If you find that this never creates `known_devices.yaml`, or if you need more information on the communication chain between Home Assistant and OpenWrt, follow these steps to grab the packet stream and gain insight into what&#x27;s happening.
+
+### Increase log level
+
+1. On your Home Assistant device, stop Home Assistant
+2. Adjust {% term &quot;`configuration.yaml`&quot; %} to log more detail for the `device_tracker` integration.
+
+    ```yaml
+    logger:
+      default: warn
+      logs:
+        homeassistant.components.device_tracker: debug
+    ```
+
+3. In another window, observe the logs.
+
+    - If using an {% term &quot;Home Assistant Supervisor&quot; %} based installation, such as the
+    {% term &quot;Home Assistant Operating System&quot; %}, log in through the [SSH add-on](/common-tasks/os/#installing-and-using-the-ssh-app) and run the following command:
+
+      ```bash
+      ha core logs --follow | grep device_tracker
+      ```
+
+    - If not using the {% term &quot;Home Assistant Supervisor&quot; %} tail the log file in the configuration directory:
+
+      ```bash
+      tail -f home-assistant.log  | grep device_tracker
+      ```
+
+4. If you see a Python stack trace like the following, check your configuration for correct username/password.
+
+    ```txt
+    17-04-28 10:43:30 INFO (MainThread) [homeassistant.loader] Loaded device_tracker from homeassistant.components.device_tracker
+    17-04-28 10:43:30 INFO (MainThread) [homeassistant.loader] Loaded device_tracker.ubus from homeassistant.components.device_tracker.ubus
+    17-04-28 10:43:30 INFO (MainThread) [homeassistant.setup] Setting up device_tracker
+    17-04-28 10:43:31 INFO (MainThread) [homeassistant.components.device_tracker] Setting up device_tracker.ubus
+    17-04-28 10:43:31 ERROR (MainThread) [homeassistant.components.device_tracker] Error setting up platform ubus
+      File &quot;/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/__init__.py&quot;, line 152, in async_setup_platform
+      File &quot;/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py&quot;, line 36, in get_scanner
+      File &quot;/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py&quot;, line 58, in __init__
+      File &quot;/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py&quot;, line 156, in _get_session_id
+      File &quot;/opt/homeassistant/venv/lib/python3.4/site-packages/homeassistant/integrations/device_tracker/ubus.py&quot;, line 147, in _req_json_rpc
+    17-04-28 10:43:31 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event service_registered[L]: domain=device_tracker, service=see&gt;
+    17-04-28 10:43:31 INFO (MainThread) [homeassistant.core] Bus:Handling &lt;Event component_loaded[L]: component=device_tracker&gt;
+    ```
+
+5. If you see lines like the following repeated at intervals that correspond to the check interval from the configuration (12 seconds by default), then Home Assistant is correctly polling the router, and you&#x27;ll need to look at what the router is sending back.
+
+    ```txt
+    17-04-28 10:50:34 INFO (Thread-7) [homeassistant.components.device_tracker.ubus] Checking ARP
+    ```
+
+### Inspect packets with TCPDump
+
+_These steps require that `tcpdump` is installed on your Home Assistant device, and that you have a utility such as [Wireshark](https://www.wireshark.org) for viewing the packets. It also assumes that Home Assistant is communicating with your router over HTTP and not HTTPS._
+
+1. On your Home Assistant device, stop Home Assistant
+2. In another shell on your Home Assistant device, start tcpdump
+
+    ```bash
+    sudo tcpdump -nnvXSs 0 -w /var/tmp/dt.out &#x27;host &lt;router_ip&gt; and port 80&#x27;
+    ```
+
+     - In this example we are only looking for traffic to or from port 80, and we are writing the packet stream out to `/var/tmp/dt.out`
+
+3. Start Home Assistant
+4. After a few seconds you should see a line like `Got xx` where `xx` is an incrementing number. This indicates that it has captured packets that match our filter. After you see this number increment a few times (&gt;20), you can hit `Ctrl-C` to cancel the capture.
+5. Transfer `/var/tmp/dt.out` to the machine where you&#x27;re running Wireshark and either drag/drop it onto the Wireshark window or use File/Open to open the capture file.
+6. In the window that opens, look for the first line that reads `POST /ubus`. Right click on this line, choose Follow and then HTTP Stream to view just the HTTP stream for this connection.
+7. The first `POST` will show Home Assistant logging into ubus and receiving a session identifier back. It will look something like this:
+
+    ```txt
+    POST /ubus HTTP/1.1
+    Host: 10.68.0.1
+    Accept: */*
+    User-Agent: python-requests/2.13.0
+    Connection: keep-alive
+    Accept-Encoding: gzip, deflate
+    Content-Length: 161
+
+    {&quot;jsonrpc&quot;: &quot;2.0&quot;, &quot;params&quot;: [&quot;00000000000000000000000000000000&quot;, &quot;session&quot;, &quot;login&quot;, {&quot;password&quot;: &quot;&lt;password&gt;&quot;, &quot;username&quot;: &quot;root&quot;}], &quot;method&quot;: &quot;call&quot;, &quot;id&quot;: 1}
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    Transfer-Encoding: chunked
+    Connection: keep-alive
+
+    {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;result&quot;:[0,{&quot;ubus_rpc_session&quot;:&quot;8b4e1632389fcfd09e96a792e01c332c&quot;,&quot;timeout&quot;:300,&quot;expires&quot;:300,&quot;acls&quot;:{&quot;access-group&quot;:{&quot;unauthenticated&quot;:[&quot;read&quot;],&quot;user&quot;:[&quot;read&quot;]},&quot;ubus&quot;:{&quot;*&quot;:[&quot;*&quot;],&quot;session&quot;:[&quot;access&quot;,&quot;login&quot;]},&quot;uci&quot;:{&quot;*&quot;:[&quot;read&quot;]}},&quot;data&quot;:{&quot;username&quot;:&quot;root&quot;}}]}
+    ```
+
+8. In the response above, the portion that reads `&quot;result&quot;:[0,` indicates that ubus accepted the login without issue. If this is not `0`, search online for what ubus status corresponds to the number you&#x27;re receiving and address any issues that it brings to light.
+9. Otherwise, back in the main Wireshark window click the `x` in the right side of the filter bar where it reads `tcp.stream eq 0`. Scroll down until you find the next `POST /ubus` line and view the HTTP stream again. This request is Home Assistant actually requesting information and will look something like the following:
+
+    ```txt
+    POST /ubus HTTP/1.1
+    Host: 10.68.0.1
+    Accept: */*
+    User-Agent: python-requests/2.13.0
+    Connection: keep-alive
+    Accept-Encoding: gzip, deflate
+    Content-Length: 114
+
+    {&quot;jsonrpc&quot;: &quot;2.0&quot;, &quot;params&quot;: [&quot;8b4e1632389fcfd09e96a792e01c332c&quot;, &quot;hostapd.*&quot;, &quot;&quot;, {}], &quot;method&quot;: &quot;list&quot;, &quot;id&quot;: 1}
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+    Transfer-Encoding: chunked
+    Connection: keep-alive
+
+    {&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;result&quot;:{}}
+    ```
+
+10. In this case we are actually receiving a valid response with no data. The request says that we are looking for ARP information from `hostapd.*`, which is the access point on the router. In my environment I don&#x27;t use the AP on the router, and so it was correctly returning no data. Armed with this information, I know that I cannot use this integration for device tracking or presence.
+
+### Cleanup
+
+When you&#x27;re done troubleshooting, remember to reset your logging configuration and delete any capture files that contain sensitive information.
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for OpenWrt (ubus).</p><p>The <strong>user</strong> configuration step lists <code>dhcp_software</code>, <code>host</code>, <code>password</code>, <code>username</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>device tracker</li></ul><h3>Connection methods</h3><ul class="chips"><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Tracking people</li><li>Troubleshooting</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/ubus/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/ubus</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/ubus</code></dd></dl></section><p><a href="../../integrations/ubus/">Return to the OpenWrt (ubus) guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

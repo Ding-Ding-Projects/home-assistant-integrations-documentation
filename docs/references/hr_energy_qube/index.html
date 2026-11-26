@@ -1,1 +1,965 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Qube heat pump reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:347" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/hr_energy_qube/">Qube heat pump guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Qube heat pump</h1><p>Instructions on how to integrate your Qube heat pump with Home Assistant.</p><section><h2>Overview</h2><p>The Qube heat pump integration allows you to monitor and control Qube heat pumps via the Modbus TCP protocol.</p></section><section><h2>Supported devices</h2><p>The following devices are known to be supported by the integration:</p></section><section><h2>Unsupported devices</h2><p>The following devices are not supported by the integration:</p></section><section><h2>Reconfiguration</h2><p>If the IP address or hostname of your heat pump changes, you can update it without removing and re-adding the integration:</p></section><section><h2>Automation: Store surplus solar power as heat</h2><p>When your solar panels export more power than the heat pump needs, raise the smart grid ready mode to Plus so the heat pump uses the surplus. Switch back to Off when the export drops.</p></section><section><h2>Automation: Heat hot water when electricity is cheap</h2><p>Boost the domestic hot water when the electricity price is low, and return to normal operation afterwards.</p></section><section><h2>Data updates</h2><p>The integration polls the heat pump every 15 seconds via Modbus TCP.</p></section><section><h2>Diagnostics</h2><p>The host address is redacted. Attach the downloaded file when reporting an issue. For more information, see Download diagnostics.</p></section><section><h2>Symptom: &quot;Failed to connect&quot; or &quot;Could not verify this is a Qube heat pump&quot;</h2><p>When trying to set up the integration, the form shows &quot;Failed to connect&quot; or &quot;Could not verify this is a Qube heat pump&quot;.</p></section><section><h2>Description</h2><p>Home Assistant connects to the heat pump over Modbus TCP on port 502 and reads a register to verify that it is a Qube heat pump. The connection fails when the address is wrong or the port can&#x27;t be reached; the verification fails when another device answers on that address.</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Qube heat pump.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Reconfiguration</li><li>Supported functionality</li><li>Qube heat pump automation examples</li><li>Data updates</li><li>Diagnostics</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/hr_energy_qube/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/hr_energy_qube</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/hr_energy_qube</code></dd></dl></section><p><a href="../../integrations/hr_energy_qube/">Return to the Qube heat pump guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Qube heat pump reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:347" data-theme="observatory"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/hr_energy_qube/">Qube heat pump guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Qube heat pump</h1><p>Instructions on how to integrate your Qube heat pump with Home Assistant.</p><div class="reader-body"><p>The <strong>Qube heat pump</strong> integration allows you to monitor and control <a>Qube</a> heat pumps via the Modbus TCP protocol.</p>
+<h2>Use cases</h2>
+<ul>
+<li>Monitor the heat pump's temperatures, power, energy use, and coefficient of performance (COP), and add the electric consumption to the <a>energy dashboard</a>.</li>
+<li>Use surplus solar power: switch the smart grid ready mode to <strong>Plus</strong> or <strong>Max</strong> when your solar panels export to the grid, so the heat pump stores the energy as heat.</li>
+<li>Heat domestic hot water when electricity is cheap, by boosting the water heater during low dynamic tariff hours.</li>
+<li>Switch between summer and winter mode, or block the heat pump during peak hours, from automations instead of the heat pump's panel.</li>
+</ul>
+<h2>Supported devices</h2>
+<p>The following devices are known to be supported by the integration:</p>
+<ul>
+<li>Qube heat pump</li>
+</ul>
+<h2>Unsupported devices</h2>
+<p>The following devices are not supported by the integration:</p>
+<ul>
+<li>Qbooster heat pump (the predecessor of the Qube heat pump)</li>
+</ul>
+<h2>Configuration</h2>
+<p>To add the <strong>Qube heat pump</strong> hub to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Qube heat pump</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p>Home Assistant discovers the Qube heat pump automatically when it is on the same network, using the controller's mDNS (Bonjour) advertisement. If the heat pump is on a separate network or VLAN, add it manually with its IP address or hostname, or allow mDNS between the networks on your router.</p>
+<pre><code>
+Host:
+  description: The IP address or hostname of your Qube heat pump.
+
+</code></pre>
+<h2>Reconfiguration</h2>
+<p>If the IP address or hostname of your heat pump changes, you can update it without removing and re-adding the integration:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong>.</li>
+<li>On the <strong>Qube heat pump</strong> integration, select the three-dot menu and choose <strong>Reconfigure</strong>.</li>
+<li>Enter the new IP address or hostname.</li>
+<li>Select <strong>Submit</strong> to save the new settings.</li>
+</ol>
+<p>Home Assistant checks that the new address belongs to a Qube heat pump and, when it can read the heat pump's mDNS announcement, that it is the same heat pump as before.</p>
+<h2>Supported functionality</h2>
+<h3>Binary sensors</h3>
+<ul>
+<li><strong>Source pump</strong><ul>
+<li><strong>Description</strong>: Indicates whether the source pump is running.</li>
+</ul>
+</li>
+<li><strong>User pump</strong><ul>
+<li><strong>Description</strong>: Indicates whether the user pump is running.</li>
+</ul>
+</li>
+<li><strong>Buffer pump</strong><ul>
+<li><strong>Description</strong>: Indicates whether the buffer pump is running.</li>
+</ul>
+</li>
+<li><strong>Four-way valve</strong><ul>
+<li><strong>Description</strong>: Indicates the state of the four-way valve.</li>
+</ul>
+</li>
+<li><strong>Three-way valve</strong><ul>
+<li><strong>Description</strong>: Indicates the state of the three-way valve.</li>
+</ul>
+</li>
+<li><strong>Cooling output</strong><ul>
+<li><strong>Description</strong>: Indicates whether the cooling output is active.</li>
+</ul>
+</li>
+<li><strong>Heater step 1 / 2 / 3</strong><ul>
+<li><strong>Description</strong>: Indicates whether the electric heater step is active.</li>
+</ul>
+</li>
+<li><strong>Keypad</strong><ul>
+<li><strong>Description</strong>: Indicates whether the keypad is enabled.</li>
+</ul>
+</li>
+<li><strong>Day mode</strong><ul>
+<li><strong>Description</strong>: Indicates whether day mode is active.</li>
+</ul>
+</li>
+<li><strong>Summer mode</strong><ul>
+<li><strong>Description</strong>: Indicates whether summer mode (cooling) is active.</li>
+</ul>
+</li>
+<li><strong>Anti-legionella</strong><ul>
+<li><strong>Description</strong>: Indicates whether an anti-legionella cycle is running.</li>
+</ul>
+</li>
+<li><strong>Dewpoint</strong><ul>
+<li><strong>Description</strong>: Indicates whether the dewpoint input is active.</li>
+</ul>
+</li>
+<li><strong>Booster security</strong><ul>
+<li><strong>Description</strong>: Indicates whether the booster security input is active.</li>
+</ul>
+</li>
+<li><strong>Source flow</strong><ul>
+<li><strong>Description</strong>: Indicates whether source flow is detected.</li>
+</ul>
+</li>
+<li><strong>PV surplus</strong><ul>
+<li><strong>Description</strong>: Indicates whether photovoltaic surplus energy is available.</li>
+</ul>
+</li>
+<li><strong>Thermostat demand</strong><ul>
+<li><strong>Description</strong>: Indicates whether the thermostat is requesting heating or cooling.</li>
+</ul>
+</li>
+<li><strong>Plant demand</strong><ul>
+<li><strong>Description</strong>: Indicates whether the plant controller is requesting heating or cooling.</li>
+</ul>
+</li>
+<li><strong>External demand</strong><ul>
+<li><strong>Description</strong>: Indicates whether an external demand signal is active.</li>
+</ul>
+</li>
+<li><strong>Anti-legionella timeout alarm</strong><ul>
+<li><strong>Description</strong>: Indicates whether the anti-legionella cycle exceeded its maximum time.</li>
+</ul>
+</li>
+<li><strong>DHW timeout alarm</strong><ul>
+<li><strong>Description</strong>: Indicates whether the domestic hot water cycle exceeded its maximum time.</li>
+</ul>
+</li>
+<li><strong>Dewpoint alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a dewpoint-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Supply too hot alarm</strong><ul>
+<li><strong>Description</strong>: Indicates the supply temperature exceeded the safety limit.</li>
+</ul>
+</li>
+<li><strong>Flow alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a flow-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Central heating alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a central heating alarm condition.</li>
+</ul>
+</li>
+<li><strong>Cooling alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a cooling-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Heating alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a heating-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Working hours alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a working hours alarm condition.</li>
+</ul>
+</li>
+<li><strong>Source alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a source-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Global alarm</strong><ul>
+<li><strong>Description</strong>: Indicates any active alarm on the heat pump.</li>
+</ul>
+</li>
+<li><strong>Compressor alarm</strong><ul>
+<li><strong>Description</strong>: Indicates a compressor-related alarm condition.</li>
+</ul>
+</li>
+<li><strong>Room sensor enabled</strong><ul>
+<li><strong>Description</strong>: Indicates whether the room temperature sensor is enabled. <a>Disabled by default</a>.</li>
+</ul>
+</li>
+<li><strong>Plant sensor enabled</strong><ul>
+<li><strong>Description</strong>: Indicates whether the plant temperature sensor is enabled. Disabled by default.</li>
+</ul>
+</li>
+<li><strong>Buffer sensor enabled</strong><ul>
+<li><strong>Description</strong>: Indicates whether the buffer temperature sensor is enabled. Disabled by default.</li>
+</ul>
+</li>
+<li><strong>DHW controller enabled</strong><ul>
+<li><strong>Description</strong>: Indicates whether the domestic hot water controller is enabled. Disabled by default.</li>
+</ul>
+</li>
+</ul>
+<h3>Selects</h3>
+<ul>
+<li><strong>SG Ready mode</strong><ul>
+<li><strong>Description</strong>: Controls the Smart Grid Ready (SG Ready) mode for load shifting based on grid conditions or solar surplus.</li>
+<li><strong>Options</strong>:<ul>
+<li><strong>Off</strong>: Normal operation.</li>
+<li><strong>Block</strong>: Block heat pump operation (grid requests reduced consumption).</li>
+<li><strong>Plus</strong>: Regular heating curve with room setpoint +1K and DHW day mode (grid has surplus energy).</li>
+<li><strong>Max</strong>: Run anti-legionella cycle once, use surplus curve with room setpoint +1K (maximum energy absorption).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Sensors</h3>
+<ul>
+<li><strong>Supply temperature CH</strong><ul>
+<li><strong>Description</strong>: Current supply temperature for central heating.</li>
+</ul>
+</li>
+<li><strong>Return temperature</strong><ul>
+<li><strong>Description</strong>: Current return temperature.</li>
+</ul>
+</li>
+<li><strong>Source temperature in</strong><ul>
+<li><strong>Description</strong>: Temperature of the source fluid entering the heat pump.</li>
+</ul>
+</li>
+<li><strong>Source temperature out</strong><ul>
+<li><strong>Description</strong>: Temperature of the source fluid leaving the heat pump.</li>
+</ul>
+</li>
+<li><strong>Room temperature</strong><ul>
+<li><strong>Description</strong>: Current room temperature as measured by the heat pump.</li>
+</ul>
+</li>
+<li><strong>DHW temperature</strong><ul>
+<li><strong>Description</strong>: Current domestic hot water temperature.</li>
+</ul>
+</li>
+<li><strong>Outside temperature</strong><ul>
+<li><strong>Description</strong>: Current outside temperature.</li>
+</ul>
+</li>
+<li><strong>Thermal power</strong><ul>
+<li><strong>Description</strong>: Current thermal power output.</li>
+</ul>
+</li>
+<li><strong>Electric power</strong><ul>
+<li><strong>Description</strong>: Current electric power consumption.</li>
+</ul>
+</li>
+<li><strong>Total electric consumption</strong><ul>
+<li><strong>Description</strong>: Cumulative electric energy consumed.</li>
+</ul>
+</li>
+<li><strong>Total thermal yield</strong><ul>
+<li><strong>Description</strong>: Cumulative thermal energy produced.</li>
+</ul>
+</li>
+<li><strong>COP</strong><ul>
+<li><strong>Description</strong>: Current coefficient of performance.</li>
+</ul>
+</li>
+<li><strong>Compressor speed</strong><ul>
+<li><strong>Description</strong>: Current compressor speed in revolutions per minute.</li>
+</ul>
+</li>
+<li><strong>Measured PVT flow</strong><ul>
+<li><strong>Description</strong>: Current photovoltaic-thermal flow rate.</li>
+</ul>
+</li>
+<li><strong>Room setpoint heating (day)</strong><ul>
+<li><strong>Description</strong>: Target room temperature for heating during daytime.</li>
+</ul>
+</li>
+<li><strong>Room setpoint heating (night)</strong><ul>
+<li><strong>Description</strong>: Target room temperature for heating during nighttime.</li>
+</ul>
+</li>
+<li><strong>Room setpoint cooling (day)</strong><ul>
+<li><strong>Description</strong>: Target room temperature for cooling during daytime.</li>
+</ul>
+</li>
+<li><strong>Room setpoint cooling (night)</strong><ul>
+<li><strong>Description</strong>: Target room temperature for cooling during nighttime.</li>
+</ul>
+</li>
+<li><strong>Heat pump status</strong><ul>
+<li><strong>Description</strong>: Current operational status of the heat pump.</li>
+</ul>
+</li>
+</ul>
+<h3>Switches</h3>
+<ul>
+<li><strong>Summer mode</strong><ul>
+<li><strong>Description</strong>: Toggle between heating and cooling mode.</li>
+</ul>
+</li>
+<li><strong>Anti-legionella cycle</strong><ul>
+<li><strong>Description</strong>: Manually start an anti-legionella prevention cycle.</li>
+</ul>
+</li>
+<li><strong>Heating curve</strong><ul>
+<li><strong>Description</strong>: Enable or disable dynamic heating curve compensation.</li>
+</ul>
+</li>
+<li><strong>Heating demand</strong><ul>
+<li><strong>Description</strong>: Activate or deactivate heating demand via Modbus.</li>
+</ul>
+</li>
+</ul>
+<h3>Water heater</h3>
+<ul>
+<li><strong>Domestic hot water</strong><ul>
+<li><strong>Description</strong>: Controls domestic hot water temperature and operation mode.</li>
+<li><strong>Current temperature</strong>: The measured DHW temperature.</li>
+<li><strong>Target temperature</strong>: The user-defined DHW setpoint (adjustable).</li>
+<li><strong>Operation modes</strong>: Heat pump (normal operation) and performance (DHW boost, forces an immediate heating cycle).</li>
+</ul>
+</li>
+</ul>
+<h2>Qube heat pump automation examples</h2>
+<p><strong>Tip</strong></p>
+<p>You don't need to edit YAML to use these examples. Copy a YAML snippet from this page, open the visual automation editor in Home Assistant, and press <kbd>Ctrl</kbd>+<kbd>V</kbd> (or <kbd>Cmd</kbd>+<kbd>V</kbd> on Mac). Home Assistant automatically converts the pasted YAML into the visual editor format, whether it's a full automation, a single trigger, a condition, or an action.</p>
+<h3>Automation: Store surplus solar power as heat</h3>
+<p>When your solar panels export more power than the heat pump needs, raise the smart grid ready mode to <strong>Plus</strong> so the heat pump uses the surplus. Switch back to <strong>Off</strong> when the export drops.</p>
+<ul>
+<li><strong>Trigger</strong>: The grid export sensor is above 1500 W for 5 minutes, or below 500 W for 5 minutes.</li>
+<li><strong>Action</strong>: Select <strong>Plus</strong> or <strong>Off</strong> in the smart grid ready mode select.</li>
+</ul>
+<h4>YAML example for storing surplus solar power</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Qube: use surplus solar power"
+triggers:
+- trigger: numeric_state
+entity_id: sensor.grid_export_power
+above: 1500
+for:
+minutes: 5
+id: surplus
+- trigger: numeric_state
+entity_id: sensor.grid_export_power
+below: 500
+for:
+minutes: 5
+id: no_surplus
+actions:
+- action: select.select_option
+target:
+entity_id: select.qube_heat_pump_smart_grid_ready_mode
+data:
+option: "{{ 'plus' if trigger.id == 'surplus' else 'off' }}"</p>
+<h3>Automation: Heat hot water when electricity is cheap</h3>
+<p>Boost the domestic hot water when the electricity price is low, and return to normal operation afterwards.</p>
+<ul>
+<li><strong>Trigger</strong>: The electricity price changes.</li>
+<li><strong>Action</strong>: Set the water heater operation mode to <strong>Performance</strong> when the price is below 0.10 per kWh, otherwise to <strong>Heat pump</strong>.</li>
+</ul>
+<h4>YAML example for heating hot water at low prices</h4>
+<h4>Example</h4>
+<p>automation: |
+alias: "Qube: heat hot water at low prices"
+triggers:
+- trigger: state
+entity_id: sensor.electricity_price
+actions:
+- action: water_heater.set_operation_mode
+target:
+entity_id: water_heater.qube_heat_pump_domestic_hot_water
+data:
+operation_mode: &gt;-
+{{ 'performance' if trigger.to_state.state | float(1) &lt; 0.10
+else 'heat_pump' }}</p>
+<p>Replace <code>sensor.grid_export_power</code> and <code>sensor.electricity_price</code> with the sensors of your energy meter and energy provider, and adjust the thresholds to their units. The examples assume an export power in watts that is positive while exporting, and a price per kWh.</p>
+<h2>Data updates</h2>
+<p>The integration polls the heat pump every 15 seconds via Modbus TCP.</p>
+<h2>Diagnostics</h2>
+<p>The diagnostics download contains:</p>
+<ul>
+<li>The values the integration last read from the heat pump.</li>
+<li>The state of the switches.</li>
+<li>The smart grid ready mode.</li>
+<li>The software version of the heat pump.</li>
+</ul>
+<p>The host address is redacted. Attach the downloaded file when reporting an issue. For more information, see <a>Download diagnostics</a>.</p>
+<h2>Known limitations</h2>
+<ul>
+<li>The integration communicates with the heat pump over Modbus TCP on your local network only. Settings that are not listed under <a>Supported functionality</a>, such as the heating curve parameters, are configured on the heat pump's panel.</li>
+<li>Changes made on the heat pump's panel appear in Home Assistant after the next poll, within 15 seconds.</li>
+<li>Automatic discovery uses mDNS, which does not cross network or VLAN boundaries unless your router forwards it. Without it, add the heat pump manually.</li>
+<li>On some firmware versions the heat pump does not report its software version over Modbus. The device page then does not show a meaningful software version.</li>
+<li>When the heat pump's energy counters briefly report a lower value, the energy sensors keep the previous value until the counter passes it again, so the energy dashboard does not count the difference twice. A drop of more than 1 kWh that persists for three polls is treated as a counter reset.</li>
+<li>The heat pump cannot be restarted from Home Assistant. To restart it, power cycle the heat pump.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Can't set up the heat pump</h4>
+<h3>Symptom: "Failed to connect" or "Could not verify this is a Qube heat pump"</h3>
+<p>When trying to set up the integration, the form shows "Failed to connect" or "Could not verify this is a Qube heat pump".</p>
+<h4>Description</h4>
+<p>Home Assistant connects to the heat pump over Modbus TCP on port 502 and reads a register to verify that it is a Qube heat pump. The connection fails when the address is wrong or the port can't be reached; the verification fails when another device answers on that address.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check the IP address or hostname of the heat pump, for example in your router's list of connected devices.</li>
+<li>Make sure Home Assistant can reach port 502 on the heat pump. If the heat pump is on a separate network or VLAN, allow this traffic in your router or firewall.</li>
+</ol>
+<h4>The heat pump is not discovered</h4>
+<h3>Symptom: The heat pump does not appear as a discovered device</h3>
+<p>Home Assistant does not show the Qube heat pump as a discovered device.</p>
+<h4>Description</h4>
+<p>The heat pump announces itself with mDNS. These announcements only reach Home Assistant when both are on the same network, or when your router forwards mDNS between networks.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Add the heat pump manually with its IP address or hostname.</li>
+<li>Optionally, enable mDNS forwarding between the networks in your router (sometimes called mDNS reflector or multicast DNS).</li>
+</ol>
+<h4>Entities are unavailable</h4>
+<h3>Symptom: All entities show as unavailable</h3>
+<p>All entities of the heat pump show as unavailable.</p>
+<h4>Description</h4>
+<p>The heat pump stopped answering Modbus requests. The integration retries on every poll and the entities recover automatically when the heat pump answers again.</p>
+<h4>Resolution</h4>
+<ol>
+<li>Check that the heat pump is powered on and connected to your network.</li>
+<li>If the IP address of the heat pump changed, Home Assistant updates it automatically when the heat pump is discovered again. Otherwise, <a>reconfigure</a> the integration with the new address, and consider giving the heat pump a fixed IP address in your router.</li>
+<li>If the problem persists, <a>download the diagnostics</a> and include them when reporting an issue.</li>
+</ol>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/hr_energy_qube.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Instructions on how to integrate your Qube heat pump with Home Assistant.
+ha_release: 2026.4
+ha_domain: hr_energy_qube
+---
+
+The **Qube heat pump** {% term integration %} allows you to monitor and control [Qube](https://www.hr-energy.com/nl/pvt-systemen/onderdelen/qube-warmtepomp/) heat pumps via the Modbus TCP protocol.
+
+## Use cases
+
+- Monitor the heat pump&#x27;s temperatures, power, energy use, and coefficient of performance (COP), and add the electric consumption to the [energy dashboard](/docs/energy/).
+- Use surplus solar power: switch the smart grid ready mode to **Plus** or **Max** when your solar panels export to the grid, so the heat pump stores the energy as heat.
+- Heat domestic hot water when electricity is cheap, by boosting the water heater during low dynamic tariff hours.
+- Switch between summer and winter mode, or block the heat pump during peak hours, from automations instead of the heat pump&#x27;s panel.
+
+## Supported devices
+
+The following devices are known to be supported by the integration:
+
+- Qube heat pump
+
+## Unsupported devices
+
+The following devices are not supported by the integration:
+
+- Qbooster heat pump (the predecessor of the Qube heat pump)
+
+{% include integrations/config_flow.md %}
+
+Home Assistant discovers the Qube heat pump automatically when it is on the same network, using the controller&#x27;s mDNS (Bonjour) advertisement. If the heat pump is on a separate network or VLAN, add it manually with its IP address or hostname, or allow mDNS between the networks on your router.
+
+{% configuration_basic %}
+Host:
+  description: The IP address or hostname of your Qube heat pump.
+{% endconfiguration_basic %}
+
+## Reconfiguration
+
+If the IP address or hostname of your heat pump changes, you can update it without removing and re-adding the integration:
+
+1. Go to {% my integrations title=&quot;**Settings** &gt; **Devices &amp; services**&quot; %}.
+2. On the **Qube heat pump** integration, select the three-dot menu and choose **Reconfigure**.
+3. Enter the new IP address or hostname.
+4. Select **Submit** to save the new settings.
+
+Home Assistant checks that the new address belongs to a Qube heat pump and, when it can read the heat pump&#x27;s mDNS announcement, that it is the same heat pump as before.
+
+## Supported functionality
+
+### Binary sensors
+
+- **Source pump**
+  - **Description**: Indicates whether the source pump is running.
+- **User pump**
+  - **Description**: Indicates whether the user pump is running.
+- **Buffer pump**
+  - **Description**: Indicates whether the buffer pump is running.
+- **Four-way valve**
+  - **Description**: Indicates the state of the four-way valve.
+- **Three-way valve**
+  - **Description**: Indicates the state of the three-way valve.
+- **Cooling output**
+  - **Description**: Indicates whether the cooling output is active.
+- **Heater step 1 / 2 / 3**
+  - **Description**: Indicates whether the electric heater step is active.
+- **Keypad**
+  - **Description**: Indicates whether the keypad is enabled.
+- **Day mode**
+  - **Description**: Indicates whether day mode is active.
+- **Summer mode**
+  - **Description**: Indicates whether summer mode (cooling) is active.
+- **Anti-legionella**
+  - **Description**: Indicates whether an anti-legionella cycle is running.
+- **Dewpoint**
+  - **Description**: Indicates whether the dewpoint input is active.
+- **Booster security**
+  - **Description**: Indicates whether the booster security input is active.
+- **Source flow**
+  - **Description**: Indicates whether source flow is detected.
+- **PV surplus**
+  - **Description**: Indicates whether photovoltaic surplus energy is available.
+- **Thermostat demand**
+  - **Description**: Indicates whether the thermostat is requesting heating or cooling.
+- **Plant demand**
+  - **Description**: Indicates whether the plant controller is requesting heating or cooling.
+- **External demand**
+  - **Description**: Indicates whether an external demand signal is active.
+- **Anti-legionella timeout alarm**
+  - **Description**: Indicates whether the anti-legionella cycle exceeded its maximum time.
+- **DHW timeout alarm**
+  - **Description**: Indicates whether the domestic hot water cycle exceeded its maximum time.
+- **Dewpoint alarm**
+  - **Description**: Indicates a dewpoint-related alarm condition.
+- **Supply too hot alarm**
+  - **Description**: Indicates the supply temperature exceeded the safety limit.
+- **Flow alarm**
+  - **Description**: Indicates a flow-related alarm condition.
+- **Central heating alarm**
+  - **Description**: Indicates a central heating alarm condition.
+- **Cooling alarm**
+  - **Description**: Indicates a cooling-related alarm condition.
+- **Heating alarm**
+  - **Description**: Indicates a heating-related alarm condition.
+- **Working hours alarm**
+  - **Description**: Indicates a working hours alarm condition.
+- **Source alarm**
+  - **Description**: Indicates a source-related alarm condition.
+- **Global alarm**
+  - **Description**: Indicates any active alarm on the heat pump.
+- **Compressor alarm**
+  - **Description**: Indicates a compressor-related alarm condition.
+- **Room sensor enabled**
+  - **Description**: Indicates whether the room temperature sensor is enabled. [Disabled by default](/docs/configuration/customizing-entities/#disabling-or-enabling-an-entity).
+- **Plant sensor enabled**
+  - **Description**: Indicates whether the plant temperature sensor is enabled. Disabled by default.
+- **Buffer sensor enabled**
+  - **Description**: Indicates whether the buffer temperature sensor is enabled. Disabled by default.
+- **DHW controller enabled**
+  - **Description**: Indicates whether the domestic hot water controller is enabled. Disabled by default.
+
+### Selects
+
+- **SG Ready mode**
+  - **Description**: Controls the Smart Grid Ready (SG Ready) mode for load shifting based on grid conditions or solar surplus.
+  - **Options**:
+    - **Off**: Normal operation.
+    - **Block**: Block heat pump operation (grid requests reduced consumption).
+    - **Plus**: Regular heating curve with room setpoint +1K and DHW day mode (grid has surplus energy).
+    - **Max**: Run anti-legionella cycle once, use surplus curve with room setpoint +1K (maximum energy absorption).
+
+### Sensors
+
+- **Supply temperature CH**
+  - **Description**: Current supply temperature for central heating.
+- **Return temperature**
+  - **Description**: Current return temperature.
+- **Source temperature in**
+  - **Description**: Temperature of the source fluid entering the heat pump.
+- **Source temperature out**
+  - **Description**: Temperature of the source fluid leaving the heat pump.
+- **Room temperature**
+  - **Description**: Current room temperature as measured by the heat pump.
+- **DHW temperature**
+  - **Description**: Current domestic hot water temperature.
+- **Outside temperature**
+  - **Description**: Current outside temperature.
+- **Thermal power**
+  - **Description**: Current thermal power output.
+- **Electric power**
+  - **Description**: Current electric power consumption.
+- **Total electric consumption**
+  - **Description**: Cumulative electric energy consumed.
+- **Total thermal yield**
+  - **Description**: Cumulative thermal energy produced.
+- **COP**
+  - **Description**: Current coefficient of performance.
+- **Compressor speed**
+  - **Description**: Current compressor speed in revolutions per minute.
+- **Measured PVT flow**
+  - **Description**: Current photovoltaic-thermal flow rate.
+- **Room setpoint heating (day)**
+  - **Description**: Target room temperature for heating during daytime.
+- **Room setpoint heating (night)**
+  - **Description**: Target room temperature for heating during nighttime.
+- **Room setpoint cooling (day)**
+  - **Description**: Target room temperature for cooling during daytime.
+- **Room setpoint cooling (night)**
+  - **Description**: Target room temperature for cooling during nighttime.
+- **Heat pump status**
+  - **Description**: Current operational status of the heat pump.
+
+### Switches
+
+- **Summer mode**
+  - **Description**: Toggle between heating and cooling mode.
+- **Anti-legionella cycle**
+  - **Description**: Manually start an anti-legionella prevention cycle.
+- **Heating curve**
+  - **Description**: Enable or disable dynamic heating curve compensation.
+- **Heating demand**
+  - **Description**: Activate or deactivate heating demand via Modbus.
+
+### Water heater
+
+- **Domestic hot water**
+  - **Description**: Controls domestic hot water temperature and operation mode.
+  - **Current temperature**: The measured DHW temperature.
+  - **Target temperature**: The user-defined DHW setpoint (adjustable).
+  - **Operation modes**: Heat pump (normal operation) and performance (DHW boost, forces an immediate heating cycle).
+
+## Qube heat pump automation examples
+
+{% include docs/paste_yaml_tip.md %}
+
+### Automation: Store surplus solar power as heat
+
+When your solar panels export more power than the heat pump needs, raise the smart grid ready mode to **Plus** so the heat pump uses the surplus. Switch back to **Off** when the export drops.
+
+- **Trigger**: The grid export sensor is above 1500 W for 5 minutes, or below 500 W for 5 minutes.
+- **Action**: Select **Plus** or **Off** in the smart grid ready mode select.
+
+{% details &quot;YAML example for storing surplus solar power&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Qube: use surplus solar power&quot;
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.grid_export_power
+      above: 1500
+      for:
+        minutes: 5
+      id: surplus
+    - trigger: numeric_state
+      entity_id: sensor.grid_export_power
+      below: 500
+      for:
+        minutes: 5
+      id: no_surplus
+  actions:
+    - action: select.select_option
+      target:
+        entity_id: select.qube_heat_pump_smart_grid_ready_mode
+      data:
+        option: &quot;{{ &#x27;plus&#x27; if trigger.id == &#x27;surplus&#x27; else &#x27;off&#x27; }}&quot;
+{% endexample %}
+
+{% enddetails %}
+
+### Automation: Heat hot water when electricity is cheap
+
+Boost the domestic hot water when the electricity price is low, and return to normal operation afterwards.
+
+- **Trigger**: The electricity price changes.
+- **Action**: Set the water heater operation mode to **Performance** when the price is below 0.10 per kWh, otherwise to **Heat pump**.
+
+{% details &quot;YAML example for heating hot water at low prices&quot; %}
+
+{% example %}
+automation: |
+  alias: &quot;Qube: heat hot water at low prices&quot;
+  triggers:
+    - trigger: state
+      entity_id: sensor.electricity_price
+  actions:
+    - action: water_heater.set_operation_mode
+      target:
+        entity_id: water_heater.qube_heat_pump_domestic_hot_water
+      data:
+        operation_mode: &gt;-
+          {{ &#x27;performance&#x27; if trigger.to_state.state | float(1) &lt; 0.10
+             else &#x27;heat_pump&#x27; }}
+{% endexample %}
+
+{% enddetails %}
+
+Replace `sensor.grid_export_power` and `sensor.electricity_price` with the sensors of your energy meter and energy provider, and adjust the thresholds to their units. The examples assume an export power in watts that is positive while exporting, and a price per kWh.
+
+## Data updates
+
+The integration polls the heat pump every 15 seconds via Modbus TCP.
+
+## Diagnostics
+
+The diagnostics download contains:
+
+- The values the integration last read from the heat pump.
+- The state of the switches.
+- The smart grid ready mode.
+- The software version of the heat pump.
+
+The host address is redacted. Attach the downloaded file when reporting an issue. For more information, see [Download diagnostics](/docs/configuration/troubleshooting/#download-diagnostics).
+
+## Known limitations
+
+- The integration communicates with the heat pump over Modbus TCP on your local network only. Settings that are not listed under [Supported functionality](#supported-functionality), such as the heating curve parameters, are configured on the heat pump&#x27;s panel.
+- Changes made on the heat pump&#x27;s panel appear in Home Assistant after the next poll, within 15 seconds.
+- Automatic discovery uses mDNS, which does not cross network or VLAN boundaries unless your router forwards it. Without it, add the heat pump manually.
+- On some firmware versions the heat pump does not report its software version over Modbus. The device page then does not show a meaningful software version.
+- When the heat pump&#x27;s energy counters briefly report a lower value, the energy sensors keep the previous value until the counter passes it again, so the energy dashboard does not count the difference twice. A drop of more than 1 kWh that persists for three polls is treated as a counter reset.
+- The heat pump cannot be restarted from Home Assistant. To restart it, power cycle the heat pump.
+
+## Troubleshooting
+
+{% details &quot;Can&#x27;t set up the heat pump&quot; %}
+
+### Symptom: &quot;Failed to connect&quot; or &quot;Could not verify this is a Qube heat pump&quot;
+
+When trying to set up the integration, the form shows &quot;Failed to connect&quot; or &quot;Could not verify this is a Qube heat pump&quot;.
+
+#### Description
+
+Home Assistant connects to the heat pump over Modbus TCP on port 502 and reads a register to verify that it is a Qube heat pump. The connection fails when the address is wrong or the port can&#x27;t be reached; the verification fails when another device answers on that address.
+
+#### Resolution
+
+1. Check the IP address or hostname of the heat pump, for example in your router&#x27;s list of connected devices.
+2. Make sure Home Assistant can reach port 502 on the heat pump. If the heat pump is on a separate network or VLAN, allow this traffic in your router or firewall.
+
+{% enddetails %}
+
+{% details &quot;The heat pump is not discovered&quot; %}
+
+### Symptom: The heat pump does not appear as a discovered device
+
+Home Assistant does not show the Qube heat pump as a discovered device.
+
+#### Description
+
+The heat pump announces itself with mDNS. These announcements only reach Home Assistant when both are on the same network, or when your router forwards mDNS between networks.
+
+#### Resolution
+
+1. Add the heat pump manually with its IP address or hostname.
+2. Optionally, enable mDNS forwarding between the networks in your router (sometimes called mDNS reflector or multicast DNS).
+
+{% enddetails %}
+
+{% details &quot;Entities are unavailable&quot; %}
+
+### Symptom: All entities show as unavailable
+
+All entities of the heat pump show as unavailable.
+
+#### Description
+
+The heat pump stopped answering Modbus requests. The integration retries on every poll and the entities recover automatically when the heat pump answers again.
+
+#### Resolution
+
+1. Check that the heat pump is powered on and connected to your network.
+2. If the IP address of the heat pump changed, Home Assistant updates it automatically when the heat pump is discovered again. Otherwise, [reconfigure](#reconfiguration) the integration with the new address, and consider giving the heat pump a fixed IP address in your router.
+3. If the problem persists, [download the diagnostics](#diagnostics) and include them when reporting an issue.
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Qube heat pump.</p><p>The <strong>reconfigure</strong> configuration step lists <code>host</code>.</p><p>The <strong>user</strong> configuration step lists <code>host</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>binary sensor</li><li>select</li><li>sensor</li><li>switch</li><li>water heater</li></ul><h3>Connection methods</h3><ul class="chips"><li>modbus</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Use cases</li><li>Supported devices</li><li>Unsupported devices</li><li>Reconfiguration</li><li>Supported functionality</li><li>Qube heat pump automation examples</li><li>Data updates</li><li>Diagnostics</li><li>Known limitations</li><li>Troubleshooting</li><li>Removing the integration</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/hr_energy_qube/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/hr_energy_qube</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/hr_energy_qube</code></dd></dl></section><p><a href="../../integrations/hr_energy_qube/">Return to the Qube heat pump guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>

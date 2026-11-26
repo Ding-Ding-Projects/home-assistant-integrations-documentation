@@ -1,1 +1,1652 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Telegram bot reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script></head><body style="--h:278" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/telegram_bot/">Telegram bot guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Telegram bot</h1><p>Telegram bot support</p><section><h2>Overview</h2><p>Use Telegram on your mobile or desktop device to send and receive messages or commands to/from your Home Assistant. This integration creates notification actions to send, edit, receive messages or download attachments from a Telegram Bot account.</p></section><section><h2>Introduction - Telegram bot platforms</h2><p>Platforms are Telegram bot implementations for managing communications with Telegram for sending and receiving messages. When setting up this integration, you should specify the platform which fits your environment and use case.</p></section><section><h2>Broadcast</h2><p>Telegram implementation to support sending messages only. Your Home Assistant instance does not have to be exposed to the internet and there is no polling to receive messages or commands sent to the bot.</p></section><section><h2>Polling</h2><p>Telegram chatbot polling implementation. This implementation fetches data from Telegram via long polling with a timeout of 10 seconds. (In long polling, the bot will wait until the timeout expires before fetching the data again if there are no updates from Telegram.)</p></section><section><h2>Webhooks</h2><p>Telegram chatbot webhooks implementation as described in the Telegram documentation. This implementation allows Telegram to push updates directly to your server and requires your Home Assistant instance to be exposed to the internet.</p></section><section><h2>Create a bot in Telegram</h2><p>To create your first Telegram bot, follow these steps:</p></section><section><h2>Allow Telegram bot to access your Home Assistant files (Optional)</h2><p>To enable Telegram bot to send local files, you must grant access to it by adding the file&#x27;s folder to allowlist_external_dirs.</p></section><section><h2>Allow Telegram to connect to your Home Assistant (Webhooks platform only)</h2><p>This integration currently does not support self-signed certificates for HTTPS. If you are using the *Reverse proxy* or *Direct* method, please ensure that your certificates are signed by a public Certificate Authority (CA).</p></section><section><h2>Home Assistant Cloud</h2><p>If you have a Home Assistant Cloud subscription, you can enable remote access to your Home Assistant.</p></section><section><h2>Reverse proxy</h2><p>If your Home Assistant is behind a publicly accessible reverse proxy (for example NGINX, Caddy, Traefik) with HTTPS enabled, do the following:</p></section><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Telegram bot.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>platform</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>, <code>platform</code>.</p><p>The <strong>webhooks</strong> configuration step lists <code>trusted_networks</code>, <code>url</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>event</li></ul><h3>Documented actions</h3><ul class="chips"><li>answer callback query</li><li>delete message</li><li>download file</li><li>edit caption</li><li>edit message</li><li>edit message media</li><li>edit replymarkup</li><li>leave chat</li><li>send animation</li><li>send chat action</li><li>send document</li><li>send location</li><li>send media group</li><li>send message</li><li>send message draft</li><li>send photo</li><li>send poll</li><li>send sticker</li><li>send video</li><li>send voice</li><li>set message reaction</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Introduction - Telegram bot platforms</li><li>Prerequisites</li><li>Allowlisting chat IDs via Subentries</li><li>Notifiers</li><li>Event entity</li><li>Example: send_message with formatted Text</li><li>Example: send_message with message tag</li><li>Example: send_message with disabled webpage preview</li><li>Example: send_message then edit it after a delay</li><li>Example: send_message to a topic within a group</li><li>Example: send_media_group</li><li>Example: automation to send a message and delete after a delay</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/telegram_bot/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/telegram_bot</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/telegram_bot</code></dd></dl></section><p><a href="../../integrations/telegram_bot/">Return to the Telegram bot guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a></footer></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Telegram bot reference · Integration Atlas</title><link rel="stylesheet" href="../../atlas.css"><script defer src="../../atlas.js"></script><link rel="stylesheet" href="../../settings.css"><link rel="stylesheet" href="../../search.css"><script src="../../settings.js" defer></script><script src="../../search.js" defer></script><link rel="stylesheet" href="../../workspace.css"><link rel="stylesheet" href="../../tour.css"><script defer src="../../workspace.js"></script><script defer src="../../tour.js"></script></head><body style="--h:278" data-theme="signal"><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="../../index.html"><i aria-hidden="true">⌂</i> Integration Atlas</a><form class="global-search" action="../../directory.html"><label><span class="sr-only">Search integrations</span><input name="q" type="search" placeholder="Find an integration" aria-label="Find an integration"></label></form><a href="../../directory.html">Directory</a><button id="workspace-open" type="button">Workspace</button><button id="reader-settings" type="button">Settings</button></header><main id="main"><nav><a href="../../directory.html">Directory</a> / <a href="../../integrations/telegram_bot/">Telegram bot guide</a> / Reference</nav><article class="reading"><small>Integration reference</small><h1>Telegram bot</h1><p>Telegram bot support</p><div class="reader-body"><p>Use Telegram on your mobile or desktop device to send and receive messages or commands to/from your Home Assistant.
+This integration creates notification actions to send, edit, receive messages or download attachments from a <a>Telegram Bot account</a>.</p>
+<h2>Introduction - Telegram bot platforms</h2>
+<p>Platforms are Telegram bot implementations for managing communications with Telegram for sending and receiving messages.
+When setting up this integration, you should specify the platform which fits your environment and use case.</p>
+<h3>Broadcast</h3>
+<p>Telegram implementation to support <strong>sending messages only</strong>. Your Home Assistant instance does not have to be exposed to the internet and there is no polling to receive messages or commands sent to the bot.</p>
+<h3>Polling</h3>
+<p>Telegram chatbot polling implementation.
+This implementation fetches data from Telegram via long polling with a timeout of 10 seconds.
+(In long polling, the bot will wait until the timeout expires before fetching the data again if there are no updates from Telegram.)</p>
+<p>Your Home Assistant instance does not have to be exposed to the internet.</p>
+<h3>Webhooks</h3>
+<p>Telegram chatbot webhooks implementation as described in the Telegram <a>documentation</a>.
+This implementation allows Telegram to push updates directly to your server and requires your Home Assistant instance to be exposed to the internet.</p>
+<h2>Prerequisites</h2>
+<h3>Create a bot in Telegram</h3>
+<p>To create your first <a>Telegram bot</a>, follow these steps:</p>
+<ol>
+<li>Tell Telegram to create a bot for you:<ul>
+<li>In Telegram, open a chat with <a>@BotFather</a> and enter <code>/newbot</code>.</li>
+<li>Follow the instructions on screen and give your bot a name.</li>
+<li>BotFather will give you a link to your new bot and an HTTP <strong>API token</strong>.</li>
+<li>Store the <strong>API token</strong> somewhere safe, it will be used for setting up the integration later.</li>
+</ul>
+</li>
+<li>Get your <strong>chat ID</strong>:<ul>
+<li>Send any message to <a>@id_bot</a>.</li>
+<li>Note down the value of the <strong>ID</strong> field in the bot's response. You will need to add this ID to the allowlist after setting up the integration to permit your new bot to send/receive messages with this target.</li>
+</ul>
+</li>
+<li>Make the first contact with your new bot (bots are not allowed to initiate contact with users):<ul>
+<li>From the conversation with BotFather, select the link to open a chat.</li>
+<li>In the chat, enter <code>/start</code>.</li>
+</ul>
+</li>
+</ol>
+<h3>Allow Telegram bot to access your Home Assistant files (Optional)</h3>
+<p>To enable Telegram bot to send local files, you must grant access to it by adding the file's folder to <a href="../homeassistant/"><code>allowlist_external_dirs</code></a>.</p>
+<p>Example <code>configuration.yaml</code>:</p>
+<pre><code>homeassistant:
+  allowlist_external_dirs:
+    - "/media"
+</code></pre>
+<h3>Allow Telegram to connect to your Home Assistant (Webhooks platform only)</h3>
+<p><strong>Note</strong></p>
+<p>This integration currently does not support self-signed certificates for HTTPS.
+If you are using the <em>Reverse proxy</em> or <em>Direct</em> method, please ensure that your certificates are signed by a public Certificate Authority (CA).</p>
+<p>If you plan to use the <code>Webhooks</code> platform, you will need to allow Telegram to connect to your Home Assistant using one of the following methods:</p>
+<h4>Home Assistant Cloud</h4>
+<p>If you have a Home Assistant Cloud subscription, you can <a>enable remote access</a> to your Home Assistant.</p>
+<h4>Reverse proxy</h4>
+<p>If your Home Assistant is behind a publicly accessible reverse proxy (for example NGINX, Caddy, Traefik) with HTTPS enabled, do the following:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong> and configure <strong>Home Assistant URL</strong>.</li>
+<li>In the <strong>HTTP server</strong> section, allow Home Assistant to accept connections from your reverse proxy:<ul>
+<li>Turn on <strong>Trust X-Forwarded-For</strong>.</li>
+<li>Add the IP address or CIDR network of the reverse proxy to <strong>Trusted proxies</strong>.</li>
+</ul>
+</li>
+</ol>
+<h4>Direct</h4>
+<p>If your Home Assistant is publicly accessible, do the following:</p>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>System</strong> &gt; <strong>Network</strong> and configure <strong>Home Assistant URL</strong>.</li>
+<li>In the <strong>HTTP server</strong> section, configure the settings needed for HTTPS, such as <strong>Server port</strong>, <strong>Listen addresses</strong>, <strong>SSL certificate path</strong>, and <strong>SSL key path</strong>.</li>
+</ol>
+<h2>Configuration</h2>
+<p>To add the <strong>Telegram bot</strong> service to your Home Assistant instance, use this My button:</p>
+<p>Config flow start</p>
+<h4>Manual configuration steps</h4>
+<p>If the above My button doesn't work, you can also perform the following steps
+manually:</p>
+<ul>
+<li><p>Browse to your Home Assistant instance.</p>
+</li>
+<li><p>Go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>In the bottom right corner, select the
+<strong>Config flow start</strong> button.</p>
+</li>
+<li><p>From the list, select <strong>Telegram bot</strong>.</p>
+</li>
+<li><p>Follow the instructions on screen to complete the setup.</p>
+</li>
+</ul>
+<p><strong>Note</strong></p>
+<p>When configuring the <strong>API endpoint</strong>, note the following protocol requirements:</p>
+<ul>
+<li>(Default) Official Telegram servers: HTTPS is required.</li>
+<li>Custom API endpoints: Both HTTP and HTTPS are supported.</li>
+</ul>
+<pre><code>
+Platform:
+  description: The Telegram bot type, either `Broadcast`, `Polling` or `Webhooks`.
+API key:
+  description: The API token of your bot.
+API endpoint:
+  description: The endpoint of the Telegram bot API server. You should only change this value if you are using a self-hosted or third-party [Telegram bot API server](https://core.telegram.org/bots/api#using-a-local-bot-api-server). Changing this value will result in a *10-minute lockout* on the official Telegram bot API server. Defaults to the official Telegram bot API server at `https://api.telegram.org`.
+Proxy URL:
+  description: Proxy URL if working behind one, optionally including username and password. (`socks5://username:password@proxy_ip:proxy_port`).
+
+</code></pre>
+<h3>Webhooks configuration</h3>
+<p><strong>Note</strong></p>
+<p>If you are using Home Assistant Cloud, you must include <code>127.0.0.1</code> in the <strong>Trusted networks</strong> field because the IP address of incoming requests is not forwarded to your Home Assistant.</p>
+<p><strong>Note</strong></p>
+<p>If you are using a custom <strong>API endpoint</strong>, you must include the IP address or IP range of the server in CIDR notation, like <code>192.168.0.0/16</code>, in the <strong>Trusted networks</strong> field.</p>
+<p>If you have selected the <code>Webhooks</code> Telegram bot type, the integration setup will continue with the webhooks configuration step.</p>
+<pre><code>
+URL:
+  description: Allow to overwrite the external URL from the Home Assistant [configuration](/integrations/homeassistant/#editing-the-general-settings-in-yaml) for different setups (`https://&lt;public_url&gt;:&lt;port&gt;`).
+Trusted networks:
+  description: Telegram server access ACL as list. Default is `149.154.160.0/20, 91.108.4.0/22`.
+
+</code></pre>
+<h2>Options</h2>
+<p>To define options for Telegram bot, follow these steps:</p>
+<ol>
+<li><p>In Home Assistant, go to <strong>Settings &gt; Devices &amp; services</strong>.</p>
+</li>
+<li><p>If multiple instances of Telegram bot are configured, choose the instance you want to configure.</p>
+</li>
+<li><p>On the card, select the cogwheel .</p>
+<ul>
+<li>If the card does not have a cogwheel, the integration does not support options for this service.</li>
+</ul>
+<p><em>Screenshot showing the cogwheel icon on an integration card in the Settings &gt; Devices &amp; services page</em></p>
+</li>
+<li><p>Edit the options, then select <strong>Submit</strong> to save the changes.</p>
+</li>
+</ol>
+<pre><code>
+Parse mode:
+  description: Default parser for messages if not explicit in message data, either `markdown` (legacy), `markdownv2`, `html` or `plain_text`. Refer to Telegram's [formatting options](https://core.telegram.org/bots/api#formatting-options) for more information.
+
+</code></pre>
+<h2>Allowlisting chat IDs via Subentries</h2>
+<p>A Telegram chat ID is a unique numerical identifier for an individual user (positive) or a chat group (negative).
+You must allowlist the chat ID for the Telegram bot before it can send/receive messages for that chat.
+To allowlist the chat ID, <a>retrieve the chat ID</a> and create a subentry:</p>
+<ol>
+<li>Go to <strong>Settings &gt; Devices &amp; services</strong>.</li>
+<li>Select the Telegram bot integration.</li>
+<li>Next to the entry, select the three dots  menu. Then, select <strong>Add allowed chat ID</strong>.</li>
+</ol>
+<pre><code>
+Chat ID:
+  description: ID representing the user or group chat to which messages can be sent.
+
+</code></pre>
+<h3>Recipients of send actions</h3>
+<p>Actions that send content, such as <code>telegram_bot.send_message</code> and <code>telegram_bot.send_media_group</code>, send it to the chats that you can specify with these options:</p>
+<ul>
+<li><code>entity_id</code>: One or more Telegram bot <a>notify entities</a>. Each notify entity represents one allowed chat ID.</li>
+<li><code>chat_id</code>: One or more allowed chat IDs. In the action dialog, <strong>Chat ID</strong> is under <strong>Additional options</strong>.</li>
+<li><code>config_entry_id</code>: The Telegram bot. In the action dialog, <strong>Config entry ID</strong> is under <strong>Additional options</strong>.</li>
+</ul>
+<p>When you have a single Telegram bot:</p>
+<ul>
+<li>If you don't specify any of the options above, the bot is selected automatically and the action sends to the first chat ID you allowlisted for the bot.</li>
+<li>If you want to send to other allowed chats, specify them with <code>entity_id</code> or <code>chat_id</code>.</li>
+</ul>
+<p>If you have more than one Telegram bot, specify one of the following:</p>
+<ul>
+<li><code>entity_id</code>: The action sends to the allowed chat ID of a specific bot notify entity or entities. If you also add a <code>chat_id</code>, the action ignores it.</li>
+<li><code>config_entry_id</code>: The action sends to the first chat ID you allowlisted for that bot.</li>
+<li><code>config_entry_id</code> and <code>chat_id</code>: The action sends to the specified allowed chat ID or IDs of that bot.</li>
+</ul>
+<p>If you have more than one Telegram bot and specify neither <code>entity_id</code> nor <code>config_entry_id</code>, the action fails with the error "Please specify at least 1 notify entity."</p>
+<h2>Notifiers</h2>
+<p>This integration will add a notify entity for each configured chat ID.
+You can use the <code>notify.send_message</code> action to publish notifications.</p>
+<h4>Example YAML configuration</h4>
+<pre><code>action: notify.send_message
+data:
+  message: "Reminder: Have you considered frogs?"
+  entity_id: notify.telegram_bot_chat
+</code></pre>
+<h2>List of actions</h2>
+<p>This integration does not provide any documented actions yet. See the <a>actions reference</a> for actions from other integrations.</p>
+<h2>Event entity</h2>
+<p>The <strong>Telegram bot</strong> integration provides an event entity which represents the state of the last message sent or received. It also provides several event attributes that can be used in automations.
+For received messages that are replies to another message, the optional <code>reply_to_message_id</code> attribute contains the message ID (<code>id</code>) of the message being replied to. It is not present when the message is not a reply.</p>
+<h3>Event: Attachment received</h3>
+<p>The <code>telegram_attachment</code> event is triggered when the bot receives a file.</p>
+<p>Example event attributes:</p>
+<pre><code>bot:
+  config_entry_id: "&lt;config entry id of the bot&gt;"
+  first_name: "&lt;first name of the bot&gt;"
+  id: "&lt;id of the bot&gt;"
+  last_name: "&lt;last name of the bot&gt;"
+  username: "&lt;username of the bot&gt;"
+chat_id: "&lt;origin chat id&gt;"
+date: "&lt;message timestamp&gt;"
+event_type: "telegram_attachment"
+file_id: "&lt;unique identifier for the file&gt;"
+file_mime_type: "&lt;MIME type of the file, if available&gt;"
+file_name: "&lt;name of the file, if available&gt;"
+file_size: "&lt;file size in bytes, if available&gt;"
+friendly_name: "&lt;name of the event entity&gt;"
+from_first: "&lt;first name of the sender&gt;"
+from_last: "&lt;last name of the sender&gt;"
+id: "&lt;message id&gt;"
+message_thread_id: "&lt;message thread id&gt;"
+reply_to_message_id: "&lt;id of the message being replied to, if applicable&gt;"
+text: "&lt;caption of the file, if available&gt;"
+user_id: "&lt;id of the sender&gt;"
+</code></pre>
+<p>Example automation:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_attachment
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received a file.
+        MIME type   : {{ trigger.to_state.attributes.file_mime_type }}
+        Size (bytes): {{ trigger.to_state.attributes.file_size }}
+        File ID     : {{ trigger.to_state.attributes.file_id }}&#32;
+        File name   : {{ trigger.to_state.attributes.file_name }}
+</code></pre>
+<h3>Event: Callback query received</h3>
+<p>The <code>telegram_callback</code> event is triggered when the bot receives a callback query from an inline keyboard button.</p>
+<p><strong>Tip</strong></p>
+<p>The <code>id</code> attribute is used as the <code>callback_query_id</code> parameter for the <code>answer_callback_query</code> action.</p>
+<p>Example event attributes:</p>
+<pre><code># Callback query always have no args
+args: []
+bot:
+  config_entry_id: "&lt;config entry id of the bot&gt;"
+  first_name: "&lt;first name of the bot&gt;"
+  id: "&lt;id of the bot&gt;"
+  last_name: "&lt;last name of the bot&gt;"
+  username: "&lt;username of the bot&gt;"
+chat_id: "&lt;origin chat id&gt;"
+chat_instance: "&lt;chat instance id&gt;"
+command: "&lt;callback query&gt;"
+data: "&lt;data associated to action callback&gt;"
+event_type: "telegram_callback"
+from_first: "&lt;first name of the sender&gt;"
+from_last: "&lt;last name of the sender&gt;"
+friendly_name: "&lt;name of the event entity&gt;"
+id: "&lt;callback id&gt;"
+message: "&lt;message origin of the action callback&gt;"
+user_id: "&lt;id of the sender&gt;"
+</code></pre>
+<p>Example automation:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received callback query.
+        Callback ID   : {{ trigger.to_state.attributes.id }}
+        Callback query: {{ trigger.to_state.attributes.data }}
+</code></pre>
+<h3>Event: Command received</h3>
+<p>The <code>telegram_command</code> event is triggered when the bot receives a command.
+A command looks like <code>/thecommand</code> or <code>/othercommand with some args</code>.</p>
+<p>Example event attributes:</p>
+<pre><code>args: "&lt;any other text following the command&gt;"
+bot:
+  config_entry_id: "&lt;config entry id of the bot&gt;"
+  first_name: "&lt;first name of the bot&gt;"
+  id: "&lt;id of the bot&gt;"
+  last_name: "&lt;last name of the bot&gt;"
+  username: "&lt;username of the bot&gt;"
+chat_id: "&lt;origin chat id&gt;"
+command: "/thecommand"
+date: "&lt;message timestamp&gt;"
+event_type: "telegram_command"
+friendly_name: "&lt;name of the event entity&gt;"
+from_first: "&lt;first name of the sender&gt;"
+from_last: "&lt;last name of the sender&gt;"
+id: "&lt;message id&gt;"
+message_thread_id: "&lt;message thread id&gt;"
+reply_to_message_id: "&lt;id of the message being replied to, if applicable&gt;"
+user_id: "&lt;id of the sender&gt;"
+</code></pre>
+<p>Example automation:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_command
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received command.
+        Command: {{ trigger.to_state.attributes.command }}
+        Args   : {{ trigger.to_state.attributes.args }}
+</code></pre>
+<h3>Event: Text received</h3>
+<p>The <code>telegram_text</code> event is triggered when the bot receives a text message (any message that does not begin with <code>/</code>).</p>
+<p>Example event attributes:</p>
+<pre><code>bot:
+  config_entry_id: "&lt;config entry id of the bot&gt;"
+  first_name: "&lt;first name of the bot&gt;"
+  id: "&lt;id of the bot&gt;"
+  last_name: "&lt;last name of the bot&gt;"
+  username: "&lt;username of the bot&gt;"
+chat_id: "&lt;origin chat id&gt;"
+date: "&lt;message timestamp&gt;"
+event_type: "telegram_text"
+friendly_name: "&lt;name of the event entity&gt;"
+from_first: "&lt;first name of the sender&gt;"
+from_last: "&lt;last name of the sender&gt;"
+id: "&lt;message id&gt;"
+message_thread_id: "&lt;message thread id&gt;"
+reply_to_message_id: "&lt;id of the message being replied to, if applicable&gt;"
+text: "&lt;the text received&gt;"
+user_id: "&lt;id of the sender&gt;"
+</code></pre>
+<p>Example automation:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_text
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Message received.
+        Chat ID   : {{ trigger.to_state.attributes.chat_id }}
+        First name: {{ trigger.to_state.attributes.from_first }}
+        Last name : {{ trigger.to_state.attributes.from_last }}
+        Message   : {{ trigger.to_state.attributes.text }}
+</code></pre>
+<h3>Event: Message sent</h3>
+<p>The <code>telegram_sent</code> event is triggered when the bot sends a message of any type.</p>
+<p><strong>Tip</strong></p>
+<p>The <code>message_id</code> attribute can be used with the edit, delete and <code>set_message_reaction</code> actions to interact with a previously sent message.</p>
+<p>Example event attributes:</p>
+<pre><code>bot:
+  config_entry_id: "&lt;config entry id of the bot&gt;"
+  first_name: "&lt;first name of the bot&gt;"
+  id: "&lt;id of the bot&gt;"
+  last_name: "&lt;last name of the bot&gt;"
+  username: "&lt;username of the bot&gt;"
+chat_id: "&lt;id of the chat the message was sent to&gt;"
+message_id: "&lt;message id&gt;"
+message_tag: "&lt;message tag&gt;"
+message_thread_id: "&lt;message thread id&gt;"
+</code></pre>
+<p><code>message_tag</code> and <code>message_thread_id</code> are only included when the action that sent the message set them.</p>
+<p>Example automation:</p>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_sent
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Bot sent a message.
+        Chat ID   : {{ trigger.to_state.attributes.chat_id }}
+        Message ID: {{ trigger.to_state.attributes.message_id }}
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+</code></pre>
+<h3>Sample automations with inline keyboards and callback queries</h3>
+<p>A quick example to show some of the callback capabilities of inline keyboards with a dumb automation consisting in a simple repeater of normal text that presents an inline keyboard with 3 buttons: 'EDIT', 'NO' and 'REMOVE BUTTON':</p>
+<ul>
+<li>Pressing 'EDIT' changes the sent message.</li>
+<li>Pressing 'NO' only shows a brief notification (answering the callback query).</li>
+<li>Pressing 'REMOVE BUTTON' changes the inline keyboard removing that button.</li>
+</ul>
+<p>Text repeater:</p>
+<pre><code>alias: Telegram bot that repeats text
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_text
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: "You said: {{ trigger.to_state.attributes.text }}"
+      title: "*Dumb automation*"
+      disable_notification: true
+      inline_keyboard:
+        - Edit message:/edit_msg, Don't:/do_nothing
+        - Remove this button:/remove_button
+</code></pre>
+<p>Message editor:</p>
+<pre><code>alias: Telegram bot that edits the last sent message
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /edit_msg
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      show_alert: true
+      message: Editing the message!
+      callback_query_id: "{{ trigger.to_state.attributes.id }}"
+  - action: telegram_bot.edit_message
+    data:
+      inline_keyboard:
+        - Edit message:/edit_msg, Don't:/do_nothing
+        - Remove this button:/remove_button
+      message_id: "{{ trigger.to_state.attributes.message.message_id }}"
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      title: "*Message edit*"
+      message: &gt;-
+        Callback received from {{ trigger.to_state.attributes.from_first }}.
+        Message id: {{ trigger.to_state.attributes.message.message_id }}.
+        Data: {{ trigger.to_state.attributes.data|replace("_", "\_") }}
+</code></pre>
+<p>Keyboard editor:</p>
+<pre><code>alias: Telegram bot that edits the keyboard
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /remove_button
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      callback_query_id: "{{ trigger.to_state.attributes.id }}"
+      message: Callback received for editing the inline keyboard!
+      show_alert: false
+  - action: telegram_bot.edit_replymarkup
+    data:
+      inline_keyboard:
+        - Edit message:/edit_msg, Don't:/do_nothing
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      message_id: last
+</code></pre>
+<p>Only acknowledges the 'NO' answer:</p>
+<pre><code>alias: Telegram bot that simply acknowledges
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /do_nothing
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      message: OK, you said no!
+      callback_query_id: "{{ trigger.to_state.attributes.id }}"
+</code></pre>
+<h3>Sample automation to receive <code>chat_id</code> and <code>message_id</code> identifiers of sent messages</h3>
+<p>The following sample automation stores the <code>chat_id</code> and <code>message_id</code> of the last sent message using input entities.
+These attributes can then be used in other <strong>Telegram bot</strong> actions.</p>
+<pre><code>alias: Notifications about messages sent by Telegram bot
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_sent
+actions:
+  - action: input_number.set_value
+    data_template:
+      value: "{{ trigger.to_state.attributes.chat_id }}"
+    target:
+      entity_id: input_number.chat_id # Replace with your input entity
+  - action: input_number.set_value
+    data_template:
+      value: "{{ trigger.to_state.attributes.message_id }}"
+    target:
+      entity_id: input_number.message_id # Replace with your input entity
+</code></pre>
+<h2>Example: send_message with formatted Text</h2>
+<pre><code>actions:
+  - action: telegram_bot.send_message
+    data:
+      title: Example Message
+      message: 'Message with *BOLD*, _ITALIC_ and `MONOSPACE` Text'
+</code></pre>
+<h2>Example: send_message with message tag</h2>
+<pre><code>actions:
+  - action: telegram_bot.send_message
+    data:
+      title: Example Message
+      message: "Message with tag"
+      message_tag: "example_tag"
+</code></pre>
+<h2>Example: send_message with disabled webpage preview</h2>
+<pre><code>actions:
+  - action: telegram_bot.send_message
+    data:
+      message: &gt;-
+        &lt;a href="https://www.home-assistant.io/"&gt;HA site&lt;/a&gt;
+      parse_mode: html
+      disable_web_page_preview: true
+</code></pre>
+<h2>Example: send_message then edit it after a delay</h2>
+<pre><code>actions:
+  - action: telegram_bot.send_message
+    data:
+      message: testing
+    response_variable: response
+  - delay:
+      seconds: 5
+  - action: telegram_bot.edit_message
+    data:
+      message: done testing
+      chat_id: "{{ response.chats[0].chat_id }}"
+      message_id: "{{ response.chats[0].message_id }}"
+</code></pre>
+<h2>Example: send_message to a topic within a group</h2>
+<pre><code>actions:
+  - action: telegram_bot.send_message
+    data:
+      message: "Message to a topic"
+      message_thread_id: 123
+</code></pre>
+<h2>Example: send_media_group</h2>
+<p>The following example sends a photo and a video as one album to the allowed chat of a specific bot notify entity.
+A media group must contain between 2 and 10 items. To learn how the action determines the chat, refer to <a>Recipients of send actions</a>.</p>
+<pre><code>actions:
+  - action: telegram_bot.send_media_group
+    data:
+      entity_id: notify.telegram_bot_chat # Replace with your notify entity
+      media:
+        - url: https://example/image.jpg
+          caption: My album
+          media_type: photo
+        - url: https://example/video.mp4
+          media_type: video
+</code></pre>
+<h2>Example: automation to send a message and delete after a delay</h2>
+<pre><code>alias: telegram send message and delete
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: testing
+    response_variable: response
+  - delay:
+      seconds: 5
+  - repeat:
+      sequence:
+        - action: telegram_bot.delete_message
+          data:
+            message_id: "{{ repeat.item.message_id }}"
+            chat_id: "{{ repeat.item.chat_id }}"
+      for_each: "{{ response.chats }}"
+</code></pre>
+<h2>Example: Multi-step automation that reports progress using draft messages</h2>
+<pre><code>triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your Telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your Telegram bot event entity
+    attribute: text
+    state: "Start morning routine"
+actions:
+  - action: telegram_bot.send_message_draft
+    data:
+      draft_id: 1
+      message: "_Opening shades..._"
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      message_thread_id: "{{ trigger.to_state.attributes.message_thread_id }}"
+  - action: cover.open_cover
+    target:
+      entity_id: cover.bedroom
+  - action: telegram_bot.send_message_draft
+    data:
+      draft_id: 1
+      message: "_Adjusting thermostat..._"
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      message_thread_id: "{{ trigger.to_state.attributes.message_thread_id }}"
+  - action: climate.set_temperature
+    target:
+      entity_id: climate.bedroom
+    data:
+      temperature: 24
+  - action: telegram_bot.send_message
+    data:
+      message: "Done!"
+      chat_id: "{{ trigger.to_state.attributes.chat_id }}"
+      message_thread_id: "{{ trigger.to_state.attributes.message_thread_id }}"
+</code></pre>
+<h2>Known limitations</h2>
+<p>The following features are not available in this integration:</p>
+<ul>
+<li>Editing the bot (You can edit the bot using <a>@BotFather</a> on the Telegram app instead)</li>
+<li>All payment related features such as Telegram Premium, Telegram Star and Telegram Gifts</li>
+<li>Telegram Business</li>
+<li>Telegram ADS</li>
+<li>Mini Bot Apps and Mini Bot Store</li>
+<li>Calls and live streaming</li>
+<li>Wallpapers and Themes</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h4>Error sending message: Can't parse entities</h4>
+<p>When using send actions such as <code>telegram_bot.send_message</code> with the <code>markdownv2</code> parse mode, the action will fail with the "Can't parse entities" error if the user input in the <code>message</code> field contains malformed Markdown syntax.</p>
+<p>You can perform any of the following steps to resolve this issue:</p>
+<ul>
+<li>Use the <code>plain_text</code> parse mode either by configuring the Telegram bot options or by specifying it via the action's <code>parse_mode</code> data attribute.</li>
+<li>Escape special characters in the <code>message</code> field with a preceding '\' character.</li>
+<li>Format your message according to the <a>formatting options</a>.</li>
+</ul>
+<h4>Telegram Webhook bot is unable to receive updates</h4>
+<p>If your Telegram bot is unable to receive updates (for example, all events other than <code>telegram_sent</code> are not triggered), please follow the troubleshooting steps below:</p>
+<ol>
+<li>Reconfigure your Telegram bot to use the <strong>Polling</strong> platform and test again to verify that the issue is not related to network connectivity between Telegram and your Home Assistant.</li>
+<li>Check your firewall rules to verify that incoming connections are not blocked.</li>
+<li>Verify that your webhook URL is public and accessible.</li>
+</ol>
+<p>If the issue persists, please refer to the <a>Webhooks Guide</a> for more detailed troubleshooting.</p>
+<h2>Removing the integration</h2>
+<p>This integration follows standard integration removal. No extra steps are required.</p>
+<h3>To remove an integration instance from Home Assistant</h3>
+<ol>
+<li>Go to <strong>Settings</strong> &gt; <strong>Devices &amp; services</strong> and select the integration card.</li>
+<li>Next to the entry you want to remove, select the three dots  menu. Then, select <strong>Delete</strong>.<ul>
+<li>Depending on the integration, the entries are listed under one of the following headings:<ul>
+<li><strong>Devices</strong></li>
+<li><strong>Hubs</strong></li>
+<li><strong>Services</strong></li>
+<li><strong>Integration entries</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>To confirm, select <strong>Delete</strong>.<ul>
+<li>Home Assistant also deletes the devices and entities of the entry.</li>
+</ul>
+</li>
+<li>If Home Assistant asks you to restart, <a>restart Home Assistant</a>.</li>
+<li>If Home Assistant asks whether to also delete the application credentials, select <strong>Remove</strong> or <strong>Keep</strong>.<ul>
+<li>If you keep them, Home Assistant uses them automatically when you add the integration again.</li>
+<li>To delete them later, refer to <a href="../application_credentials/">Deleting application credentials</a>.</li>
+</ul>
+</li>
+</ol>
+</div><section><h2>Original source and license</h2><p>Adapted from Home Assistant Documentation by its contributors under CC BY-NC-SA 4.0. This local edition reformats the source for offline reading.</p><p><code>https://github.com/home-assistant/home-assistant.io/blob/b167e2551e94a02d23337d5ccf860fa95589a508/source/_integrations/telegram_bot.markdown</code></p><details><summary>Original Markdown source</summary><pre>---
+description: Telegram bot support
+ha_release: 0.42
+ha_domain: telegram_bot
+---
+
+Use Telegram on your mobile or desktop device to send and receive messages or commands to/from your Home Assistant.
+This integration creates notification actions to send, edit, receive messages or download attachments from a [Telegram Bot account](https://core.telegram.org/bots).
+
+## Introduction - Telegram bot platforms
+
+Platforms are Telegram bot implementations for managing communications with Telegram for sending and receiving messages.
+When setting up this integration, you should specify the platform which fits your environment and use case.
+
+### Broadcast
+
+Telegram implementation to support **sending messages only**. Your Home Assistant instance does not have to be exposed to the internet and there is no polling to receive messages or commands sent to the bot.
+
+### Polling
+
+Telegram chatbot polling implementation.
+This implementation fetches data from Telegram via long polling with a timeout of 10 seconds.
+(In long polling, the bot will wait until the timeout expires before fetching the data again if there are no updates from Telegram.)
+
+Your Home Assistant instance does not have to be exposed to the internet.
+
+### Webhooks
+
+Telegram chatbot webhooks implementation as described in the Telegram [documentation](https://core.telegram.org/bots/webhooks).
+This implementation allows Telegram to push updates directly to your server and requires your Home Assistant instance to be exposed to the internet.
+
+## Prerequisites
+
+### Create a bot in Telegram
+
+To create your first [Telegram bot](https://core.telegram.org/bots#how-do-i-create-a-bot), follow these steps:
+
+1. Tell Telegram to create a bot for you:
+   - In Telegram, open a chat with [@BotFather](https://t.me/BotFather) and enter `/newbot`.
+   - Follow the instructions on screen and give your bot a name.
+   - BotFather will give you a link to your new bot and an HTTP **API token**.
+   - Store the **API token** somewhere safe, it will be used for setting up the integration later.
+2. Get your **chat ID**:
+   - Send any message to [@id_bot](https://t.me/id_bot).
+   - Note down the value of the **ID** field in the bot&#x27;s response. You will need to add this ID to the allowlist after setting up the integration to permit your new bot to send/receive messages with this target.
+3. Make the first contact with your new bot (bots are not allowed to initiate contact with users):
+   - From the conversation with BotFather, select the link to open a chat.
+   - In the chat, enter `/start`.
+
+### Allow Telegram bot to access your Home Assistant files (Optional)
+
+To enable Telegram bot to send local files, you must grant access to it by adding the file&#x27;s folder to [`allowlist_external_dirs`](/integrations/homeassistant/#allowlist_external_dirs).
+
+Example `configuration.yaml`:
+
+```yaml
+homeassistant:
+  allowlist_external_dirs:
+    - &quot;/media&quot;
+```
+
+### Allow Telegram to connect to your Home Assistant (Webhooks platform only)
+
+{% note %}
+This integration currently does not support self-signed certificates for HTTPS.
+If you are using the *Reverse proxy* or *Direct* method, please ensure that your certificates are signed by a public Certificate Authority (CA).
+{% endnote %}
+
+If you plan to use the `Webhooks` platform, you will need to allow Telegram to connect to your Home Assistant using one of the following methods:
+
+#### Home Assistant Cloud
+
+If you have a Home Assistant Cloud subscription, you can [enable remote access](https://support.nabucasa.com/hc/articles/26474279202973#to-activate-remote-access-from-outside-your-network) to your Home Assistant.
+
+#### Reverse proxy
+
+If your Home Assistant is behind a publicly accessible reverse proxy (for example NGINX, Caddy, Traefik) with HTTPS enabled, do the following:
+
+1. Go to {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %} and configure **Home Assistant URL**.
+2. In the **HTTP server** section, allow Home Assistant to accept connections from your reverse proxy:
+   - Turn on **Trust X-Forwarded-For**.
+   - Add the IP address or CIDR network of the reverse proxy to **Trusted proxies**.
+
+#### Direct
+
+If your Home Assistant is publicly accessible, do the following:
+
+1. Go to {% my network title=&quot;**Settings** &gt; **System** &gt; **Network**&quot; %} and configure **Home Assistant URL**.
+2. In the **HTTP server** section, configure the settings needed for HTTPS, such as **Server port**, **Listen addresses**, **SSL certificate path**, and **SSL key path**.
+
+{% include integrations/config_flow.md %}
+
+{% note %}
+When configuring the **API endpoint**, note the following protocol requirements:
+
+- (Default) Official Telegram servers: HTTPS is required.
+- Custom API endpoints: Both HTTP and HTTPS are supported.
+
+{% endnote %}
+
+{% configuration_basic %}
+Platform:
+  description: The Telegram bot type, either `Broadcast`, `Polling` or `Webhooks`.
+API key:
+  description: The API token of your bot.
+API endpoint:
+  description: The endpoint of the Telegram bot API server. You should only change this value if you are using a self-hosted or third-party [Telegram bot API server](https://core.telegram.org/bots/api#using-a-local-bot-api-server). Changing this value will result in a *10-minute lockout* on the official Telegram bot API server. Defaults to the official Telegram bot API server at `https://api.telegram.org`.
+Proxy URL:
+  description: Proxy URL if working behind one, optionally including username and password. (`socks5://username:password@proxy_ip:proxy_port`).
+{% endconfiguration_basic %}
+
+### Webhooks configuration
+
+{% note %}
+If you are using Home Assistant Cloud, you must include `127.0.0.1` in the **Trusted networks** field because the IP address of incoming requests is not forwarded to your Home Assistant.
+{% endnote %}
+
+{% note %}
+If you are using a custom **API endpoint**, you must include the IP address or IP range of the server in CIDR notation, like `192.168.0.0/16`, in the **Trusted networks** field.
+{% endnote %}
+
+If you have selected the `Webhooks` Telegram bot type, the integration setup will continue with the webhooks configuration step.
+{% configuration_basic %}
+URL:
+  description: Allow to overwrite the external URL from the Home Assistant [configuration](/integrations/homeassistant/#editing-the-general-settings-in-yaml) for different setups (`https://&lt;public_url&gt;:&lt;port&gt;`).
+Trusted networks:
+  description: Telegram server access ACL as list. Default is `149.154.160.0/20, 91.108.4.0/22`.
+{% endconfiguration_basic %}
+
+{% include integrations/option_flow.md %}
+{% configuration_basic %}
+Parse mode:
+  description: Default parser for messages if not explicit in message data, either `markdown` (legacy), `markdownv2`, `html` or `plain_text`. Refer to Telegram&#x27;s [formatting options](https://core.telegram.org/bots/api#formatting-options) for more information.
+{% endconfiguration_basic %}
+
+## Allowlisting chat IDs via Subentries
+
+A Telegram chat ID is a unique numerical identifier for an individual user (positive) or a chat group (negative).
+You must allowlist the chat ID for the Telegram bot before it can send/receive messages for that chat.
+To allowlist the chat ID, [retrieve the chat ID](#create-a-bot-in-telegram) and create a subentry:
+
+1. Go to **{% my integrations title=&quot;Settings &gt; Devices &amp; services&quot; %}**.
+2. Select the Telegram bot integration.
+3. Next to the entry, select the three dots {% icon &quot;mdi:dots-vertical&quot; %} menu. Then, select **Add allowed chat ID**.
+
+{% configuration_basic %}
+Chat ID:
+  description: ID representing the user or group chat to which messages can be sent.
+{% endconfiguration_basic %}
+
+### Recipients of send actions
+
+Actions that send content, such as `telegram_bot.send_message` and `telegram_bot.send_media_group`, send it to the chats that you can specify with these options:
+
+- `entity_id`: One or more Telegram bot [notify entities](#notifiers). Each notify entity represents one allowed chat ID.
+- `chat_id`: One or more allowed chat IDs. In the action dialog, **Chat ID** is under **Additional options**.
+- `config_entry_id`: The Telegram bot. In the action dialog, **Config entry ID** is under **Additional options**.
+
+When you have a single Telegram bot:
+
+- If you don&#x27;t specify any of the options above, the bot is selected automatically and the action sends to the first chat ID you allowlisted for the bot.
+- If you want to send to other allowed chats, specify them with `entity_id` or `chat_id`.
+
+If you have more than one Telegram bot, specify one of the following:
+
+- `entity_id`: The action sends to the allowed chat ID of a specific bot notify entity or entities. If you also add a `chat_id`, the action ignores it.
+- `config_entry_id`: The action sends to the first chat ID you allowlisted for that bot.
+- `config_entry_id` and `chat_id`: The action sends to the specified allowed chat ID or IDs of that bot.
+
+If you have more than one Telegram bot and specify neither `entity_id` nor `config_entry_id`, the action fails with the error &quot;Please specify at least 1 notify entity.&quot;
+
+## Notifiers
+
+This integration will add a notify {% term entity %} for each configured chat ID.
+You can use the `notify.send_message` action to publish notifications.
+
+{% details &quot;Example YAML configuration&quot; %}
+
+```yaml
+action: notify.send_message
+data:
+  message: &quot;Reminder: Have you considered frogs?&quot;
+  entity_id: notify.telegram_bot_chat
+```
+
+{% enddetails %}
+
+{% include integrations/actions.md %}
+
+## Event entity
+
+The **Telegram bot** integration provides an {% term event %} {% term entity %} which represents the state of the last message sent or received. It also provides several event attributes that can be used in automations.
+For received messages that are replies to another message, the optional `reply_to_message_id` attribute contains the message ID (`id`) of the message being replied to. It is not present when the message is not a reply.
+
+### Event: Attachment received
+
+The `telegram_attachment` event is triggered when the bot receives a file.
+
+Example event attributes:
+
+```yaml
+bot:
+  config_entry_id: &quot;&lt;config entry id of the bot&gt;&quot;
+  first_name: &quot;&lt;first name of the bot&gt;&quot;
+  id: &quot;&lt;id of the bot&gt;&quot;
+  last_name: &quot;&lt;last name of the bot&gt;&quot;
+  username: &quot;&lt;username of the bot&gt;&quot;
+chat_id: &quot;&lt;origin chat id&gt;&quot;
+date: &quot;&lt;message timestamp&gt;&quot;
+event_type: &quot;telegram_attachment&quot;
+file_id: &quot;&lt;unique identifier for the file&gt;&quot;
+file_mime_type: &quot;&lt;MIME type of the file, if available&gt;&quot;
+file_name: &quot;&lt;name of the file, if available&gt;&quot;
+file_size: &quot;&lt;file size in bytes, if available&gt;&quot;
+friendly_name: &quot;&lt;name of the event entity&gt;&quot;
+from_first: &quot;&lt;first name of the sender&gt;&quot;
+from_last: &quot;&lt;last name of the sender&gt;&quot;
+id: &quot;&lt;message id&gt;&quot;
+message_thread_id: &quot;&lt;message thread id&gt;&quot;
+reply_to_message_id: &quot;&lt;id of the message being replied to, if applicable&gt;&quot;
+text: &quot;&lt;caption of the file, if available&gt;&quot;
+user_id: &quot;&lt;id of the sender&gt;&quot;
+```
+
+Example automation:
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_attachment
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received a file.
+        MIME type   : {{ trigger.to_state.attributes.file_mime_type }}
+        Size (bytes): {{ trigger.to_state.attributes.file_size }}
+        File ID     : {{ trigger.to_state.attributes.file_id }}&#32;
+        File name   : {{ trigger.to_state.attributes.file_name }}
+```
+
+### Event: Callback query received
+
+The `telegram_callback` event is triggered when the bot receives a callback query from an inline keyboard button.
+
+{% tip %}
+The `id` attribute is used as the `callback_query_id` parameter for the `answer_callback_query` action.
+{% endtip %}
+
+Example event attributes:
+
+```yaml
+# Callback query always have no args
+args: []
+bot:
+  config_entry_id: &quot;&lt;config entry id of the bot&gt;&quot;
+  first_name: &quot;&lt;first name of the bot&gt;&quot;
+  id: &quot;&lt;id of the bot&gt;&quot;
+  last_name: &quot;&lt;last name of the bot&gt;&quot;
+  username: &quot;&lt;username of the bot&gt;&quot;
+chat_id: &quot;&lt;origin chat id&gt;&quot;
+chat_instance: &quot;&lt;chat instance id&gt;&quot;
+command: &quot;&lt;callback query&gt;&quot;
+data: &quot;&lt;data associated to action callback&gt;&quot;
+event_type: &quot;telegram_callback&quot;
+from_first: &quot;&lt;first name of the sender&gt;&quot;
+from_last: &quot;&lt;last name of the sender&gt;&quot;
+friendly_name: &quot;&lt;name of the event entity&gt;&quot;
+id: &quot;&lt;callback id&gt;&quot;
+message: &quot;&lt;message origin of the action callback&gt;&quot;
+user_id: &quot;&lt;id of the sender&gt;&quot;
+```
+
+Example automation:
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received callback query.
+        Callback ID   : {{ trigger.to_state.attributes.id }}
+        Callback query: {{ trigger.to_state.attributes.data }}
+```
+
+### Event: Command received
+
+The `telegram_command` event is triggered when the bot receives a command.
+A command looks like `/thecommand` or `/othercommand with some args`.
+
+Example event attributes:
+
+```yaml
+args: &quot;&lt;any other text following the command&gt;&quot;
+bot:
+  config_entry_id: &quot;&lt;config entry id of the bot&gt;&quot;
+  first_name: &quot;&lt;first name of the bot&gt;&quot;
+  id: &quot;&lt;id of the bot&gt;&quot;
+  last_name: &quot;&lt;last name of the bot&gt;&quot;
+  username: &quot;&lt;username of the bot&gt;&quot;
+chat_id: &quot;&lt;origin chat id&gt;&quot;
+command: &quot;/thecommand&quot;
+date: &quot;&lt;message timestamp&gt;&quot;
+event_type: &quot;telegram_command&quot;
+friendly_name: &quot;&lt;name of the event entity&gt;&quot;
+from_first: &quot;&lt;first name of the sender&gt;&quot;
+from_last: &quot;&lt;last name of the sender&gt;&quot;
+id: &quot;&lt;message id&gt;&quot;
+message_thread_id: &quot;&lt;message thread id&gt;&quot;
+reply_to_message_id: &quot;&lt;id of the message being replied to, if applicable&gt;&quot;
+user_id: &quot;&lt;id of the sender&gt;&quot;
+```
+
+Example automation:
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_command
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Received command.
+        Command: {{ trigger.to_state.attributes.command }}
+        Args   : {{ trigger.to_state.attributes.args }}
+```
+
+### Event: Text received
+
+The `telegram_text` event is triggered when the bot receives a text message (any message that does not begin with `/`).
+
+Example event attributes:
+
+```yaml
+bot:
+  config_entry_id: &quot;&lt;config entry id of the bot&gt;&quot;
+  first_name: &quot;&lt;first name of the bot&gt;&quot;
+  id: &quot;&lt;id of the bot&gt;&quot;
+  last_name: &quot;&lt;last name of the bot&gt;&quot;
+  username: &quot;&lt;username of the bot&gt;&quot;
+chat_id: &quot;&lt;origin chat id&gt;&quot;
+date: &quot;&lt;message timestamp&gt;&quot;
+event_type: &quot;telegram_text&quot;
+friendly_name: &quot;&lt;name of the event entity&gt;&quot;
+from_first: &quot;&lt;first name of the sender&gt;&quot;
+from_last: &quot;&lt;last name of the sender&gt;&quot;
+id: &quot;&lt;message id&gt;&quot;
+message_thread_id: &quot;&lt;message thread id&gt;&quot;
+reply_to_message_id: &quot;&lt;id of the message being replied to, if applicable&gt;&quot;
+text: &quot;&lt;the text received&gt;&quot;
+user_id: &quot;&lt;id of the sender&gt;&quot;
+```
+
+Example automation:
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_text
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Message received.
+        Chat ID   : {{ trigger.to_state.attributes.chat_id }}
+        First name: {{ trigger.to_state.attributes.from_first }}
+        Last name : {{ trigger.to_state.attributes.from_last }}
+        Message   : {{ trigger.to_state.attributes.text }}
+```
+
+### Event: Message sent
+
+The `telegram_sent` event is triggered when the bot sends a message of any type.
+
+{% tip %}
+The `message_id` attribute can be used with the edit, delete and `set_message_reaction` actions to interact with a previously sent message.
+{% endtip %}
+
+Example event attributes:
+
+```yaml
+bot:
+  config_entry_id: &quot;&lt;config entry id of the bot&gt;&quot;
+  first_name: &quot;&lt;first name of the bot&gt;&quot;
+  id: &quot;&lt;id of the bot&gt;&quot;
+  last_name: &quot;&lt;last name of the bot&gt;&quot;
+  username: &quot;&lt;username of the bot&gt;&quot;
+chat_id: &quot;&lt;id of the chat the message was sent to&gt;&quot;
+message_id: &quot;&lt;message id&gt;&quot;
+message_tag: &quot;&lt;message tag&gt;&quot;
+message_thread_id: &quot;&lt;message thread id&gt;&quot;
+```
+
+`message_tag` and `message_thread_id` are only included when the action that sent the message set them.
+
+Example automation:
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_sent
+actions:
+  - action: notify.persistent_notification
+    data:
+      message: &gt;-
+        Bot sent a message.
+        Chat ID   : {{ trigger.to_state.attributes.chat_id }}
+        Message ID: {{ trigger.to_state.attributes.message_id }}
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+```
+
+### Sample automations with inline keyboards and callback queries
+
+A quick example to show some of the callback capabilities of inline keyboards with a dumb automation consisting in a simple repeater of normal text that presents an inline keyboard with 3 buttons: &#x27;EDIT&#x27;, &#x27;NO&#x27; and &#x27;REMOVE BUTTON&#x27;:
+
+- Pressing &#x27;EDIT&#x27; changes the sent message.
+- Pressing &#x27;NO&#x27; only shows a brief notification (answering the callback query).
+- Pressing &#x27;REMOVE BUTTON&#x27; changes the inline keyboard removing that button.
+
+Text repeater:
+
+```yaml
+alias: Telegram bot that repeats text
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_text
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: &quot;You said: {{ trigger.to_state.attributes.text }}&quot;
+      title: &quot;*Dumb automation*&quot;
+      disable_notification: true
+      inline_keyboard:
+        - Edit message:/edit_msg, Don&#x27;t:/do_nothing
+        - Remove this button:/remove_button
+```
+
+Message editor:
+
+```yaml
+alias: Telegram bot that edits the last sent message
+description: &quot;&quot;
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /edit_msg
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      show_alert: true
+      message: Editing the message!
+      callback_query_id: &quot;{{ trigger.to_state.attributes.id }}&quot;
+  - action: telegram_bot.edit_message
+    data:
+      inline_keyboard:
+        - Edit message:/edit_msg, Don&#x27;t:/do_nothing
+        - Remove this button:/remove_button
+      message_id: &quot;{{ trigger.to_state.attributes.message.message_id }}&quot;
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      title: &quot;*Message edit*&quot;
+      message: &gt;-
+        Callback received from {{ trigger.to_state.attributes.from_first }}.
+        Message id: {{ trigger.to_state.attributes.message.message_id }}.
+        Data: {{ trigger.to_state.attributes.data|replace(&quot;_&quot;, &quot;\_&quot;) }}
+```
+
+Keyboard editor:
+
+```yaml
+alias: Telegram bot that edits the keyboard
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /remove_button
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      callback_query_id: &quot;{{ trigger.to_state.attributes.id }}&quot;
+      message: Callback received for editing the inline keyboard!
+      show_alert: false
+  - action: telegram_bot.edit_replymarkup
+    data:
+      inline_keyboard:
+        - Edit message:/edit_msg, Don&#x27;t:/do_nothing
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      message_id: last
+```
+
+Only acknowledges the &#x27;NO&#x27; answer:
+
+```yaml
+alias: Telegram bot that simply acknowledges
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_callback
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: command
+    state: /do_nothing
+actions:
+  - action: telegram_bot.answer_callback_query
+    data:
+      message: OK, you said no!
+      callback_query_id: &quot;{{ trigger.to_state.attributes.id }}&quot;
+```
+
+### Sample automation to receive `chat_id` and `message_id` identifiers of sent messages
+
+The following sample automation stores the `chat_id` and `message_id` of the last sent message using input entities.
+These attributes can then be used in other **Telegram bot** actions.
+
+```yaml
+alias: Notifications about messages sent by Telegram bot
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your telegram bot event entity
+    attribute: event_type
+    state: telegram_sent
+actions:
+  - action: input_number.set_value
+    data_template:
+      value: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+    target:
+      entity_id: input_number.chat_id # Replace with your input entity
+  - action: input_number.set_value
+    data_template:
+      value: &quot;{{ trigger.to_state.attributes.message_id }}&quot;
+    target:
+      entity_id: input_number.message_id # Replace with your input entity
+```
+
+## Example: send_message with formatted Text
+
+```yaml
+actions:
+  - action: telegram_bot.send_message
+    data:
+      title: Example Message
+      message: &#x27;Message with *BOLD*, _ITALIC_ and `MONOSPACE` Text&#x27;
+```
+
+## Example: send_message with message tag
+
+```yaml
+actions:
+  - action: telegram_bot.send_message
+    data:
+      title: Example Message
+      message: &quot;Message with tag&quot;
+      message_tag: &quot;example_tag&quot;
+```
+
+## Example: send_message with disabled webpage preview
+
+```yaml
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: &gt;-
+        &lt;a href=&quot;https://www.home-assistant.io/&quot;&gt;HA site&lt;/a&gt;
+      parse_mode: html
+      disable_web_page_preview: true
+```
+
+## Example: send_message then edit it after a delay
+
+```yaml
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: testing
+    response_variable: response
+  - delay:
+      seconds: 5
+  - action: telegram_bot.edit_message
+    data:
+      message: done testing
+      chat_id: &quot;{{ response.chats[0].chat_id }}&quot;
+      message_id: &quot;{{ response.chats[0].message_id }}&quot;
+```
+
+## Example: send_message to a topic within a group
+
+```yaml
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: &quot;Message to a topic&quot;
+      message_thread_id: 123
+```
+
+## Example: send_media_group
+
+The following example sends a photo and a video as one album to the allowed chat of a specific bot notify entity.
+A media group must contain between 2 and 10 items. To learn how the action determines the chat, refer to [Recipients of send actions](#recipients-of-send-actions).
+
+```yaml
+actions:
+  - action: telegram_bot.send_media_group
+    data:
+      entity_id: notify.telegram_bot_chat # Replace with your notify entity
+      media:
+        - url: https://example/image.jpg
+          caption: My album
+          media_type: photo
+        - url: https://example/video.mp4
+          media_type: video
+```
+
+## Example: automation to send a message and delete after a delay
+
+```yaml
+alias: telegram send message and delete
+actions:
+  - action: telegram_bot.send_message
+    data:
+      message: testing
+    response_variable: response
+  - delay:
+      seconds: 5
+  - repeat:
+      sequence:
+        - action: telegram_bot.delete_message
+          data:
+            message_id: &quot;{{ repeat.item.message_id }}&quot;
+            chat_id: &quot;{{ repeat.item.chat_id }}&quot;
+      for_each: &quot;{{ response.chats }}&quot;
+```
+
+## Example: Multi-step automation that reports progress using draft messages
+
+```yaml
+triggers:
+  - trigger: state
+    entity_id:
+      - event.bot_update_event # Replace with your Telegram bot event entity
+conditions:
+  - condition: state
+    entity_id: event.bot_update_event # Replace with your Telegram bot event entity
+    attribute: text
+    state: &quot;Start morning routine&quot;
+actions:
+  - action: telegram_bot.send_message_draft
+    data:
+      draft_id: 1
+      message: &quot;_Opening shades..._&quot;
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      message_thread_id: &quot;{{ trigger.to_state.attributes.message_thread_id }}&quot;
+  - action: cover.open_cover
+    target:
+      entity_id: cover.bedroom
+  - action: telegram_bot.send_message_draft
+    data:
+      draft_id: 1
+      message: &quot;_Adjusting thermostat..._&quot;
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      message_thread_id: &quot;{{ trigger.to_state.attributes.message_thread_id }}&quot;
+  - action: climate.set_temperature
+    target:
+      entity_id: climate.bedroom
+    data:
+      temperature: 24
+  - action: telegram_bot.send_message
+    data:
+      message: &quot;Done!&quot;
+      chat_id: &quot;{{ trigger.to_state.attributes.chat_id }}&quot;
+      message_thread_id: &quot;{{ trigger.to_state.attributes.message_thread_id }}&quot;
+```
+
+## Known limitations
+
+The following features are not available in this integration:
+
+- Editing the bot (You can edit the bot using [@BotFather](https://t.me/botfather) on the Telegram app instead)
+- All payment related features such as Telegram Premium, Telegram Star and Telegram Gifts
+- Telegram Business
+- Telegram ADS
+- Mini Bot Apps and Mini Bot Store
+- Calls and live streaming
+- Wallpapers and Themes
+
+## Troubleshooting
+
+{% details &quot;Error sending message: Can&#x27;t parse entities&quot; %}
+
+When using send actions such as `telegram_bot.send_message` with the `markdownv2` parse mode, the action will fail with the &quot;Can&#x27;t parse entities&quot; error if the user input in the `message` field contains malformed Markdown syntax.
+
+You can perform any of the following steps to resolve this issue:
+
+- Use the `plain_text` parse mode either by configuring the Telegram bot options or by specifying it via the action&#x27;s `parse_mode` data attribute.
+- Escape special characters in the `message` field with a preceding &#x27;\\&#x27; character.
+- Format your message according to the [formatting options](https://core.telegram.org/bots/api#formatting-options).
+
+{% enddetails %}
+
+{% details &quot;Telegram Webhook bot is unable to receive updates&quot; %}
+
+If your Telegram bot is unable to receive updates (for example, all events other than `telegram_sent` are not triggered), please follow the troubleshooting steps below:
+
+1. Reconfigure your Telegram bot to use the **Polling** platform and test again to verify that the issue is not related to network connectivity between Telegram and your Home Assistant.
+2. Check your firewall rules to verify that incoming connections are not blocked.
+3. Verify that your webhook URL is public and accessible.
+
+If the issue persists, please refer to the [Webhooks Guide](https://core.telegram.org/bots/webhooks) for more detailed troubleshooting.
+
+{% enddetails %}
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.
+
+{% include integrations/remove_device_service.md %}
+</pre></details></section><details><summary>Source license</summary><pre>## creative commons
+
+# Attribution-NonCommercial-ShareAlike 4.0 International
+
+Creative Commons Corporation (“Creative Commons”) is not a law firm and does not provide legal services or legal advice. Distribution of Creative Commons public licenses does not create a lawyer-client or other relationship. Creative Commons makes its licenses and related information available on an “as-is” basis. Creative Commons gives no warranties regarding its licenses, any material licensed under their terms and conditions, or any related information. Creative Commons disclaims all liability for damages resulting from their use to the fullest extent possible.
+
+### Using Creative Commons Public Licenses
+
+Creative Commons public licenses provide a standard set of terms and conditions that creators and other rights holders may use to share original works of authorship and other material subject to copyright and certain other rights specified in the public license below. The following considerations are for informational purposes only, are not exhaustive, and do not form part of our licenses.
+
+* __Considerations for licensors:__ Our public licenses are intended for use by those authorized to give the public permission to use material in ways otherwise restricted by copyright and certain other rights. Our licenses are irrevocable. Licensors should read and understand the terms and conditions of the license they choose before applying it. Licensors should also secure all rights necessary before applying our licenses so that the public can reuse the material as expected. Licensors should clearly mark any material not subject to the license. This includes other CC-licensed material, or material used under an exception or limitation to copyright. [More considerations for licensors](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensors).
+
+* __Considerations for the public:__ By using one of our public licenses, a licensor grants the public permission to use the licensed material under specified terms and conditions. If the licensor’s permission is not necessary for any reason–for example, because of any applicable exception or limitation to copyright–then that use is not regulated by the license. Our licenses grant only permissions under copyright and certain other rights that a licensor has authority to grant. Use of the licensed material may still be restricted for other reasons, including because others have copyright or other rights in the material. A licensor may make special requests, such as asking that all changes be marked or described. Although not required by our licenses, you are encouraged to respect those requests where reasonable. [More considerations for the public](http://wiki.creativecommons.org/Considerations_for_licensors_and_licensees#Considerations_for_licensees).
+
+## Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+
+By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of these terms and conditions, and the Licensor grants You such rights in consideration of benefits the Licensor receives from making the Licensed Material available under these terms and conditions.
+
+### Section 1 – Definitions.
+
+a. __Adapted Material__ means material subject to Copyright and Similar Rights that is derived from or based upon the Licensed Material and in which the Licensed Material is translated, altered, arranged, transformed, or otherwise modified in a manner requiring permission under the Copyright and Similar Rights held by the Licensor. For purposes of this Public License, where the Licensed Material is a musical work, performance, or sound recording, Adapted Material is always produced where the Licensed Material is synched in timed relation with a moving image.
+
+b. __Adapter&#x27;s License__ means the license You apply to Your Copyright and Similar Rights in Your contributions to Adapted Material in accordance with the terms and conditions of this Public License.
+
+c. __BY-NC-SA Compatible License__ means a license listed at [creativecommons.org/compatiblelicenses](http://creativecommons.org/compatiblelicenses), approved by Creative Commons as essentially the equivalent of this Public License.
+
+d. __Copyright and Similar Rights__ means copyright and/or similar rights closely related to copyright including, without limitation, performance, broadcast, sound recording, and Sui Generis Database Rights, without regard to how the rights are labeled or categorized. For purposes of this Public License, the rights specified in Section 2(b)(1)-(2) are not Copyright and Similar Rights.
+
+e. __Effective Technological Measures__ means those measures that, in the absence of proper authority, may not be circumvented under laws fulfilling obligations under Article 11 of the WIPO Copyright Treaty adopted on December 20, 1996, and/or similar international agreements.
+
+f. __Exceptions and Limitations__ means fair use, fair dealing, and/or any other exception or limitation to Copyright and Similar Rights that applies to Your use of the Licensed Material.
+
+g. __License Elements__ means the license attributes listed in the name of a Creative Commons Public License. The License Elements of this Public License are Attribution, NonCommercial, and ShareAlike.
+
+h. __Licensed Material__ means the artistic or literary work, database, or other material to which the Licensor applied this Public License.
+
+i. __Licensed Rights__ means the rights granted to You subject to the terms and conditions of this Public License, which are limited to all Copyright and Similar Rights that apply to Your use of the Licensed Material and that the Licensor has authority to license.
+
+h. __Licensor__ means the individual(s) or entity(ies) granting rights under this Public License.
+
+i. __NonCommercial__ means not primarily intended for or directed towards commercial advantage or monetary compensation. For purposes of this Public License, the exchange of the Licensed Material for other material subject to Copyright and Similar Rights by digital file-sharing or similar means is NonCommercial provided there is no payment of monetary compensation in connection with the exchange.
+
+j. __Share__ means to provide material to the public by any means or process that requires permission under the Licensed Rights, such as reproduction, public display, public performance, distribution, dissemination, communication, or importation, and to make material available to the public including in ways that members of the public may access the material from a place and at a time individually chosen by them.
+
+k. __Sui Generis Database Rights__ means rights other than copyright resulting from Directive 96/9/EC of the European Parliament and of the Council of 11 March 1996 on the legal protection of databases, as amended and/or succeeded, as well as other essentially equivalent rights anywhere in the world.
+
+l. __You__ means the individual or entity exercising the Licensed Rights under this Public License. Your has a corresponding meaning.
+
+### Section 2 – Scope.
+
+a. ___License grant.___
+
+    1. Subject to the terms and conditions of this Public License, the Licensor hereby grants You a worldwide, royalty-free, non-sublicensable, non-exclusive, irrevocable license to exercise the Licensed Rights in the Licensed Material to:
+
+        A. reproduce and Share the Licensed Material, in whole or in part, for NonCommercial purposes only; and
+
+        B. produce, reproduce, and Share Adapted Material for NonCommercial purposes only.
+
+    2. __Exceptions and Limitations.__ For the avoidance of doubt, where Exceptions and Limitations apply to Your use, this Public License does not apply, and You do not need to comply with its terms and conditions.
+
+    3. __Term.__ The term of this Public License is specified in Section 6(a).
+
+    4. __Media and formats; technical modifications allowed.__ The Licensor authorizes You to exercise the Licensed Rights in all media and formats whether now known or hereafter created, and to make technical modifications necessary to do so. The Licensor waives and/or agrees not to assert any right or authority to forbid You from making technical modifications necessary to exercise the Licensed Rights, including technical modifications necessary to circumvent Effective Technological Measures. For purposes of this Public License, simply making modifications authorized by this Section 2(a)(4) never produces Adapted Material.
+
+    5. __Downstream recipients.__
+
+        A. __Offer from the Licensor – Licensed Material.__ Every recipient of the Licensed Material automatically receives an offer from the Licensor to exercise the Licensed Rights under the terms and conditions of this Public License.
+
+        B. __Additional offer from the Licensor – Adapted Material.__ Every recipient of Adapted Material from You automatically receives an offer from the Licensor to exercise the Licensed Rights in the Adapted Material under the conditions of the Adapter’s License You apply.
+
+        C. __No downstream restrictions.__ You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, the Licensed Material if doing so restricts exercise of the Licensed Rights by any recipient of the Licensed Material.
+
+    6. __No endorsement.__ Nothing in this Public License constitutes or may be construed as permission to assert or imply that You are, or that Your use of the Licensed Material is, connected with, or sponsored, endorsed, or granted official status by, the Licensor or others designated to receive attribution as provided in Section 3(a)(1)(A)(i).
+
+b. ___Other rights.___
+
+    1. Moral rights, such as the right of integrity, are not licensed under this Public License, nor are publicity, privacy, and/or other similar personality rights; however, to the extent possible, the Licensor waives and/or agrees not to assert any such rights held by the Licensor to the limited extent necessary to allow You to exercise the Licensed Rights, but not otherwise.
+
+    2. Patent and trademark rights are not licensed under this Public License.
+
+    3. To the extent possible, the Licensor waives any right to collect royalties from You for the exercise of the Licensed Rights, whether directly or through a collecting society under any voluntary or waivable statutory or compulsory licensing scheme. In all other cases the Licensor expressly reserves any right to collect such royalties, including when the Licensed Material is used other than for NonCommercial purposes.
+
+### Section 3 – License Conditions.
+
+Your exercise of the Licensed Rights is expressly made subject to the following conditions.
+
+a. ___Attribution.___
+
+    1. If You Share the Licensed Material (including in modified form), You must:
+
+        A. retain the following if it is supplied by the Licensor with the Licensed Material:
+
+            i. identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated);
+
+            ii. a copyright notice;
+
+            iii. a notice that refers to this Public License;
+
+            iv. a notice that refers to the disclaimer of warranties;
+
+            v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
+
+        B. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+
+        C. indicate the Licensed Material is licensed under this Public License, and include the text of, or the URI or hyperlink to, this Public License.
+
+    2. You may satisfy the conditions in Section 3(a)(1) in any reasonable manner based on the medium, means, and context in which You Share the Licensed Material. For example, it may be reasonable to satisfy the conditions by providing a URI or hyperlink to a resource that includes the required information.
+
+    3. If requested by the Licensor, You must remove any of the information required by Section 3(a)(1)(A) to the extent reasonably practicable.
+
+b. ___ShareAlike.___
+
+In addition to the conditions in Section 3(a), if You Share Adapted Material You produce, the following conditions also apply.
+
+1. The Adapter’s License You apply must be a Creative Commons license with the same License Elements, this version or later, or a BY-NC-SA Compatible License.
+
+2. You must include the text of, or the URI or hyperlink to, the Adapter&#x27;s License You apply. You may satisfy this condition in any reasonable manner based on the medium, means, and context in which You Share Adapted Material.
+
+3. You may not offer or impose any additional or different terms or conditions on, or apply any Effective Technological Measures to, Adapted Material that restrict exercise of the rights granted under the Adapter&#x27;s License You apply.
+
+### Section 4 – Sui Generis Database Rights.
+
+Where the Licensed Rights include Sui Generis Database Rights that apply to Your use of the Licensed Material:
+
+a. for the avoidance of doubt, Section 2(a)(1) grants You the right to extract, reuse, reproduce, and Share all or a substantial portion of the contents of the database for NonCommercial purposes only;
+
+b. if You include all or a substantial portion of the database contents in a database in which You have Sui Generis Database Rights, then the database in which You have Sui Generis Database Rights (but not its individual contents) is Adapted Material, including for purposes of Section 3(b); and
+
+c. You must comply with the conditions in Section 3(a) if You Share all or a substantial portion of the contents of the database.
+
+For the avoidance of doubt, this Section 4 supplements and does not replace Your obligations under this Public License where the Licensed Rights include other Copyright and Similar Rights.
+
+### Section 5 – Disclaimer of Warranties and Limitation of Liability.
+
+a. __Unless otherwise separately undertaken by the Licensor, to the extent possible, the Licensor offers the Licensed Material as-is and as-available, and makes no representations or warranties of any kind concerning the Licensed Material, whether express, implied, statutory, or other. This includes, without limitation, warranties of title, merchantability, fitness for a particular purpose, non-infringement, absence of latent or other defects, accuracy, or the presence or absence of errors, whether or not known or discoverable. Where disclaimers of warranties are not allowed in full or in part, this disclaimer may not apply to You.__
+
+b. __To the extent possible, in no event will the Licensor be liable to You on any legal theory (including, without limitation, negligence) or otherwise for any direct, special, indirect, incidental, consequential, punitive, exemplary, or other losses, costs, expenses, or damages arising out of this Public License or use of the Licensed Material, even if the Licensor has been advised of the possibility of such losses, costs, expenses, or damages. Where a limitation of liability is not allowed in full or in part, this limitation may not apply to You.__
+
+c. The disclaimer of warranties and limitation of liability provided above shall be interpreted in a manner that, to the extent possible, most closely approximates an absolute disclaimer and waiver of all liability.
+
+### Section 6 – Term and Termination.
+
+a. This Public License applies for the term of the Copyright and Similar Rights licensed here. However, if You fail to comply with this Public License, then Your rights under this Public License terminate automatically.
+
+b. Where Your right to use the Licensed Material has terminated under Section 6(a), it reinstates:
+
+    1. automatically as of the date the violation is cured, provided it is cured within 30 days of Your discovery of the violation; or
+
+    2. upon express reinstatement by the Licensor.
+
+    For the avoidance of doubt, this Section 6(b) does not affect any right the Licensor may have to seek remedies for Your violations of this Public License.
+
+c. For the avoidance of doubt, the Licensor may also offer the Licensed Material under separate terms or conditions or stop distributing the Licensed Material at any time; however, doing so will not terminate this Public License.
+
+d. Sections 1, 5, 6, 7, and 8 survive termination of this Public License.
+
+### Section 7 – Other Terms and Conditions.
+
+a. The Licensor shall not be bound by any additional or different terms or conditions communicated by You unless expressly agreed.
+
+b. Any arrangements, understandings, or agreements regarding the Licensed Material not stated herein are separate from and independent of the terms and conditions of this Public License.
+
+### Section 8 – Interpretation.
+
+a. For the avoidance of doubt, this Public License does not, and shall not be interpreted to, reduce, limit, restrict, or impose conditions on any use of the Licensed Material that could lawfully be made without permission under this Public License.
+
+b. To the extent possible, if any provision of this Public License is deemed unenforceable, it shall be automatically reformed to the minimum extent necessary to make it enforceable. If the provision cannot be reformed, it shall be severed from this Public License without affecting the enforceability of the remaining terms and conditions.
+
+c. No term or condition of this Public License will be waived and no failure to comply consented to unless expressly agreed to by the Licensor.
+
+d. Nothing in this Public License constitutes or may be interpreted as a limitation upon, or waiver of, any privileges and immunities that apply to the Licensor or You, including from the legal processes of any jurisdiction or authority.
+
+```txt
+Creative Commons is not a party to its public licenses. Notwithstanding, Creative Commons may elect to apply one of its public licenses to material it publishes and in those instances will be considered the “Licensor.” Except for the limited purpose of indicating that material is shared under a Creative Commons public license or as otherwise permitted by the Creative Commons policies published at [creativecommons.org/policies](http://creativecommons.org/policies), Creative Commons does not authorize the use of the trademark “Creative Commons” or any other trademark or logo of Creative Commons without its prior written consent including, without limitation, in connection with any unauthorized modifications to any of its public licenses or any other arrangements, understandings, or agreements concerning use of licensed material. For the avoidance of doubt, this paragraph does not form part of the public licenses.
+
+Creative Commons may be contacted at creativecommons.org
+```
+</pre></details><section><h2>Configuration details</h2><p>In Home Assistant, open <strong>Settings → Devices &amp; services</strong>, choose <strong>Add integration</strong>, and search for Telegram bot.</p><p>The <strong>reauth confirm</strong> configuration step lists <code>api_key</code>.</p><p>The <strong>reconfigure</strong> configuration step lists <code>platform</code>.</p><p>The <strong>user</strong> configuration step lists <code>api_key</code>, <code>platform</code>.</p><p>The <strong>webhooks</strong> configuration step lists <code>trusted_networks</code>, <code>url</code>.</p><h3>Entity platforms</h3><ul class="chips"><li>event</li></ul><h3>Documented actions</h3><ul class="chips"><li>answer callback query</li><li>delete message</li><li>download file</li><li>edit caption</li><li>edit message</li><li>edit message media</li><li>edit replymarkup</li><li>leave chat</li><li>send animation</li><li>send chat action</li><li>send document</li><li>send location</li><li>send media group</li><li>send message</li><li>send message draft</li><li>send photo</li><li>send poll</li><li>send sticker</li><li>send video</li><li>send voice</li><li>set message reaction</li></ul><h3>Connection methods</h3><ul class="chips"><li>cloud</li><li>network</li></ul></section><section><h2>Topics in the original article</h2><ul><li>Introduction - Telegram bot platforms</li><li>Prerequisites</li><li>Allowlisting chat IDs via Subentries</li><li>Notifiers</li><li>Event entity</li><li>Example: send_message with formatted Text</li><li>Example: send_message with message tag</li><li>Example: send_message with disabled webpage preview</li><li>Example: send_message then edit it after a delay</li><li>Example: send_message to a topic within a group</li><li>Example: send_media_group</li><li>Example: automation to send a message and delete after a delay</li></ul></section><section><h2>Source addresses</h2><dl><dt>Home Assistant article</dt><dd><code>https://www.home-assistant.io/integrations/telegram_bot/</code></dd><dt>Stock source</dt><dd><code>https://github.com/home-assistant/core/tree/9882010fb2e5f5b571a9cfa3336661b59d16deca/homeassistant/components/telegram_bot</code></dd><dt>Material source</dt><dd><code>https://github.com/Ding-Ding-Projects/home-assistant-material/tree/0fdb8afd02dbb75e36feb96b4e809e2cf918e22e/core/homeassistant/components/telegram_bot</code></dd></dl></section><p><a href="../../integrations/telegram_bot/">Return to the Telegram bot guide →</a></p></article></main><footer>Independent Home Assistant integration reference · <a href="../../credits.html">Sources &amp; attribution</a> · <a href="../../downloads.html">Offline guide</a> · <button id="tour-open">Guided tour</button> <button id="access-open">Accessibility</button></footer></body></html>
