@@ -46,11 +46,20 @@ def marketing(row, copy, guide):
     kicker = e(row['name']) if copy['headline'] != row['name'] else e((row.get('categories') or [row.get('integration_type','Home Assistant integration')])[0].replace('_',' ').replace('.',' / '))
     image = f'<img class="editorial-plate" src="../../assets/{copy["theme"]}.webp" alt="" width="443" height="443">'
     content = f'<small>{kicker}</small><h1>{title}</h1><p>{e(copy["intro"])}</p><a class="cta" href="{guide}">Open the {e(row["name"])} guide →</a>'
-    variant = int.from_bytes(hashlib.sha256(row['domain'].encode()).digest()[:2], 'big') % 4
+    digest = hashlib.sha256(row['domain'].encode()).digest()
+    variant = digest[0] % 4
+    # Long names and step-heavy integrations need more room for their lead.
+    lead = min(66, 43 + len(row['name']) // 3 + digest[1] % 12)
+    body_width = min(66, 42 + len(row.get('topics', [])) + digest[2] % 13)
+    focal = 25 + digest[3] % 51
+    tilt = 85 + digest[4] % 38
+    geometry = f'--lead:{lead}%;--story-width:{body_width}%;--focal:{focal}%;--tilt:{tilt}deg;--identity:{int.from_bytes(digest[5:7], "big") % 360}'
     hero = f'<div class="hero campaign composition-{variant}"><div>{content}</div><div class="visual-plate">{image}{art}</div></div>'
     highlights = ''.join(f'<li>{e(h)}</li>' for h in copy['highlights'])
     body = f'<div class="story-notes"><section><h2>Inside the guide</h2><ul>{highlights or "<li>Setup and maintainer references</li>"}</ul></section><section><h2>Start exploring</h2><p>{e(row.get("summary") or row["name"])}</p><a href="{guide}#setup">Go to setup →</a></section></div>'
-    return path, hero + body + task_selector(row,guide)
+    tasks = task_selector(row, guide)
+    sections = tasks + body if variant in (1, 3) else body + tasks
+    return path, f'<div class="integration-story" style="{geometry}">{hero}{sections}</div>'
 
 
 def task_selector(row, guide):
