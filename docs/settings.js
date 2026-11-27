@@ -494,7 +494,10 @@
         previous && previous.rendered === node.data
           ? previous.source
           : node.data;
-      const rendered = transform(source);
+      const cantonese = node.parentElement.dataset.readerCantonese;
+      const rendered = cantonese
+        ? rewrite(localized([source, cantonese]))
+        : transform(source);
       originals.set(node, { source, rendered });
       if (node.data !== rendered) node.data = rendered;
     }

@@ -257,13 +257,21 @@
       drawCollection("saved");
       drawCollection("history");
     }
+    function lookupStatus(english, cantonese) {
+      const found = el("found");
+      found.dataset.readerCantonese = cantonese;
+      found.textContent = english;
+    }
     function search() {
       const query = el("query").value.trim().toLocaleLowerCase();
       el("results").replaceChildren();
       if (!index) return;
       if (!query) {
-        el("found").textContent =
-          "Type to search " + index.length.toLocaleString() + " integrations.";
+        const count = index.length.toLocaleString();
+        lookupStatus(
+          "Type to search " + count + " integrations.",
+          "輸入名稱就可以搜尋 " + count + " 個整合。",
+        );
         return;
       }
       const matches = index.filter(
@@ -278,11 +286,14 @@
         item.append(a);
         el("results").append(item);
       }
-      el("found").textContent = matches.length
-        ? (matches.length > 12 ? "Showing 12 of " : "") +
-          matches.length.toLocaleString() +
-          (matches.length === 1 ? " match" : " matches")
-        : "No matching integrations.";
+      const count = matches.length.toLocaleString();
+      if (matches.length > 12) {
+        lookupStatus("Showing 12 of " + count + " matches", "共搵到 " + count + " 個結果，顯示頭 12 個。");
+      } else if (matches.length) {
+        lookupStatus(count + (matches.length === 1 ? " match" : " matches"), "搵到 " + count + " 個結果。");
+      } else {
+        lookupStatus("No matching integrations.", "搵唔到符合條件嘅整合。");
+      }
     }
     async function ensureIndex() {
       if (index) {
@@ -290,7 +301,7 @@
         return;
       }
       if (loading) return;
-      el("found").textContent = "Loading integration names…";
+      lookupStatus("Loading integration names…", "載入緊整合名稱…");
       loading = true;
       try {
         const response = await fetch(new URL("lookup.json", base), {
@@ -309,8 +320,10 @@
         );
         search();
       } catch {
-        el("found").textContent =
-          "Integration search is unavailable. Reopen the workspace to retry.";
+        lookupStatus(
+          "Integration search is unavailable. Reopen the workspace to retry.",
+          "暫時用唔到整合搜尋。請重新開啟閱讀工作區再試。",
+        );
       } finally {
         loading = false;
       }
