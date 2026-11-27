@@ -301,6 +301,11 @@
     ["Sources & attribution", "來源及鳴謝"],
     ["Offline guide", "離線指南"],
     ["Browse integrations", "瀏覽整合"],
+    ["Browse by collection", "按分類瀏覽"],
+    ["Built-in integrations", "內置整合"],
+    ["Material integrations", "Material 整合"],
+    ["Integration packages", "整合套件"],
+    ["Explore by task", "按任務探索"],
     ["Name or domain", "名稱或網域"],
     ["Overview", "概覽"],
     ["Guide", "指南"],
@@ -420,7 +425,7 @@
     try {
       storedStyles = JSON.parse(read(pageStyleKey));
     } catch {}
-    for (const node of document.querySelectorAll("main .hero,main .panel,main .story-notes > section,main .reading,main .featured,#directory")) {
+    for (const node of document.querySelectorAll("main .hero,main .panel,main .story-notes > section,main .reading,main .atlas-collections,main .featured,#directory")) {
       const heading = node.querySelector("h1,h2,h3");
       if (!heading) continue;
       const name = heading.textContent.trim();

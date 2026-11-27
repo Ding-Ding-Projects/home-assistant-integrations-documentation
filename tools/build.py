@@ -133,7 +133,22 @@ print(f'{len(rows)} guides, {len(layouts)} distinct section layouts')
 
 stories = [('hue','Light a room','studio'),('sun','Follow the sun','almanac'),('printer_door','Watch a print','console'),('bin_day','Plan collection day','almanac'),('mqtt','Connect a message bus','signal')]
 features = ''.join(f'<a class="feature-card {family}" href="discover/{domain}/"><small>{esc(domain.replace("_"," ").title())}</small><h2>{title}</h2><span>Explore →</span></a>' for domain,title,family in stories)
-home = f'<section class="hero directory-hero"><div><small>Home Assistant integrations</small><h1>A home in sync.</h1><p>Explore what your lights, sensors and everyday devices can do together.</p><a class="cta" href="directory.html">Explore {len(rows):,} integrations →</a></div></section><section class="featured"><h2>Explore by story</h2><div class="feature-grid">{features}</div></section>'
+collections = [
+    ('Stock', 'Built-in integrations', 'Set up devices and services available with Home Assistant.'),
+    ('Material', 'Material integrations', 'Explore the components shipped with Home Assistant Material.'),
+    ('Package', 'Integration packages', 'Find packages to add to your installation.'),
+]
+collection_links = ''.join(
+    f'<a href="directory.html?collection={key}#directory"><h3>{title}</h3>'
+    f'<p>{description}</p><span>{sum(key in row["sources"] for row in rows):,} integrations →</span></a>'
+    for key, title, description in collections
+)
+home = f'''<section class="hero directory-hero"><div><small>Home Assistant field guide</small>
+<h1>Integration Atlas</h1><p>Choose an integration, follow its setup guide, and keep its reference close at hand.</p>
+<a class="cta" href="directory.html#directory">Browse {len(rows):,} integrations <span aria-hidden="true">→</span></a></div><img src="assets/atlas-home.webp" alt="" width="960" height="720"></section>
+<section class="atlas-collections" aria-labelledby="collections-title"><h2 id="collections-title">Browse by collection</h2>
+<div>{collection_links}</div></section>
+<section class="featured"><h2>Explore by task</h2><div class="feature-grid">{features}</div></section>'''
 (OUT/'index.html').write_text(shell('Home',home))
 
 (OUT/'article-license.html').write_text(shell('Article license','<h1>Article license</h1><pre style="white-space:pre-wrap">'+esc(Path('ARTICLE-LICENSE.md').read_text())+'</pre>'))
